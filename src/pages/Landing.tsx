@@ -94,12 +94,12 @@ const Landing = () => {
       <div
         onMouseEnter={() => setHover("kunde")}
         onMouseLeave={() => setHover(null)}
-        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1400ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[flex] md:min-h-screen ${kundeFlex}`}
+        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1600ms] ease-[cubic-bezier(0.45,0.05,0.55,0.95)] will-change-[flex] motion-reduce:transition-none md:min-h-screen ${kundeFlex}`}
       >
         <img
           src="https://images.unsplash.com/photo-1590635023142-73c3d34f2805?w=1400&h=1600&fit=crop&auto=format"
           alt="Kunde hält einen Akku-Bohrschrauber — Gerät zurückgeben"
-          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[1800ms] ease-out group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[2200ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] will-change-transform motion-reduce:transition-none group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-foreground/55 transition-colors duration-1000" />
         <div className="absolute inset-0 bg-[hsl(28_45%_14%)]/40 mix-blend-multiply transition-colors duration-1000" />
