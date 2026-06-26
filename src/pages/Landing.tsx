@@ -29,12 +29,12 @@ const Landing = () => {
 
       {/* Center headline */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 w-full max-w-3xl -translate-x-1/2 -translate-y-1/2 px-6 text-center">
-        <h1 className="font-display text-4xl font-semibold leading-tight text-background drop-shadow-lg md:text-6xl">
+        <h1 className="font-display text-4xl font-semibold leading-tight text-background [text-shadow:0_2px_24px_hsl(0_0%_0%/0.6)] md:text-6xl">
           Bist du Produzent
           <br />
           oder Kunde?
         </h1>
-        <p className="mt-4 text-sm text-background/80 md:text-base">
+        <p className="mt-4 text-sm text-background/90 [text-shadow:0_1px_12px_hsl(0_0%_0%/0.5)] md:text-base">
           Wähle deine Seite — wir kümmern uns um den Rest.
         </p>
         <div className="mx-auto mt-6 flex max-w-xs items-center gap-3 text-background/70">
