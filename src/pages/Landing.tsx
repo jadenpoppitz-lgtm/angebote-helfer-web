@@ -49,14 +49,16 @@ const Landing = () => {
         to="/angebote?role=produzent"
         onMouseEnter={() => setHover("produzent")}
         onMouseLeave={() => setHover(null)}
-        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:min-h-screen ${produzentFlex}`}
+        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1400ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[flex] md:min-h-screen ${produzentFlex}`}
       >
         <img
           src="https://images.unsplash.com/photo-1700727448686-b314cb5f9948?w=1400&h=1600&fit=crop&auto=format"
           alt="Produktionshalle — Herstellung elektronischer Geräte"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[1800ms] ease-out group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-[hsl(152_55%_18%)]/70 transition-colors duration-700 group-hover:bg-[hsl(152_55%_14%)]/55" />
+        <div className="absolute inset-0 bg-foreground/55 transition-colors duration-1000" />
+        <div className="absolute inset-0 bg-[hsl(152_55%_14%)]/45 mix-blend-multiply transition-colors duration-1000" />
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
         <div className="relative z-10 mt-auto flex w-full flex-col items-start gap-4 p-8 text-background md:p-14">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80">
             Produzent
@@ -84,14 +86,16 @@ const Landing = () => {
       <div
         onMouseEnter={() => setHover("kunde")}
         onMouseLeave={() => setHover(null)}
-        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:min-h-screen ${kundeFlex}`}
+        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1400ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[flex] md:min-h-screen ${kundeFlex}`}
       >
         <img
           src="https://images.unsplash.com/photo-1590635023142-73c3d34f2805?w=1400&h=1600&fit=crop&auto=format"
           alt="Kunde hält einen Akku-Bohrschrauber — Gerät zurückgeben"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[1800ms] ease-out group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-[hsl(28_45%_18%)]/70 transition-colors duration-700 group-hover:bg-[hsl(28_45%_14%)]/55" />
+        <div className="absolute inset-0 bg-foreground/55 transition-colors duration-1000" />
+        <div className="absolute inset-0 bg-[hsl(28_45%_14%)]/40 mix-blend-multiply transition-colors duration-1000" />
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
         <div className="relative z-10 mt-auto flex w-full flex-col items-start gap-4 p-8 text-background md:p-14">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80">
             Kunde
