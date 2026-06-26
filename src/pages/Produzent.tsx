@@ -14,9 +14,11 @@ import {
   Recycle,
   Coins,
   ShieldCheck,
-  TrendingDown,
   Globe2,
   CheckCircle2,
+  Flame,
+  Users,
+  LineChart,
 } from "lucide-react";
 
 type Metal = {
@@ -90,19 +92,19 @@ const LOOP = [
 
 const BENEFITS = [
   {
-    icon: TrendingDown,
-    title: "Bis zu 18 % geringere Materialkosten",
-    text: "Recycelte Edelmetalle aus Ihrem eigenen Materialstrom sind günstiger als LBMA-Spot zzgl. Aufschlägen Ihres Halbzeug-Lieferanten.",
-  },
-  {
     icon: ShieldCheck,
     title: "Versorgungs­sicherheit",
-    text: "Unabhängig von Spot-Volatilität, Mine-to-Market-Risiken und geopolitischen Engpässen bei Pd und Pt.",
+    text: "Unabhängig von Spot-Volatilität und geopolitischen Engpässen bei Au, Pd und Pt – Ihr Materialstrom kommt aus Ihrem eigenen Bestand zurück.",
   },
   {
     icon: Globe2,
-    title: "Scope-3 Reduktion",
-    text: "Closed-Loop-Edelmetalle sparen pro kg Gold bis zu 16 t CO₂e gegenüber Primärgewinnung – auditierbar dokumentiert.",
+    title: "Emissions­kontrolle",
+    text: "Closed-Loop-Edelmetalle sparen pro kg Gold bis zu 16 t CO₂e gegenüber Primärgewinnung – auditierbar pro Charge dokumentiert.",
+  },
+  {
+    icon: LineChart,
+    title: "Reporting & Berichts­pflicht",
+    text: "Monatliche Reports für Scope-3, Lieferkettengesetz und CSRD – Sie geben die Zahlen einfach weiter.",
   },
 ];
 
@@ -184,31 +186,36 @@ const Produzent = () => {
 
             {/* Loop visualization */}
             <div className="relative">
-              <div className="relative mx-auto aspect-square w-full max-w-md">
-                <div className="absolute inset-0 rounded-full border border-background/20" />
-                <div className="absolute inset-6 rounded-full border border-dashed border-background/30" />
-                <div className="absolute inset-12 rounded-full bg-background/5 backdrop-blur" />
-                <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-background px-4 py-3 text-center text-foreground shadow-elegant">
-                  <Factory className="mx-auto h-5 w-5 text-primary" />
-                  <p className="mt-1 text-xs font-semibold">OEM</p>
+              <div className="relative mx-auto w-full max-w-md rounded-3xl border border-background/20 bg-background/5 p-6 backdrop-blur">
+                <p className="text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-background/70">
+                  Closed Loop · Materialhoheit beim OEM
+                </p>
+                <ol className="mt-6 space-y-3">
+                  {[
+                    { icon: Factory, label: "OEM", sub: "Produktion & Hoheit über Material" },
+                    { icon: Users, label: "Kunde", sub: "Gibt Gerät / PCB zurück" },
+                    { icon: Recycle, label: "Kernbeißer", sub: "Sammelt, sortiert, dokumentiert" },
+                    { icon: Flame, label: "Hochofen / Refining", sub: "Verarbeitet auf Weisung des OEM" },
+                  ].map((s, i) => (
+                    <li key={s.label} className="flex items-center gap-3 rounded-xl bg-background/10 px-3 py-2.5 ring-1 ring-background/15">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-background text-foreground">
+                        <s.icon className="h-4 w-4" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold leading-tight">{s.label}</p>
+                        <p className="truncate text-[11px] text-background/70">{s.sub}</p>
+                      </div>
+                      <span className="text-[10px] font-mono text-background/50">0{i + 1}</span>
+                    </li>
+                  ))}
+                </ol>
+                <div className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-[hsl(150_70%_75%)] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[hsl(152_55%_14%)]">
+                  <Coins className="h-3.5 w-3.5" />
+                  Edelmetall zurück an OEM
                 </div>
-                <div className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 rounded-2xl bg-background px-4 py-3 text-center text-foreground shadow-elegant">
-                  <CircuitBoard className="mx-auto h-5 w-5 text-primary" />
-                  <p className="mt-1 text-xs font-semibold">PCB</p>
-                </div>
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 rounded-2xl bg-background px-4 py-3 text-center text-foreground shadow-elegant">
-                  <Recycle className="mx-auto h-5 w-5 text-primary" />
-                  <p className="mt-1 text-xs font-semibold">Refining</p>
-                </div>
-                <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-background px-4 py-3 text-center text-foreground shadow-elegant">
-                  <Coins className="mx-auto h-5 w-5 text-accent" />
-                  <p className="mt-1 text-xs font-semibold">Au / Ag / Pd</p>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="rounded-full bg-[hsl(150_70%_75%)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[hsl(152_55%_14%)]">
-                    Closed Loop
-                  </div>
-                </div>
+                <p className="mt-3 text-center text-[11px] leading-relaxed text-background/70">
+                  Der OEM bestimmt, wohin die zurück­gewonnenen Edelmetalle vom Hochofen geliefert werden – die Hoheit über das Material bleibt jederzeit beim Hersteller.
+                </p>
               </div>
             </div>
           </div>
@@ -232,7 +239,7 @@ const Produzent = () => {
         </section>
 
         {/* Loop */}
-        <section id="kreislauf" className="container py-20">
+        <section id="kreislauf" className="container py-20 scroll-mt-20">
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Materialfluss</p>
             <h2 className="mt-3 font-display text-3xl font-semibold md:text-4xl">
@@ -261,7 +268,7 @@ const Produzent = () => {
         </section>
 
         {/* Metals */}
-        <section className="bg-gradient-soft py-20">
+        <section id="metalle" className="bg-gradient-soft py-20 scroll-mt-20">
           <div className="container">
             <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
               <div className="max-w-xl">
@@ -295,7 +302,7 @@ const Produzent = () => {
         </section>
 
         {/* Benefits */}
-        <section className="container py-20">
+        <section id="vorteile" className="container py-20 scroll-mt-20">
           <div className="grid gap-10 md:grid-cols-3">
             {BENEFITS.map((b) => (
               <div key={b.title}>
@@ -310,7 +317,7 @@ const Produzent = () => {
         </section>
 
         {/* Anfrage */}
-        <section id="anfrage" className="border-t border-border bg-secondary/40 py-20">
+        <section id="anfrage" className="border-t border-border bg-secondary/40 py-20 scroll-mt-20">
           <div className="container grid gap-12 md:grid-cols-[1fr_1.1fr]">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Closed-Loop-Vereinbarung</p>
