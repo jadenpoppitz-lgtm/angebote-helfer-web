@@ -1,0 +1,176 @@
+export type Material =
+  | "Elektroschrott"
+  | "Metall"
+  | "Papier"
+  | "Kunststoff"
+  | "Glas"
+  | "Holz"
+  | "Batterien";
+
+export type DeliveryMode = "Abholung" | "Anlieferung";
+
+export interface Offer {
+  id: string;
+  material: Material;
+  provider: string;
+  city: string;
+  plzPrefix: string;
+  mode: DeliveryMode;
+  /** Positive = Vergütung €/t für Anbieter zahlt Kunden, negative = Entsorgungsgebühr */
+  pricePerTon: number;
+  unit: "€/t" | "€/kg" | "€/Stk";
+  conditions: string;
+  availability: "Sofort verfügbar" | "In 2–5 Tagen" | "Auf Anfrage";
+  rating: number;
+  reviews: number;
+}
+
+export const MATERIALS: Material[] = [
+  "Elektroschrott",
+  "Metall",
+  "Papier",
+  "Kunststoff",
+  "Glas",
+  "Holz",
+  "Batterien",
+];
+
+export const REGIONS = [
+  "Berlin",
+  "Hamburg",
+  "München",
+  "Köln",
+  "Frankfurt am Main",
+  "Stuttgart",
+  "Leipzig",
+  "Dresden",
+];
+
+export const OFFERS: Offer[] = [
+  {
+    id: "1",
+    material: "Metall",
+    provider: "NordMetall Recycling GmbH",
+    city: "Hamburg",
+    plzPrefix: "20",
+    mode: "Abholung",
+    pricePerTon: 285,
+    unit: "€/t",
+    conditions: "Ab 500 kg, sortenrein, Mischschrott möglich",
+    availability: "Sofort verfügbar",
+    rating: 4.8,
+    reviews: 142,
+  },
+  {
+    id: "2",
+    material: "Elektroschrott",
+    provider: "GreenCircuit AG",
+    city: "Berlin",
+    plzPrefix: "10",
+    mode: "Abholung",
+    pricePerTon: 0,
+    unit: "€/t",
+    conditions: "Kostenfreie Abholung ab 200 kg, zertifiziert nach ElektroG",
+    availability: "In 2–5 Tagen",
+    rating: 4.7,
+    reviews: 89,
+  },
+  {
+    id: "3",
+    material: "Papier",
+    provider: "Papierwerk Süd",
+    city: "München",
+    plzPrefix: "80",
+    mode: "Anlieferung",
+    pricePerTon: 95,
+    unit: "€/t",
+    conditions: "Sortiertes Altpapier, keine Verbundstoffe",
+    availability: "Sofort verfügbar",
+    rating: 4.6,
+    reviews: 211,
+  },
+  {
+    id: "4",
+    material: "Kunststoff",
+    provider: "PolyLoop Recycling",
+    city: "Köln",
+    plzPrefix: "50",
+    mode: "Abholung",
+    pricePerTon: 60,
+    unit: "€/t",
+    conditions: "PE/PP sortenrein, Folien gepresst",
+    availability: "In 2–5 Tagen",
+    rating: 4.4,
+    reviews: 64,
+  },
+  {
+    id: "5",
+    material: "Glas",
+    provider: "Glaswerk Rhein-Main",
+    city: "Frankfurt am Main",
+    plzPrefix: "60",
+    mode: "Anlieferung",
+    pricePerTon: 35,
+    unit: "€/t",
+    conditions: "Nach Farben getrennt, ohne Fremdstoffe",
+    availability: "Sofort verfügbar",
+    rating: 4.5,
+    reviews: 73,
+  },
+  {
+    id: "6",
+    material: "Holz",
+    provider: "HolzRecycling Stuttgart",
+    city: "Stuttgart",
+    plzPrefix: "70",
+    mode: "Abholung",
+    pricePerTon: -45,
+    unit: "€/t",
+    conditions: "A1–A3, behandelt nach Absprache",
+    availability: "In 2–5 Tagen",
+    rating: 4.3,
+    reviews: 51,
+  },
+  {
+    id: "7",
+    material: "Batterien",
+    provider: "BattCycle Sachsen",
+    city: "Leipzig",
+    plzPrefix: "04",
+    mode: "Anlieferung",
+    pricePerTon: 0,
+    unit: "€/kg",
+    conditions: "Li-Ion gesondert, GRS-zertifiziert",
+    availability: "Auf Anfrage",
+    rating: 4.9,
+    reviews: 38,
+  },
+  {
+    id: "8",
+    material: "Metall",
+    provider: "Schrott & Söhne",
+    city: "Dresden",
+    plzPrefix: "01",
+    mode: "Abholung",
+    pricePerTon: 245,
+    unit: "€/t",
+    conditions: "Container ab 1 t, Eisenmetalle",
+    availability: "Sofort verfügbar",
+    rating: 4.2,
+    reviews: 97,
+  },
+  {
+    id: "9",
+    material: "Elektroschrott",
+    provider: "ReUse Berlin",
+    city: "Berlin",
+    plzPrefix: "12",
+    mode: "Anlieferung",
+    pricePerTon: 120,
+    unit: "€/t",
+    conditions: "IT-Geräte mit Datenträgerlöschung",
+    availability: "Sofort verfügbar",
+    rating: 4.8,
+    reviews: 156,
+  },
+];
