@@ -54,7 +54,7 @@ const Landing = () => {
 
       {/* Produzent */}
       <Link
-        to="/angebote?role=produzent"
+        to="/produzent"
         onMouseEnter={() => setHover("produzent")}
         onMouseLeave={() => setHover(null)}
         className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1600ms] ease-[cubic-bezier(0.45,0.05,0.55,0.95)] will-change-[flex] motion-reduce:transition-none md:min-h-screen ${produzentFlex}`}
