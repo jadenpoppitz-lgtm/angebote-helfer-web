@@ -79,7 +79,7 @@ const LOOP = [
   {
     icon: Recycle,
     title: "Edelmetall-Aufbereitung",
-    text: "Hydrometallurgische Trennung von Au, Ag, Pd, Pt und HG-Kupfer auf LBMA-Reinheit. Kein Papier, kein Kunststoff, kein Mischschrott.",
+    text: "Hydrometallurgische Trennung von Au, Ag, Pd, Pt und HG-Kupfer auf LBMA-Reinheit.",
   },
   {
     icon: Coins,
@@ -118,8 +118,7 @@ const Produzent = () => {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     toast.success("Anfrage erhalten", {
-      description:
-        "Wir melden uns binnen 24h mit einem Closed-Loop-Konzept für Ihre Edelmetallströme.",
+      description: "Wir melden uns binnen 24h mit einem Closed-Loop-Konzept für Ihre Edelmetallströme.",
     });
     setForm({ company: "", contact: "", email: "", volume: "", notes: "" });
   };
@@ -133,8 +132,7 @@ const Produzent = () => {
           <div
             className="pointer-events-none absolute inset-0 opacity-[0.08]"
             style={{
-              backgroundImage:
-                "radial-gradient(circle at 1px 1px, hsl(60 30% 98%) 1px, transparent 0)",
+              backgroundImage: "radial-gradient(circle at 1px 1px, hsl(60 30% 98%) 1px, transparent 0)",
               backgroundSize: "28px 28px",
             }}
           />
@@ -145,23 +143,16 @@ const Produzent = () => {
               </span>
               <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] md:text-6xl">
                 Edelmetalle aus Ihren Leiterplatten —
-                <span className="block text-[hsl(150_70%_75%)]">
-                  zurück in Ihre Produktion.
-                </span>
+                <span className="block text-[hsl(150_70%_75%)]">zurück in Ihre Produktion.</span>
               </h1>
               <p className="mt-6 max-w-xl text-base text-background/85 md:text-lg">
-                Wir betreiben einen geschlossenen Materialkreislauf
-                ausschließlich für Edelmetalle aus Elektronikschrott. Kein
-                Papier, kein Mischabfall – nur das, was wirklich Wert hat:
-                Gold, Silber, Palladium, Platin und HG-Kupfer. Direkt aus
-                Ihrer Leiterplatte zurück an Sie oder Ihren Halbzeug-Lieferanten.
+                Wir betreiben einen geschlossenen Materialkreislauf ausschließlich für Edelmetalle aus
+                Elektronikschrott. Kein Papier, kein Mischabfall – nur das, was wirklich Wert hat: Gold, Silber,
+                Palladium, Platin und HG-Kupfer. Direkt aus Ihrer Leiterplatte zurück an Sie oder Ihren
+                Halbzeug-Lieferanten.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-background text-foreground hover:bg-background/90"
-                >
+                <Button asChild size="lg" className="bg-background text-foreground hover:bg-background/90">
                   <a href="#anfrage">
                     Closed-Loop anfragen <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
@@ -177,28 +168,16 @@ const Produzent = () => {
               </div>
               <dl className="mt-12 grid max-w-lg grid-cols-3 gap-6 text-background">
                 <div>
-                  <dt className="text-xs uppercase tracking-wider text-background/70">
-                    Rückgewinnung
-                  </dt>
-                  <dd className="mt-1 font-display text-2xl font-semibold">
-                    &gt; 98 %
-                  </dd>
+                  <dt className="text-xs uppercase tracking-wider text-background/70">Rückgewinnung</dt>
+                  <dd className="mt-1 font-display text-2xl font-semibold">&gt; 98 %</dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-wider text-background/70">
-                    Reinheit
-                  </dt>
-                  <dd className="mt-1 font-display text-2xl font-semibold">
-                    999,9 ‰
-                  </dd>
+                  <dt className="text-xs uppercase tracking-wider text-background/70">Reinheit</dt>
+                  <dd className="mt-1 font-display text-2xl font-semibold">999,9 ‰</dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-wider text-background/70">
-                    Lieferzeit
-                  </dt>
-                  <dd className="mt-1 font-display text-2xl font-semibold">
-                    14 Tage
-                  </dd>
+                  <dt className="text-xs uppercase tracking-wider text-background/70">Lieferzeit</dt>
+                  <dd className="mt-1 font-display text-2xl font-semibold">14 Tage</dd>
                 </div>
               </dl>
             </div>
@@ -239,10 +218,9 @@ const Produzent = () => {
         <section className="border-b border-border bg-secondary/50">
           <div className="container flex flex-col items-start gap-3 py-6 md:flex-row md:items-center md:justify-between">
             <p className="text-sm text-secondary-foreground">
-              <strong className="font-semibold">Wir konzentrieren uns bewusst auf Edelmetalle.</strong>{" "}
-              Papier, Kunststoff und Mischschrott gehören nicht zu unserem
-              Kreislauf – das hält die Rückgewinnungsquote hoch und Ihre
-              Materialkosten niedrig.
+              <strong className="font-semibold">Wir konzentrieren uns bewusst auf Edelmetalle.</strong> Papier,
+              Kunststoff und Mischschrott gehören nicht zu unserem Kreislauf – das hält die Rückgewinnungsquote hoch und
+              Ihre Materialkosten niedrig.
             </p>
             <Link
               to="/angebote"
@@ -256,15 +234,12 @@ const Produzent = () => {
         {/* Loop */}
         <section id="kreislauf" className="container py-20">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
-              Materialfluss
-            </p>
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Materialfluss</p>
             <h2 className="mt-3 font-display text-3xl font-semibold md:text-4xl">
               Vier Stationen. Ein geschlossener Kreislauf.
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Ihre Leiterplatten verlassen den Betrieb nie wirklich – sie
-              kommen als Reinmetall zurück.
+              Ihre Leiterplatten verlassen den Betrieb nie wirklich – sie kommen als Reinmetall zurück.
             </p>
           </div>
 
@@ -275,17 +250,11 @@ const Produzent = () => {
                 className="relative rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-display text-xs font-semibold text-muted-foreground">
-                    0{i + 1}
-                  </span>
+                  <span className="font-display text-xs font-semibold text-muted-foreground">0{i + 1}</span>
                   <step.icon className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mt-4 font-display text-lg font-semibold">
-                  {step.title}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {step.text}
-                </p>
+                <h3 className="mt-4 font-display text-lg font-semibold">{step.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{step.text}</p>
               </li>
             ))}
           </ol>
@@ -296,16 +265,13 @@ const Produzent = () => {
           <div className="container">
             <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
               <div className="max-w-xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
-                  Rückgewonnene Metalle
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Rückgewonnene Metalle</p>
                 <h2 className="mt-3 font-display text-3xl font-semibold md:text-4xl">
                   Nur Edelmetalle. Direkt in OEM-Qualität.
                 </h2>
               </div>
               <p className="max-w-md text-sm text-muted-foreground">
-                Typische Ausbeuten pro Tonne bestückter Leiterplatten —
-                abhängig von Baugruppe und Bestückungs­dichte.
+                Typische Ausbeuten pro Tonne bestückter Leiterplatten — abhängig von Baugruppe und Bestückungs­dichte.
               </p>
             </div>
 
@@ -315,23 +281,13 @@ const Produzent = () => {
                   key={m.symbol}
                   className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-transform duration-500 hover:-translate-y-1 hover:shadow-[var(--shadow-elegant)]"
                 >
-                  <div
-                    className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${m.color}`}
-                  />
+                  <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${m.color}`} />
                   <div className="flex items-baseline justify-between">
-                    <span className="font-display text-3xl font-semibold">
-                      {m.symbol}
-                    </span>
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground">
-                      {m.name}
-                    </span>
+                    <span className="font-display text-3xl font-semibold">{m.symbol}</span>
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground">{m.name}</span>
                   </div>
-                  <p className="mt-6 text-sm font-semibold text-foreground">
-                    {m.yield}
-                  </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {m.use}
-                  </p>
+                  <p className="mt-6 text-sm font-semibold text-foreground">{m.yield}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{m.use}</p>
                 </div>
               ))}
             </div>
@@ -346,9 +302,7 @@ const Produzent = () => {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <b.icon className="h-6 w-6" />
                 </div>
-                <h3 className="mt-5 font-display text-xl font-semibold">
-                  {b.title}
-                </h3>
+                <h3 className="mt-5 font-display text-xl font-semibold">{b.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{b.text}</p>
               </div>
             ))}
@@ -359,16 +313,13 @@ const Produzent = () => {
         <section id="anfrage" className="border-t border-border bg-secondary/40 py-20">
           <div className="container grid gap-12 md:grid-cols-[1fr_1.1fr]">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
-                Closed-Loop-Vereinbarung
-              </p>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">Closed-Loop-Vereinbarung</p>
               <h2 className="mt-3 font-display text-3xl font-semibold md:text-4xl">
                 Ihre Leiterplatten. Ihre Edelmetalle. Zurück an Sie.
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Senden Sie uns ein typisches Mengen- und Baugruppenprofil. Wir
-                erstellen ein individuelles Konzept inkl. Logistik, Refining-
-                Konditionen und Rücklieferung als Barren oder Halbzeug.
+                Senden Sie uns ein typisches Mengen- und Baugruppenprofil. Wir erstellen ein individuelles Konzept inkl.
+                Logistik, Refining- Konditionen und Rücklieferung als Barren oder Halbzeug.
               </p>
               <ul className="mt-6 space-y-3 text-sm">
                 {[
@@ -396,9 +347,7 @@ const Produzent = () => {
                     id="company"
                     required
                     value={form.company}
-                    onChange={(e) =>
-                      setForm({ ...form, company: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, company: e.target.value })}
                     placeholder="OEM GmbH"
                   />
                 </div>
@@ -408,9 +357,7 @@ const Produzent = () => {
                     id="contact"
                     required
                     value={form.contact}
-                    onChange={(e) =>
-                      setForm({ ...form, contact: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, contact: e.target.value })}
                   />
                 </div>
                 <div>
@@ -420,22 +367,16 @@ const Produzent = () => {
                     type="email"
                     required
                     value={form.email}
-                    onChange={(e) =>
-                      setForm({ ...form, email: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <Label htmlFor="volume">
-                    Geschätztes Jahresvolumen Leiterplatten
-                  </Label>
+                  <Label htmlFor="volume">Geschätztes Jahresvolumen Leiterplatten</Label>
                   <Input
                     id="volume"
                     placeholder="z. B. 12 t / Jahr"
                     value={form.volume}
-                    onChange={(e) =>
-                      setForm({ ...form, volume: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, volume: e.target.value })}
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -445,9 +386,7 @@ const Produzent = () => {
                     rows={4}
                     placeholder="Industrie-Steuerungen, Telekom-Module, …"
                     value={form.notes}
-                    onChange={(e) =>
-                      setForm({ ...form, notes: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, notes: e.target.value })}
                   />
                 </div>
               </div>
