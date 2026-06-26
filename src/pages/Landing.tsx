@@ -68,19 +68,19 @@ const Landing = () => {
         <div className="absolute inset-0 bg-[hsl(152_55%_14%)]/45 mix-blend-multiply transition-colors duration-1000" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
         <div className="relative z-10 mt-auto flex w-full flex-col items-start gap-4 p-8 text-background md:p-14">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:tracking-[0.35em]">
             Produzent
           </span>
-          <h2 className="font-display text-3xl font-semibold leading-tight md:text-5xl">
+          <h2 className="font-display text-3xl font-semibold leading-tight transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-5xl">
             Schließen Sie
             <br />
             den Kreislauf.
           </h2>
-          <p className="max-w-md text-sm text-background/85 md:text-base">
+          <p className="max-w-md text-sm text-background/85 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-base">
             Partnerschaft, Beratung und die Garantie, dass Ihre Materialien
             wieder zu Ihnen zurückfinden.
           </p>
-          <span className="mt-2 inline-flex h-12 items-center gap-2 rounded-full bg-background px-6 font-medium text-foreground shadow-elegant transition-transform group-hover:translate-x-1">
+          <span className="mt-2 inline-flex h-12 items-center gap-2 rounded-full bg-background px-6 font-medium text-foreground shadow-elegant transition-all duration-500 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-2">
             Erstgespräch vereinbaren
             <ArrowRight className="h-4 w-4" />
           </span>
@@ -105,15 +105,15 @@ const Landing = () => {
         <div className="absolute inset-0 bg-[hsl(28_45%_14%)]/40 mix-blend-multiply transition-colors duration-1000" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
         <div className="relative z-10 mt-auto flex w-full flex-col items-start gap-4 p-8 text-background md:p-14">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:tracking-[0.35em]">
             Kunde
           </span>
-          <h2 className="font-display text-3xl font-semibold leading-tight md:text-5xl">
+          <h2 className="font-display text-3xl font-semibold leading-tight transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-5xl">
             Gerät zurückgeben.
             <br />
             Einfach.
           </h2>
-          <p className="max-w-md text-sm text-background/85 md:text-base">
+          <p className="max-w-md text-sm text-background/85 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-base">
             Seriennummer oder QR-Code — wir erledigen den Rest.
           </p>
           <form
