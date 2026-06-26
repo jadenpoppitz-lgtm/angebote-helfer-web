@@ -11,9 +11,17 @@ const Landing = () => {
   const navigate = useNavigate();
 
   const produzentFlex =
-    hover === "produzent" ? "flex-[1.6]" : hover === "kunde" ? "flex-[0.4]" : "flex-1";
+    hover === "produzent"
+      ? "flex-[1.7]"
+      : hover === "kunde"
+        ? "flex-[0.3]"
+        : "flex-1";
   const kundeFlex =
-    hover === "kunde" ? "flex-[1.6]" : hover === "produzent" ? "flex-[0.4]" : "flex-1";
+    hover === "kunde"
+      ? "flex-[1.7]"
+      : hover === "produzent"
+        ? "flex-[0.3]"
+        : "flex-1";
 
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-hidden bg-foreground md:flex-row">
@@ -49,12 +57,12 @@ const Landing = () => {
         to="/angebote?role=produzent"
         onMouseEnter={() => setHover("produzent")}
         onMouseLeave={() => setHover(null)}
-        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1400ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[flex] md:min-h-screen ${produzentFlex}`}
+        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1600ms] ease-[cubic-bezier(0.45,0.05,0.55,0.95)] will-change-[flex] motion-reduce:transition-none md:min-h-screen ${produzentFlex}`}
       >
         <img
           src="https://images.unsplash.com/photo-1700727448686-b314cb5f9948?w=1400&h=1600&fit=crop&auto=format"
           alt="Produktionshalle — Herstellung elektronischer Geräte"
-          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[1800ms] ease-out group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[2200ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] will-change-transform motion-reduce:transition-none group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-foreground/55 transition-colors duration-1000" />
         <div className="absolute inset-0 bg-[hsl(152_55%_14%)]/45 mix-blend-multiply transition-colors duration-1000" />
