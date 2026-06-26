@@ -11,9 +11,17 @@ const Landing = () => {
   const navigate = useNavigate();
 
   const produzentFlex =
-    hover === "produzent" ? "flex-[1.6]" : hover === "kunde" ? "flex-[0.4]" : "flex-1";
+    hover === "produzent"
+      ? "flex-[1.7]"
+      : hover === "kunde"
+        ? "flex-[0.3]"
+        : "flex-1";
   const kundeFlex =
-    hover === "kunde" ? "flex-[1.6]" : hover === "produzent" ? "flex-[0.4]" : "flex-1";
+    hover === "kunde"
+      ? "flex-[1.7]"
+      : hover === "produzent"
+        ? "flex-[0.3]"
+        : "flex-1";
 
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-hidden bg-foreground md:flex-row">
@@ -49,30 +57,30 @@ const Landing = () => {
         to="/angebote?role=produzent"
         onMouseEnter={() => setHover("produzent")}
         onMouseLeave={() => setHover(null)}
-        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1400ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[flex] md:min-h-screen ${produzentFlex}`}
+        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1600ms] ease-[cubic-bezier(0.45,0.05,0.55,0.95)] will-change-[flex] motion-reduce:transition-none md:min-h-screen ${produzentFlex}`}
       >
         <img
           src="https://images.unsplash.com/photo-1700727448686-b314cb5f9948?w=1400&h=1600&fit=crop&auto=format"
           alt="Produktionshalle — Herstellung elektronischer Geräte"
-          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[1800ms] ease-out group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[2200ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] will-change-transform motion-reduce:transition-none group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-foreground/55 transition-colors duration-1000" />
         <div className="absolute inset-0 bg-[hsl(152_55%_14%)]/45 mix-blend-multiply transition-colors duration-1000" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
         <div className="relative z-10 mt-auto flex w-full flex-col items-start gap-4 p-8 text-background md:p-14">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:tracking-[0.35em]">
             Produzent
           </span>
-          <h2 className="font-display text-3xl font-semibold leading-tight md:text-5xl">
+          <h2 className="font-display text-3xl font-semibold leading-tight transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-5xl">
             Schließen Sie
             <br />
             den Kreislauf.
           </h2>
-          <p className="max-w-md text-sm text-background/85 md:text-base">
+          <p className="max-w-md text-sm text-background/85 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-base">
             Partnerschaft, Beratung und die Garantie, dass Ihre Materialien
             wieder zu Ihnen zurückfinden.
           </p>
-          <span className="mt-2 inline-flex h-12 items-center gap-2 rounded-full bg-background px-6 font-medium text-foreground shadow-elegant transition-transform group-hover:translate-x-1">
+          <span className="mt-2 inline-flex h-12 items-center gap-2 rounded-full bg-background px-6 font-medium text-foreground shadow-elegant transition-all duration-500 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-2">
             Erstgespräch vereinbaren
             <ArrowRight className="h-4 w-4" />
           </span>
@@ -86,26 +94,26 @@ const Landing = () => {
       <div
         onMouseEnter={() => setHover("kunde")}
         onMouseLeave={() => setHover(null)}
-        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1400ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[flex] md:min-h-screen ${kundeFlex}`}
+        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[1600ms] ease-[cubic-bezier(0.45,0.05,0.55,0.95)] will-change-[flex] motion-reduce:transition-none md:min-h-screen ${kundeFlex}`}
       >
         <img
           src="https://images.unsplash.com/photo-1590635023142-73c3d34f2805?w=1400&h=1600&fit=crop&auto=format"
           alt="Kunde hält einen Akku-Bohrschrauber — Gerät zurückgeben"
-          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[1800ms] ease-out group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[2200ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] will-change-transform motion-reduce:transition-none group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-foreground/55 transition-colors duration-1000" />
         <div className="absolute inset-0 bg-[hsl(28_45%_14%)]/40 mix-blend-multiply transition-colors duration-1000" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
         <div className="relative z-10 mt-auto flex w-full flex-col items-start gap-4 p-8 text-background md:p-14">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:tracking-[0.35em]">
             Kunde
           </span>
-          <h2 className="font-display text-3xl font-semibold leading-tight md:text-5xl">
+          <h2 className="font-display text-3xl font-semibold leading-tight transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-5xl">
             Gerät zurückgeben.
             <br />
             Einfach.
           </h2>
-          <p className="max-w-md text-sm text-background/85 md:text-base">
+          <p className="max-w-md text-sm text-background/85 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-base">
             Seriennummer oder QR-Code — wir erledigen den Rest.
           </p>
           <form
