@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { languages, useLanguage } from "@/lib/i18n";
-import { Recycle, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -22,8 +22,8 @@ export function Header({ onRequest }: HeaderProps) {
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-hero text-primary-foreground shadow-card">
-            <Recycle className="h-5 w-5" />
+          <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-background shadow-card ring-1 ring-border">
+            <img src="/logo.png" alt="Kernbeisser Logo" className="h-full w-full object-cover" />
           </span>
           <span className="font-display text-lg font-semibold tracking-tight">
             Kern<span className="text-primary">beißer</span>

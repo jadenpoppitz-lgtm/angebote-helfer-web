@@ -1,5 +1,5 @@
 import { useLanguage } from "@/lib/i18n";
-import { Recycle, Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 
 export function Footer() {
   const { t } = useLanguage();
@@ -9,8 +9,8 @@ export function Footer() {
       <div className="container grid gap-10 py-14 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-hero text-primary-foreground">
-              <Recycle className="h-5 w-5" />
+            <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-background ring-1 ring-border">
+              <img src="/logo.png" alt="Kernbeisser Logo" className="h-full w-full object-cover" />
             </span>
             <span className="font-display text-lg font-semibold">
               Recycling<span className="text-primary">Angebote</span>
