@@ -1,9 +1,182 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowLeft, MapPin, QrCode, Search, Leaf, Clock, CheckCircle2, Cloud, Award, Tag } from "lucide-react";
+import {
+  ArrowLeft,
+  Award,
+  CheckCircle2,
+  Clock,
+  Cloud,
+  Leaf,
+  MapPin,
+  QrCode,
+  Search,
+  Tag,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { SERIAL_DB, DEMO_SERIAL, type SerialLookup } from "@/data/partners";
+import { languages, useLanguage, type Language } from "@/lib/i18n";
+import { SERIAL_DB, DEMO_SERIAL, type Partner, type SerialLookup } from "@/data/partners";
+
+const pageText = {
+  de: {
+    back: "Zurück",
+    eyebrow: "Rückgabe",
+    title: "Seriennummer prüfen",
+    intro:
+      "Scannen Sie den QR-Code auf Ihrer Leiterplatte oder Baugruppe oder geben Sie die Seriennummer ein. Wir zeigen Ihnen Rückgabestellen in Ihrer Stadt.",
+    placeholder: "z. B. KB-DD-0001",
+    submit: "Prüfen",
+    demo: (serial: string) => `Test-Seriennummer verwenden (${serial})`,
+    benefits: [
+      {
+        icon: Cloud,
+        title: "CO₂ senken",
+        text: "Jede zurückgegebene Baugruppe spart Primärgewinnung - Ihr persönlicher Beitrag wird dokumentiert.",
+      },
+      {
+        icon: Award,
+        title: "Zertifikate",
+        text: "Sie erhalten ein digitales Rückgabezertifikat als Nachweis für Ihre Nachhaltigkeitsbilanz.",
+      },
+      {
+        icon: Tag,
+        title: "Rabattaktionen",
+        text: "Künftig profitieren Sie bei Partner-Herstellern von Vergünstigungen auf Folgeprodukte.",
+      },
+    ],
+    notFoundTitle: "Seriennummer nicht erkannt",
+    notFoundText: "Bitte prüfen Sie Ihre Eingabe oder verwenden Sie die Test-Seriennummer.",
+    recognized: "Erkannt",
+    zip: "PLZ",
+    returnPoints: (city: string) => `Rückgabestellen in ${city}`,
+    partnerCount: (count: number) =>
+      `${count} Partner in Ihrer Nähe nehmen Baugruppen und Leiterplatten an und leiten sie sortenrein an unsere Recyclinganlagen weiter.`,
+    away: "entfernt",
+    nextTitle: "So geht es weiter",
+    process: [
+      "Baugruppe bei einem Partner abgeben - kostenfrei, ohne Termin.",
+      "Partner sortiert Leiterplatten und übergibt sie sortenrein an die Recyclinganlage.",
+      "Edelmetalle fließen über uns zurück an den ursprünglichen Hersteller.",
+    ],
+    prototype: "Prototyp",
+  },
+  en: {
+    back: "Back",
+    eyebrow: "Return",
+    title: "Check serial number",
+    intro:
+      "Scan the QR code on your circuit board or assembly, or enter the serial number. We will show return points in your city.",
+    placeholder: "e.g. KB-DD-0001",
+    submit: "Check",
+    demo: (serial: string) => `Use demo serial number (${serial})`,
+    benefits: [
+      {
+        icon: Cloud,
+        title: "Reduce CO₂",
+        text: "Every returned assembly avoids primary extraction - your personal contribution is documented.",
+      },
+      {
+        icon: Award,
+        title: "Certificates",
+        text: "You receive a digital return certificate as proof for your sustainability balance.",
+      },
+      {
+        icon: Tag,
+        title: "Partner discounts",
+        text: "In future, partner manufacturers can offer discounts on follow-up products.",
+      },
+    ],
+    notFoundTitle: "Serial number not recognized",
+    notFoundText: "Please check your entry or use the demo serial number.",
+    recognized: "Recognized",
+    zip: "ZIP",
+    returnPoints: (city: string) => `Return points in ${city}`,
+    partnerCount: (count: number) =>
+      `${count} nearby partners accept assemblies and circuit boards and forward them sorted by material to our recycling plants.`,
+    away: "away",
+    nextTitle: "What happens next",
+    process: [
+      "Drop off the assembly with a partner - free of charge, no appointment needed.",
+      "The partner sorts circuit boards and transfers them cleanly to the recycling plant.",
+      "Precious metals flow back through us to the original manufacturer.",
+    ],
+    prototype: "Prototype",
+  },
+  zh: {
+    back: "返回",
+    eyebrow: "退回",
+    title: "检查序列号",
+    intro: "扫描电路板或组件上的二维码，或输入序列号。我们会显示您所在城市的退回网点。",
+    placeholder: "例如 KB-DD-0001",
+    submit: "检查",
+    demo: (serial: string) => `使用测试序列号（${serial}）`,
+    benefits: [
+      {
+        icon: Cloud,
+        title: "减少二氧化碳",
+        text: "每个退回的组件都能减少原生资源开采，并记录您的个人贡献。",
+      },
+      {
+        icon: Award,
+        title: "证书",
+        text: "您会获得数字退回证书，用于证明可持续发展贡献。",
+      },
+      {
+        icon: Tag,
+        title: "合作优惠",
+        text: "未来您可在合作制造商处享受后续产品优惠。",
+      },
+    ],
+    notFoundTitle: "未识别序列号",
+    notFoundText: "请检查输入，或使用测试序列号。",
+    recognized: "已识别",
+    zip: "邮编",
+    returnPoints: (city: string) => `${city} 的退回网点`,
+    partnerCount: (count: number) => `${count} 个附近合作伙伴接收组件和电路板，并分类送往我们的回收设施。`,
+    away: "距离",
+    nextTitle: "接下来如何处理",
+    process: [
+      "将组件交给合作伙伴 - 免费，无需预约。",
+      "合作伙伴对电路板进行分类，并送至回收设施。",
+      "贵金属通过我们回流给原始制造商。",
+    ],
+    prototype: "原型",
+  },
+} as const;
+
+const partnerTypeLabels: Record<Language, Record<Partner["type"], string>> = {
+  de: {
+    Sammelstelle: "Sammelstelle",
+    Fachhändler: "Fachhändler",
+    Servicepartner: "Servicepartner",
+  },
+  en: {
+    Sammelstelle: "Collection point",
+    Fachhändler: "Specialist retailer",
+    Servicepartner: "Service partner",
+  },
+  zh: {
+    Sammelstelle: "收集点",
+    Fachhändler: "专业经销商",
+    Servicepartner: "服务伙伴",
+  },
+};
+
+function deviceLabel(result: SerialLookup, language: Language) {
+  if (language === "en") {
+    return result.device
+      .replace("Steuerungsmodul · Leiterplatte Rev. C", "Control module · circuit board Rev. C")
+      .replace("Leiterplatte · Sensorboard", "Circuit board · sensor board")
+      .replace("Hauptplatine · Industriesteuerung", "Mainboard · industrial controller");
+  }
+  if (language === "zh") {
+    return result.device
+      .replace("Steuerungsmodul · Leiterplatte Rev. C", "控制模块 · 电路板 Rev. C")
+      .replace("Leiterplatte · Sensorboard", "电路板 · 传感器板")
+      .replace("Hauptplatine · Industriesteuerung", "主板 · 工业控制器");
+  }
+  return result.device;
+}
 
 const Index = () => {
   const [params, setParams] = useSearchParams();
@@ -11,6 +184,8 @@ const Index = () => {
   const [input, setInput] = useState(initial);
   const [result, setResult] = useState<SerialLookup | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const { language, setLanguage, cityLabel } = useLanguage();
+  const copy = pageText[language];
 
   const lookup = (raw: string) => {
     const key = raw.trim().toUpperCase();
@@ -30,8 +205,8 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     lookup(input);
   };
 
@@ -42,9 +217,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border/60">
-        <div className="container flex h-16 items-center justify-between">
+        <div className="container flex h-16 items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2">
             <span className="flex h-8 w-8 items-center justify-center rounded-md bg-foreground text-background">
               <Leaf className="h-4 w-4" />
@@ -53,50 +227,59 @@ const Index = () => {
               Kernbeißer
             </span>
           </Link>
-          <Link
-            to="/"
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Zurück
-          </Link>
+          <div className="flex items-center gap-3">
+            <div className="hidden rounded-md border border-border bg-muted/40 p-1 sm:flex">
+              {languages.map((item) => (
+                <button
+                  key={item.code}
+                  type="button"
+                  onClick={() => setLanguage(item.code)}
+                  className={`h-8 rounded px-2 text-xs font-medium ${
+                    language === item.code ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+                  }`}
+                >
+                  {item.short}
+                </button>
+              ))}
+            </div>
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {copy.back}
+            </Link>
+          </div>
         </div>
       </header>
 
       <main className="container max-w-3xl py-16 md:py-24">
-        {/* Intro */}
         <div className="text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-            Rückgabe
+            {copy.eyebrow}
           </p>
           <h1 className="mt-3 font-display text-3xl font-semibold md:text-5xl">
-            Seriennummer prüfen
+            {copy.title}
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground md:text-base">
-            Scannen Sie den QR-Code auf Ihrer Leiterplatte oder Baugruppe oder
-            geben Sie die Seriennummer ein. Wir zeigen Ihnen Rückgabestellen in
-            Ihrer Stadt.
+            {copy.intro}
           </p>
         </div>
 
-        {/* Input */}
-        <form
-          onSubmit={onSubmit}
-          className="mx-auto mt-10 flex max-w-xl flex-col gap-3 sm:flex-row"
-        >
+        <form onSubmit={onSubmit} className="mx-auto mt-10 flex max-w-xl flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
             <QrCode className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               className="h-12 pl-10 text-base tracking-wider"
-              placeholder="z. B. KB-DD-0001"
+              placeholder={copy.placeholder}
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(event) => setInput(event.target.value)}
               autoFocus
             />
           </div>
           <Button type="submit" size="lg" className="h-12 px-6">
             <Search className="mr-2 h-4 w-4" />
-            Prüfen
+            {copy.submit}
           </Button>
         </form>
         <div className="mx-auto mt-3 max-w-xl text-center">
@@ -104,159 +287,100 @@ const Index = () => {
             onClick={useDemo}
             className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
-            Test-Seriennummer verwenden ({DEMO_SERIAL})
+            {copy.demo(DEMO_SERIAL)}
           </button>
         </div>
 
-        {/* Customer benefits */}
         <section className="mx-auto mt-14 grid max-w-3xl gap-4 sm:grid-cols-3">
-          {[
-            {
-              icon: Cloud,
-              title: "CO₂ senken",
-              text: "Jede zurück­gegebene Baugruppe spart Primär­gewinnung – Ihr persönlicher Beitrag wird dokumentiert.",
-            },
-            {
-              icon: Award,
-              title: "Zertifikate",
-              text: "Sie erhalten ein digitales Rückgabe­zertifikat als Nachweis für Ihre Nachhaltigkeits­bilanz.",
-            },
-            {
-              icon: Tag,
-              title: "Rabatt­aktionen",
-              text: "Künftig profitieren Sie bei Partner-Herstellern von Vergünstigungen auf Folge­produkte.",
-            },
-          ].map((b) => (
-            <div
-              key={b.title}
-              className="rounded-xl border border-border bg-card p-5"
-            >
+          {copy.benefits.map((benefit) => (
+            <div key={benefit.title} className="rounded-xl border border-border bg-card p-5">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <b.icon className="h-4 w-4" />
+                <benefit.icon className="h-4 w-4" />
               </div>
-              <p className="mt-3 font-display text-sm font-semibold">{b.title}</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{b.text}</p>
+              <p className="mt-3 font-display text-sm font-semibold">{benefit.title}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{benefit.text}</p>
             </div>
           ))}
         </section>
 
-        {/* Not found */}
         {notFound && (
           <div className="mx-auto mt-10 max-w-xl rounded-lg border border-border bg-card p-6 text-center">
-            <p className="font-medium">Seriennummer nicht erkannt</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Bitte prüfen Sie Ihre Eingabe oder verwenden Sie die
-              Test-Seriennummer.
-            </p>
+            <p className="font-medium">{copy.notFoundTitle}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{copy.notFoundText}</p>
           </div>
         )}
 
-        {/* Result */}
         {result && (
           <section className="mt-14">
-            {/* Device card */}
             <div className="rounded-xl border border-border bg-card p-6">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
                     <CheckCircle2 className="h-3.5 w-3.5" />
-                    Erkannt
+                    {copy.recognized}
                   </div>
-                  <p className="mt-2 font-display text-xl font-semibold">
-                    {result.device}
-                  </p>
-                  <p className="mt-1 font-mono text-xs text-muted-foreground">
-                    {result.serial}
-                  </p>
+                  <p className="mt-2 font-display text-xl font-semibold">{deviceLabel(result, language)}</p>
+                  <p className="mt-1 font-mono text-xs text-muted-foreground">{result.serial}</p>
                 </div>
                 <div className="text-right">
                   <div className="inline-flex items-center gap-1.5 text-sm font-medium">
                     <MapPin className="h-4 w-4 text-primary" />
-                    {result.city}
+                    {cityLabel(result.city)}
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    PLZ {result.postalCode}
+                    {copy.zip} {result.postalCode}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Partners */}
             <div className="mt-10">
               <h2 className="font-display text-xl font-semibold">
-                Rückgabestellen in {result.city}
+                {copy.returnPoints(cityLabel(result.city))}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                {result.partners.length} Partner in Ihrer Nähe nehmen
-                Baugruppen &amp; Leiterplatten an und leiten sie sortenrein an
-                unsere Recyclinganlagen weiter.
+                {copy.partnerCount(result.partners.length)}
               </p>
 
               <ul className="mt-6 divide-y divide-border rounded-xl border border-border bg-card">
-                {result.partners.map((p) => (
+                {result.partners.map((partner) => (
                   <li
-                    key={p.id}
+                    key={partner.id}
                     className="flex flex-col gap-2 p-5 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">{p.name}</span>
+                        <span className="font-medium">{partner.name}</span>
                         <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                          {p.type}
+                          {partnerTypeLabels[language][partner.type]}
                         </span>
                       </div>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {p.street}
-                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground">{partner.street}</p>
                       <p className="mt-0.5 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
-                        {p.hours}
+                        {partner.hours}
                       </p>
                     </div>
                     <div className="text-sm text-muted-foreground sm:text-right">
-                      <span className="font-medium text-foreground">
-                        {p.distanceKm.toFixed(1)} km
-                      </span>{" "}
-                      entfernt
+                      <span className="font-medium text-foreground">{partner.distanceKm.toFixed(1)} km</span>{" "}
+                      {copy.away}
                     </div>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Process */}
             <div className="mt-12 rounded-xl border border-border bg-muted/30 p-6">
-              <h3 className="font-display text-base font-semibold">
-                So geht es weiter
-              </h3>
+              <h3 className="font-display text-base font-semibold">{copy.nextTitle}</h3>
               <ol className="mt-4 grid gap-4 text-sm sm:grid-cols-3">
-                <li className="flex gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-foreground text-xs font-semibold text-background">
-                    1
-                  </span>
-                  <span className="text-muted-foreground">
-                    Baugruppe bei einem Partner abgeben — kostenfrei, ohne
-                    Termin.
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-foreground text-xs font-semibold text-background">
-                    2
-                  </span>
-                  <span className="text-muted-foreground">
-                    Partner sortiert Leiterplatten und übergibt sie sortenrein
-                    an die Recyclinganlage.
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-foreground text-xs font-semibold text-background">
-                    3
-                  </span>
-                  <span className="text-muted-foreground">
-                    Edelmetalle fließen über uns zurück an den ursprünglichen
-                    Hersteller.
-                  </span>
-                </li>
+                {copy.process.map((step, index) => (
+                  <li key={step} className="flex gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-foreground text-xs font-semibold text-background">
+                      {index + 1}
+                    </span>
+                    <span className="text-muted-foreground">{step}</span>
+                  </li>
+                ))}
               </ol>
             </div>
           </section>
@@ -265,7 +389,7 @@ const Index = () => {
 
       <footer className="border-t border-border/60 py-8">
         <div className="container text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Kernbeißer · Prototyp
+          © {new Date().getFullYear()} Kernbeißer · {copy.prototype}
         </div>
       </footer>
     </div>

@@ -1,5 +1,5 @@
 import { useLanguage } from "@/lib/i18n";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 export function Footer() {
   const { t } = useLanguage();
@@ -28,7 +28,7 @@ export function Footer() {
               <Phone className="h-4 w-4" /> +49 30 1234 5678
             </li>
             <li className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" /> Berlin, Deutschland
+              <MapPin className="h-4 w-4" /> {t.berlinGermany}
             </li>
           </ul>
         </div>

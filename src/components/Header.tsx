@@ -12,10 +12,10 @@ export function Header({ onRequest }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const nav = [
-    { href: "#kreislauf", label: "Kreislauf" },
-    { href: "#metalle", label: "Metalle" },
-    { href: "#vorteile", label: "Vorteile" },
-    { href: "#anfrage", label: "Anfrage" },
+    { href: "#kreislauf", label: t.producerNavLoop },
+    { href: "#metalle", label: t.producerNavMetals },
+    { href: "#vorteile", label: t.producerNavBenefits },
+    { href: "#anfrage", label: t.producerNavRequest },
   ];
 
   return (
@@ -43,7 +43,7 @@ export function Header({ onRequest }: HeaderProps) {
             to="/angebote"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            Für Kunden
+            {t.customerLink}
           </Link>
         </nav>
         <div className="hidden items-center gap-3 md:flex">
@@ -65,7 +65,7 @@ export function Header({ onRequest }: HeaderProps) {
             ))}
           </div>
           <Button asChild size="lg" className="shadow-card" onClick={onRequest}>
-            <a href="#anfrage">Closed-Loop anfragen</a>
+            <a href="#anfrage">{t.closedLoopRequest}</a>
           </Button>
         </div>
         <button
@@ -94,7 +94,7 @@ export function Header({ onRequest }: HeaderProps) {
               onClick={() => setOpen(false)}
               className="text-sm font-medium text-muted-foreground"
             >
-              Für Kunden
+              {t.customerLink}
             </Link>
             <div className="flex rounded-md border border-border bg-muted/40 p-1">
               {languages.map((item) => (
@@ -114,7 +114,7 @@ export function Header({ onRequest }: HeaderProps) {
             </div>
             <Button asChild className="mt-2" onClick={onRequest}>
               <a href="#anfrage" onClick={() => setOpen(false)}>
-                Closed-Loop anfragen
+                {t.closedLoopRequest}
               </a>
             </Button>
           </div>
