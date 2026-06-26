@@ -19,6 +19,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MATERIALS, type Material, type Offer } from "@/data/offers";
+import { createRequest } from "@/lib/api";
+import { useLanguage } from "@/lib/i18n";
 import { toast } from "sonner";
 import { CheckCircle2, Upload } from "lucide-react";
 
@@ -29,6 +31,7 @@ interface Props {
 }
 
 export function RequestDialog({ open, onOpenChange, offer }: Props) {
+  const { t, materialLabel, modeLabel } = useLanguage();
   const [step, setStep] = useState(1);
   const [material, setMaterial] = useState<Material>("Metall");
   const [quantity, setQuantity] = useState("");
@@ -39,6 +42,7 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -53,11 +57,33 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
   const canNext1 = quantity && plz.length >= 4;
   const canSubmit = name && /.+@.+\..+/.test(email);
 
-  const submit = () => {
-    toast.success("Anfrage gesendet", {
-      description: `Wir melden uns innerhalb von 24 Stunden bei ${name}.`,
-    });
-    onOpenChange(false);
+  const submit = async () => {
+    setIsSubmitting(true);
+    try {
+      const result = await createRequest({
+        offerId: offer?.id,
+        material,
+        quantity,
+        plz,
+        city,
+        pickup,
+        name,
+        email,
+        phone,
+        notes,
+      });
+
+      toast.success(t.requestSent, {
+        description: t.referenceMessage(result.request.id, name),
+      });
+      onOpenChange(false);
+    } catch (error) {
+      toast.error(t.requestFailed, {
+        description: error instanceof Error ? error.message : t.retry,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -65,19 +91,17 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">
-            {offer ? `Anfrage an ${offer.provider}` : "Angebot anfragen"}
+            {offer ? `${t.sendRequest}: ${offer.provider}` : t.requestOffer}
           </DialogTitle>
-          <DialogDescription>
-            Schritt {step} von 2 · Unverbindlich und kostenfrei
-          </DialogDescription>
+          <DialogDescription>{t.dialogStep(step)}</DialogDescription>
         </DialogHeader>
 
         <div className="mt-2 flex gap-1.5">
-          {[1, 2].map((s) => (
+          {[1, 2].map((item) => (
             <div
-              key={s}
+              key={item}
               className={`h-1.5 flex-1 rounded-full ${
-                s <= step ? "bg-primary" : "bg-muted"
+                item <= step ? "bg-primary" : "bg-muted"
               }`}
             />
           ))}
@@ -86,18 +110,15 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
         {step === 1 && (
           <div className="grid gap-4 py-2">
             <div>
-              <Label>Material</Label>
-              <Select
-                value={material}
-                onValueChange={(v) => setMaterial(v as Material)}
-              >
+              <Label>{t.navMaterials}</Label>
+              <Select value={material} onValueChange={(value) => setMaterial(value as Material)}>
                 <SelectTrigger className="mt-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {MATERIALS.map((m) => (
-                    <SelectItem key={m} value={m}>
-                      {m}
+                  {MATERIALS.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {materialLabel(item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -105,58 +126,56 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Menge (geschätzt)</Label>
+                <Label>{t.quantity}</Label>
                 <Input
                   className="mt-1"
-                  placeholder="z. B. 500 kg"
+                  placeholder={t.quantityPlaceholder}
                   value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
+                  onChange={(event) => setQuantity(event.target.value)}
                 />
               </div>
               <div>
-                <Label>PLZ</Label>
+                <Label>{t.zip}</Label>
                 <Input
                   className="mt-1"
-                  placeholder="z. B. 10115"
+                  placeholder="10115"
                   value={plz}
                   maxLength={5}
-                  onChange={(e) =>
-                    setPlz(e.target.value.replace(/\D/g, ""))
-                  }
+                  onChange={(event) => setPlz(event.target.value.replace(/\D/g, ""))}
                 />
               </div>
             </div>
             <div>
-              <Label>Ort (optional)</Label>
+              <Label>{t.cityOptional}</Label>
               <Input
                 className="mt-1"
                 value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="Stadt"
+                onChange={(event) => setCity(event.target.value)}
+                placeholder={t.cityPlaceholder}
               />
             </div>
             <div>
-              <Label>Übergabe</Label>
+              <Label>{t.handover}</Label>
               <div className="mt-1 grid grid-cols-2 gap-2">
-                {(["Abholung", "Anlieferung"] as const).map((m) => (
+                {(["Abholung", "Anlieferung"] as const).map((mode) => (
                   <button
-                    key={m}
+                    key={mode}
                     type="button"
-                    onClick={() => setPickup(m)}
+                    onClick={() => setPickup(mode)}
                     className={`rounded-md border px-3 py-2 text-sm transition-colors ${
-                      pickup === m
+                      pickup === mode
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border bg-background hover:bg-muted"
                     }`}
                   >
-                    {m}
+                    {modeLabel(mode)}
                   </button>
                 ))}
               </div>
             </div>
             <label className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-border bg-muted/30 px-3 py-4 text-sm text-muted-foreground hover:bg-muted/50">
               <Upload className="h-4 w-4" />
-              Fotos hinzufügen (optional)
+              {t.photos}
               <input type="file" multiple className="hidden" accept="image/*" />
             </label>
           </div>
@@ -165,47 +184,46 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
         {step === 2 && (
           <div className="grid gap-4 py-2">
             <div>
-              <Label>Name</Label>
+              <Label>{t.name}</Label>
               <Input
                 className="mt-1"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Vor- und Nachname"
+                onChange={(event) => setName(event.target.value)}
+                placeholder={t.namePlaceholder}
               />
             </div>
             <div>
-              <Label>E-Mail</Label>
+              <Label>{t.email}</Label>
               <Input
                 className="mt-1"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="ihre@email.de"
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="name@example.com"
               />
             </div>
             <div>
-              <Label>Telefon (optional)</Label>
+              <Label>{t.phoneOptional}</Label>
               <Input
                 className="mt-1"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(event) => setPhone(event.target.value)}
                 placeholder="+49 ..."
               />
             </div>
             <div>
-              <Label>Notizen</Label>
+              <Label>{t.notes}</Label>
               <Textarea
                 className="mt-1"
                 rows={3}
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Besonderheiten, gewünschte Termine ..."
+                onChange={(event) => setNotes(event.target.value)}
+                placeholder={t.notesPlaceholder}
               />
             </div>
             <p className="flex items-start gap-2 rounded-md bg-success/10 p-3 text-xs text-success">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
-              Ihre Daten werden ausschließlich zur Bearbeitung der Anfrage
-              verwendet.
+              {t.privacyNote}
             </p>
           </div>
         )}
@@ -213,16 +231,16 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
         <DialogFooter className="gap-2 sm:gap-2">
           {step === 2 && (
             <Button variant="outline" onClick={() => setStep(1)}>
-              Zurück
+              {t.back}
             </Button>
           )}
           {step === 1 ? (
             <Button disabled={!canNext1} onClick={() => setStep(2)}>
-              Weiter
+              {t.next}
             </Button>
           ) : (
-            <Button disabled={!canSubmit} onClick={submit}>
-              Anfrage senden
+            <Button disabled={!canSubmit || isSubmitting} onClick={submit}>
+              {isSubmitting ? t.sending : t.sendRequest}
             </Button>
           )}
         </DialogFooter>

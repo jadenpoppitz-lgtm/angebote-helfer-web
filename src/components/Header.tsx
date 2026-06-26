@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { languages, useLanguage } from "@/lib/i18n";
 import { Recycle, Menu } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -7,15 +8,16 @@ interface HeaderProps {
   onRequest: () => void;
 }
 
-const NAV = [
-  { href: "#kreislauf", label: "Kreislauf" },
-  { href: "#metalle", label: "Metalle" },
-  { href: "#vorteile", label: "Vorteile" },
-  { href: "#anfrage", label: "Anfrage" },
-];
-
 export function Header({ onRequest }: HeaderProps) {
   const [open, setOpen] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
+  const nav = [
+    { href: "#kreislauf", label: "Kreislauf" },
+    { href: "#metalle", label: "Metalle" },
+    { href: "#vorteile", label: "Vorteile" },
+    { href: "#anfrage", label: "Anfrage" },
+  ];
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between gap-6">
@@ -28,13 +30,13 @@ export function Header({ onRequest }: HeaderProps) {
           </span>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
-          {NAV.map((n) => (
+          {nav.map((item) => (
             <a
-              key={n.href}
-              href={n.href}
+              key={item.href}
+              href={item.href}
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
-              {n.label}
+              {item.label}
             </a>
           ))}
           <Link
@@ -44,15 +46,32 @@ export function Header({ onRequest }: HeaderProps) {
             Für Kunden
           </Link>
         </nav>
-        <div className="hidden md:block">
-          <Button asChild size="lg" className="shadow-card">
+        <div className="hidden items-center gap-3 md:flex">
+          <div className="flex rounded-md border border-border bg-muted/40 p-1" aria-label={t.language}>
+            {languages.map((item) => (
+              <button
+                key={item.code}
+                type="button"
+                onClick={() => setLanguage(item.code)}
+                className={`h-8 rounded px-2 text-xs font-medium transition-colors ${
+                  language === item.code
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                title={item.label}
+              >
+                {item.short}
+              </button>
+            ))}
+          </div>
+          <Button asChild size="lg" className="shadow-card" onClick={onRequest}>
             <a href="#anfrage">Closed-Loop anfragen</a>
           </Button>
         </div>
         <button
           className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border md:hidden"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Menü"
+          onClick={() => setOpen((value) => !value)}
+          aria-label={t.menu}
         >
           <Menu className="h-5 w-5" />
         </button>
@@ -60,14 +79,14 @@ export function Header({ onRequest }: HeaderProps) {
       {open && (
         <div className="border-t border-border bg-background md:hidden">
           <div className="container flex flex-col gap-3 py-4">
-            {NAV.map((n) => (
+            {nav.map((item) => (
               <a
-                key={n.href}
-                href={n.href}
+                key={item.href}
+                href={item.href}
                 onClick={() => setOpen(false)}
                 className="text-sm font-medium text-muted-foreground"
               >
-                {n.label}
+                {item.label}
               </a>
             ))}
             <Link
@@ -77,8 +96,26 @@ export function Header({ onRequest }: HeaderProps) {
             >
               Für Kunden
             </Link>
-            <Button asChild className="mt-2">
-              <a href="#anfrage" onClick={() => setOpen(false)}>Closed-Loop anfragen</a>
+            <div className="flex rounded-md border border-border bg-muted/40 p-1">
+              {languages.map((item) => (
+                <button
+                  key={item.code}
+                  type="button"
+                  onClick={() => setLanguage(item.code)}
+                  className={`h-8 flex-1 rounded px-2 text-xs font-medium ${
+                    language === item.code
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+            <Button asChild className="mt-2" onClick={onRequest}>
+              <a href="#anfrage" onClick={() => setOpen(false)}>
+                Closed-Loop anfragen
+              </a>
             </Button>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Offer } from "@/data/offers";
+import { useLanguage } from "@/lib/i18n";
 import { MapPin, Star, Truck, PackageCheck, Clock } from "lucide-react";
 
 interface Props {
@@ -19,44 +20,37 @@ const MATERIAL_COLOR: Record<string, string> = {
 };
 
 export function OfferCard({ offer, onRequest }: Props) {
+  const { t, materialLabel, modeLabel, availabilityLabel, cityLabel, locale } = useLanguage();
   const price = offer.pricePerTon;
   const isPay = price > 0;
   const isFree = price === 0;
+
   return (
     <article className="group flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-elegant md:flex-row md:items-center">
       <div className="flex flex-1 flex-col gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge
-            className={`${MATERIAL_COLOR[offer.material]} border-0 font-medium`}
-          >
-            {offer.material}
+          <Badge className={`${MATERIAL_COLOR[offer.material]} border-0 font-medium`}>
+            {materialLabel(offer.material)}
           </Badge>
           <Badge variant="outline" className="gap-1">
-            {offer.mode === "Abholung" ? (
-              <Truck className="h-3 w-3" />
-            ) : (
-              <PackageCheck className="h-3 w-3" />
-            )}
-            {offer.mode}
+            {offer.mode === "Abholung" ? <Truck className="h-3 w-3" /> : <PackageCheck className="h-3 w-3" />}
+            {modeLabel(offer.mode)}
           </Badge>
           <Badge variant="outline" className="gap-1">
             <Clock className="h-3 w-3" />
-            {offer.availability}
+            {availabilityLabel(offer.availability)}
           </Badge>
         </div>
         <div>
-          <h3 className="font-display text-xl font-semibold leading-tight">
-            {offer.provider}
-          </h3>
+          <h3 className="font-display text-xl font-semibold leading-tight">{offer.provider}</h3>
           <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1">
               <MapPin className="h-3.5 w-3.5" />
-              {offer.city} · PLZ {offer.plzPrefix}xxx
+              {cityLabel(offer.city)} · {t.zip} {offer.plzPrefix}xxx
             </span>
             <span className="inline-flex items-center gap-1">
               <Star className="h-3.5 w-3.5 fill-accent text-accent" />
-              {offer.rating.toFixed(1)}{" "}
-              <span className="text-xs">({offer.reviews})</span>
+              {offer.rating.toFixed(1)} <span className="text-xs">({offer.reviews})</span>
             </span>
           </div>
         </div>
@@ -65,24 +59,18 @@ export function OfferCard({ offer, onRequest }: Props) {
       <div className="flex shrink-0 flex-col items-stretch gap-3 border-t border-border pt-4 md:items-end md:border-l md:border-t-0 md:pl-6 md:pt-0">
         <div className="md:text-right">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            {isPay ? "Vergütung" : isFree ? "Konditionen" : "Entsorgungsgebühr"}
+            {isPay ? t.compensation : isFree ? t.conditions : t.disposalFee}
           </p>
           <p
             className={`font-display text-2xl font-semibold ${
-              isPay
-                ? "text-success"
-                : isFree
-                  ? "text-foreground"
-                  : "text-destructive"
+              isPay ? "text-success" : isFree ? "text-foreground" : "text-destructive"
             }`}
           >
-            {isFree
-              ? "Kostenfrei"
-              : `${Math.abs(price).toLocaleString("de-DE")} ${offer.unit}`}
+            {isFree ? t.free : `${Math.abs(price).toLocaleString(locale)} ${offer.unit}`}
           </p>
         </div>
         <Button onClick={() => onRequest(offer)} className="w-full md:w-auto">
-          Anfrage senden
+          {t.sendRequest}
         </Button>
       </div>
     </article>

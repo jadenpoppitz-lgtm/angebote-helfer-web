@@ -1,31 +1,4 @@
-export type Material =
-  | "Elektroschrott"
-  | "Metall"
-  | "Papier"
-  | "Kunststoff"
-  | "Glas"
-  | "Holz"
-  | "Batterien";
-
-export type DeliveryMode = "Abholung" | "Anlieferung";
-
-export interface Offer {
-  id: string;
-  material: Material;
-  provider: string;
-  city: string;
-  plzPrefix: string;
-  mode: DeliveryMode;
-  /** Positive = Vergütung €/t für Anbieter zahlt Kunden, negative = Entsorgungsgebühr */
-  pricePerTon: number;
-  unit: "€/t" | "€/kg" | "€/Stk";
-  conditions: string;
-  availability: "Sofort verfügbar" | "In 2-5 Tagen" | "Auf Anfrage";
-  rating: number;
-  reviews: number;
-}
-
-export const MATERIALS: Material[] = [
+export const materials = [
   "Elektroschrott",
   "Metall",
   "Papier",
@@ -35,18 +8,7 @@ export const MATERIALS: Material[] = [
   "Batterien",
 ];
 
-export const REGIONS = [
-  "Berlin",
-  "Hamburg",
-  "München",
-  "Köln",
-  "Frankfurt am Main",
-  "Stuttgart",
-  "Leipzig",
-  "Dresden",
-];
-
-export const OFFERS: Offer[] = [
+export const offers = [
   {
     id: "1",
     material: "Metall",

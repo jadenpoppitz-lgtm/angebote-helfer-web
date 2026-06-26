@@ -1,6 +1,9 @@
+import { useLanguage } from "@/lib/i18n";
 import { Recycle, Mail, Phone, MapPin } from "lucide-react";
 
 export function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer id="kontakt" className="border-t border-border bg-card">
       <div className="container grid gap-10 py-14 md:grid-cols-4">
@@ -13,13 +16,10 @@ export function Footer() {
               Recycling<span className="text-primary">Angebote</span>
             </span>
           </div>
-          <p className="mt-4 max-w-md text-sm text-muted-foreground">
-            Die unabhängige Plattform für faire Recycling-Angebote in
-            Deutschland. Verbinden Sie sich mit zertifizierten Entsorgern.
-          </p>
+          <p className="mt-4 max-w-md text-sm text-muted-foreground">{t.footerText}</p>
         </div>
         <div>
-          <h4 className="font-semibold">Kontakt</h4>
+          <h4 className="font-semibold">{t.navContact}</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li className="flex items-center gap-2">
               <Mail className="h-4 w-4" /> hallo@recycling-angebote.de
@@ -33,18 +33,18 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold">Rechtliches</h4>
+          <h4 className="font-semibold">{t.legal}</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li>Impressum</li>
-            <li>Datenschutz</li>
-            <li>AGB</li>
+            <li>{t.imprint}</li>
+            <li>{t.privacy}</li>
+            <li>{t.terms}</li>
           </ul>
         </div>
       </div>
       <div className="border-t border-border">
         <div className="container flex flex-col items-center justify-between gap-2 py-4 text-xs text-muted-foreground md:flex-row">
-          <p>© {new Date().getFullYear()} Recycling Angebote. Alle Rechte vorbehalten.</p>
-          <p>Made with ♻ in Deutschland</p>
+          <p>© {new Date().getFullYear()} Recycling Angebote. {t.rights}</p>
+          <p>{t.madeIn}</p>
         </div>
       </div>
     </footer>
