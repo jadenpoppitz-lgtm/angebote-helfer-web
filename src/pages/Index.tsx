@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowLeft, MapPin, QrCode, Search, Leaf, Clock, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, MapPin, QrCode, Search, Leaf, Clock, CheckCircle2, Cloud, Award, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SERIAL_DB, DEMO_SERIAL, type SerialLookup } from "@/data/partners";
@@ -107,6 +107,38 @@ const Index = () => {
             Test-Seriennummer verwenden ({DEMO_SERIAL})
           </button>
         </div>
+
+        {/* Customer benefits */}
+        <section className="mx-auto mt-14 grid max-w-3xl gap-4 sm:grid-cols-3">
+          {[
+            {
+              icon: Cloud,
+              title: "CO₂ senken",
+              text: "Jede zurück­gegebene Baugruppe spart Primär­gewinnung – Ihr persönlicher Beitrag wird dokumentiert.",
+            },
+            {
+              icon: Award,
+              title: "Zertifikate",
+              text: "Sie erhalten ein digitales Rückgabe­zertifikat als Nachweis für Ihre Nachhaltigkeits­bilanz.",
+            },
+            {
+              icon: Tag,
+              title: "Rabatt­aktionen",
+              text: "Künftig profitieren Sie bei Partner-Herstellern von Vergünstigungen auf Folge­produkte.",
+            },
+          ].map((b) => (
+            <div
+              key={b.title}
+              className="rounded-xl border border-border bg-card p-5"
+            >
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <b.icon className="h-4 w-4" />
+              </div>
+              <p className="mt-3 font-display text-sm font-semibold">{b.title}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{b.text}</p>
+            </div>
+          ))}
+        </section>
 
         {/* Not found */}
         {notFound && (
