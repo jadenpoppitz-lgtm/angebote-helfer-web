@@ -79,29 +79,29 @@ const Landing = () => {
         to="/produzent"
         onMouseEnter={() => setHover("produzent")}
         onMouseLeave={() => setHover(null)}
-        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[2600ms] ease-[cubic-bezier(0.37,0,0.18,1)] will-change-[flex] motion-reduce:transition-none md:min-h-screen ${produzentFlex}`}
+        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[5200ms] ease-[cubic-bezier(0.19,1,0.22,1)] will-change-[flex] motion-reduce:transition-none md:min-h-screen ${produzentFlex}`}
       >
         <img
           src="https://images.unsplash.com/photo-1700727448686-b314cb5f9948?w=1400&h=1600&fit=crop&auto=format"
           alt="Produktionshalle"
-          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[3200ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] will-change-transform motion-reduce:transition-none group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[7600ms] ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform motion-reduce:transition-none group-hover:scale-[1.035]"
         />
-        <div className="absolute inset-0 bg-foreground/55 transition-colors duration-1000" />
-        <div className="absolute inset-0 bg-[hsl(152_55%_14%)]/45 mix-blend-multiply transition-colors duration-1000" />
+        <div className="absolute inset-0 bg-foreground/55 transition-colors duration-[2800ms] ease-[cubic-bezier(0.19,1,0.22,1)]" />
+        <div className="absolute inset-0 bg-[hsl(152_55%_14%)]/45 mix-blend-multiply transition-colors duration-[2800ms] ease-[cubic-bezier(0.19,1,0.22,1)]" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
         <div className="relative z-10 mt-auto flex w-full flex-col items-start gap-4 p-8 text-background md:p-14">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:tracking-[0.35em]">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80 transition-all duration-[1600ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:tracking-[0.35em]">
             {t.producer}
           </span>
-          <h2 className="font-display text-3xl font-semibold leading-tight transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-5xl">
+          <h2 className="font-display text-3xl font-semibold leading-tight transition-all duration-[1600ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:translate-x-1 md:text-5xl">
             {producerTitleA}
             <br />
             {producerTitleB}
           </h2>
-          <p className="max-w-md text-sm text-background/85 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-base">
+          <p className="max-w-md text-sm text-background/85 transition-all duration-[1800ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:translate-x-1 md:text-base">
             {t.producerText}
           </p>
-          <span className="mt-2 inline-flex h-12 items-center gap-2 rounded-full bg-background px-6 font-medium text-foreground shadow-elegant transition-all duration-500 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-2">
+          <span className="mt-2 inline-flex h-12 items-center gap-2 rounded-full bg-background px-6 font-medium text-foreground shadow-elegant transition-all duration-[1400ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:translate-x-2">
             {t.firstCall}
             <ArrowRight className="h-4 w-4" />
           </span>
@@ -113,26 +113,26 @@ const Landing = () => {
       <div
         onMouseEnter={() => setHover("kunde")}
         onMouseLeave={() => setHover(null)}
-        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[2600ms] ease-[cubic-bezier(0.37,0,0.18,1)] will-change-[flex] motion-reduce:transition-none md:min-h-screen ${kundeFlex}`}
+        className={`group relative isolate flex min-h-[60vh] w-full overflow-hidden transition-[flex-grow,flex-shrink,flex-basis] duration-[5200ms] ease-[cubic-bezier(0.19,1,0.22,1)] will-change-[flex] motion-reduce:transition-none md:min-h-screen ${kundeFlex}`}
       >
         <img
           src="https://images.unsplash.com/photo-1590635023142-73c3d34f2805?w=1400&h=1600&fit=crop&auto=format"
           alt="Kunde hält Werkzeug"
-          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[3200ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] will-change-transform motion-reduce:transition-none group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover grayscale-[40%] transition-transform duration-[7600ms] ease-[cubic-bezier(0.19,1,0.22,1)] will-change-transform motion-reduce:transition-none group-hover:scale-[1.035]"
         />
-        <div className="absolute inset-0 bg-foreground/55 transition-colors duration-1000" />
-        <div className="absolute inset-0 bg-[hsl(28_45%_14%)]/40 mix-blend-multiply transition-colors duration-1000" />
+        <div className="absolute inset-0 bg-foreground/55 transition-colors duration-[2800ms] ease-[cubic-bezier(0.19,1,0.22,1)]" />
+        <div className="absolute inset-0 bg-[hsl(28_45%_14%)]/40 mix-blend-multiply transition-colors duration-[2800ms] ease-[cubic-bezier(0.19,1,0.22,1)]" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
         <div className="relative z-10 mt-auto flex w-full flex-col items-start gap-4 p-8 text-background md:p-14">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:tracking-[0.35em]">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-background/80 transition-all duration-[1600ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:tracking-[0.35em]">
             {t.customer}
           </span>
-          <h2 className="font-display text-3xl font-semibold leading-tight transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-5xl">
+          <h2 className="font-display text-3xl font-semibold leading-tight transition-all duration-[1600ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:translate-x-1 md:text-5xl">
             {customerTitleA}
             <br />
             {customerTitleB}
           </h2>
-          <p className="max-w-md text-sm text-background/85 transition-all duration-700 ease-[cubic-bezier(0.45,0.05,0.55,0.95)] group-hover:translate-x-1 md:text-base">
+          <p className="max-w-md text-sm text-background/85 transition-all duration-[1800ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:translate-x-1 md:text-base">
             {t.customerText}
           </p>
           <form
