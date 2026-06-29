@@ -73,8 +73,8 @@ export default {
         elegant: "var(--shadow-elegant)",
       },
       fontFamily: {
-        display: ['"Fraunces"', "ui-serif", "Georgia", "serif"],
-        sans: ['"Plus Jakarta Sans"', "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ['"Lora"', "Georgia", "serif"],
+        sans: ['"Nunito Sans"', "ui-sans-serif", "system-ui", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
