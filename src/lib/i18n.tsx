@@ -250,16 +250,16 @@ const translations = {
       },
       problem: {
         eyebrow: "Das Problem",
-        title: "Wertvoller Elektroschrott verschwindet aus dem Kreislauf.",
+        title: "Wertvolle Materialien verlieren ihren Weg zurück in die Produktion.",
         text:
-          "Millionen Tonnen Elektronik enthalten Kupfer, Gold, Aluminium und seltene Materialien. Zu oft landen sie in intransparenten Recyclingwegen, werden ins Ausland verschoben oder verlieren ihren Weg zurück zum Hersteller.",
+          "Alte Produkte werden exportiert, unscharf gesammelt oder nicht sauber auseinandergenommen. Dabei gehen Materialien verloren: teils physisch im Ausland, teils im Prozess, weil bestimmte Fraktionen gar nicht erst gefiltert werden. Langfristig müssen kritische Rohstoffe und CMA-relevante Materialien stärker in Europa bleiben. Mit Kernbeisser lassen sich B2B-Produkte reiner recyceln, Materialhoheit bei OEMs halten und ein Ökosystem fördern, in dem Produktion in Europa wieder wirtschaftlich sinnvoller wird.",
         cta: "Zu unserer Lösung",
-        imageA: "Bauteile werden gesammelt, aber die Herkunft und Materialqualität gehen verloren.",
-        imageB: "Materialströme verlassen den Kreislauf, bevor sie wieder produktiv genutzt werden können.",
+        imageA: "Export und Mischsammlung trennen Produkte von Herkunft, Qualität und OEM-Verantwortung.",
+        imageB: "Nicht gefilterte Fraktionen verlieren Kupfer, Edelmetalle und CMA-relevante Materialien im Prozess.",
         stats: [
-          { value: "Mio. t", label: "E-Schrott" },
-          { value: "PCB", label: "Wertträger" },
-          { value: "0 Loop", label: "ohne Rückführung" },
+          { value: "Export", label: "verlorene Kontrolle" },
+          { value: "CMA", label: "Europa sichern" },
+          { value: "OEM", label: "Materialhoheit" },
         ],
       },
       solution: {
@@ -478,16 +478,16 @@ const translations = {
       },
       problem: {
         eyebrow: "The problem",
-        title: "Valuable e-waste disappears from the recycling loop.",
+        title: "Valuable materials lose their path back into production.",
         text:
-          "Millions of tons of electronics contain copper, gold, aluminium and rare materials. Too often they move through opaque recycling paths, leave the region or never find their way back to the manufacturer.",
+          "Old products are exported, collected too broadly or not disassembled cleanly. Materials are lost along the way: physically abroad, and inside the process when specific fractions are never filtered in the first place. In the long run, critical raw materials and CMA-relevant materials need to stay in Europe more often. With Kernbeisser, B2B products can be recycled more purely, OEMs can keep material sovereignty, and a stronger ecosystem can make production in Europe economically attractive again.",
         cta: "See our solution",
-        imageA: "Components are collected, but origin and material quality get lost.",
-        imageB: "Material streams leave the loop before they can become productive again.",
+        imageA: "Export and mixed collection separate products from origin, quality and OEM responsibility.",
+        imageB: "Unfiltered fractions lose copper, precious metals and CMA-relevant materials inside the process.",
         stats: [
-          { value: "M t", label: "e-waste" },
-          { value: "PCB", label: "value carrier" },
-          { value: "0 loop", label: "no return" },
+          { value: "Export", label: "lost control" },
+          { value: "CMA", label: "secure Europe" },
+          { value: "OEM", label: "material sovereignty" },
         ],
       },
       solution: {
@@ -701,16 +701,16 @@ const translations = {
       },
       problem: {
         eyebrow: "问题",
-        title: "有价值的电子废料正在从回收循环中消失。",
+        title: "有价值的材料正在失去回到生产中的路径。",
         text:
-          "数百万吨电子产品含有铜、金、铝和稀有材料。它们经常进入不透明的回收路径，被转移到海外，或无法回到制造商的材料循环。",
+          "旧产品被出口、被混合收集，或没有被清晰拆解。材料会在途中流失：一部分流向海外，一部分在处理过程中因为特定材料没有被过滤出来而消失。长期来看，关键原材料和与 CMA 相关的材料需要更多留在欧洲。通过 Kernbeisser，B2B 产品可以被更纯净地回收，OEM 可以保留材料主权，并推动一个让欧洲生产更有经济意义的生态系统。",
         cta: "查看我们的解决方案",
-        imageA: "零部件被收集，但来源和材料质量常常丢失。",
-        imageB: "材料流在重新创造价值之前，就已经离开循环。",
+        imageA: "出口和混合收集会切断产品来源、质量和 OEM 责任。",
+        imageB: "未被过滤的材料组分会让铜、贵金属和 CMA 相关材料在过程中流失。",
         stats: [
-          { value: "百万吨", label: "电子废料" },
-          { value: "PCB", label: "价值载体" },
-          { value: "0 循环", label: "无回流" },
+          { value: "出口", label: "控制流失" },
+          { value: "CMA", label: "保障欧洲" },
+          { value: "OEM", label: "材料主权" },
         ],
       },
       solution: {
