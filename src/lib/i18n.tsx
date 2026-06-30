@@ -256,6 +256,8 @@ const translations = {
         cta: "Zu unserer Lösung",
         imageA: "Export und Mischsammlung trennen Produkte von Herkunft, Qualität und OEM-Verantwortung.",
         imageB: "Nicht gefilterte Fraktionen verlieren Kupfer, Edelmetalle und CMA-relevante Materialien im Prozess.",
+        imageC: "Fehlende Demontage macht hochwertige B2B-Produkte zu anonymem Mischmaterial.",
+        imageD: "Ohne Datenfluss verlieren OEMs Materialhoheit und Europa verliert Produktionsoptionen.",
         stats: [
           { value: "Export", label: "verlorene Kontrolle" },
           { value: "CMA", label: "Europa sichern" },
@@ -484,6 +486,8 @@ const translations = {
         cta: "See our solution",
         imageA: "Export and mixed collection separate products from origin, quality and OEM responsibility.",
         imageB: "Unfiltered fractions lose copper, precious metals and CMA-relevant materials inside the process.",
+        imageC: "Missing disassembly turns high-value B2B products into anonymous mixed material.",
+        imageD: "Without data flow, OEMs lose material sovereignty and Europe loses production options.",
         stats: [
           { value: "Export", label: "lost control" },
           { value: "CMA", label: "secure Europe" },
@@ -707,6 +711,8 @@ const translations = {
         cta: "查看我们的解决方案",
         imageA: "出口和混合收集会切断产品来源、质量和 OEM 责任。",
         imageB: "未被过滤的材料组分会让铜、贵金属和 CMA 相关材料在过程中流失。",
+        imageC: "缺少拆解会让高价值 B2B 产品变成匿名混合材料。",
+        imageD: "没有数据流，OEM 会失去材料主权，欧洲也会失去生产选择。",
         stats: [
           { value: "出口", label: "控制流失" },
           { value: "CMA", label: "保障欧洲" },

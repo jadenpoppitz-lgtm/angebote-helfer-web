@@ -98,23 +98,41 @@ const Landing = () => {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="relative min-h-80 overflow-hidden rounded-lg border border-background/10 bg-background/5">
+            <div className="relative min-h-72 overflow-hidden rounded-lg border border-background/10 bg-background/5">
               <img
-                src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?auto=format&fit=crop&w=900&q=80"
+                src="https://images.unsplash.com/photo-1494412685616-a5d310fbb07d?auto=format&fit=crop&w=900&q=80"
                 alt=""
                 className="absolute inset-0 h-full w-full object-cover opacity-70 grayscale"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
               <p className="absolute bottom-5 left-5 right-5 text-sm font-semibold leading-6">{story.problem.imageA}</p>
             </div>
-            <div className="relative min-h-80 overflow-hidden rounded-lg border border-background/10 bg-background/5 sm:mt-16">
+            <div className="relative min-h-72 overflow-hidden rounded-lg border border-background/10 bg-background/5 sm:mt-12">
               <img
-                src="https://images.unsplash.com/photo-1605600659873-d808a13e4d2a?auto=format&fit=crop&w=900&q=80"
+                src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80"
                 alt=""
                 className="absolute inset-0 h-full w-full object-cover opacity-65 grayscale"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
               <p className="absolute bottom-5 left-5 right-5 text-sm font-semibold leading-6">{story.problem.imageB}</p>
+            </div>
+            <div className="relative min-h-56 overflow-hidden rounded-lg border border-background/10 bg-background/5">
+              <img
+                src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=900&q=80"
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover opacity-60 grayscale"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              <p className="absolute bottom-5 left-5 right-5 text-sm font-semibold leading-6">{story.problem.imageC}</p>
+            </div>
+            <div className="relative min-h-56 overflow-hidden rounded-lg border border-background/10 bg-background/5 sm:mt-12">
+              <img
+                src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80"
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover opacity-60 grayscale"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-transparent" />
+              <p className="absolute bottom-5 left-5 right-5 text-sm font-semibold leading-6">{story.problem.imageD}</p>
             </div>
           </div>
         </div>
