@@ -240,6 +240,66 @@ const translations = {
         cloud: "Sends into cloud component producers",
       },
     },
+    landingStory: {
+      hero: {
+        eyebrow: "Materialien beginnen in der Natur",
+        title: "Was wir abbauen, muss im Kreislauf bleiben.",
+        text:
+          "Kernbeisser verbindet Produkt, Rückgabe, Demontage und Verwertung so, dass wertvolle Metalle nicht aus dem System verschwinden.",
+        nav: "Zum Problem",
+      },
+      problem: {
+        eyebrow: "Das Problem",
+        title: "Wertvoller Elektroschrott verschwindet aus dem Kreislauf.",
+        text:
+          "Millionen Tonnen Elektronik enthalten Kupfer, Gold, Aluminium und seltene Materialien. Zu oft landen sie in intransparenten Recyclingwegen, werden ins Ausland verschoben oder verlieren ihren Weg zurück zum Hersteller.",
+        cta: "Zu unserer Lösung",
+        imageA: "Bauteile werden gesammelt, aber die Herkunft und Materialqualität gehen verloren.",
+        imageB: "Materialströme verlassen den Kreislauf, bevor sie wieder produktiv genutzt werden können.",
+        stats: [
+          { value: "Mio. t", label: "E-Schrott" },
+          { value: "PCB", label: "Wertträger" },
+          { value: "0 Loop", label: "ohne Rückführung" },
+        ],
+      },
+      solution: {
+        eyebrow: "Unsere Lösung",
+        title: "Ein steuerbarer Kreislauf statt eines blinden Recyclingwegs.",
+        text:
+          "Der Graph zeigt, wo Kernbeisser Transparenz, Rücknahme und Materialrückführung verbindet. Fahre über einen Punkt, um zu sehen, welche Rolle Kernbeisser dort übernimmt.",
+        hoverLabel: "Kernbeisser löst hier",
+        points: {
+          customer: {
+            title: "Customer Rückgabe",
+            text: "Kunden starten die Rückgabe über Seriennummer oder QR-Code. Kernbeisser ordnet das Produkt direkt dem richtigen Kreislauf zu.",
+          },
+          oem: {
+            title: "OEM Steuerung",
+            text: "OEMs sehen, welche Produkte und PCB-Ströme zurückkommen, und können Rücknahme, Vergütung und Materialziele steuern.",
+          },
+          consulting: {
+            title: "Consulting & Daten",
+            text: "Kernbeisser bewertet Material, Partner und nächste Schritte, damit PCB nicht anonym verkauft, sondern gezielt rückgeführt wird.",
+          },
+          product: {
+            title: "Produkt-Identität",
+            text: "Produktdaten bleiben am Materialfluss hängen. Dadurch gehen Herkunft, Qualität und Zielmaterial nicht im Recyclingweg verloren.",
+          },
+          disassembly: {
+            title: "Demontage",
+            text: "Demontage trennt PCB, Gehäuse und nutzbare Komponenten sauber, bevor Materialien in den falschen Kanal fallen.",
+          },
+          smelter: {
+            title: "Smelter Netzwerk",
+            text: "Smelter erhalten qualifizierte PCB-Ströme. Kernbeisser dokumentiert Lösung, Materialausbeute und Rückführung.",
+          },
+          asia: {
+            title: "Auslandsrisiko",
+            text: "Der Graph macht sichtbar, wann Material Richtung Ausland verschwindet und wo ein geschlossener europäischer Pfad sinnvoller ist.",
+          },
+        },
+      },
+    },
     or: "oder",
     producer: "Produzent",
     producerTitle: "Schließen Sie\nden Kreislauf.",
@@ -408,6 +468,66 @@ const translations = {
         cloud: "Sends into cloud component producers",
       },
     },
+    landingStory: {
+      hero: {
+        eyebrow: "Materials begin in nature",
+        title: "What we extract must stay in the loop.",
+        text:
+          "Kernbeisser connects product, return, disassembly and recovery so valuable metals do not disappear from the system.",
+        nav: "See the problem",
+      },
+      problem: {
+        eyebrow: "The problem",
+        title: "Valuable e-waste disappears from the recycling loop.",
+        text:
+          "Millions of tons of electronics contain copper, gold, aluminium and rare materials. Too often they move through opaque recycling paths, leave the region or never find their way back to the manufacturer.",
+        cta: "See our solution",
+        imageA: "Components are collected, but origin and material quality get lost.",
+        imageB: "Material streams leave the loop before they can become productive again.",
+        stats: [
+          { value: "M t", label: "e-waste" },
+          { value: "PCB", label: "value carrier" },
+          { value: "0 loop", label: "no return" },
+        ],
+      },
+      solution: {
+        eyebrow: "Our solution",
+        title: "A controllable loop instead of a blind recycling path.",
+        text:
+          "The graph shows where Kernbeisser connects transparency, take-back and material recovery. Hover a point to see what Kernbeisser solves there.",
+        hoverLabel: "Kernbeisser solves here",
+        points: {
+          customer: {
+            title: "Customer return",
+            text: "Customers start the return with a serial number or QR code. Kernbeisser routes the product into the right loop immediately.",
+          },
+          oem: {
+            title: "OEM control",
+            text: "OEMs see which products and PCB streams return, then steer take-back, compensation and material goals.",
+          },
+          consulting: {
+            title: "Consulting & data",
+            text: "Kernbeisser evaluates material, partners and next steps so PCB is not sold anonymously but recovered deliberately.",
+          },
+          product: {
+            title: "Product identity",
+            text: "Product data stays connected to the material flow, preserving origin, quality and target material.",
+          },
+          disassembly: {
+            title: "Disassembly",
+            text: "Disassembly separates PCB, housing and usable components before materials fall into the wrong channel.",
+          },
+          smelter: {
+            title: "Smelter network",
+            text: "Smelters receive qualified PCB streams. Kernbeisser documents solution, material yield and return path.",
+          },
+          asia: {
+            title: "Export risk",
+            text: "The graph makes visible when material disappears abroad and where a closed European path is stronger.",
+          },
+        },
+      },
+    },
     or: "or",
     producer: "Producer",
     producerTitle: "Close\nthe loop.",
@@ -570,6 +690,64 @@ const translations = {
         pcbSolution: "PCB / 出售方案",
         material: "材料",
         cloud: "发送至云端组件生产商",
+      },
+    },
+    landingStory: {
+      hero: {
+        eyebrow: "材料源于自然",
+        title: "被开采的材料，必须留在循环中。",
+        text: "Kernbeisser 连接产品、回收、拆解和再利用，让有价值的金属不再从系统中消失。",
+        nav: "查看问题",
+      },
+      problem: {
+        eyebrow: "问题",
+        title: "有价值的电子废料正在从回收循环中消失。",
+        text:
+          "数百万吨电子产品含有铜、金、铝和稀有材料。它们经常进入不透明的回收路径，被转移到海外，或无法回到制造商的材料循环。",
+        cta: "查看我们的解决方案",
+        imageA: "零部件被收集，但来源和材料质量常常丢失。",
+        imageB: "材料流在重新创造价值之前，就已经离开循环。",
+        stats: [
+          { value: "百万吨", label: "电子废料" },
+          { value: "PCB", label: "价值载体" },
+          { value: "0 循环", label: "无回流" },
+        ],
+      },
+      solution: {
+        eyebrow: "我们的解决方案",
+        title: "可控的循环，而不是盲目的回收路径。",
+        text: "这张图展示 Kernbeisser 如何连接透明度、回收和材料回流。悬停在节点上，可查看对应解决方式。",
+        hoverLabel: "Kernbeisser 在这里解决",
+        points: {
+          customer: {
+            title: "客户回收",
+            text: "客户通过序列号或二维码启动回收。Kernbeisser 立即把产品导入正确的循环。",
+          },
+          oem: {
+            title: "OEM 控制",
+            text: "OEM 可以看到哪些产品和 PCB 流返回，并控制回收、补偿和材料目标。",
+          },
+          consulting: {
+            title: "咨询与数据",
+            text: "Kernbeisser 评估材料、合作方和下一步，让 PCB 不再匿名出售，而是被有目标地回收。",
+          },
+          product: {
+            title: "产品身份",
+            text: "产品数据与材料流保持连接，保留来源、质量和目标材料信息。",
+          },
+          disassembly: {
+            title: "拆解",
+            text: "拆解把 PCB、外壳和可用组件分离，避免材料进入错误渠道。",
+          },
+          smelter: {
+            title: "冶炼网络",
+            text: "冶炼方接收经过确认的 PCB 流。Kernbeisser 记录方案、材料产出和回流路径。",
+          },
+          asia: {
+            title: "出口风险",
+            text: "图中显示材料何时可能流向海外，以及何处更适合建立封闭的欧洲路径。",
+          },
+        },
       },
     },
     or: "或",
