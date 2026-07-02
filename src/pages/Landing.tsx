@@ -51,6 +51,17 @@ export type LandingCopy = {
     nextStep: string;
     nodes: Record<GraphPoint, { title: string; label: string; problem: string; solution: string; next: string }>;
     values: Array<{ role: string; value: string }>;
+    flow: {
+      product: string;
+      sellPcb: string;
+      productPcb: string;
+      pcb: string;
+      setSolution: string;
+      material: string;
+      componentsAbroad: string;
+      leakage: string;
+      export: string;
+    };
   };
   demos: {
     eyebrow: string;
@@ -243,6 +254,17 @@ export const copy: Record<Language, LandingCopy> = {
         { role: "Customer", value: "Rückgabe bestätigen, Rabatt erhalten, Produktstatus sehen." },
         { role: "Partner", value: "ESG-Reporting, offene Fälle, koordinierte Prozessdaten." },
       ],
+      flow: {
+        product: "Produkt",
+        sellPcb: "PCB verkaufen",
+        productPcb: "Produkt - PCB",
+        pcb: "PCB",
+        setSolution: "Lösung setzen",
+        material: "Material",
+        componentsAbroad: "Komponenten ins Ausland",
+        leakage: "Verlustpfad",
+        export: "Asien / Export",
+      },
     },
     demos: {
       eyebrow: "Demo-Oberflächen",
@@ -487,6 +509,17 @@ export const copy: Record<Language, LandingCopy> = {
         { role: "Customer", value: "Confirm return, receive discount, see product status." },
         { role: "Partner", value: "ESG reporting, open cases, coordinated process data." },
       ],
+      flow: {
+        product: "Product",
+        sellPcb: "Sell PCB",
+        productPcb: "Product - PCB",
+        pcb: "PCB",
+        setSolution: "Set solution",
+        material: "Material",
+        componentsAbroad: "Components abroad",
+        leakage: "Leakage",
+        export: "Asia / Export",
+      },
     },
     demos: {
       eyebrow: "Demo surfaces",
@@ -730,6 +763,17 @@ export const copy: Record<Language, LandingCopy> = {
         { role: "客户", value: "确认退回、获得折扣、查看产品状态。" },
         { role: "伙伴", value: "ESG 报告、未结案件、协调流程数据。" },
       ],
+      flow: {
+        product: "产品",
+        sellPcb: "出售 PCB",
+        productPcb: "产品 - PCB",
+        pcb: "PCB",
+        setSolution: "设置方案",
+        material: "材料",
+        componentsAbroad: "组件流向海外",
+        leakage: "流失路径",
+        export: "亚洲 / 出口",
+      },
     },
     demos: {
       eyebrow: "演示界面",
@@ -828,7 +872,7 @@ export const copy: Record<Language, LandingCopy> = {
 };
 
 export const roleOrder: RoleId[] = ["oem", "customer", "recycler", "smelter", "partner"];
-const graphOrder: GraphPoint[] = ["identify", "return", "disassembly", "recycler", "smelter", "reporting", "oem"];
+const graphOrder: GraphPoint[] = ["oem", "return", "identify", "disassembly", "recycler", "smelter", "reporting"];
 
 export const roleIcons: Record<RoleId, typeof Factory> = {
   oem: Factory,
@@ -1200,57 +1244,99 @@ const ProcessGraph = ({
   chooseRole: (role: RoleId) => void;
   jumpTo: (id: "demos" | "forms") => void;
 }) => {
-  const positions: Record<GraphPoint, string> = {
-    identify: "left-[5%] top-[42%]",
-    return: "left-[18%] top-[16%]",
-    disassembly: "left-[34%] top-[42%]",
-    recycler: "left-[50%] top-[16%]",
-    smelter: "left-[66%] top-[42%]",
-    reporting: "left-[78%] top-[16%]",
-    oem: "left-[84%] top-[63%]",
+  const positions: Record<GraphPoint, { x: number; y: number; width?: number }> = {
+    oem: { x: 80, y: 325, width: 168 },
+    return: { x: 128, y: 92, width: 176 },
+    identify: { x: 450, y: 300, width: 190 },
+    disassembly: { x: 700, y: 80, width: 176 },
+    recycler: { x: 690, y: 325, width: 184 },
+    smelter: { x: 920, y: 275, width: 172 },
+    reporting: { x: 470, y: 505, width: 210 },
   };
 
   return (
     <div className="rounded-lg border border-foreground/10 bg-[hsl(39_45%_95%)] p-3 shadow-elegant">
       <div className="hidden overflow-x-auto lg:block">
-        <div className="relative h-[660px] min-w-[1120px] overflow-hidden rounded-md bg-[linear-gradient(120deg,hsl(44_55%_88%/.72),transparent_42%,hsl(155_35%_87%/.8))]">
+        <div className="relative h-[680px] min-w-[1120px] overflow-hidden rounded-md bg-[linear-gradient(120deg,hsl(44_55%_90%/.82),transparent_44%,hsl(155_35%_88%/.82))]">
           <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1120 660" aria-hidden="true">
             <defs>
               <marker id="graph-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto">
                 <path d="M2 2 L10 6 L2 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </marker>
-              <path id="flow-a" d="M145 345 C230 180 330 180 415 345 S600 510 735 345 S910 185 970 255" />
-              <path id="flow-b" d="M150 410 C300 545 510 560 705 420 S900 410 975 485" />
+              <marker id="loss-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M2 2 L10 6 L2 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </marker>
+              <path id="flow-product" d="M250 160 C335 172 385 230 458 305" />
+              <path id="flow-pcb" d="M632 335 C700 322 776 322 912 330" />
+              <path id="flow-material" d="M998 407 C980 468 928 518 840 552" />
+              <path id="flow-export" d="M215 440 C340 560 548 594 812 565" />
             </defs>
-            <g className="text-primary/70" fill="none" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round" markerEnd="url(#graph-arrow)">
-              <path d="M145 345 C230 180 330 180 415 345" />
-              <path d="M415 345 C500 510 620 510 735 345" />
-              <path d="M735 345 C825 185 915 185 970 255" />
-              <path d="M150 410 C300 545 510 560 705 420" strokeDasharray="14 16" />
-              <path d="M705 420 C820 340 910 405 975 485" />
+            <g className="text-primary/75" fill="none" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#graph-arrow)">
+              <path d="M165 322 C168 250 184 205 218 166" />
+              <path d="M250 160 C335 172 385 230 458 305" />
+              <path d="M452 352 C372 372 300 378 244 374" />
+              <path d="M620 296 C650 210 692 155 738 132" />
+              <path d="M632 335 C700 322 776 322 912 330" />
+              <path d="M878 356 C904 346 917 342 928 338" />
+              <path d="M1018 258 C1008 215 984 178 955 142" />
+              <path d="M998 407 C980 468 928 518 840 552" />
+              <path d="M665 548 C735 548 790 550 838 552" />
+            </g>
+            <g className="text-destructive/65" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#loss-arrow)">
+              <path d="M215 440 C340 560 548 594 812 565" strokeDasharray="16 14" />
+            </g>
+            <g className="pointer-events-none select-none font-sans text-[15px] font-semibold">
+              <text x="132" y="247" className="fill-foreground/55">{content.solution.flow.product}</text>
+              <text x="330" y="210" className="fill-foreground/55">{content.solution.flow.product}</text>
+              <text x="318" y="358" className="fill-foreground/55">{content.solution.flow.sellPcb}</text>
+              <text x="620" y="215" className="fill-foreground/55">{content.solution.flow.productPcb}</text>
+              <text x="752" y="304" className="fill-foreground/55">{content.solution.flow.pcb}</text>
+              <text x="766" y="353" className="fill-foreground/55">{content.solution.flow.setSolution}</text>
+              <text x="917" y="492" className="fill-foreground/55">{content.solution.flow.material}</text>
+              <text x="350" y="566" className="fill-destructive/65">{content.solution.flow.componentsAbroad}</text>
             </g>
             <g>
               {[0, 1, 2].map((index) => (
-                <circle key={index} r="6" className="fill-primary">
-                  <animateMotion dur="7s" repeatCount="indefinite" begin={`${index * 1.4}s`}>
-                    <mpath href="#flow-a" />
+                <circle key={`product-${index}`} r="6" className="fill-primary">
+                  <animateMotion dur="9s" repeatCount="indefinite" begin={`${index * 1.7}s`}>
+                    <mpath href="#flow-product" />
+                  </animateMotion>
+                </circle>
+              ))}
+              {[0, 1, 2].map((index) => (
+                <circle key={`pcb-${index}`} r="5.5" className="fill-primary">
+                  <animateMotion dur="8s" repeatCount="indefinite" begin={`${index * 1.5}s`}>
+                    <mpath href="#flow-pcb" />
                   </animateMotion>
                 </circle>
               ))}
               {[0, 1].map((index) => (
-                <circle key={index} r="5" className="fill-foreground/60">
-                  <animateMotion dur="8s" repeatCount="indefinite" begin={`${index * 2}s`}>
-                    <mpath href="#flow-b" />
+                <circle key={`material-${index}`} r="5.5" className="fill-primary">
+                  <animateMotion dur="8.5s" repeatCount="indefinite" begin={`${index * 2.1}s`}>
+                    <mpath href="#flow-material" />
+                  </animateMotion>
+                </circle>
+              ))}
+              {[0, 1].map((index) => (
+                <circle key={`export-${index}`} r="5" className="fill-destructive/70">
+                  <animateMotion dur="10s" repeatCount="indefinite" begin={`${index * 2.6}s`}>
+                    <mpath href="#flow-export" />
                   </animateMotion>
                 </circle>
               ))}
             </g>
           </svg>
 
+          <div className="absolute left-[770px] top-[535px] z-10 rounded-full border border-destructive/35 bg-destructive/10 px-6 py-4 text-center shadow-card">
+            <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-destructive/75">{content.solution.flow.leakage}</span>
+            <span className="font-display text-2xl font-semibold text-destructive">{content.solution.flow.export}</span>
+          </div>
+
           {graphOrder.map((point) => {
             const Icon = graphIcons[point];
             const node = content.solution.nodes[point];
             const role = point === "oem" ? "oem" : point === "return" ? "customer" : point === "recycler" ? "recycler" : point === "smelter" ? "smelter" : point === "reporting" ? "partner" : null;
+            const position = positions[point];
             return (
               <button
                 key={point}
@@ -1268,7 +1354,8 @@ const ProcessGraph = ({
                 }}
                 className={`absolute w-40 rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
                   activePoint === point ? "border-primary ring-2 ring-primary/20" : "border-border"
-                } ${positions[point]}`}
+                }`}
+                style={{ left: position.x, top: position.y, width: position.width ?? 160 }}
               >
                 <span className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" />
