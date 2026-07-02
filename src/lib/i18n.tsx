@@ -473,7 +473,7 @@ const translations = {
     landingStory: {
       hero: {
         eyebrow: "Materials begin in nature",
-        title: "What we extract stays in the loop.",
+        title: "What we extract must stay in the loop.",
         text:
           "Kernbeisser connects product, return, disassembly and recovery so valuable metals do not disappear from the system.",
         nav: "See the problem",
