@@ -1245,30 +1245,34 @@ const ProcessGraph = ({
   jumpTo: (id: "demos" | "forms") => void;
 }) => {
   const positions: Record<GraphPoint, { x: number; y: number; width?: number }> = {
-    oem: { x: 70, y: 330, width: 170 },
-    return: { x: 130, y: 78, width: 178 },
-    identify: { x: 470, y: 305, width: 196 },
-    disassembly: { x: 760, y: 74, width: 184 },
-    recycler: { x: 755, y: 330, width: 188 },
-    smelter: { x: 1030, y: 286, width: 176 },
-    reporting: { x: 520, y: 545, width: 218 },
+    oem: { x: 70, y: 336, width: 174 },
+    return: { x: 118, y: 78, width: 184 },
+    identify: { x: 475, y: 318, width: 202 },
+    disassembly: { x: 760, y: 78, width: 190 },
+    recycler: { x: 762, y: 336, width: 192 },
+    smelter: { x: 1038, y: 336, width: 178 },
+    reporting: { x: 508, y: 582, width: 230 },
   };
   const flowLabels: Array<{ text: string; x: number; y: number; tone?: "loss" }> = [
-    { text: content.solution.flow.product, x: 94, y: 242 },
-    { text: content.solution.flow.product, x: 352, y: 190 },
-    { text: content.solution.flow.sellPcb, x: 296, y: 400 },
-    { text: content.solution.flow.productPcb, x: 668, y: 218 },
-    { text: content.solution.flow.pcb, x: 876, y: 304 },
-    { text: content.solution.flow.setSolution, x: 860, y: 376 },
-    { text: content.solution.flow.material, x: 1005, y: 505 },
-    { text: content.solution.flow.componentsAbroad, x: 344, y: 616, tone: "loss" },
+    { text: content.solution.flow.product, x: 86, y: 254 },
+    { text: content.solution.flow.product, x: 346, y: 196 },
+    { text: content.solution.flow.sellPcb, x: 302, y: 426 },
+    { text: content.solution.flow.productPcb, x: 656, y: 222 },
+    { text: content.solution.flow.pcb, x: 892, y: 338 },
+    { text: content.solution.flow.setSolution, x: 888, y: 402 },
+    { text: content.solution.flow.material, x: 1015, y: 548 },
+    { text: content.solution.flow.componentsAbroad, x: 350, y: 662, tone: "loss" },
   ];
 
   return (
     <div className="rounded-lg border border-foreground/10 bg-[hsl(39_45%_95%)] p-3 shadow-elegant">
       <div className="hidden overflow-x-auto lg:block">
-        <div className="relative h-[720px] min-w-[1240px] overflow-hidden rounded-md bg-[linear-gradient(120deg,hsl(44_55%_91%/.9),hsl(50_46%_96%/.92)_48%,hsl(155_35%_89%/.9))]">
-          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1240 700" aria-hidden="true">
+        <div className="relative h-[760px] min-w-[1240px] overflow-hidden rounded-md bg-[linear-gradient(120deg,hsl(44_55%_91%/.9),hsl(50_46%_96%/.94)_48%,hsl(155_35%_89%/.9))]">
+          <div className="absolute left-8 right-8 top-10 h-[210px] rounded-2xl border border-foreground/5 bg-background/30" />
+          <div className="absolute left-8 right-8 top-[300px] h-[190px] rounded-2xl border border-primary/10 bg-primary/5" />
+          <div className="absolute left-8 right-8 top-[550px] h-[150px] rounded-2xl border border-destructive/10 bg-destructive/5" />
+
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1240 740" aria-hidden="true">
             <defs>
               <marker id="graph-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
                 <path d="M2 2 L10 6 L2 10" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
@@ -1276,24 +1280,24 @@ const ProcessGraph = ({
               <marker id="loss-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
                 <path d="M2 2 L10 6 L2 10" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
               </marker>
-              <path id="flow-product" d="M300 148 C390 160 424 236 478 304" />
-              <path id="flow-pcb" d="M672 345 C760 334 885 334 1020 344" />
-              <path id="flow-material" d="M1110 412 C1080 498 990 568 902 586" />
-              <path id="flow-export" d="M212 463 C360 612 565 650 844 610" />
+              <path id="flow-product" d="M302 154 C388 164 430 246 482 318" />
+              <path id="flow-pcb" d="M678 374 C760 362 900 362 1038 374" />
+              <path id="flow-material" d="M1126 464 C1092 552 1002 610 884 642" />
+              <path id="flow-export" d="M220 475 C365 642 585 696 845 656" />
             </defs>
             <g className="text-primary/68" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#graph-arrow)">
-              <path d="M154 328 C154 254 184 195 222 156" />
-              <path d="M300 148 C390 160 424 236 478 304" />
-              <path d="M468 356 C390 386 315 392 240 386" />
-              <path d="M640 298 C672 200 722 145 778 130" />
-              <path d="M672 345 C760 334 885 334 1020 344" />
-              <path d="M942 368 C988 358 1010 352 1026 346" />
-              <path d="M1118 268 C1110 218 1082 178 1038 142" />
-              <path d="M1110 412 C1080 498 990 568 902 586" />
-              <path d="M735 594 C798 594 850 592 902 586" />
+              <path d="M158 336 C158 266 184 202 222 156" />
+              <path d="M302 154 C388 164 430 246 482 318" />
+              <path d="M474 392 C390 420 318 418 244 390" />
+              <path d="M646 318 C672 212 716 150 780 136" />
+              <path d="M678 374 C760 362 900 362 1038 374" />
+              <path d="M954 398 C988 384 1012 378 1038 374" />
+              <path d="M1128 334 C1128 250 1096 184 1044 142" />
+              <path d="M1126 464 C1092 552 1002 610 884 642" />
+              <path d="M738 640 C790 646 836 646 884 642" />
             </g>
             <g className="text-destructive/58" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#loss-arrow)">
-              <path d="M212 463 C360 612 565 650 844 610" strokeDasharray="15 14" />
+              <path d="M220 475 C365 642 585 696 845 656" strokeDasharray="15 14" />
             </g>
             <g>
               {[0, 1, 2].map((index) => (
@@ -1341,7 +1345,7 @@ const ProcessGraph = ({
             </span>
           ))}
 
-          <div className="absolute left-[845px] top-[572px] z-10 rounded-full border border-destructive/35 bg-[hsl(39_45%_95%/.92)] px-6 py-4 text-center shadow-card backdrop-blur">
+          <div className="absolute left-[850px] top-[636px] z-10 rounded-full border border-destructive/35 bg-[hsl(39_45%_95%/.92)] px-6 py-4 text-center shadow-card backdrop-blur">
             <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-destructive/75">{content.solution.flow.leakage}</span>
             <span className="font-display text-2xl font-semibold text-destructive">{content.solution.flow.export}</span>
           </div>
@@ -1366,16 +1370,21 @@ const ProcessGraph = ({
                   }
                   jumpTo(point === "identify" ? "forms" : "demos");
                 }}
-                className={`absolute z-20 rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
+                className={`absolute z-20 flex min-h-[126px] flex-col rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
                   activePoint === point ? "border-primary ring-2 ring-primary/20" : "border-border"
                 }`}
                 style={{ left: position.x, top: position.y, width: position.width ?? 160 }}
               >
-                <span className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <Icon className="h-5 w-5" />
+                <span className="flex items-start justify-between gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                    {node.label}
+                  </span>
                 </span>
-                <span className="block font-display text-lg font-semibold leading-tight">{node.title}</span>
-                <span className="mt-2 block text-xs text-muted-foreground">{node.label}</span>
+                <span className="mt-4 block font-display text-lg font-semibold leading-tight">{node.title}</span>
+                <span className="mt-2 block text-xs leading-5 text-muted-foreground">{node.next}</span>
               </button>
             );
           })}
