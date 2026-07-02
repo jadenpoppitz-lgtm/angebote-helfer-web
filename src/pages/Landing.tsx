@@ -364,7 +364,7 @@ export const copy: Record<Language, LandingCopy> = {
     nav: { problem: "Problem", roles: "Roles", solution: "Loop", demos: "Demos", forms: "Start" },
     hero: {
       eyebrow: "Materials begin in nature",
-      title: "What we extract must stay in the loop.",
+      title: "What we extract stays in the loop.",
       text:
         "Kernbeisser turns recycling into a controllable B2B process: identify products, disassemble cleanly, preserve material data and keep value in Europe.",
       cta: "Select role",
