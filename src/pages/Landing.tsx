@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { languages, type Language, useLanguage } from "@/lib/i18n";
+import { DEMO_SERIAL, SERIAL_DB, type SerialLookup } from "@/data/partners";
 
 type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
 type GraphPoint = "identify" | "return" | "disassembly" | "recycler" | "smelter" | "reporting" | "oem";
@@ -56,6 +57,22 @@ type LandingCopy = {
     title: string;
     text: string;
     liveLabel: string;
+    customerLive: {
+      title: string;
+      text: string;
+      serialLabel: string;
+      serialPlaceholder: string;
+      detect: string;
+      detected: string;
+      unknown: string;
+      returnPoints: string;
+      discounts: string;
+      useDemo: string;
+      confirm: string;
+      locationPending: string;
+      check: string;
+      oemOffers: Array<{ oem: string; offer: string; condition: string }>;
+    };
     surfaces: Record<RoleId, { title: string; subtitle: string; metrics: Array<{ label: string; value: string }>; steps: string[] }>;
   };
   form: {
@@ -232,6 +249,26 @@ const copy: Record<Language, LandingCopy> = {
       title: "So fühlt sich das Netzwerk als Produkt an.",
       text: "Jede Rolle bekommt eine kleine Oberfläche mit Demo-Daten, damit der Prototyp nicht nur erklärt, sondern bedienbar wirkt.",
       liveLabel: "Live-Demo",
+      customerLive: {
+        title: "Live-Demo: Customer Rückgabe",
+        text: "Gib eine Seriennummer ein. Kernbeisser erkennt Produkt und Standort, zeigt Rückgabepartner und mögliche OEM-Rabatte.",
+        serialLabel: "Seriennummer",
+        serialPlaceholder: "z. B. KB-DD-0001",
+        detect: "Standort automatisch erkennen",
+        detected: "Standort erkannt",
+        unknown: "Seriennummer noch nicht im Demo-System",
+        returnPoints: "Rückgabepartner",
+        discounts: "Rabattaktionen der Partner-OEMs",
+        useDemo: "Demo-Seriennummer nutzen",
+        confirm: "Rückgabe bestätigen",
+        locationPending: "Standort wird erkannt ...",
+        check: "Prüfen",
+        oemOffers: [
+          { oem: "YETI Industrial", offer: "12% Rabatt auf Service-PCB", condition: "nach bestätigter Rückgabe" },
+          { oem: "Leaftronics OEM", offer: "85 EUR Materialgutschrift", condition: "für sortenreine Leiterplatten" },
+          { oem: "Kernbeisser Network", offer: "CO2-Zertifikat + Einkaufsvorteil", condition: "für ESG-fähige Rückläufer" },
+        ],
+      },
       surfaces: {
         oem: {
           title: "OEM-Dashboard",
@@ -456,6 +493,26 @@ const copy: Record<Language, LandingCopy> = {
       title: "How the network feels as a product.",
       text: "Each role gets a small interface with demo data, so the prototype feels usable.",
       liveLabel: "Live demo",
+      customerLive: {
+        title: "Live demo: customer return",
+        text: "Enter a serial number. Kernbeisser detects product and location, then shows return partners and possible OEM discounts.",
+        serialLabel: "Serial number",
+        serialPlaceholder: "e.g. KB-DD-0001",
+        detect: "Detect location automatically",
+        detected: "Location detected",
+        unknown: "Serial number is not in the demo system yet",
+        returnPoints: "Return partners",
+        discounts: "Partner OEM discount actions",
+        useDemo: "Use demo serial",
+        confirm: "Confirm return",
+        locationPending: "Detecting location ...",
+        check: "Check",
+        oemOffers: [
+          { oem: "YETI Industrial", offer: "12% discount on service PCB", condition: "after confirmed return" },
+          { oem: "Leaftronics OEM", offer: "85 EUR material credit", condition: "for sorted circuit boards" },
+          { oem: "Kernbeisser Network", offer: "CO2 certificate + purchase benefit", condition: "for ESG-ready returns" },
+        ],
+      },
       surfaces: {
         oem: {
           title: "OEM dashboard",
@@ -679,6 +736,26 @@ const copy: Record<Language, LandingCopy> = {
       title: "网络作为产品的体验。",
       text: "每个角色都有包含演示数据的小界面，让原型更像可用产品。",
       liveLabel: "实时演示",
+      customerLive: {
+        title: "实时演示：客户退回",
+        text: "输入序列号。Kernbeisser 会识别产品和位置，并显示退回伙伴与可能的 OEM 折扣。",
+        serialLabel: "序列号",
+        serialPlaceholder: "例如 KB-DD-0001",
+        detect: "自动识别位置",
+        detected: "位置已识别",
+        unknown: "该序列号暂未在演示系统中",
+        returnPoints: "退回伙伴",
+        discounts: "合作 OEM 折扣",
+        useDemo: "使用演示序列号",
+        confirm: "确认退回",
+        locationPending: "正在识别位置 ...",
+        check: "检查",
+        oemOffers: [
+          { oem: "YETI Industrial", offer: "服务 PCB 12% 折扣", condition: "确认退回后" },
+          { oem: "Leaftronics OEM", offer: "85 欧元材料积分", condition: "适用于分类电路板" },
+          { oem: "Kernbeisser Network", offer: "CO2 证书 + 采购优惠", condition: "适用于 ESG 可追踪退回" },
+        ],
+      },
       surfaces: {
         oem: {
           title: "OEM 仪表板",
@@ -1029,7 +1106,11 @@ const Landing = () => {
               ))}
             </div>
           </div>
-          <DemoSurface content={content} surface={activeSurface} reference={reference} />
+          {activeRole === "customer" ? (
+            <CustomerReturnDemo content={content} language={language} reference={reference} />
+          ) : (
+            <DemoSurface content={content} surface={activeSurface} reference={reference} />
+          )}
         </div>
       </section>
 
@@ -1273,6 +1354,177 @@ const DemoSurface = ({ content, surface, reference }: { content: LandingCopy; su
     </div>
   </div>
 );
+
+const CustomerReturnDemo = ({ content, language, reference }: { content: LandingCopy; language: Language; reference: string }) => {
+  const [serial, setSerial] = useState(DEMO_SERIAL);
+  const [lookup, setLookup] = useState<SerialLookup | null>(SERIAL_DB[DEMO_SERIAL]);
+  const [notFound, setNotFound] = useState(false);
+  const [location, setLocation] = useState(SERIAL_DB[DEMO_SERIAL].city);
+  const [detecting, setDetecting] = useState(false);
+  const copy = content.demos.customerLive;
+
+  const checkSerial = (value = serial) => {
+    const key = value.trim().toUpperCase();
+    const result = SERIAL_DB[key];
+    setLookup(result ?? null);
+    setNotFound(!result && key.length > 0);
+    if (result) {
+      setLocation(result.city);
+    }
+  };
+
+  const detectLocation = () => {
+    setDetecting(true);
+    window.setTimeout(() => {
+      const next = lookup?.city ?? "Dresden";
+      setLocation(next);
+      setDetecting(false);
+      toast.success(copy.detected, { description: next });
+    }, 650);
+  };
+
+  const device = lookup ? localizeDevice(lookup.device, language) : null;
+
+  return (
+    <div className="rounded-lg border border-background/15 bg-background/8 p-5 shadow-elegant backdrop-blur">
+      <div className="flex flex-col justify-between gap-4 border-b border-background/15 pb-5 md:flex-row md:items-center">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{content.form.demoId} {reference}</p>
+          <h3 className="mt-2 font-display text-3xl font-semibold">{copy.title}</h3>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-background/65">{copy.text}</p>
+        </div>
+        <span className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">
+          <QrCode className="h-4 w-4" />
+          {content.demos.liveLabel}
+        </span>
+      </div>
+
+      <div className="mt-5 grid gap-4 lg:grid-cols-[0.45fr_0.55fr]">
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            checkSerial();
+          }}
+          className="rounded-lg border border-background/10 bg-black/25 p-4"
+        >
+          <label className="grid gap-2 text-sm font-semibold">
+            {copy.serialLabel}
+            <input
+              value={serial}
+              onChange={(event) => setSerial(event.target.value)}
+              placeholder={copy.serialPlaceholder}
+              className="h-11 rounded-md border border-background/15 bg-black/30 px-3 font-mono text-sm text-background outline-none focus:border-primary"
+            />
+          </label>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button type="submit" className="inline-flex h-10 items-center gap-2 rounded-md bg-background px-4 text-sm font-semibold text-foreground">
+              <SearchCheck className="h-4 w-4" />
+              {copy.check}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSerial(DEMO_SERIAL);
+                checkSerial(DEMO_SERIAL);
+              }}
+              className="inline-flex h-10 items-center gap-2 rounded-md border border-background/15 px-4 text-sm font-semibold text-background/75 hover:text-background"
+            >
+              {copy.useDemo}
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={detectLocation}
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md border border-primary/35 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary"
+          >
+            <Globe2 className="h-4 w-4" />
+            {detecting ? copy.locationPending : copy.detect}
+          </button>
+
+          <div className="mt-4 rounded-md border border-background/10 bg-black/20 p-3">
+            <p className="text-xs uppercase tracking-[0.22em] text-background/45">{copy.detected}</p>
+            <p className="mt-1 font-display text-2xl font-semibold">{location}</p>
+          </div>
+        </form>
+
+        <div className="grid gap-4">
+          <div className="rounded-lg border border-background/10 bg-black/25 p-4">
+            {lookup ? (
+              <>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.22em] text-primary">{lookup.serial}</p>
+                    <h4 className="mt-2 font-display text-2xl font-semibold">{device}</h4>
+                  </div>
+                  <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">{lookup.postalCode}</span>
+                </div>
+                <p className="mt-4 text-sm font-semibold text-background/80">{copy.returnPoints}</p>
+                <div className="mt-3 grid gap-2">
+                  {lookup.partners.slice(0, 3).map((partner) => (
+                    <div key={partner.id} className="flex items-center justify-between gap-3 rounded-md border border-background/10 bg-black/20 px-3 py-2">
+                      <span>
+                        <span className="block text-sm font-semibold">{partner.name}</span>
+                        <span className="block text-xs text-background/50">{partner.street}</span>
+                      </span>
+                      <span className="text-sm font-semibold text-primary">{partner.distanceKm.toFixed(1)} km</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : notFound ? (
+              <div className="rounded-md border border-background/10 bg-black/20 p-4 text-sm text-background/70">{copy.unknown}</div>
+            ) : (
+              <div className="rounded-md border border-background/10 bg-black/20 p-4 text-sm text-background/70">{copy.text}</div>
+            )}
+          </div>
+
+          <div className="rounded-lg border border-background/10 bg-black/25 p-4">
+            <p className="text-sm font-semibold text-background/85">{copy.discounts}</p>
+            <div className="mt-3 grid gap-2">
+              {copy.oemOffers.map((offer) => (
+                <div key={offer.oem} className="rounded-md border border-background/10 bg-black/20 p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="font-display text-lg font-semibold">{offer.oem}</p>
+                    <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+                      OEM
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm font-semibold text-background/85">{offer.offer}</p>
+                  <p className="mt-1 text-xs text-background/50">{offer.condition}</p>
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => toast.success(copy.confirm, { description: lookup?.serial ?? serial })}
+              className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
+            >
+              <CheckCircle2 className="h-4 w-4" />
+              {copy.confirm}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+function localizeDevice(device: string, language: Language) {
+  if (language === "en") {
+    return device
+      .replace("Steuerungsmodul Â· Leiterplatte Rev. C", "Control module · circuit board Rev. C")
+      .replace("Leiterplatte Â· Sensorboard", "Circuit board · sensor board")
+      .replace("Hauptplatine Â· Industriesteuerung", "Mainboard · industrial controller");
+  }
+  if (language === "zh") {
+    return device
+      .replace("Steuerungsmodul Â· Leiterplatte Rev. C", "控制模块 · 电路板 Rev. C")
+      .replace("Leiterplatte Â· Sensorboard", "电路板 · 传感器板")
+      .replace("Hauptplatine Â· Industriesteuerung", "主板 · 工业控制器");
+  }
+  return device.replace(/Â·/g, "·");
+}
 
 const TextInput = ({
   label,
