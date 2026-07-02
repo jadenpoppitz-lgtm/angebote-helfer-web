@@ -23,10 +23,10 @@ import { toast } from "@/components/ui/sonner";
 import { languages, type Language, useLanguage } from "@/lib/i18n";
 import { DEMO_SERIAL, SERIAL_DB, type SerialLookup } from "@/data/partners";
 
-type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
+export type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
 type GraphPoint = "identify" | "return" | "disassembly" | "recycler" | "smelter" | "reporting" | "oem";
 
-type LandingCopy = {
+export type LandingCopy = {
   nav: { problem: string; roles: string; solution: string; demos: string; forms: string };
   hero: { eyebrow: string; title: string; text: string; cta: string };
   problem: {
@@ -92,7 +92,7 @@ type LandingCopy = {
   };
 };
 
-const copy: Record<Language, LandingCopy> = {
+export const copy: Record<Language, LandingCopy> = {
   de: {
     nav: { problem: "Problem", roles: "Rollen", solution: "Kreislauf", demos: "Demos", forms: "Starten" },
     hero: {
@@ -827,10 +827,10 @@ const copy: Record<Language, LandingCopy> = {
   },
 };
 
-const roleOrder: RoleId[] = ["oem", "customer", "recycler", "smelter", "partner"];
+export const roleOrder: RoleId[] = ["oem", "customer", "recycler", "smelter", "partner"];
 const graphOrder: GraphPoint[] = ["identify", "return", "disassembly", "recycler", "smelter", "reporting", "oem"];
 
-const roleIcons: Record<RoleId, typeof Factory> = {
+export const roleIcons: Record<RoleId, typeof Factory> = {
   oem: Factory,
   customer: UserRound,
   recycler: Recycle,
@@ -865,7 +865,6 @@ const Landing = () => {
   const content = copy[language];
 
   const activeNode = content.solution.nodes[activePoint];
-  const activeSurface = content.demos.surfaces[activeRole];
   const reference = useMemo(() => `KB-${new Date().getFullYear()}-${String(Math.floor(100 + Math.random() * 900))}`, []);
 
   const chooseRole = (role: RoleId) => {
@@ -1089,28 +1088,36 @@ const Landing = () => {
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.demos.eyebrow}</p>
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-5xl">{content.demos.title}</h2>
             <p className="mt-5 text-base leading-7 text-background/70">{content.demos.text}</p>
-            <div className="mt-6 grid gap-2">
-              {roleOrder.map((role) => (
-                <button
-                  key={role}
-                  type="button"
-                  onClick={() => chooseRole(role)}
-                  className={`rounded-md border px-4 py-3 text-left text-sm font-semibold transition-colors ${
-                    activeRole === role
-                      ? "border-primary bg-primary/15 text-background"
-                      : "border-background/15 text-background/65 hover:text-background"
-                  }`}
-                >
-                  {content.roles.cards[role].title}
-                </button>
-              ))}
-            </div>
           </div>
-          {activeRole === "customer" ? (
-            <CustomerReturnDemo content={content} language={language} reference={reference} />
-          ) : (
-            <DemoSurface content={content} surface={activeSurface} reference={reference} />
-          )}
+          <div className="grid gap-3 md:grid-cols-2">
+            {roleOrder.map((role) => {
+              const Icon = roleIcons[role];
+              const card = content.roles.cards[role];
+              const surface = content.demos.surfaces[role];
+              return (
+                <Link
+                  key={role}
+                  to={`/demo/${role}`}
+                  className="group rounded-lg border border-background/15 bg-background/8 p-5 shadow-elegant backdrop-blur transition-all hover:-translate-y-1 hover:border-primary/55"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="grid h-11 w-11 place-items-center rounded-md bg-primary/15 text-primary">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <span className="inline-flex items-center gap-2 rounded-full border border-background/15 px-3 py-1 text-xs font-semibold text-background/70 group-hover:text-background">
+                      {content.demos.liveLabel}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
+                  </div>
+                  <h3 className="mt-5 font-display text-2xl font-semibold">{card.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-background/65">{surface.subtitle}</p>
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                    {content.form.demoId} {reference}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -1321,7 +1328,7 @@ const InfoPanel = ({ content, activeNode }: { content: LandingCopy; activeNode: 
   </div>
 );
 
-const DemoSurface = ({ content, surface, reference }: { content: LandingCopy; surface: LandingCopy["demos"]["surfaces"][RoleId]; reference: string }) => (
+export const DemoSurface = ({ content, surface, reference }: { content: LandingCopy; surface: LandingCopy["demos"]["surfaces"][RoleId]; reference: string }) => (
   <div className="rounded-lg border border-background/15 bg-background/8 p-5 shadow-elegant backdrop-blur">
     <div className="flex flex-col justify-between gap-4 border-b border-background/15 pb-5 md:flex-row md:items-center">
       <div>
@@ -1355,7 +1362,7 @@ const DemoSurface = ({ content, surface, reference }: { content: LandingCopy; su
   </div>
 );
 
-const CustomerReturnDemo = ({ content, language, reference }: { content: LandingCopy; language: Language; reference: string }) => {
+export const CustomerReturnDemo = ({ content, language, reference }: { content: LandingCopy; language: Language; reference: string }) => {
   const [serial, setSerial] = useState(DEMO_SERIAL);
   const [lookup, setLookup] = useState<SerialLookup | null>(SERIAL_DB[DEMO_SERIAL]);
   const [notFound, setNotFound] = useState(false);
