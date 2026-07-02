@@ -1,0 +1,2 @@
+angebote-helfer-web Vercel deployment test
+Triggered from Codex on 2026-07-02.
