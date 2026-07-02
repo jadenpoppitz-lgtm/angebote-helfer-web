@@ -1245,81 +1245,81 @@ const ProcessGraph = ({
   jumpTo: (id: "demos" | "forms") => void;
 }) => {
   const positions: Record<GraphPoint, { x: number; y: number; width?: number }> = {
-    oem: { x: 80, y: 325, width: 168 },
-    return: { x: 128, y: 92, width: 176 },
-    identify: { x: 450, y: 300, width: 190 },
-    disassembly: { x: 700, y: 80, width: 176 },
-    recycler: { x: 690, y: 325, width: 184 },
-    smelter: { x: 920, y: 275, width: 172 },
-    reporting: { x: 470, y: 505, width: 210 },
+    oem: { x: 70, y: 330, width: 170 },
+    return: { x: 130, y: 78, width: 178 },
+    identify: { x: 470, y: 305, width: 196 },
+    disassembly: { x: 760, y: 74, width: 184 },
+    recycler: { x: 755, y: 330, width: 188 },
+    smelter: { x: 1030, y: 286, width: 176 },
+    reporting: { x: 520, y: 545, width: 218 },
   };
+  const flowLabels: Array<{ text: string; x: number; y: number; tone?: "loss" }> = [
+    { text: content.solution.flow.product, x: 94, y: 242 },
+    { text: content.solution.flow.product, x: 352, y: 190 },
+    { text: content.solution.flow.sellPcb, x: 296, y: 400 },
+    { text: content.solution.flow.productPcb, x: 668, y: 218 },
+    { text: content.solution.flow.pcb, x: 876, y: 304 },
+    { text: content.solution.flow.setSolution, x: 860, y: 376 },
+    { text: content.solution.flow.material, x: 1005, y: 505 },
+    { text: content.solution.flow.componentsAbroad, x: 344, y: 616, tone: "loss" },
+  ];
 
   return (
     <div className="rounded-lg border border-foreground/10 bg-[hsl(39_45%_95%)] p-3 shadow-elegant">
       <div className="hidden overflow-x-auto lg:block">
-        <div className="relative h-[680px] min-w-[1120px] overflow-hidden rounded-md bg-[linear-gradient(120deg,hsl(44_55%_90%/.82),transparent_44%,hsl(155_35%_88%/.82))]">
-          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1120 660" aria-hidden="true">
+        <div className="relative h-[720px] min-w-[1240px] overflow-hidden rounded-md bg-[linear-gradient(120deg,hsl(44_55%_91%/.9),hsl(50_46%_96%/.92)_48%,hsl(155_35%_89%/.9))]">
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1240 700" aria-hidden="true">
             <defs>
-              <marker id="graph-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M2 2 L10 6 L2 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <marker id="graph-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M2 2 L10 6 L2 10" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
               </marker>
-              <marker id="loss-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M2 2 L10 6 L2 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <marker id="loss-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M2 2 L10 6 L2 10" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
               </marker>
-              <path id="flow-product" d="M250 160 C335 172 385 230 458 305" />
-              <path id="flow-pcb" d="M632 335 C700 322 776 322 912 330" />
-              <path id="flow-material" d="M998 407 C980 468 928 518 840 552" />
-              <path id="flow-export" d="M215 440 C340 560 548 594 812 565" />
+              <path id="flow-product" d="M300 148 C390 160 424 236 478 304" />
+              <path id="flow-pcb" d="M672 345 C760 334 885 334 1020 344" />
+              <path id="flow-material" d="M1110 412 C1080 498 990 568 902 586" />
+              <path id="flow-export" d="M212 463 C360 612 565 650 844 610" />
             </defs>
-            <g className="text-primary/75" fill="none" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#graph-arrow)">
-              <path d="M165 322 C168 250 184 205 218 166" />
-              <path d="M250 160 C335 172 385 230 458 305" />
-              <path d="M452 352 C372 372 300 378 244 374" />
-              <path d="M620 296 C650 210 692 155 738 132" />
-              <path d="M632 335 C700 322 776 322 912 330" />
-              <path d="M878 356 C904 346 917 342 928 338" />
-              <path d="M1018 258 C1008 215 984 178 955 142" />
-              <path d="M998 407 C980 468 928 518 840 552" />
-              <path d="M665 548 C735 548 790 550 838 552" />
+            <g className="text-primary/68" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#graph-arrow)">
+              <path d="M154 328 C154 254 184 195 222 156" />
+              <path d="M300 148 C390 160 424 236 478 304" />
+              <path d="M468 356 C390 386 315 392 240 386" />
+              <path d="M640 298 C672 200 722 145 778 130" />
+              <path d="M672 345 C760 334 885 334 1020 344" />
+              <path d="M942 368 C988 358 1010 352 1026 346" />
+              <path d="M1118 268 C1110 218 1082 178 1038 142" />
+              <path d="M1110 412 C1080 498 990 568 902 586" />
+              <path d="M735 594 C798 594 850 592 902 586" />
             </g>
-            <g className="text-destructive/65" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#loss-arrow)">
-              <path d="M215 440 C340 560 548 594 812 565" strokeDasharray="16 14" />
-            </g>
-            <g className="pointer-events-none select-none font-sans text-[15px] font-semibold">
-              <text x="132" y="247" className="fill-foreground/55">{content.solution.flow.product}</text>
-              <text x="330" y="210" className="fill-foreground/55">{content.solution.flow.product}</text>
-              <text x="318" y="358" className="fill-foreground/55">{content.solution.flow.sellPcb}</text>
-              <text x="620" y="215" className="fill-foreground/55">{content.solution.flow.productPcb}</text>
-              <text x="752" y="304" className="fill-foreground/55">{content.solution.flow.pcb}</text>
-              <text x="766" y="353" className="fill-foreground/55">{content.solution.flow.setSolution}</text>
-              <text x="917" y="492" className="fill-foreground/55">{content.solution.flow.material}</text>
-              <text x="350" y="566" className="fill-destructive/65">{content.solution.flow.componentsAbroad}</text>
+            <g className="text-destructive/58" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#loss-arrow)">
+              <path d="M212 463 C360 612 565 650 844 610" strokeDasharray="15 14" />
             </g>
             <g>
               {[0, 1, 2].map((index) => (
                 <circle key={`product-${index}`} r="6" className="fill-primary">
-                  <animateMotion dur="9s" repeatCount="indefinite" begin={`${index * 1.7}s`}>
+                  <animateMotion dur="11s" repeatCount="indefinite" begin={`${index * 2.1}s`}>
                     <mpath href="#flow-product" />
                   </animateMotion>
                 </circle>
               ))}
               {[0, 1, 2].map((index) => (
                 <circle key={`pcb-${index}`} r="5.5" className="fill-primary">
-                  <animateMotion dur="8s" repeatCount="indefinite" begin={`${index * 1.5}s`}>
+                  <animateMotion dur="10s" repeatCount="indefinite" begin={`${index * 1.9}s`}>
                     <mpath href="#flow-pcb" />
                   </animateMotion>
                 </circle>
               ))}
               {[0, 1].map((index) => (
                 <circle key={`material-${index}`} r="5.5" className="fill-primary">
-                  <animateMotion dur="8.5s" repeatCount="indefinite" begin={`${index * 2.1}s`}>
+                  <animateMotion dur="10.5s" repeatCount="indefinite" begin={`${index * 2.6}s`}>
                     <mpath href="#flow-material" />
                   </animateMotion>
                 </circle>
               ))}
               {[0, 1].map((index) => (
                 <circle key={`export-${index}`} r="5" className="fill-destructive/70">
-                  <animateMotion dur="10s" repeatCount="indefinite" begin={`${index * 2.6}s`}>
+                  <animateMotion dur="12s" repeatCount="indefinite" begin={`${index * 3.1}s`}>
                     <mpath href="#flow-export" />
                   </animateMotion>
                 </circle>
@@ -1327,7 +1327,21 @@ const ProcessGraph = ({
             </g>
           </svg>
 
-          <div className="absolute left-[770px] top-[535px] z-10 rounded-full border border-destructive/35 bg-destructive/10 px-6 py-4 text-center shadow-card">
+          {flowLabels.map((label) => (
+            <span
+              key={`${label.text}-${label.x}-${label.y}`}
+              className={`pointer-events-none absolute z-10 rounded-full border px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur ${
+                label.tone === "loss"
+                  ? "border-destructive/20 bg-destructive/10 text-destructive/75"
+                  : "border-foreground/10 bg-background/75 text-foreground/55"
+              }`}
+              style={{ left: label.x, top: label.y }}
+            >
+              {label.text}
+            </span>
+          ))}
+
+          <div className="absolute left-[845px] top-[572px] z-10 rounded-full border border-destructive/35 bg-[hsl(39_45%_95%/.92)] px-6 py-4 text-center shadow-card backdrop-blur">
             <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-destructive/75">{content.solution.flow.leakage}</span>
             <span className="font-display text-2xl font-semibold text-destructive">{content.solution.flow.export}</span>
           </div>
@@ -1352,7 +1366,7 @@ const ProcessGraph = ({
                   }
                   jumpTo(point === "identify" ? "forms" : "demos");
                 }}
-                className={`absolute w-40 rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
+                className={`absolute z-20 rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
                   activePoint === point ? "border-primary ring-2 ring-primary/20" : "border-border"
                 }`}
                 style={{ left: position.x, top: position.y, width: position.width ?? 160 }}
