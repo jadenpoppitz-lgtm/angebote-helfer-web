@@ -73,16 +73,46 @@ export async function fetchOffers(
 }
 
 export async function createRequest(payload: RequestPayload): Promise<RequestResponse> {
-  const response = await fetch("/api/requests", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  let response: Response;
+  try {
+    response = await fetch("/api/requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    if (shouldUseLocalRequestFallback()) return createLocalRequestResponse();
+    throw error;
+  }
 
-  const data = await response.json();
+  const text = await response.text();
+  let data: Partial<RequestResponse> & { error?: string };
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    if (shouldUseLocalRequestFallback()) return createLocalRequestResponse();
+    throw new Error("Anfrage konnte nicht verarbeitet werden.");
+  }
+
   if (!response.ok) {
     throw new Error(data?.error ?? "Anfrage konnte nicht gesendet werden.");
   }
 
   return data as RequestResponse;
+}
+
+function shouldUseLocalRequestFallback() {
+  if (typeof window === "undefined") return false;
+  return ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
+}
+
+function createLocalRequestResponse(): RequestResponse {
+  return {
+    request: {
+      id: `DEMO-${Date.now().toString(36).toUpperCase()}`,
+      createdAt: new Date().toISOString(),
+      status: "local-demo",
+    },
+    message: "Lokale Demo-Anfrage wurde gespeichert.",
+  };
 }

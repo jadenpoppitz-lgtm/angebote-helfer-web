@@ -54,12 +54,13 @@ const DemoPage = () => {
 
   return (
     <div className="min-h-screen bg-black text-background">
-      <div className="fixed right-4 top-4 z-50 flex rounded-md border border-background/20 bg-black/35 p-1 shadow-card backdrop-blur-md">
+      <div className="fixed bottom-4 right-4 z-50 flex rounded-md border border-background/20 bg-black/45 p-1 shadow-card backdrop-blur-md sm:bottom-auto sm:top-4">
         {languages.map((item) => (
           <button
             key={item.code}
             type="button"
             onClick={() => setLanguage(item.code)}
+            aria-label={item.label}
             className={`h-8 rounded px-2 text-xs font-medium transition-colors ${
               language === item.code ? "bg-background text-foreground" : "text-background/75 hover:text-background"
             }`}
@@ -70,7 +71,7 @@ const DemoPage = () => {
         ))}
       </div>
 
-      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 pr-32 sm:px-8">
+      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
         <Link to="/" className="flex items-center gap-3 text-background/80 transition-colors hover:text-background">
           <ArrowLeft className="h-4 w-4" />
           {labels.back}

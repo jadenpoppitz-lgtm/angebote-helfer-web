@@ -913,7 +913,11 @@ const Landing = () => {
       createdAt: new Date().toISOString(),
     };
 
-    window.localStorage.setItem(`kernbeisser-request-${id}`, JSON.stringify(payload));
+    try {
+      window.localStorage.setItem(`kernbeisser-request-${id}`, JSON.stringify(payload));
+    } catch {
+      // The prototype should still confirm submissions when storage is blocked.
+    }
     window.setTimeout(() => {
       setConfirmation({ id, role: activeRole });
       setIsSubmitting(false);
@@ -925,12 +929,13 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-black text-background">
-      <div className="fixed right-4 top-4 z-50 flex rounded-md border border-background/20 bg-black/35 p-1 shadow-card backdrop-blur-md">
+      <div className="fixed bottom-4 right-4 z-50 flex rounded-md border border-background/20 bg-black/45 p-1 shadow-card backdrop-blur-md sm:bottom-auto sm:top-4">
         {languages.map((item) => (
           <button
             key={item.code}
             type="button"
             onClick={() => setLanguage(item.code)}
+            aria-label={item.label}
             className={`h-8 rounded px-2 text-xs font-medium transition-colors ${
               language === item.code ? "bg-background text-foreground" : "text-background/75 hover:text-background"
             }`}
@@ -946,7 +951,7 @@ const Landing = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/80" />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-black" />
 
-        <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 pr-32 sm:px-8">
+        <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
           <Link to="/" className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-background shadow-elegant">
               <img src="/logo.png" alt="Kernbeisser Logo" className="h-full w-full object-cover" />
@@ -1054,8 +1059,12 @@ const Landing = () => {
                 <button
                   key={role}
                   type="button"
-                  onClick={() => chooseRole(role)}
-                  className={`flex min-h-72 flex-col rounded-lg border bg-background p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
+                  onClick={() => {
+                    chooseRole(role);
+                    jumpTo("solution");
+                  }}
+                  aria-pressed={active}
+                  className={`flex flex-col rounded-lg border bg-background p-4 text-left shadow-card transition-all hover:-translate-y-1 md:min-h-72 ${
                     active ? "border-primary ring-2 ring-primary/20" : "border-border"
                   }`}
                 >
@@ -1188,8 +1197,9 @@ const Landing = () => {
               <label className="grid gap-2 text-sm font-medium sm:col-span-2">
                 {content.form.product}
                 <input
+                  key={activeRole}
                   name="product"
-                  defaultValue={activeRole === "customer" ? "KB-DD-0001" : ""}
+                  defaultValue={activeRole === "customer" ? DEMO_SERIAL : ""}
                   className="h-11 rounded-md border border-input bg-background px-3 text-sm"
                 />
               </label>
@@ -1741,19 +1751,20 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
 };
 
 function localizeDevice(device: string, language: Language) {
+  const normalized = device.replace(/Â·/g, "·");
   if (language === "en") {
-    return device
-      .replace("Steuerungsmodul Â· Leiterplatte Rev. C", "Control module · circuit board Rev. C")
-      .replace("Leiterplatte Â· Sensorboard", "Circuit board · sensor board")
-      .replace("Hauptplatine Â· Industriesteuerung", "Mainboard · industrial controller");
+    return normalized
+      .replace("Steuerungsmodul · Leiterplatte Rev. C", "Control module · circuit board Rev. C")
+      .replace("Leiterplatte · Sensorboard", "Circuit board · sensor board")
+      .replace("Hauptplatine · Industriesteuerung", "Mainboard · industrial controller");
   }
   if (language === "zh") {
-    return device
-      .replace("Steuerungsmodul Â· Leiterplatte Rev. C", "控制模块 · 电路板 Rev. C")
-      .replace("Leiterplatte Â· Sensorboard", "电路板 · 传感器板")
-      .replace("Hauptplatine Â· Industriesteuerung", "主板 · 工业控制器");
+    return normalized
+      .replace("Steuerungsmodul · Leiterplatte Rev. C", "控制模块 · 电路板 Rev. C")
+      .replace("Leiterplatte · Sensorboard", "电路板 · 传感器板")
+      .replace("Hauptplatine · Industriesteuerung", "主板 · 工业控制器");
   }
-  return device.replace(/Â·/g, "·");
+  return normalized;
 }
 
 const TextInput = ({

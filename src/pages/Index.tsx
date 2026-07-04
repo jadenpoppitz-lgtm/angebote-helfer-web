@@ -163,19 +163,20 @@ const partnerTypeLabels: Record<Language, Record<Partner["type"], string>> = {
 };
 
 function deviceLabel(result: SerialLookup, language: Language) {
+  const normalized = result.device.replace(/Â·/g, "·");
   if (language === "en") {
-    return result.device
+    return normalized
       .replace("Steuerungsmodul · Leiterplatte Rev. C", "Control module · circuit board Rev. C")
       .replace("Leiterplatte · Sensorboard", "Circuit board · sensor board")
       .replace("Hauptplatine · Industriesteuerung", "Mainboard · industrial controller");
   }
   if (language === "zh") {
-    return result.device
+    return normalized
       .replace("Steuerungsmodul · Leiterplatte Rev. C", "控制模块 · 电路板 Rev. C")
       .replace("Leiterplatte · Sensorboard", "电路板 · 传感器板")
       .replace("Hauptplatine · Industriesteuerung", "主板 · 工业控制器");
   }
-  return result.device;
+  return normalized;
 }
 
 const Index = () => {
@@ -218,22 +219,23 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/60">
-        <div className="container flex h-16 items-center justify-between gap-4">
+        <div className="container flex h-16 items-center justify-between gap-2 sm:gap-4">
           <Link to="/" className="flex items-center gap-2">
             <span className="flex h-8 w-8 items-center justify-center rounded-md bg-foreground text-background">
               <Leaf className="h-4 w-4" />
             </span>
-            <span className="font-display text-base font-semibold uppercase tracking-[0.2em]">
+            <span className="font-display text-sm font-semibold uppercase tracking-[0.16em] sm:text-base sm:tracking-[0.2em]">
               Kernbeißer
             </span>
           </Link>
-          <div className="flex items-center gap-3">
-            <div className="hidden rounded-md border border-border bg-muted/40 p-1 sm:flex">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <div className="flex rounded-md border border-border bg-muted/40 p-1" aria-label="Language">
               {languages.map((item) => (
                 <button
                   key={item.code}
                   type="button"
                   onClick={() => setLanguage(item.code)}
+                  aria-label={item.label}
                   className={`h-8 rounded px-2 text-xs font-medium ${
                     language === item.code ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
                   }`}
@@ -244,7 +246,7 @@ const Index = () => {
             </div>
             <Link
               to="/"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground sm:text-sm"
             >
               <ArrowLeft className="h-4 w-4" />
               {copy.back}

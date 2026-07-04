@@ -252,6 +252,7 @@ export function DeviceImpact({ language }: { language: Language }) {
   });
   const [query, setQuery] = useState("");
   const [selectedClass, setSelectedClass] = useState<DeviceClass>("device");
+  const [manualClassOverride, setManualClassOverride] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -261,6 +262,7 @@ export function DeviceImpact({ language }: { language: Language }) {
       setDetected(result);
       setQuery(result.label);
       setSelectedClass(result.deviceClass);
+      setManualClassOverride(false);
     });
 
     return () => {
@@ -269,7 +271,7 @@ export function DeviceImpact({ language }: { language: Language }) {
   }, []);
 
   const matchedModel = useMemo(() => findDeviceModel(query), [query]);
-  const effectiveClass = matchedModel?.class ?? classifyDevice(query, selectedClass);
+  const effectiveClass = manualClassOverride ? selectedClass : matchedModel?.class ?? classifyDevice(query, selectedClass);
   const profile = DEVICE_CLASS_PROFILES[effectiveClass];
   const standardGrams = Math.round((profile.pcbMassG * profile.standardCircularity) / 100);
   const leafGrams = Math.round((profile.pcbMassG * profile.leaftronicsCircularity) / 100);
@@ -295,6 +297,7 @@ export function DeviceImpact({ language }: { language: Language }) {
   const handleQuery = (value: string) => {
     setQuery(value);
     setSelectedClass(classifyDevice(value, selectedClass));
+    setManualClassOverride(false);
   };
 
   const displayModel = query.trim() || text.empty;
@@ -362,6 +365,7 @@ export function DeviceImpact({ language }: { language: Language }) {
                   onClick={() => {
                     setQuery(detected.label);
                     setSelectedClass(detected.deviceClass);
+                    setManualClassOverride(false);
                   }}
                   className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-foreground px-4 text-sm font-semibold text-background shadow-card transition-transform hover:-translate-y-0.5"
                 >
@@ -379,6 +383,7 @@ export function DeviceImpact({ language }: { language: Language }) {
                     onClick={() => {
                       setQuery(model.label);
                       setSelectedClass(model.class);
+                      setManualClassOverride(false);
                     }}
                     className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
                       matchedModel?.id === model.id
@@ -402,7 +407,11 @@ export function DeviceImpact({ language }: { language: Language }) {
                     <button
                       key={item}
                       type="button"
-                      onClick={() => setSelectedClass(item)}
+                      onClick={() => {
+                        setSelectedClass(item);
+                        setManualClassOverride(true);
+                      }}
+                      aria-pressed={active}
                       className={`flex min-h-11 items-center justify-center gap-2 rounded-md border px-2 py-2 text-[11px] font-semibold leading-tight transition-all hover:-translate-y-0.5 sm:text-xs ${
                         active ? "border-primary bg-primary text-primary-foreground shadow-card" : "border-border bg-background text-muted-foreground"
                       }`}

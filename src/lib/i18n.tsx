@@ -787,13 +787,21 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem("language");
-    return saved === "en" || saved === "zh" || saved === "de" ? saved : "de";
+    try {
+      const saved = localStorage.getItem("language");
+      return saved === "en" || saved === "zh" || saved === "de" ? saved : "de";
+    } catch {
+      return "de";
+    }
   });
 
   const setLanguage = (nextLanguage: Language) => {
     setLanguageState(nextLanguage);
-    localStorage.setItem("language", nextLanguage);
+    try {
+      localStorage.setItem("language", nextLanguage);
+    } catch {
+      // Keep the in-memory language update when storage is blocked.
+    }
   };
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -32,6 +32,7 @@ interface Props {
 
 export function RequestDialog({ open, onOpenChange, offer }: Props) {
   const { t, materialLabel, modeLabel } = useLanguage();
+  const formId = useId();
   const [step, setStep] = useState(1);
   const [material, setMaterial] = useState<Material>("Metall");
   const [quantity, setQuantity] = useState("");
@@ -42,11 +43,13 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
+  const [photoCount, setPhotoCount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (open) {
       setStep(1);
+      setPhotoCount(0);
       if (offer) {
         setMaterial(offer.material);
         setPickup(offer.mode);
@@ -54,8 +57,8 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
     }
   }, [open, offer]);
 
-  const canNext1 = quantity && plz.length >= 4;
-  const canSubmit = name && /.+@.+\..+/.test(email);
+  const canNext1 = quantity.trim().length > 0 && /^\d{4,5}$/.test(plz);
+  const canSubmit = name.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   const submit = async () => {
     setIsSubmitting(true);
@@ -88,7 +91,7 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-lg overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">
             {offer ? `${t.sendRequest}: ${offer.provider}` : t.requestOffer}
@@ -96,10 +99,17 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
           <DialogDescription>{t.dialogStep(step)}</DialogDescription>
         </DialogHeader>
 
-        <div className="mt-2 flex gap-1.5">
+        <div
+          className="mt-2 flex gap-1.5"
+          role="progressbar"
+          aria-valuemin={1}
+          aria-valuemax={2}
+          aria-valuenow={step}
+        >
           {[1, 2].map((item) => (
             <div
               key={item}
+              aria-hidden="true"
               className={`h-1.5 flex-1 rounded-full ${
                 item <= step ? "bg-primary" : "bg-muted"
               }`}
@@ -110,9 +120,9 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
         {step === 1 && (
           <div className="grid gap-4 py-2">
             <div>
-              <Label>{t.navMaterials}</Label>
+              <Label htmlFor={`${formId}-material`}>{t.navMaterials}</Label>
               <Select value={material} onValueChange={(value) => setMaterial(value as Material)}>
-                <SelectTrigger className="mt-1">
+                <SelectTrigger id={`${formId}-material`} className="mt-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -126,8 +136,9 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>{t.quantity}</Label>
+                <Label htmlFor={`${formId}-quantity`}>{t.quantity}</Label>
                 <Input
+                  id={`${formId}-quantity`}
                   className="mt-1"
                   placeholder={t.quantityPlaceholder}
                   value={quantity}
@@ -135,8 +146,9 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
                 />
               </div>
               <div>
-                <Label>{t.zip}</Label>
+                <Label htmlFor={`${formId}-plz`}>{t.zip}</Label>
                 <Input
+                  id={`${formId}-plz`}
                   className="mt-1"
                   placeholder="10115"
                   value={plz}
@@ -146,8 +158,9 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
               </div>
             </div>
             <div>
-              <Label>{t.cityOptional}</Label>
+              <Label htmlFor={`${formId}-city`}>{t.cityOptional}</Label>
               <Input
+                id={`${formId}-city`}
                 className="mt-1"
                 value={city}
                 onChange={(event) => setCity(event.target.value)}
@@ -162,6 +175,7 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
                     key={mode}
                     type="button"
                     onClick={() => setPickup(mode)}
+                    aria-pressed={pickup === mode}
                     className={`rounded-md border px-3 py-2 text-sm transition-colors ${
                       pickup === mode
                         ? "border-primary bg-primary text-primary-foreground"
@@ -173,10 +187,20 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
                 ))}
               </div>
             </div>
-            <label className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-border bg-muted/30 px-3 py-4 text-sm text-muted-foreground hover:bg-muted/50">
+            <label
+              htmlFor={`${formId}-photos`}
+              className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-border bg-muted/30 px-3 py-4 text-center text-sm text-muted-foreground hover:bg-muted/50"
+            >
               <Upload className="h-4 w-4" />
-              {t.photos}
-              <input type="file" multiple className="hidden" accept="image/*" />
+              {photoCount > 0 ? `${t.photos} · ${photoCount}` : t.photos}
+              <input
+                id={`${formId}-photos`}
+                type="file"
+                multiple
+                className="hidden"
+                accept="image/*"
+                onChange={(event) => setPhotoCount(event.target.files?.length ?? 0)}
+              />
             </label>
           </div>
         )}
@@ -184,8 +208,9 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
         {step === 2 && (
           <div className="grid gap-4 py-2">
             <div>
-              <Label>{t.name}</Label>
+              <Label htmlFor={`${formId}-name`}>{t.name}</Label>
               <Input
+                id={`${formId}-name`}
                 className="mt-1"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
@@ -193,8 +218,9 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
               />
             </div>
             <div>
-              <Label>{t.email}</Label>
+              <Label htmlFor={`${formId}-email`}>{t.email}</Label>
               <Input
+                id={`${formId}-email`}
                 className="mt-1"
                 type="email"
                 value={email}
@@ -203,8 +229,9 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
               />
             </div>
             <div>
-              <Label>{t.phoneOptional}</Label>
+              <Label htmlFor={`${formId}-phone`}>{t.phoneOptional}</Label>
               <Input
+                id={`${formId}-phone`}
                 className="mt-1"
                 value={phone}
                 onChange={(event) => setPhone(event.target.value)}
@@ -212,8 +239,9 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
               />
             </div>
             <div>
-              <Label>{t.notes}</Label>
+              <Label htmlFor={`${formId}-notes`}>{t.notes}</Label>
               <Textarea
+                id={`${formId}-notes`}
                 className="mt-1"
                 rows={3}
                 value={notes}
@@ -230,16 +258,16 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
 
         <DialogFooter className="gap-2 sm:gap-2">
           {step === 2 && (
-            <Button variant="outline" onClick={() => setStep(1)}>
+            <Button type="button" variant="outline" onClick={() => setStep(1)}>
               {t.back}
             </Button>
           )}
           {step === 1 ? (
-            <Button disabled={!canNext1} onClick={() => setStep(2)}>
+            <Button type="button" disabled={!canNext1} onClick={() => setStep(2)}>
               {t.next}
             </Button>
           ) : (
-            <Button disabled={!canSubmit || isSubmitting} onClick={submit}>
+            <Button type="button" disabled={!canSubmit || isSubmitting} onClick={submit}>
               {isSubmitting ? t.sending : t.sendRequest}
             </Button>
           )}
