@@ -123,4 +123,30 @@ All colors MUST be HSL.
     mask-image: radial-gradient(circle at center, black 0%, transparent 72%);
   }
 
+  .flow-beam-trace {
+    stroke-dasharray: 78 520;
+    stroke-dashoffset: 598;
+    animation: flow-beam-move var(--beam-duration, 7.5s) linear infinite;
+    animation-delay: var(--beam-delay, 0s);
+    filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.28));
+  }
+}
+
+@keyframes flow-beam-move {
+  from {
+    stroke-dashoffset: 598;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-beam-trace {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    opacity: 0.42;
+  }
 }

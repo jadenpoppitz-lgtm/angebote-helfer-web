@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { FormEvent, ReactNode } from "react";
+import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowDown,
@@ -7,8 +7,6 @@ import {
   BarChart3,
   CheckCircle2,
   Factory,
-  FileText,
-  FlaskConical,
   Flame,
   Globe2,
   Handshake,
@@ -25,7 +23,7 @@ import { languages, type Language, useLanguage } from "@/lib/i18n";
 import { DEMO_SERIAL, SERIAL_DB, type SerialLookup } from "@/data/partners";
 
 export type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
-type GraphPoint = "identify" | "return" | "disassembly" | "recycler" | "smelter" | "reporting" | "oem";
+type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" | "asia";
 
 export type LandingCopy = {
   nav: { problem: string; impact: string; roles: string; solution: string; demos: string; forms: string };
@@ -191,61 +189,54 @@ export const copy: Record<Language, LandingCopy> = {
       },
     },
     solution: {
-      eyebrow: "Interaktiver Kreislauf",
-      title: "Ein lesbarer Graph mit echten nächsten Schritten.",
+      eyebrow: "Interaktiver Wertstrom",
+      title: "Produkt, PCB und Material laufen getrennt durch den Loop.",
       text:
-        "Die Pfeile zeigen Material- und Transportwege. Die Punkte zeigen, wo Kernbeisser Wert erzeugt: von Seriennummer bis ESG-Bericht.",
+        "Die Animation folgt dem Prozess aus der Skizze: OEM liefert Produkt, der Kunde gibt zurück, Kernbeisser routet PCB und Produkt, der Smelter gewinnt Material und Exportpfade werden sichtbar.",
       hoverLabel: "Aktiver Prozesspunkt",
       nextStep: "Nächster Schritt",
       nodes: {
-        identify: {
-          title: "Produkt identifizieren",
-          label: "Serial / QR",
-          problem: "Ohne Produkt-ID ist Material nicht rückführbar.",
-          solution: "Seriennummer, PCB-Typ und OEM-Bezug werden erfasst.",
-          next: "Rückgabeformular öffnen",
+        oem: {
+          title: "OEM",
+          label: "Produktion",
+          problem: "Materialhoheit endet oft nach dem Verkauf.",
+          solution: "Der OEM bleibt Start- und Zielpunkt: Produkt geht zum Kunden, PCB-Wert und Daten kommen zurück.",
+          next: "OEM-Dashboard öffnen",
         },
-        return: {
-          title: "Rückgabe anstoßen",
+        customer: {
+          title: "Customer",
           label: "Customer",
-          problem: "Produkte bleiben liegen oder werden falsch entsorgt.",
-          solution: "Rückgeber erhalten Status und Rabatt im OEM-Netzwerk.",
-          next: "Rabattstatus prüfen",
+          problem: "Produkte bleiben beim Kunden oder gehen in Mischströme.",
+          solution: "Der Kunde gibt das Produkt in den Loop zurück, statt es anonym zu entsorgen.",
+          next: "Rückgabe starten",
+        },
+        consulting: {
+          title: "Consulting",
+          label: "Kernbeisser",
+          problem: "Ohne Bewertung wird PCB anonym verkauft oder falsch geroutet.",
+          solution: "Kernbeisser bewertet Produkt und PCB, verkauft oder ordnet PCB zu und setzt die passende Lösung.",
+          next: "Routing prüfen",
         },
         disassembly: {
-          title: "Sauber demontieren",
-          label: "Demontage",
+          title: "Disassembly",
+          label: "Produkt - PCB",
           problem: "PCB, Gehäuse und Komponenten vermischen sich.",
-          solution: "Partner erhalten klare Demontage- und Fraktionslogik.",
+          solution: "Demontage trennt Produkt und PCB, bevor Material in den falschen Kanal fällt.",
           next: "Demontageauftrag anlegen",
         },
-        recycler: {
-          title: "Chemisch lösen",
-          label: "Recycler",
-          problem: "Wertstoffe werden nicht gezielt gefiltert.",
-          solution: "Chemische Lösungen verbessern Auflösung und Trennung.",
-          next: "Recycler-Demo ansehen",
-        },
         smelter: {
-          title: "Material verwerten",
-          label: "Smelter",
-          problem: "Schwankende Qualität senkt Ausbeute.",
-          solution: "Qualifizierte PCB-Chargen gehen an passende Materialpartner.",
+          title: "Smelter",
+          label: "PCB + Lösung",
+          problem: "Unklare PCB-Chargen reduzieren Ausbeute.",
+          solution: "Qualifizierte PCB-Ströme gehen mit Lösung und erwarteter Ausbeute zum Smelter.",
           next: "Charge prüfen",
         },
-        reporting: {
-          title: "ESG dokumentieren",
-          label: "Reporting",
-          problem: "Nachweise bleiben unvollständig.",
-          solution: "CO2, Materialwert und Rückführung werden dokumentiert.",
-          next: "Bericht erzeugen",
-        },
-        oem: {
-          title: "An OEM zurückführen",
-          label: "OEM",
-          problem: "Materialhoheit endet nach dem Produktverkauf.",
-          solution: "OEMs erhalten Daten, Sekundärmaterial und neue Produktionsoptionen.",
-          next: "OEM-Dashboard öffnen",
+        asia: {
+          title: "Asia / Export",
+          label: "Leakage",
+          problem: "Komponenten und Material verschwinden außerhalb des europäischen Loops.",
+          solution: "Der Verlustpfad wird sichtbar und kann Schritt für Schritt reduziert werden.",
+          next: "Leakage reduzieren",
         },
       },
       values: [
@@ -447,60 +438,53 @@ export const copy: Record<Language, LandingCopy> = {
       },
     },
     solution: {
-      eyebrow: "Interactive loop",
-      title: "A readable graph with real next steps.",
-      text: "Arrows show material and transport paths. Nodes show where Kernbeisser creates value, from serial number to ESG report.",
+      eyebrow: "Interactive value flow",
+      title: "Product, PCB and material move through separate loop paths.",
+      text: "The animation follows the sketched process: OEM ships product, the customer returns it, Kernbeisser routes product and PCB, the smelter recovers material and export leakage becomes visible.",
       hoverLabel: "Active process point",
       nextStep: "Next step",
       nodes: {
-        identify: {
-          title: "Identify product",
-          label: "Serial / QR",
-          problem: "Without product ID, material cannot be returned.",
-          solution: "Serial number, PCB type and OEM relation are captured.",
-          next: "Open return form",
+        oem: {
+          title: "OEM",
+          label: "Production",
+          problem: "Material sovereignty often ends after the product sale.",
+          solution: "The OEM stays the start and target point: products go to customers, PCB value and data come back.",
+          next: "Open OEM dashboard",
         },
-        return: {
-          title: "Trigger return",
+        customer: {
+          title: "Customer",
           label: "Customer",
-          problem: "Products sit idle or are disposed incorrectly.",
-          solution: "Returners get status and discounts in the OEM network.",
-          next: "Check discount status",
+          problem: "Products sit with customers or enter mixed streams.",
+          solution: "The customer sends the product back into the loop instead of disposing of it anonymously.",
+          next: "Start return",
+        },
+        consulting: {
+          title: "Consulting",
+          label: "Kernbeisser",
+          problem: "Without evaluation, PCB is sold anonymously or routed incorrectly.",
+          solution: "Kernbeisser evaluates product and PCB, sells or assigns PCB and sets the suitable solution.",
+          next: "Review routing",
         },
         disassembly: {
-          title: "Clean disassembly",
-          label: "Disassembly",
+          title: "Disassembly",
+          label: "Product - PCB",
           problem: "PCB, housing and components get mixed.",
-          solution: "Partners receive disassembly and fraction logic.",
+          solution: "Disassembly separates product and PCB before material falls into the wrong channel.",
           next: "Create disassembly order",
         },
-        recycler: {
-          title: "Chemical recovery",
-          label: "Recycler",
-          problem: "Valuable fractions are not filtered deliberately.",
-          solution: "Chemical solutions improve dissolution and separation.",
-          next: "View recycler demo",
-        },
         smelter: {
-          title: "Recover material",
-          label: "Smelter",
-          problem: "Inconsistent quality reduces yield.",
-          solution: "Qualified PCB batches go to suitable material partners.",
+          title: "Smelter",
+          label: "PCB + solution",
+          problem: "Unclear PCB batches reduce yield.",
+          solution: "Qualified PCB streams go to the smelter with the right solution and expected yield.",
           next: "Review batch",
         },
-        reporting: {
-          title: "Document ESG",
-          label: "Reporting",
-          problem: "Proof stays incomplete.",
-          solution: "CO2, material value and return path are documented.",
-          next: "Generate report",
-        },
-        oem: {
-          title: "Return to OEM",
-          label: "OEM",
-          problem: "Material sovereignty ends after sale.",
-          solution: "OEMs receive data, secondary material and production options.",
-          next: "Open OEM dashboard",
+        asia: {
+          title: "Asia / Export",
+          label: "Leakage",
+          problem: "Components and material disappear outside the European loop.",
+          solution: "The leakage path becomes visible and can be reduced step by step.",
+          next: "Reduce leakage",
         },
       },
       values: [
@@ -701,60 +685,53 @@ export const copy: Record<Language, LandingCopy> = {
       },
     },
     solution: {
-      eyebrow: "交互式循环",
-      title: "可读的流程图和真实下一步。",
-      text: "箭头显示材料和运输路径。节点显示 Kernbeisser 从序列号到 ESG 报告创造价值的位置。",
+      eyebrow: "交互式价值流",
+      title: "产品、PCB 和材料沿着不同路径进入循环。",
+      text: "动画按照草图展示流程：OEM 交付产品，客户退回，Kernbeisser 路由产品和 PCB，冶炼方回收材料，同时显示出口流失路径。",
       hoverLabel: "当前流程点",
       nextStep: "下一步",
       nodes: {
-        identify: {
-          title: "识别产品",
-          label: "序列号 / QR",
-          problem: "没有产品 ID，材料无法回流。",
-          solution: "记录序列号、PCB 类型和 OEM 关系。",
-          next: "打开退回表单",
+        oem: {
+          title: "OEM",
+          label: "生产",
+          problem: "材料主权常常在产品销售后结束。",
+          solution: "OEM 保持起点和目标点：产品交给客户，PCB 价值和数据回到体系。",
+          next: "打开 OEM 仪表板",
         },
-        return: {
-          title: "启动退回",
+        customer: {
+          title: "客户",
           label: "客户",
-          problem: "产品闲置或被错误处理。",
-          solution: "退回方获得状态和 OEM 网络折扣。",
-          next: "检查折扣状态",
+          problem: "产品停留在客户处，或进入混合回收流。",
+          solution: "客户把产品送回循环，而不是匿名处理。",
+          next: "启动退回",
+        },
+        consulting: {
+          title: "咨询 / 路由",
+          label: "Kernbeisser",
+          problem: "没有评估时，PCB 会被匿名出售或错误路由。",
+          solution: "Kernbeisser 评估产品和 PCB，分配或出售 PCB，并设置合适方案。",
+          next: "检查路由",
         },
         disassembly: {
-          title: "清晰拆解",
-          label: "拆解",
+          title: "拆解",
+          label: "产品 - PCB",
           problem: "PCB、外壳和组件混合。",
-          solution: "伙伴获得拆解和材料组分逻辑。",
+          solution: "拆解先分离产品和 PCB，避免材料进入错误渠道。",
           next: "创建拆解任务",
         },
-        recycler: {
-          title: "化学回收",
-          label: "回收商",
-          problem: "有价值组分没有被有目标地过滤。",
-          solution: "化学方案改善溶解和分离。",
-          next: "查看回收商演示",
-        },
         smelter: {
-          title: "材料利用",
-          label: "冶炼方",
-          problem: "质量波动降低产出。",
-          solution: "合格 PCB 批次进入合适材料伙伴。",
+          title: "冶炼方",
+          label: "PCB + 方案",
+          problem: "PCB 批次不清晰会降低产出。",
+          solution: "合格 PCB 流带着方案和预期产出进入冶炼方。",
           next: "检查批次",
         },
-        reporting: {
-          title: "ESG 记录",
-          label: "报告",
-          problem: "证明不完整。",
-          solution: "记录 CO2、材料价值和回流路径。",
-          next: "生成报告",
-        },
-        oem: {
-          title: "回流到 OEM",
-          label: "OEM",
-          problem: "材料主权在销售后结束。",
-          solution: "OEM 获得数据、二次材料和生产选择。",
-          next: "打开 OEM 仪表板",
+        asia: {
+          title: "亚洲 / 出口",
+          label: "流失",
+          problem: "组件和材料离开欧洲循环。",
+          solution: "流失路径被显示出来，并可逐步减少。",
+          next: "减少流失",
         },
       },
       values: [
@@ -873,7 +850,7 @@ export const copy: Record<Language, LandingCopy> = {
 };
 
 export const roleOrder: RoleId[] = ["oem", "customer", "recycler", "smelter", "partner"];
-const graphOrder: GraphPoint[] = ["oem", "return", "identify", "disassembly", "recycler", "smelter", "reporting"];
+const graphOrder: GraphPoint[] = ["oem", "customer", "consulting", "disassembly", "smelter", "asia"];
 
 export const roleIcons: Record<RoleId, typeof Factory> = {
   oem: Factory,
@@ -884,21 +861,20 @@ export const roleIcons: Record<RoleId, typeof Factory> = {
 };
 
 const graphIcons: Record<GraphPoint, typeof Factory> = {
-  identify: SearchCheck,
-  return: QrCode,
-  disassembly: Wrench,
-  recycler: FlaskConical,
-  smelter: Flame,
-  reporting: FileText,
   oem: Factory,
+  customer: UserRound,
+  consulting: Handshake,
+  disassembly: Wrench,
+  smelter: Flame,
+  asia: Globe2,
 };
 
 const roleToPoint: Record<RoleId, GraphPoint> = {
   oem: "oem",
-  customer: "return",
-  recycler: "recycler",
+  customer: "customer",
+  recycler: "disassembly",
   smelter: "smelter",
-  partner: "reporting",
+  partner: "consulting",
 };
 
 const Landing = () => {
@@ -1250,142 +1226,197 @@ const ProcessGraph = ({
   chooseRole: (role: RoleId) => void;
   jumpTo: (id: "demos" | "forms") => void;
 }) => {
-  const positions: Record<GraphPoint, { x: number; y: number; width?: number }> = {
-    oem: { x: 70, y: 336, width: 174 },
-    return: { x: 118, y: 78, width: 184 },
-    identify: { x: 475, y: 318, width: 202 },
-    disassembly: { x: 760, y: 78, width: 190 },
-    recycler: { x: 762, y: 336, width: 192 },
-    smelter: { x: 1038, y: 336, width: 178 },
-    reporting: { x: 508, y: 582, width: 230 },
+  const positions: Record<GraphPoint, { x: number; y: number; width: number }> = {
+    oem: { x: 70, y: 326, width: 182 },
+    customer: { x: 104, y: 88, width: 190 },
+    consulting: { x: 438, y: 304, width: 214 },
+    disassembly: { x: 694, y: 88, width: 196 },
+    smelter: { x: 858, y: 316, width: 184 },
+    asia: { x: 596, y: 510, width: 224 },
   };
-  const flowLabels: Array<{ text: string; x: number; y: number; tone?: "loss" }> = [
-    { text: content.solution.flow.product, x: 86, y: 254 },
-    { text: content.solution.flow.product, x: 346, y: 196 },
-    { text: content.solution.flow.sellPcb, x: 302, y: 426 },
-    { text: content.solution.flow.productPcb, x: 656, y: 222 },
-    { text: content.solution.flow.pcb, x: 892, y: 338 },
-    { text: content.solution.flow.setSolution, x: 888, y: 402 },
-    { text: content.solution.flow.material, x: 1015, y: 548 },
-    { text: content.solution.flow.componentsAbroad, x: 350, y: 662, tone: "loss" },
+
+  const pointToRole: Partial<Record<GraphPoint, RoleId>> = {
+    oem: "oem",
+    customer: "customer",
+    consulting: "partner",
+    disassembly: "recycler",
+    smelter: "smelter",
+  };
+
+  const edges: FlowEdge[] = [
+    {
+      id: "oem-customer",
+      from: "oem",
+      to: "customer",
+      path: "M162 326 C160 276 174 238 198 214",
+      label: content.solution.flow.product,
+      labelX: 92,
+      labelY: 260,
+      duration: 7.4,
+    },
+    {
+      id: "customer-consulting",
+      from: "customer",
+      to: "consulting",
+      path: "M294 154 C360 158 392 248 438 322",
+      label: content.solution.flow.product,
+      labelX: 336,
+      labelY: 196,
+      duration: 7.8,
+      delay: 0.7,
+    },
+    {
+      id: "consulting-oem",
+      from: "consulting",
+      to: "oem",
+      path: "M438 378 C370 416 304 416 252 392",
+      label: content.solution.flow.sellPcb,
+      labelX: 300,
+      labelY: 414,
+      duration: 8.2,
+      delay: 1.1,
+    },
+    {
+      id: "consulting-disassembly",
+      from: "consulting",
+      to: "disassembly",
+      path: "M646 320 C674 244 710 176 756 152",
+      label: content.solution.flow.productPcb,
+      labelX: 616,
+      labelY: 220,
+      duration: 8,
+      delay: 1.7,
+    },
+    {
+      id: "disassembly-smelter",
+      from: "disassembly",
+      to: "smelter",
+      path: "M794 214 C850 244 928 270 950 316",
+      label: content.solution.flow.pcb,
+      labelX: 896,
+      labelY: 258,
+      duration: 7.2,
+      delay: 0.4,
+    },
+    {
+      id: "consulting-smelter",
+      from: "consulting",
+      to: "smelter",
+      path: "M652 394 C724 390 798 392 858 396",
+      label: `${content.solution.flow.pcb} / ${content.solution.flow.setSolution}`,
+      labelX: 712,
+      labelY: 414,
+      duration: 7.6,
+      delay: 1.3,
+    },
+    {
+      id: "smelter-asia",
+      from: "smelter",
+      to: "asia",
+      path: "M944 442 C900 502 824 548 820 582",
+      label: content.solution.flow.material,
+      labelX: 900,
+      labelY: 520,
+      duration: 8.4,
+      delay: 2.2,
+      tone: "neutral",
+    },
+    {
+      id: "oem-asia",
+      from: "oem",
+      to: "asia",
+      path: "M216 454 C328 568 470 604 596 598",
+      label: content.solution.flow.componentsAbroad,
+      labelX: 330,
+      labelY: 586,
+      duration: 9.5,
+      delay: 0.9,
+      tone: "loss",
+      dashed: true,
+    },
   ];
+
+  const handleNode = (point: GraphPoint) => {
+    setActivePoint(point);
+    const role = pointToRole[point];
+    if (role) {
+      chooseRole(role);
+      jumpTo("demos");
+      return;
+    }
+    jumpTo("forms");
+  };
 
   return (
     <div className="rounded-lg border border-foreground/10 bg-[hsl(39_45%_95%)] p-3 shadow-elegant">
       <div className="hidden overflow-x-auto lg:block">
-        <div className="relative h-[760px] min-w-[1240px] overflow-hidden rounded-md bg-[linear-gradient(120deg,hsl(44_55%_91%/.9),hsl(50_46%_96%/.94)_48%,hsl(155_35%_89%/.9))]">
-          <div className="absolute left-8 right-8 top-10 h-[210px] rounded-2xl border border-foreground/5 bg-background/30" />
-          <div className="absolute left-8 right-8 top-[300px] h-[190px] rounded-2xl border border-primary/10 bg-primary/5" />
-          <div className="absolute left-8 right-8 top-[550px] h-[150px] rounded-2xl border border-destructive/10 bg-destructive/5" />
+        <div className="relative h-[680px] min-w-[1120px] overflow-hidden rounded-md bg-[linear-gradient(120deg,hsl(44_55%_91%/.9),hsl(50_46%_96%/.96)_46%,hsl(155_35%_89%/.88))]">
+          <div className="absolute inset-0 bg-[linear-gradient(hsl(155_30%_12%/.035)_1px,transparent_1px),linear-gradient(90deg,hsl(155_30%_12%/.035)_1px,transparent_1px)] bg-[size:44px_44px]" />
+          <div className="absolute left-8 right-8 top-8 h-[246px] rounded-2xl border border-foreground/5 bg-background/28" />
+          <div className="absolute left-8 right-8 top-[286px] h-[198px] rounded-2xl border border-primary/10 bg-primary/5" />
+          <div className="absolute left-8 right-8 top-[506px] h-[126px] rounded-2xl border border-destructive/10 bg-destructive/5" />
 
-          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1240 740" aria-hidden="true">
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1120 660" aria-hidden="true">
             <defs>
-              <marker id="graph-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
-                <path d="M2 2 L10 6 L2 10" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+              <marker id="flow-arrow-loop" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.9" strokeLinecap="round" />
               </marker>
-              <marker id="loss-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
-                <path d="M2 2 L10 6 L2 10" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+              <marker id="flow-arrow-neutral" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(var(--foreground))" strokeWidth="1.9" strokeLinecap="round" />
               </marker>
-              <path id="flow-product" d="M302 154 C388 164 430 246 482 318" />
-              <path id="flow-pcb" d="M678 374 C760 362 900 362 1038 374" />
-              <path id="flow-material" d="M1126 464 C1092 552 1002 610 884 642" />
-              <path id="flow-export" d="M220 475 C365 642 585 696 845 656" />
+              <marker id="flow-arrow-loss" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(var(--destructive))" strokeWidth="1.9" strokeLinecap="round" />
+              </marker>
             </defs>
-            <g className="text-primary/68" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#graph-arrow)">
-              <path d="M158 336 C158 266 184 202 222 156" />
-              <path d="M302 154 C388 164 430 246 482 318" />
-              <path d="M474 392 C390 420 318 418 244 390" />
-              <path d="M646 318 C672 212 716 150 780 136" />
-              <path d="M678 374 C760 362 900 362 1038 374" />
-              <path d="M954 398 C988 384 1012 378 1038 374" />
-              <path d="M1128 334 C1128 250 1096 184 1044 142" />
-              <path d="M1126 464 C1092 552 1002 610 884 642" />
-              <path d="M738 640 C790 646 836 646 884 642" />
-            </g>
-            <g className="text-destructive/58" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#loss-arrow)">
-              <path d="M220 475 C365 642 585 696 845 656" strokeDasharray="15 14" />
-            </g>
-            <g>
-              {[0, 1, 2].map((index) => (
-                <circle key={`product-${index}`} r="6" className="fill-primary">
-                  <animateMotion dur="11s" repeatCount="indefinite" begin={`${index * 2.1}s`}>
-                    <mpath href="#flow-product" />
-                  </animateMotion>
-                </circle>
-              ))}
-              {[0, 1, 2].map((index) => (
-                <circle key={`pcb-${index}`} r="5.5" className="fill-primary">
-                  <animateMotion dur="10s" repeatCount="indefinite" begin={`${index * 1.9}s`}>
-                    <mpath href="#flow-pcb" />
-                  </animateMotion>
-                </circle>
-              ))}
-              {[0, 1].map((index) => (
-                <circle key={`material-${index}`} r="5.5" className="fill-primary">
-                  <animateMotion dur="10.5s" repeatCount="indefinite" begin={`${index * 2.6}s`}>
-                    <mpath href="#flow-material" />
-                  </animateMotion>
-                </circle>
-              ))}
-              {[0, 1].map((index) => (
-                <circle key={`export-${index}`} r="5" className="fill-destructive/70">
-                  <animateMotion dur="12s" repeatCount="indefinite" begin={`${index * 3.1}s`}>
-                    <mpath href="#flow-export" />
-                  </animateMotion>
-                </circle>
-              ))}
-            </g>
+
+            {edges.map((edge) => (
+              <FlowBeam key={edge.id} edge={edge} active={edge.from === activePoint || edge.to === activePoint} />
+            ))}
           </svg>
 
-          {flowLabels.map((label) => (
+          {edges.map((edge) => (
             <span
-              key={`${label.text}-${label.x}-${label.y}`}
+              key={`${edge.id}-label`}
               className={`pointer-events-none absolute z-10 rounded-full border px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur ${
-                label.tone === "loss"
+                edge.tone === "loss"
                   ? "border-destructive/20 bg-destructive/10 text-destructive/75"
-                  : "border-foreground/10 bg-background/75 text-foreground/55"
+                  : edge.tone === "neutral"
+                    ? "border-foreground/10 bg-background/70 text-foreground/55"
+                    : "border-primary/15 bg-background/75 text-primary/75"
               }`}
-              style={{ left: label.x, top: label.y }}
+              style={{ left: edge.labelX, top: edge.labelY }}
             >
-              {label.text}
+              {edge.label}
             </span>
           ))}
-
-          <div className="absolute left-[850px] top-[636px] z-10 rounded-full border border-destructive/35 bg-[hsl(39_45%_95%/.92)] px-6 py-4 text-center shadow-card backdrop-blur">
-            <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-destructive/75">{content.solution.flow.leakage}</span>
-            <span className="font-display text-2xl font-semibold text-destructive">{content.solution.flow.export}</span>
-          </div>
 
           {graphOrder.map((point) => {
             const Icon = graphIcons[point];
             const node = content.solution.nodes[point];
-            const role = point === "oem" ? "oem" : point === "return" ? "customer" : point === "recycler" ? "recycler" : point === "smelter" ? "smelter" : point === "reporting" ? "partner" : null;
             const position = positions[point];
+            const isLoss = point === "asia";
             return (
               <button
                 key={point}
                 type="button"
                 onMouseEnter={() => setActivePoint(point)}
                 onFocus={() => setActivePoint(point)}
-                onClick={() => {
-                  setActivePoint(point);
-                  if (role) {
-                    chooseRole(role);
-                    jumpTo("demos");
-                    return;
-                  }
-                  jumpTo(point === "identify" ? "forms" : "demos");
-                }}
+                onClick={() => handleNode(point)}
+                aria-pressed={activePoint === point}
                 className={`absolute z-20 flex min-h-[126px] flex-col rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
-                  activePoint === point ? "border-primary ring-2 ring-primary/20" : "border-border"
+                  activePoint === point
+                    ? isLoss
+                      ? "border-destructive ring-2 ring-destructive/20"
+                      : "border-primary ring-2 ring-primary/20"
+                    : "border-border"
                 }`}
                 style={{ left: position.x, top: position.y, width: position.width ?? 160 }}
               >
                 <span className="flex items-start justify-between gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${isLoss ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
                     <Icon className="h-5 w-5" />
                   </span>
-                  <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  <span className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${isLoss ? "bg-destructive/10 text-destructive/75" : "bg-muted text-muted-foreground"}`}>
                     {node.label}
                   </span>
                 </span>
@@ -1397,23 +1428,26 @@ const ProcessGraph = ({
         </div>
       </div>
 
-      <div className="grid gap-3 lg:hidden">
+      <div className="grid gap-2 lg:hidden">
         {graphOrder.map((point, index) => {
           const Icon = graphIcons[point];
           const node = content.solution.nodes[point];
+          const isLoss = point === "asia";
           return (
             <button
               key={point}
               type="button"
-              onClick={() => {
-                setActivePoint(point);
-                jumpTo(point === "identify" || point === "return" ? "forms" : "demos");
-              }}
-              className={`flex items-start gap-3 rounded-lg border bg-background p-4 text-left shadow-card ${
-                activePoint === point ? "border-primary ring-2 ring-primary/20" : "border-border"
+              onClick={() => handleNode(point)}
+              className={`relative flex items-start gap-3 rounded-lg border bg-background p-4 text-left shadow-card ${
+                activePoint === point
+                  ? isLoss
+                    ? "border-destructive ring-2 ring-destructive/20"
+                    : "border-primary ring-2 ring-primary/20"
+                  : "border-border"
               }`}
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              {index < graphOrder.length - 1 ? <span aria-hidden className="absolute left-8 top-14 h-[calc(100%+8px)] w-px bg-primary/18" /> : null}
+              <span className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${isLoss ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
                 <Icon className="h-5 w-5" />
               </span>
               <span>
@@ -1428,6 +1462,67 @@ const ProcessGraph = ({
         })}
       </div>
     </div>
+  );
+};
+
+type FlowEdge = {
+  id: string;
+  from: GraphPoint;
+  to: GraphPoint;
+  path: string;
+  label: string;
+  labelX: number;
+  labelY: number;
+  tone?: "loop" | "neutral" | "loss";
+  duration?: number;
+  delay?: number;
+  dashed?: boolean;
+};
+
+// Beam styling follows Magic UI's MIT-licensed Animated Beam pattern, adapted to a fixed SVG process map.
+const FlowBeam = ({ edge, active }: { edge: FlowEdge; active: boolean }) => {
+  const tone = edge.tone ?? "loop";
+  const gradientId = `flow-gradient-${edge.id}`;
+  const markerId = tone === "loss" ? "flow-arrow-loss" : tone === "neutral" ? "flow-arrow-neutral" : "flow-arrow-loop";
+  const stroke = tone === "loss" ? "hsl(var(--destructive))" : tone === "neutral" ? "hsl(var(--foreground))" : "hsl(var(--primary))";
+  const glow = tone === "loss" ? "hsl(var(--accent))" : tone === "neutral" ? "hsl(var(--primary-glow))" : "hsl(var(--primary-glow))";
+  const style = {
+    "--beam-duration": `${edge.duration ?? 7.5}s`,
+    "--beam-delay": `${edge.delay ?? 0}s`,
+  } as CSSProperties;
+
+  return (
+    <g>
+      <defs>
+        <linearGradient id={gradientId} x1="0%" x2="100%" y1="0%" y2="0%">
+          <stop offset="0%" stopColor={stroke} stopOpacity="0" />
+          <stop offset="42%" stopColor={glow} stopOpacity="0.25" />
+          <stop offset="72%" stopColor={stroke} stopOpacity="0.96" />
+          <stop offset="100%" stopColor={stroke} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path
+        d={edge.path}
+        fill="none"
+        stroke={stroke}
+        strokeDasharray={edge.dashed ? "14 13" : undefined}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeOpacity={active ? 0.48 : tone === "loss" ? 0.34 : 0.24}
+        strokeWidth={active ? 4.8 : 3.8}
+        markerEnd={`url(#${markerId})`}
+      />
+      <path
+        d={edge.path}
+        className="flow-beam-trace"
+        fill="none"
+        stroke={`url(#${gradientId})`}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={active ? 7 : 5.5}
+        style={style}
+      />
+    </g>
   );
 };
 
