@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ComponentType } from "react";
 import {
   ArrowRight,
   BadgeCheck,
-  CheckCircle2,
   Cpu,
   Gauge,
   Laptop,
@@ -66,8 +65,10 @@ const copy: Record<
     classNames: Record<DeviceClass, string>;
     without: string;
     with: string;
-    standardText: string;
     leafText: string;
+    loopPotential: string;
+    cleanPcb: string;
+    baseline: string;
     impactTitle: string;
     materialKept: string;
     co2Saved: string;
@@ -113,8 +114,10 @@ const copy: Record<
     },
     without: "Ohne Leaftronics",
     with: "Mit Leaftronics PCB",
-    standardText: "Mischstrom, weniger Produktdaten, niedrigerer Rückführungsgrad.",
     leafText: "Design für Rückgabe, saubere PCB-Fraktion, dokumentierter Materialpfad.",
+    loopPotential: "Loop-Potenzial",
+    cleanPcb: "PCB sauber rückführbar",
+    baseline: "Baseline",
     impactTitle: "Dein modellierter Vorteil",
     materialKept: "mehr PCB im Kreislauf",
     co2Saved: "kg CO2e sparbar",
@@ -159,8 +162,10 @@ const copy: Record<
     },
     without: "Without Leaftronics",
     with: "With Leaftronics PCB",
-    standardText: "Mixed stream, fewer product records, lower return rate.",
     leafText: "Return-ready design, clean PCB fraction, documented material path.",
+    loopPotential: "Loop potential",
+    cleanPcb: "clean PCB returnable",
+    baseline: "Baseline",
     impactTitle: "Your modeled advantage",
     materialKept: "more PCB kept in a clean loop",
     co2Saved: "kg CO2e process effort avoidable",
@@ -204,8 +209,10 @@ const copy: Record<
     },
     without: "没有 Leaftronics",
     with: "使用 Leaftronics PCB",
-    standardText: "混合回收流、产品数据较少、回流比例较低。",
     leafText: "为回收设计、PCB 分类更清晰、材料路径可记录。",
+    loopPotential: "循环潜力",
+    cleanPcb: "PCB 可清晰回流",
+    baseline: "基线",
     impactTitle: "模拟优势",
     materialKept: "更多 PCB 留在清晰循环中",
     co2Saved: "kg CO2e 流程负担可避免",
@@ -266,8 +273,10 @@ export function DeviceImpact({ language }: { language: Language }) {
   const profile = DEVICE_CLASS_PROFILES[effectiveClass];
   const standardGrams = Math.round((profile.pcbMassG * profile.standardCircularity) / 100);
   const leafGrams = Math.round((profile.pcbMassG * profile.leaftronicsCircularity) / 100);
-  const extraGrams = Math.max(0, leafGrams - standardGrams);
   const co2Saved = Math.max(0, profile.standardCo2Kg - profile.leaftronicsCo2Kg);
+  const standardCredit = Math.max(1, Math.round(profile.materialCreditEur * 0.35));
+  const standardReturnDays = profile.returnDays + 9;
+  const loopLift = profile.leaftronicsCircularity - profile.standardCircularity;
   const isManualSelection = query.trim().length > 0 && normalizeDeviceText(query) !== normalizeDeviceText(detected.label);
   const confidence = isManualSelection ? 100 : confidenceScore(detected.confidence);
 
@@ -292,31 +301,29 @@ export function DeviceImpact({ language }: { language: Language }) {
   const ActiveIcon = classIcons[effectiveClass];
 
   return (
-    <section id="device-impact" className="relative isolate overflow-hidden bg-[hsl(42_31%_91%)] py-20 text-foreground md:py-28">
-      <div aria-hidden className="absolute inset-0 impact-grid opacity-70" />
-      <div aria-hidden className="absolute left-1/2 top-0 h-80 w-[720px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+    <section id="device-impact" className="relative isolate overflow-hidden bg-[hsl(42_31%_91%)] py-14 text-foreground md:py-24">
+      <div aria-hidden className="absolute inset-0 impact-grid opacity-55" />
+      <div aria-hidden className="absolute left-1/2 top-0 h-72 w-[640px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
 
-      <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-8">
-        <div className="grid gap-8 lg:grid-cols-[0.38fr_0.62fr] lg:items-end">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-primary">{text.eyebrow}</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{text.title}</h2>
-            <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">{text.text}</p>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-3">
-            <TrustTile icon={ShieldCheck} title={text.privacyTitle} text={text.privacyText} />
-            <TrustTile icon={Search} title={text.modelTitle} text={text.modelText} />
-            <TrustTile icon={Gauge} title={text.estimateTitle} text={text.estimateText} />
-          </div>
+      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-primary">{text.eyebrow}</p>
+          <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{text.title}</h2>
+          <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{text.text}</p>
         </div>
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-[0.43fr_0.57fr]">
-          <div className="rounded-lg border border-border bg-background/85 p-5 shadow-elegant backdrop-blur md:p-6">
+        <div className="mt-7 grid gap-3 md:grid-cols-3">
+          <TrustTile icon={ShieldCheck} title={text.privacyTitle} text={text.privacyText} />
+          <TrustTile icon={Search} title={text.modelTitle} text={text.modelText} />
+          <TrustTile icon={Gauge} title={text.estimateTitle} text={text.estimateText} />
+        </div>
+
+        <div className="mt-10 grid gap-7 lg:grid-cols-[0.38fr_0.62fr] lg:items-start">
+          <div className="rounded-lg border border-border bg-background/88 p-4 shadow-card backdrop-blur sm:p-5 md:p-6">
             <div className="flex items-start justify-between gap-4">
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{text.detected}</p>
-                <h3 className="mt-2 font-display text-3xl font-semibold leading-tight">{displayModel}</h3>
+                <h3 className="mt-2 break-words font-display text-3xl font-semibold leading-tight">{displayModel}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {isManualSelection
                     ? text.manualSource
@@ -328,12 +335,10 @@ export function DeviceImpact({ language }: { language: Language }) {
               </span>
             </div>
 
-            <div className="mt-5 overflow-hidden rounded-md border border-border bg-muted/50">
-              <div className="flex flex-col gap-1 px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:tracking-[0.18em]">
+            <div className="mt-5 overflow-hidden rounded-md border border-border bg-muted/45">
+              <div className="flex flex-col gap-1 px-3 py-2 text-xs font-semibold uppercase tracking-[0.11em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
                 <span>{text.confidence}</span>
-                <span className="tracking-[0.08em] sm:tracking-[0.18em]">
-                  {confidence}% · {isManualSelection ? text.manualSource : text.confidenceLabels[detected.confidence]}
-                </span>
+                <span>{confidence}% · {isManualSelection ? text.manualSource : text.confidenceLabels[detected.confidence]}</span>
               </div>
               <div className="h-2 bg-background">
                 <div className="h-full rounded-r-full bg-gradient-hero transition-all duration-700" style={{ width: `${confidence}%` }} />
@@ -344,13 +349,13 @@ export function DeviceImpact({ language }: { language: Language }) {
               <label className="text-sm font-semibold" htmlFor="device-model-input">
                 {text.searchLabel}
               </label>
-              <div className="mt-2 flex gap-2">
+              <div className="mt-2 grid gap-2 sm:grid-cols-[1fr_auto]">
                 <input
                   id="device-model-input"
                   value={query}
                   onChange={(event) => handleQuery(event.target.value)}
                   placeholder={text.searchPlaceholder}
-                  className="h-12 min-w-0 flex-1 rounded-md border border-input bg-background px-3 text-sm outline-none transition-colors focus:border-primary"
+                  className="h-12 min-w-0 rounded-md border border-input bg-background px-3 text-sm outline-none transition-colors focus:border-primary"
                 />
                 <button
                   type="button"
@@ -358,13 +363,13 @@ export function DeviceImpact({ language }: { language: Language }) {
                     setQuery(detected.label);
                     setSelectedClass(detected.deviceClass);
                   }}
-                  className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-md bg-foreground px-4 text-sm font-semibold text-background shadow-card transition-transform hover:-translate-y-0.5"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-foreground px-4 text-sm font-semibold text-background shadow-card transition-transform hover:-translate-y-0.5"
                 >
                   <RefreshCw className="h-4 w-4" />
-                  <span className="hidden sm:inline">{text.useDetected}</span>
+                  {text.useDetected}
                 </button>
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">{text.customHint}</p>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">{text.customHint}</p>
 
               <div className="mt-3 flex flex-wrap gap-2">
                 {suggestions.map((model) => (
@@ -389,7 +394,7 @@ export function DeviceImpact({ language }: { language: Language }) {
 
             <div className="mt-6">
               <p className="text-sm font-semibold">{text.classLabel}</p>
-              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              <div className="mt-3 grid grid-cols-2 gap-2 min-[480px]:grid-cols-3">
                 {classOrder.map((item) => {
                   const Icon = classIcons[item];
                   const active = effectiveClass === item;
@@ -398,7 +403,7 @@ export function DeviceImpact({ language }: { language: Language }) {
                       key={item}
                       type="button"
                       onClick={() => setSelectedClass(item)}
-                      className={`flex h-11 items-center justify-center gap-2 rounded-md border px-2 text-xs font-semibold transition-all hover:-translate-y-0.5 ${
+                      className={`flex min-h-11 items-center justify-center gap-2 rounded-md border px-2 py-2 text-[11px] font-semibold leading-tight transition-all hover:-translate-y-0.5 sm:text-xs ${
                         active ? "border-primary bg-primary text-primary-foreground shadow-card" : "border-border bg-background text-muted-foreground"
                       }`}
                     >
@@ -409,54 +414,71 @@ export function DeviceImpact({ language }: { language: Language }) {
                 })}
               </div>
             </div>
-
-            <DeviceVisual deviceClass={effectiveClass} />
           </div>
 
-          <div className="rounded-lg border border-border bg-background p-5 shadow-elegant md:p-6">
-            <div className="grid gap-4 md:grid-cols-2">
-              <ComparisonCard
-                title={text.without}
-                text={text.standardText}
-                percentage={profile.standardCircularity}
-                grams={standardGrams}
-                tone="standard"
+          <div className="rounded-lg border border-border bg-background p-4 shadow-elegant sm:p-5 md:p-7">
+            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{text.impactTitle}</p>
+                <h3 className="mt-2 break-words font-display text-3xl font-semibold leading-tight">{displayModel}</h3>
+              </div>
+              <span className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
+                <BadgeCheck className="h-4 w-4" />
+                {text.classNames[effectiveClass]}
+              </span>
+            </div>
+
+            <div className="mt-6 rounded-lg bg-gradient-hero p-4 text-primary-foreground shadow-elegant sm:p-5 md:p-6">
+              <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-75">{text.with}</p>
+                  <div className="mt-2 flex items-end gap-3">
+                    <p className="font-display text-6xl font-semibold leading-none sm:text-7xl md:text-8xl">
+                      {profile.leaftronicsCircularity}%
+                    </p>
+                    <p className="pb-2 text-sm font-semibold uppercase tracking-[0.2em] opacity-80">{text.loopPotential}</p>
+                  </div>
+                  <p className="mt-3 text-sm font-medium opacity-80">
+                    {text.baseline}: {text.without} {profile.standardCircularity}% · +{loopLift} pp
+                  </p>
+                </div>
+                <Leaf className="hidden h-16 w-16 opacity-35 md:block" />
+              </div>
+              <div className="mt-5 h-3 overflow-hidden rounded-full bg-primary-foreground/20">
+                <div className="h-full rounded-full bg-primary-foreground" style={{ width: `${profile.leaftronicsCircularity}%` }} />
+              </div>
+            </div>
+
+            <div className="mt-5 grid overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2">
+              <ImpactValue
+                icon={Leaf}
+                value={formatGrams(leafGrams, language)}
+                label={text.cleanPcb}
+                baseline={`${text.without}: ${formatGrams(standardGrams, language)}`}
               />
-              <ComparisonCard
-                title={text.with}
-                text={text.leafText}
-                percentage={profile.leaftronicsCircularity}
-                grams={leafGrams}
-                tone="leaf"
+              <ImpactValue
+                icon={Sparkles}
+                value={formatKg(co2Saved, language)}
+                label={text.co2Saved}
+                baseline={`${text.without}: ${formatKg(profile.standardCo2Kg, language)} kg CO2e`}
+              />
+              <ImpactValue
+                icon={Cpu}
+                value={formatEuro(profile.materialCreditEur, language)}
+                label={text.credit}
+                baseline={`${text.without}: ${formatEuro(standardCredit, language)} EUR`}
+              />
+              <ImpactValue
+                icon={ArrowRight}
+                value={`${profile.returnDays}`}
+                label={text.faster}
+                baseline={`${text.without}: ${standardReturnDays}`}
               />
             </div>
 
-            <div className="mt-6 rounded-lg border border-primary/20 bg-primary/5 p-5">
-              <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{text.impactTitle}</p>
-                  <h3 className="mt-2 font-display text-3xl font-semibold">{displayModel}</h3>
-                </div>
-                <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-background px-3 py-1 text-xs font-semibold text-primary">
-                  <BadgeCheck className="h-4 w-4" />
-                  {text.classNames[effectiveClass]}
-                </span>
-              </div>
-
-              <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                <MetricCard value={`+${formatGrams(extraGrams, language)}`} label={text.materialKept} icon={Leaf} />
-                <MetricCard value={formatKg(co2Saved, language)} label={text.co2Saved} icon={Sparkles} />
-                <MetricCard value={formatEuro(profile.materialCreditEur, language)} label={text.credit} icon={Cpu} />
-                <MetricCard value={`${profile.returnDays}`} label={text.faster} icon={ArrowRight} />
-              </div>
-
-              <div className="mt-6 grid gap-3 md:grid-cols-[1fr_auto_1fr] md:items-center">
-                <FlowStep label={text.without} value={`${profile.standardCircularity}%`} />
-                <div className="hidden h-px bg-primary/30 md:block" />
-                <FlowStep label={text.with} value={`${profile.leaftronicsCircularity}%`} active />
-              </div>
-
-              <p className="mt-5 text-xs leading-5 text-muted-foreground">{text.compared}</p>
+            <div className="mt-5 rounded-md border border-primary/15 bg-primary/5 px-4 py-3">
+              <p className="text-sm font-semibold text-primary">{text.leafText}</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">{text.compared}</p>
             </div>
           </div>
         </div>
@@ -552,111 +574,42 @@ function platformDeviceLabel(platform: string, deviceClass: DeviceClass) {
   return platform;
 }
 
-function TrustTile({ icon: Icon, title, text }: { icon: typeof ShieldCheck; title: string; text: string }) {
+function TrustTile({ icon: Icon, title, text }: { icon: ComponentType<{ className?: string }>; title: string; text: string }) {
   return (
-    <div className="rounded-lg border border-border bg-background/70 p-4 shadow-card backdrop-blur">
-      <span className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
+    <div className="flex gap-3 rounded-md border border-border bg-background/70 p-3 shadow-card backdrop-blur">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
         <Icon className="h-5 w-5" />
       </span>
-      <p className="mt-3 font-display text-lg font-semibold">{title}</p>
-      <p className="mt-1 text-sm leading-6 text-muted-foreground">{text}</p>
+      <div>
+        <p className="font-display text-base font-semibold">{title}</p>
+        <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{text}</p>
+      </div>
     </div>
   );
 }
 
-function ComparisonCard({
-  title,
-  text,
-  percentage,
-  grams,
-  tone,
+function ImpactValue({
+  icon: Icon,
+  value,
+  label,
+  baseline,
 }: {
-  title: string;
-  text: string;
-  percentage: number;
-  grams: number;
-  tone: "standard" | "leaf";
+  icon: ComponentType<{ className?: string }>;
+  value: string;
+  label: string;
+  baseline: string;
 }) {
-  const active = tone === "leaf";
-
   return (
-    <div className={`rounded-lg border p-5 ${active ? "border-primary/25 bg-primary/5" : "border-border bg-muted/40"}`}>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="font-display text-2xl font-semibold">{title}</p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p>
+    <div className="bg-background p-4 sm:p-5">
+      <div className="flex items-start gap-3">
+        <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+          <Icon className="h-5 w-5" />
+        </span>
+        <div className="min-w-0">
+          <p className="font-display text-3xl font-semibold leading-none text-primary sm:text-4xl">{value}</p>
+          <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-foreground">{label}</p>
+          <p className="mt-1 text-[11px] leading-5 text-muted-foreground sm:text-xs">{baseline}</p>
         </div>
-        {active ? <CheckCircle2 className="h-6 w-6 text-primary" /> : <Cpu className="h-6 w-6 text-muted-foreground" />}
-      </div>
-      <div className="mt-5">
-        <div className="mb-2 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-          <span>Loop</span>
-          <span>{percentage}%</span>
-        </div>
-        <div className="h-3 overflow-hidden rounded-full bg-background">
-          <div
-            className={`h-full rounded-full transition-all duration-700 ${active ? "bg-gradient-hero" : "bg-muted-foreground/35"}`}
-            style={{ width: `${percentage}%` }}
-          />
-        </div>
-        <p className="mt-3 text-sm font-semibold">{grams} g PCB</p>
-      </div>
-    </div>
-  );
-}
-
-function MetricCard({ value, label, icon: Icon }: { value: string; label: string; icon: typeof Leaf }) {
-  return (
-    <div className="rounded-md border border-primary/15 bg-background p-4 shadow-card">
-      <Icon className="h-5 w-5 text-primary" />
-      <p className="mt-3 font-display text-3xl font-semibold">{value}</p>
-      <p className="mt-1 break-words text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
-    </div>
-  );
-}
-
-function FlowStep({ label, value, active = false }: { label: string; value: string; active?: boolean }) {
-  return (
-    <div className={`rounded-md border px-4 py-3 ${active ? "border-primary/25 bg-background" : "border-border bg-background/70"}`}>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
-      <p className={`mt-1 font-display text-3xl font-semibold ${active ? "text-primary" : ""}`}>{value}</p>
-    </div>
-  );
-}
-
-function DeviceVisual({ deviceClass }: { deviceClass: DeviceClass }) {
-  const isWide = deviceClass === "laptop" || deviceClass === "desktop";
-  const isWearable = deviceClass === "wearable";
-
-  return (
-    <div className="relative mt-8 flex min-h-72 items-center justify-center overflow-hidden rounded-lg border border-border bg-[radial-gradient(circle_at_50%_35%,hsl(152_55%_28%/.13),transparent_42%),linear-gradient(135deg,hsl(155_30%_12%/.04),hsl(38_70%_92%/.55))]">
-      <div className="absolute h-44 w-44 rounded-full border border-primary/20 impact-orbit" />
-      <div className="absolute h-64 w-64 rounded-full border border-accent/20 impact-orbit-reverse" />
-      <div className={`relative z-10 shadow-elegant ${isWide ? "w-72" : isWearable ? "w-32" : "w-36"}`}>
-        <div
-          className={`relative overflow-hidden border border-foreground/15 bg-foreground text-background ${
-            isWide
-              ? "h-44 rounded-lg"
-              : isWearable
-                ? "mx-auto h-32 w-24 rounded-[2rem]"
-                : "mx-auto h-56 w-32 rounded-[2rem]"
-          }`}
-        >
-          <div className="absolute inset-3 rounded-[1.35rem] border border-background/10 bg-[linear-gradient(145deg,hsl(152_55%_28%/.35),hsl(155_30%_12%))]" />
-          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 240 320" aria-hidden="true">
-            <path className="impact-circuit" d="M30 88 H86 C112 88 112 134 138 134 H210" />
-            <path className="impact-circuit impact-circuit-delay" d="M32 208 H80 C104 208 112 172 142 172 H206" />
-            <path className="impact-circuit impact-circuit-slow" d="M120 36 V88 M120 172 V284" />
-            <circle cx="120" cy="160" r="42" className="fill-background/8 stroke-primary/80" strokeWidth="3" />
-            <path d="M120 132 C140 146 144 176 120 194 C96 176 100 146 120 132Z" className="fill-primary" />
-          </svg>
-          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-background/10 bg-background/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]">
-            <Leaf className="h-3 w-3 text-primary" />
-            Loop ready
-          </div>
-        </div>
-        {isWide ? <div className="mx-auto h-3 w-56 rounded-b-xl bg-foreground/80" /> : null}
-        {isWearable ? <div className="mx-auto h-16 w-12 rounded-b-3xl border-x border-b border-foreground/20 bg-foreground/15" /> : null}
       </div>
     </div>
   );
