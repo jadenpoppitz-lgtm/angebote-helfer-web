@@ -20,6 +20,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
+import { DeviceImpact } from "@/components/DeviceImpact";
 import { languages, type Language, useLanguage } from "@/lib/i18n";
 import { DEMO_SERIAL, SERIAL_DB, type SerialLookup } from "@/data/partners";
 
@@ -27,7 +28,7 @@ export type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
 type GraphPoint = "identify" | "return" | "disassembly" | "recycler" | "smelter" | "reporting" | "oem";
 
 export type LandingCopy = {
-  nav: { problem: string; roles: string; solution: string; demos: string; forms: string };
+  nav: { problem: string; impact: string; roles: string; solution: string; demos: string; forms: string };
   hero: { eyebrow: string; title: string; text: string; cta: string };
   problem: {
     eyebrow: string;
@@ -105,7 +106,7 @@ export type LandingCopy = {
 
 export const copy: Record<Language, LandingCopy> = {
   de: {
-    nav: { problem: "Problem", roles: "Rollen", solution: "Kreislauf", demos: "Demos", forms: "Starten" },
+    nav: { problem: "Problem", impact: "Device Impact", roles: "Rollen", solution: "Kreislauf", demos: "Demos", forms: "Starten" },
     hero: {
       eyebrow: "Materialien beginnen in der Natur",
       title: "Was wir abbauen, muss im Kreislauf bleiben.",
@@ -361,7 +362,7 @@ export const copy: Record<Language, LandingCopy> = {
     },
   },
   en: {
-    nav: { problem: "Problem", roles: "Roles", solution: "Loop", demos: "Demos", forms: "Start" },
+    nav: { problem: "Problem", impact: "Device impact", roles: "Roles", solution: "Loop", demos: "Demos", forms: "Start" },
     hero: {
       eyebrow: "Materials begin in nature",
       title: "What we extract must stay in the loop.",
@@ -616,7 +617,7 @@ export const copy: Record<Language, LandingCopy> = {
     },
   },
   zh: {
-    nav: { problem: "问题", roles: "角色", solution: "循环", demos: "演示", forms: "开始" },
+    nav: { problem: "问题", impact: "设备影响", roles: "角色", solution: "循环", demos: "演示", forms: "开始" },
     hero: {
       eyebrow: "材料源于自然",
       title: "被开采的材料必须留在循环中。",
@@ -980,6 +981,9 @@ const Landing = () => {
             <a href="#problem" className="transition-colors hover:text-background">
               {content.nav.problem}
             </a>
+            <a href="#device-impact" className="transition-colors hover:text-background">
+              {content.nav.impact}
+            </a>
             <a href="#roles" className="transition-colors hover:text-background">
               {content.nav.roles}
             </a>
@@ -1055,6 +1059,8 @@ const Landing = () => {
           </div>
         </div>
       </section>
+
+      <DeviceImpact language={language} />
 
       <section id="roles" className="bg-[hsl(42_31%_91%)] py-16 text-foreground md:py-24">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
