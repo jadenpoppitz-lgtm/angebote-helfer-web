@@ -1179,12 +1179,16 @@ const ProcessGraph = ({
   chooseRole: (role: RoleId) => void;
   jumpTo: (id: "demos" | "forms") => void;
 }) => {
-  const positions: Record<GraphPoint, { x: number; y: number; width: number }> = {
-    oem: { x: 80, y: 304, width: 182 },
-    customer: { x: 104, y: 88, width: 190 },
-    consulting: { x: 453, y: 304, width: 214 },
-    disassembly: { x: 694, y: 88, width: 196 },
-    smelter: { x: 858, y: 304, width: 184 },
+  const topRowY = 88;
+  const mainRowY = 304;
+  const topRowHeight = 148;
+
+  const positions: Record<GraphPoint, { x: number; y: number; width: number; height?: number }> = {
+    oem: { x: 80, y: mainRowY, width: 182 },
+    customer: { x: 104, y: topRowY, width: 190, height: topRowHeight },
+    consulting: { x: 453, y: mainRowY, width: 214 },
+    disassembly: { x: 694, y: topRowY, width: 196, height: topRowHeight },
+    smelter: { x: 858, y: mainRowY, width: 184 },
     asia: { x: 596, y: 510, width: 224 },
   };
 
@@ -1363,7 +1367,7 @@ const ProcessGraph = ({
                     ? "border-primary ring-2 ring-primary/20"
                     : "border-border"
                 }`}
-                style={{ left: position.x, top: position.y, width: position.width ?? 160 }}
+                style={{ left: position.x, top: position.y, width: position.width ?? 160, height: position.height }}
               >
                 <span className="flex items-start justify-between gap-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
