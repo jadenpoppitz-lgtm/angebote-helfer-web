@@ -1180,11 +1180,11 @@ const ProcessGraph = ({
   jumpTo: (id: "demos" | "forms") => void;
 }) => {
   const positions: Record<GraphPoint, { x: number; y: number; width: number }> = {
-    oem: { x: 80, y: 326, width: 182 },
+    oem: { x: 80, y: 304, width: 182 },
     customer: { x: 104, y: 88, width: 190 },
     consulting: { x: 453, y: 304, width: 214 },
     disassembly: { x: 694, y: 88, width: 196 },
-    smelter: { x: 858, y: 326, width: 184 },
+    smelter: { x: 858, y: 304, width: 184 },
     asia: { x: 596, y: 510, width: 224 },
   };
 
@@ -1201,7 +1201,7 @@ const ProcessGraph = ({
       id: "oem-customer",
       from: "oem",
       to: "customer",
-      path: "M172 312 C160 282 166 248 198 228",
+      path: "M172 290 C160 268 166 240 198 228",
       label: content.solution.flow.product,
       labelX: 102,
       labelY: 262,
@@ -1222,7 +1222,7 @@ const ProcessGraph = ({
       id: "consulting-oem",
       from: "consulting",
       to: "oem",
-      path: "M447 388 C384 416 326 414 266 386",
+      path: "M447 388 C384 410 326 404 266 386",
       label: content.solution.flow.sellPcb,
       labelX: 320,
       labelY: 398,
@@ -1244,7 +1244,7 @@ const ProcessGraph = ({
       id: "disassembly-smelter",
       from: "disassembly",
       to: "smelter",
-      path: "M820 228 C878 238 936 282 950 312",
+      path: "M820 228 C878 238 936 272 950 290",
       label: content.solution.flow.pcb,
       labelX: 910,
       labelY: 262,
@@ -1278,7 +1278,7 @@ const ProcessGraph = ({
       id: "smelter-asia",
       from: "smelter",
       to: "asia",
-      path: "M934 456 C900 514 852 556 834 582",
+      path: "M934 434 C900 506 852 556 834 582",
       label: content.solution.flow.material,
       labelX: 886,
       labelY: 514,
@@ -1290,7 +1290,7 @@ const ProcessGraph = ({
       id: "asia-oem",
       from: "asia",
       to: "oem",
-      path: "M582 598 C442 612 312 560 200 466",
+      path: "M582 598 C442 612 312 552 200 444",
       label: content.solution.flow.componentsAbroad,
       labelX: 330,
       labelY: 568,
