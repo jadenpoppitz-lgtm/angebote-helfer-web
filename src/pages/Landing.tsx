@@ -1018,6 +1018,45 @@ const Landing = () => {
         </div>
       </section>
 
+      <section id="demos" className="bg-black py-20 text-background md:py-28">
+        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.35fr_0.65fr]">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.demos.eyebrow}</p>
+            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-5xl">{content.demos.title}</h2>
+            <p className="mt-5 text-base leading-7 text-background/70">{content.demos.text}</p>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            {roleOrder.map((role) => {
+              const Icon = roleIcons[role];
+              const card = content.roles.cards[role];
+              const surface = content.demos.surfaces[role];
+              return (
+                <Link
+                  key={role}
+                  to={`/demo/${role}`}
+                  className="group rounded-lg border border-background/15 bg-background/8 p-5 shadow-elegant backdrop-blur transition-all hover:-translate-y-1 hover:border-primary/55"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="grid h-11 w-11 place-items-center rounded-md bg-primary/15 text-primary">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <span className="inline-flex items-center gap-2 rounded-full border border-background/15 px-3 py-1 text-xs font-semibold text-background/70 group-hover:text-background">
+                      {content.demos.liveLabel}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
+                  </div>
+                  <h3 className="mt-5 font-display text-2xl font-semibold">{card.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-background/65">{surface.subtitle}</p>
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                    {content.form.demoId} {reference}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       <DeviceImpact language={language} />
 
       <section id="roles" className="bg-[hsl(42_31%_91%)] py-16 text-foreground md:py-24">
@@ -1056,45 +1095,6 @@ const Landing = () => {
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.value}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="demos" className="bg-black py-20 text-background md:py-28">
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.35fr_0.65fr]">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.demos.eyebrow}</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-5xl">{content.demos.title}</h2>
-            <p className="mt-5 text-base leading-7 text-background/70">{content.demos.text}</p>
-          </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            {roleOrder.map((role) => {
-              const Icon = roleIcons[role];
-              const card = content.roles.cards[role];
-              const surface = content.demos.surfaces[role];
-              return (
-                <Link
-                  key={role}
-                  to={`/demo/${role}`}
-                  className="group rounded-lg border border-background/15 bg-background/8 p-5 shadow-elegant backdrop-blur transition-all hover:-translate-y-1 hover:border-primary/55"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="grid h-11 w-11 place-items-center rounded-md bg-primary/15 text-primary">
-                      <Icon className="h-5 w-5" />
-                    </span>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-background/15 px-3 py-1 text-xs font-semibold text-background/70 group-hover:text-background">
-                      {content.demos.liveLabel}
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </span>
-                  </div>
-                  <h3 className="mt-5 font-display text-2xl font-semibold">{card.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-background/65">{surface.subtitle}</p>
-                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
-                    {content.form.demoId} {reference}
-                  </p>
-                </Link>
-              );
-            })}
           </div>
         </div>
       </section>
