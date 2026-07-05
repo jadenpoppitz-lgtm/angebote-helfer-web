@@ -1027,40 +1027,6 @@ const Landing = () => {
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.roles.title}</h2>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.roles.text}</p>
           </div>
-          <div className="mt-8 grid gap-4 md:grid-cols-5">
-            {roleOrder.map((role) => {
-              const Icon = roleIcons[role];
-              const card = content.roles.cards[role];
-              const active = activeRole === role;
-              return (
-                <button
-                  key={role}
-                  type="button"
-                  onClick={() => {
-                    chooseRole(role);
-                    jumpTo("solution");
-                  }}
-                  aria-pressed={active}
-                  className={`flex flex-col rounded-lg border bg-background p-4 text-left shadow-card transition-all hover:-translate-y-1 md:min-h-72 ${
-                    active ? "border-primary ring-2 ring-primary/20" : "border-border"
-                  }`}
-                >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <span className="mt-4 font-display text-xl font-semibold">{card.title}</span>
-                  <span className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-destructive/80">Problem</span>
-                  <span className="mt-1 text-sm leading-6 text-muted-foreground">{card.problem}</span>
-                  <span className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary">Value</span>
-                  <span className="mt-1 text-sm leading-6 text-muted-foreground">{card.value}</span>
-                  <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-primary">
-                    {card.cta}
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
-                </button>
-              );
-            })}
-          </div>
         </div>
       </section>
 
