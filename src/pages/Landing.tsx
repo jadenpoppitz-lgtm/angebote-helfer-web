@@ -1201,7 +1201,7 @@ const ProcessGraph = ({
       id: "oem-customer",
       from: "oem",
       to: "customer",
-      path: "M162 320 C150 282 158 246 198 220",
+      path: "M162 312 C150 282 158 248 198 228",
       label: content.solution.flow.product,
       labelX: 102,
       labelY: 262,
@@ -1211,7 +1211,7 @@ const ProcessGraph = ({
       id: "customer-consulting",
       from: "customer",
       to: "consulting",
-      path: "M300 154 C360 160 402 246 446 298",
+      path: "M308 154 C360 160 402 244 446 290",
       label: content.solution.flow.product,
       labelX: 346,
       labelY: 206,
@@ -1222,7 +1222,7 @@ const ProcessGraph = ({
       id: "consulting-oem",
       from: "consulting",
       to: "oem",
-      path: "M432 388 C370 416 314 414 258 386",
+      path: "M424 388 C370 416 314 414 266 386",
       label: content.solution.flow.sellPcb,
       labelX: 308,
       labelY: 398,
@@ -1233,7 +1233,7 @@ const ProcessGraph = ({
       id: "consulting-disassembly",
       from: "consulting",
       to: "disassembly",
-      path: "M650 300 C664 260 700 226 762 220",
+      path: "M650 290 C666 258 704 232 762 228",
       label: content.solution.flow.productPcb,
       labelX: 612,
       labelY: 244,
@@ -1244,7 +1244,7 @@ const ProcessGraph = ({
       id: "disassembly-smelter",
       from: "disassembly",
       to: "smelter",
-      path: "M820 220 C878 236 936 272 950 310",
+      path: "M820 228 C878 238 936 272 950 302",
       label: content.solution.flow.pcb,
       labelX: 910,
       labelY: 262,
@@ -1255,7 +1255,7 @@ const ProcessGraph = ({
       id: "consulting-smelter-pcb",
       from: "consulting",
       to: "smelter",
-      path: "M658 370 C724 362 790 362 852 372",
+      path: "M666 370 C724 362 790 362 844 372",
       label: content.solution.flow.pcb,
       labelX: 748,
       labelY: 348,
@@ -1266,7 +1266,7 @@ const ProcessGraph = ({
       id: "smelter-consulting-solution",
       from: "smelter",
       to: "consulting",
-      path: "M852 412 C790 426 722 426 658 410",
+      path: "M844 412 C790 426 722 426 666 410",
       label: content.solution.flow.setSolution,
       labelX: 706,
       labelY: 430,
@@ -1278,7 +1278,7 @@ const ProcessGraph = ({
       id: "smelter-asia",
       from: "smelter",
       to: "asia",
-      path: "M934 448 C900 514 852 556 826 582",
+      path: "M934 456 C900 514 852 556 834 582",
       label: content.solution.flow.material,
       labelX: 886,
       labelY: 514,
@@ -1290,7 +1290,7 @@ const ProcessGraph = ({
       id: "asia-oem",
       from: "asia",
       to: "oem",
-      path: "M590 598 C442 612 304 560 190 458",
+      path: "M582 598 C442 612 304 560 190 466",
       label: content.solution.flow.componentsAbroad,
       labelX: 330,
       labelY: 568,
@@ -1317,7 +1317,7 @@ const ProcessGraph = ({
         <div className="relative h-[680px] min-w-[1120px] overflow-hidden rounded-md bg-[linear-gradient(120deg,hsl(44_55%_91%/.9),hsl(50_46%_96%/.96)_46%,hsl(155_35%_89%/.88))]">
           <div className="absolute inset-0 bg-[linear-gradient(hsl(155_30%_12%/.035)_1px,transparent_1px),linear-gradient(90deg,hsl(155_30%_12%/.035)_1px,transparent_1px)] bg-[size:44px_44px]" />
 
-          <svg className="pointer-events-none absolute inset-0 z-30 h-full w-full overflow-visible" viewBox="0 0 1120 680" aria-hidden="true">
+          <svg className="pointer-events-none absolute inset-0 z-10 h-full w-full" viewBox="0 0 1120 680" aria-hidden="true">
             <defs>
               <marker id="flow-arrow-loop" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
                 <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.9" strokeLinecap="round" />
@@ -1335,7 +1335,7 @@ const ProcessGraph = ({
           {edges.map((edge) => (
             <span
               key={`${edge.id}-label`}
-              className={`pointer-events-none absolute z-10 rounded-full border px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur ${
+              className={`pointer-events-none absolute z-20 rounded-full border px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur ${
                 edge.tone === "neutral"
                     ? "border-foreground/10 bg-background/70 text-foreground/55"
                     : "border-primary/15 bg-background/75 text-primary/75"
@@ -1358,7 +1358,7 @@ const ProcessGraph = ({
                 onFocus={() => setActivePoint(point)}
                 onClick={() => handleNode(point)}
                 aria-pressed={activePoint === point}
-                className={`absolute z-20 flex min-h-[126px] flex-col rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
+                className={`absolute z-30 flex min-h-[126px] flex-col rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
                   activePoint === point
                     ? "border-primary ring-2 ring-primary/20"
                     : "border-border"
