@@ -1258,7 +1258,7 @@ const ProcessGraph = ({
       id: "oem-customer",
       from: "oem",
       to: "customer",
-      path: "M162 326 C150 282 158 246 198 214",
+      path: "M162 320 C150 282 158 246 198 220",
       label: content.solution.flow.product,
       labelX: 102,
       labelY: 262,
@@ -1268,7 +1268,7 @@ const ProcessGraph = ({
       id: "customer-consulting",
       from: "customer",
       to: "consulting",
-      path: "M294 154 C360 160 396 252 438 334",
+      path: "M300 154 C360 160 402 246 446 298",
       label: content.solution.flow.product,
       labelX: 346,
       labelY: 206,
@@ -1279,7 +1279,7 @@ const ProcessGraph = ({
       id: "consulting-oem",
       from: "consulting",
       to: "oem",
-      path: "M438 388 C370 416 308 414 252 386",
+      path: "M432 388 C370 416 314 414 258 386",
       label: content.solution.flow.sellPcb,
       labelX: 308,
       labelY: 398,
@@ -1290,7 +1290,7 @@ const ProcessGraph = ({
       id: "consulting-disassembly",
       from: "consulting",
       to: "disassembly",
-      path: "M646 304 C660 264 696 230 760 214",
+      path: "M650 300 C664 260 700 226 762 220",
       label: content.solution.flow.productPcb,
       labelX: 612,
       labelY: 244,
@@ -1301,7 +1301,7 @@ const ProcessGraph = ({
       id: "disassembly-smelter",
       from: "disassembly",
       to: "smelter",
-      path: "M820 214 C878 232 934 272 950 316",
+      path: "M820 220 C878 236 936 272 950 310",
       label: content.solution.flow.pcb,
       labelX: 910,
       labelY: 262,
@@ -1312,7 +1312,7 @@ const ProcessGraph = ({
       id: "consulting-smelter-pcb",
       from: "consulting",
       to: "smelter",
-      path: "M652 370 C724 362 790 362 858 372",
+      path: "M658 370 C724 362 790 362 852 372",
       label: content.solution.flow.pcb,
       labelX: 748,
       labelY: 348,
@@ -1323,7 +1323,7 @@ const ProcessGraph = ({
       id: "smelter-consulting-solution",
       from: "smelter",
       to: "consulting",
-      path: "M858 412 C790 426 722 426 652 410",
+      path: "M852 412 C790 426 722 426 658 410",
       label: content.solution.flow.setSolution,
       labelX: 706,
       labelY: 430,
@@ -1335,7 +1335,7 @@ const ProcessGraph = ({
       id: "smelter-asia",
       from: "smelter",
       to: "asia",
-      path: "M934 442 C900 514 852 556 820 582",
+      path: "M934 448 C900 514 852 556 826 582",
       label: content.solution.flow.material,
       labelX: 886,
       labelY: 514,
@@ -1344,10 +1344,10 @@ const ProcessGraph = ({
       tone: "neutral",
     },
     {
-      id: "oem-asia",
-      from: "oem",
-      to: "asia",
-      path: "M190 452 C304 560 442 612 596 598",
+      id: "asia-oem",
+      from: "asia",
+      to: "oem",
+      path: "M590 598 C442 612 304 560 190 458",
       label: content.solution.flow.componentsAbroad,
       labelX: 330,
       labelY: 568,
@@ -1378,7 +1378,7 @@ const ProcessGraph = ({
           <div className="absolute left-8 right-8 top-[286px] h-[198px] rounded-2xl border border-primary/10 bg-primary/5" />
           <div className="absolute left-8 right-8 top-[506px] h-[126px] rounded-2xl border border-destructive/10 bg-destructive/5" />
 
-          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1120 660" aria-hidden="true">
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1120 680" aria-hidden="true">
             <defs>
               <marker id="flow-arrow-loop" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
                 <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.9" strokeLinecap="round" />
