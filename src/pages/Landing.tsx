@@ -1296,8 +1296,7 @@ const ProcessGraph = ({
       labelY: 568,
       duration: 9.5,
       delay: 0.9,
-      tone: "loss",
-      dashed: true,
+      tone: "loop",
     },
   ];
 
@@ -1326,9 +1325,6 @@ const ProcessGraph = ({
               <marker id="flow-arrow-neutral" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
                 <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(var(--foreground))" strokeWidth="1.9" strokeLinecap="round" />
               </marker>
-              <marker id="flow-arrow-loss" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
-                <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(var(--destructive))" strokeWidth="1.9" strokeLinecap="round" />
-              </marker>
             </defs>
 
             {edges.map((edge) => (
@@ -1340,9 +1336,7 @@ const ProcessGraph = ({
             <span
               key={`${edge.id}-label`}
               className={`pointer-events-none absolute z-10 rounded-full border px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur ${
-                edge.tone === "loss"
-                  ? "border-destructive/20 bg-destructive/10 text-destructive/75"
-                  : edge.tone === "neutral"
+                edge.tone === "neutral"
                     ? "border-foreground/10 bg-background/70 text-foreground/55"
                     : "border-primary/15 bg-background/75 text-primary/75"
               }`}
@@ -1356,7 +1350,6 @@ const ProcessGraph = ({
             const Icon = graphIcons[point];
             const node = content.solution.nodes[point];
             const position = positions[point];
-            const isLoss = point === "asia";
             return (
               <button
                 key={point}
@@ -1367,18 +1360,16 @@ const ProcessGraph = ({
                 aria-pressed={activePoint === point}
                 className={`absolute z-20 flex min-h-[126px] flex-col rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
                   activePoint === point
-                    ? isLoss
-                      ? "border-destructive ring-2 ring-destructive/20"
-                      : "border-primary ring-2 ring-primary/20"
+                    ? "border-primary ring-2 ring-primary/20"
                     : "border-border"
                 }`}
                 style={{ left: position.x, top: position.y, width: position.width ?? 160 }}
               >
                 <span className="flex items-start justify-between gap-3">
-                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${isLoss ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </span>
-                  <span className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${isLoss ? "bg-destructive/10 text-destructive/75" : "bg-muted text-muted-foreground"}`}>
+                  <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                     {node.label}
                   </span>
                 </span>
@@ -1394,7 +1385,6 @@ const ProcessGraph = ({
         {graphOrder.map((point, index) => {
           const Icon = graphIcons[point];
           const node = content.solution.nodes[point];
-          const isLoss = point === "asia";
           return (
             <button
               key={point}
@@ -1402,14 +1392,12 @@ const ProcessGraph = ({
               onClick={() => handleNode(point)}
               className={`relative flex items-start gap-3 rounded-lg border bg-background p-4 text-left shadow-card ${
                 activePoint === point
-                  ? isLoss
-                    ? "border-destructive ring-2 ring-destructive/20"
-                    : "border-primary ring-2 ring-primary/20"
+                  ? "border-primary ring-2 ring-primary/20"
                   : "border-border"
               }`}
             >
               {index < graphOrder.length - 1 ? <span aria-hidden className="absolute left-8 top-14 h-[calc(100%+8px)] w-px bg-primary/18" /> : null}
-              <span className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${isLoss ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
+              <span className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <Icon className="h-5 w-5" />
               </span>
               <span>
@@ -1435,19 +1423,18 @@ type FlowEdge = {
   label: string;
   labelX: number;
   labelY: number;
-  tone?: "loop" | "neutral" | "loss";
+  tone?: "loop" | "neutral";
   duration?: number;
   delay?: number;
-  dashed?: boolean;
 };
 
 // Beam styling follows Magic UI's MIT-licensed Animated Beam pattern, adapted to a fixed SVG process map.
 const FlowBeam = ({ edge, active }: { edge: FlowEdge; active: boolean }) => {
   const tone = edge.tone ?? "loop";
   const gradientId = `flow-gradient-${edge.id}`;
-  const markerId = tone === "loss" ? "flow-arrow-loss" : tone === "neutral" ? "flow-arrow-neutral" : "flow-arrow-loop";
-  const stroke = tone === "loss" ? "hsl(var(--destructive))" : tone === "neutral" ? "hsl(var(--foreground))" : "hsl(var(--primary))";
-  const glow = tone === "loss" ? "hsl(var(--accent))" : tone === "neutral" ? "hsl(var(--primary-glow))" : "hsl(var(--primary-glow))";
+  const markerId = tone === "neutral" ? "flow-arrow-neutral" : "flow-arrow-loop";
+  const stroke = tone === "neutral" ? "hsl(var(--foreground))" : "hsl(var(--primary))";
+  const glow = "hsl(var(--primary-glow))";
   const style = {
     "--beam-duration": `${edge.duration ?? 7.5}s`,
     "--beam-delay": `${edge.delay ?? 0}s`,
@@ -1467,10 +1454,9 @@ const FlowBeam = ({ edge, active }: { edge: FlowEdge; active: boolean }) => {
         d={edge.path}
         fill="none"
         stroke={stroke}
-        strokeDasharray={edge.dashed ? "14 13" : undefined}
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeOpacity={active ? 0.48 : tone === "loss" ? 0.34 : 0.24}
+        strokeOpacity={active ? 0.48 : 0.24}
         strokeWidth={active ? 4.8 : 3.8}
         markerEnd={`url(#${markerId})`}
       />
@@ -1492,7 +1478,7 @@ const InfoPanel = ({ content, activeNode }: { content: LandingCopy; activeNode: 
   <div className="rounded-lg border border-primary/25 bg-background/80 p-4 shadow-card md:w-96">
     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{content.solution.hoverLabel}</p>
     <h3 className="mt-3 font-display text-2xl font-semibold">{activeNode.title}</h3>
-    <p className="mt-2 text-sm font-semibold text-destructive/80">{activeNode.problem}</p>
+    <p className="mt-2 text-sm font-semibold text-primary/80">{activeNode.problem}</p>
     <p className="mt-2 text-sm leading-6 text-muted-foreground">{activeNode.solution}</p>
     <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary">
       {content.solution.nextStep}: {activeNode.next}
