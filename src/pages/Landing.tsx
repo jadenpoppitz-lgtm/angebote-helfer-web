@@ -1317,9 +1317,6 @@ const ProcessGraph = ({
       <div className="hidden overflow-x-auto lg:block">
         <div className="relative h-[680px] min-w-[1120px] overflow-hidden rounded-md bg-[linear-gradient(120deg,hsl(44_55%_91%/.9),hsl(50_46%_96%/.96)_46%,hsl(155_35%_89%/.88))]">
           <div className="absolute inset-0 bg-[linear-gradient(hsl(155_30%_12%/.035)_1px,transparent_1px),linear-gradient(90deg,hsl(155_30%_12%/.035)_1px,transparent_1px)] bg-[size:44px_44px]" />
-          <div className="absolute left-8 right-8 top-8 h-[246px] rounded-2xl border border-foreground/5 bg-background/28" />
-          <div className="absolute left-8 right-8 top-[286px] h-[198px] rounded-2xl border border-primary/10 bg-primary/5" />
-          <div className="absolute left-8 right-8 top-[506px] h-[126px] rounded-2xl border border-destructive/10 bg-destructive/5" />
 
           <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1120 680" aria-hidden="true">
             <defs>
