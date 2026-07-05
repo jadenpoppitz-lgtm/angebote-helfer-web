@@ -1018,6 +1018,36 @@ const Landing = () => {
         </div>
       </section>
 
+      <section id="solution" className="bg-[hsl(42_31%_91%)] pb-16 text-foreground md:pb-24">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <div className="max-w-3xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.solution.eyebrow}</p>
+              <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.solution.title}</h2>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.solution.text}</p>
+            </div>
+            <InfoPanel content={content} activeNode={activeNode} />
+          </div>
+
+          <ProcessGraph
+            content={content}
+            activePoint={activePoint}
+            setActivePoint={setActivePoint}
+            chooseRole={chooseRole}
+            jumpTo={jumpTo}
+          />
+
+          <div className="mt-6 grid gap-3 md:grid-cols-5">
+            {content.solution.values.map((item) => (
+              <div key={item.role} className="rounded-lg border border-border bg-background/80 p-4 shadow-card">
+                <p className="font-display text-lg font-semibold">{item.role}</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="demos" className="bg-black py-20 text-background md:py-28">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.35fr_0.65fr]">
           <div>
@@ -1065,36 +1095,6 @@ const Landing = () => {
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.roles.eyebrow}</p>
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.roles.title}</h2>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.roles.text}</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="solution" className="bg-[hsl(42_31%_91%)] pb-16 text-foreground md:pb-24">
-        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-          <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
-            <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.solution.eyebrow}</p>
-              <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.solution.title}</h2>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.solution.text}</p>
-            </div>
-            <InfoPanel content={content} activeNode={activeNode} />
-          </div>
-
-          <ProcessGraph
-            content={content}
-            activePoint={activePoint}
-            setActivePoint={setActivePoint}
-            chooseRole={chooseRole}
-            jumpTo={jumpTo}
-          />
-
-          <div className="mt-6 grid gap-3 md:grid-cols-5">
-            {content.solution.values.map((item) => (
-              <div key={item.role} className="rounded-lg border border-border bg-background/80 p-4 shadow-card">
-                <p className="font-display text-lg font-semibold">{item.role}</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.value}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
