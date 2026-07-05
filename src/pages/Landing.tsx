@@ -135,11 +135,6 @@ export const copy: Record<Language, LandingCopy> = {
           image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
         },
         {
-          title: "Fehlende Demontage",
-          text: "PCB, Gehäuse und Komponenten werden nicht sauber getrennt, bevor Wertstoffe in falsche Kanäle fallen.",
-          image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=900&q=80",
-        },
-        {
           title: "Keine Materialhoheit",
           text: "Ohne Datenfluss verlieren OEMs Rückführungsdaten, ESG-Nachweise und europäische Produktionsoptionen.",
           image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80",
@@ -384,11 +379,6 @@ export const copy: Record<Language, LandingCopy> = {
           image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
         },
         {
-          title: "Missing disassembly",
-          text: "PCB, housing and components are not separated before materials fall into the wrong channels.",
-          image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=900&q=80",
-        },
-        {
           title: "No material sovereignty",
           text: "Without data flow, OEMs lose return data, ESG proof and European production options.",
           image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80",
@@ -629,11 +619,6 @@ export const copy: Record<Language, LandingCopy> = {
           title: "混合收集",
           text: "B2B 产品进入混合材料流，失去质量、序列号和责任关系。",
           image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
-        },
-        {
-          title: "缺少拆解",
-          text: "PCB、外壳和组件没有被分离，材料进入错误渠道。",
-          image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=900&q=80",
         },
         {
           title: "没有材料主权",
@@ -1004,17 +989,9 @@ const Landing = () => {
             <p className="text-xs font-semibold uppercase tracking-[0.32em] text-primary">{content.problem.eyebrow}</p>
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.problem.title}</h2>
             <p className="mt-6 max-w-xl text-base leading-8 text-background/72">{content.problem.text}</p>
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              {content.problem.stats.map((stat) => (
-                <div key={stat.label} className="border-l border-background/20 pl-4">
-                  <p className="font-display text-3xl font-semibold text-background">{stat.value}</p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.2em] text-background/50">{stat.label}</p>
-                </div>
-              ))}
-            </div>
             <a
               href="#solution"
-              className="mt-10 inline-flex h-12 items-center gap-2 rounded-md bg-background px-5 font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
+              className="mt-8 inline-flex h-12 items-center gap-2 rounded-md bg-background px-5 font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
             >
               {content.problem.cta}
               <ArrowRight className="h-4 w-4" />
