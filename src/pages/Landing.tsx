@@ -23,7 +23,7 @@ import { languages, type Language, useLanguage } from "@/lib/i18n";
 import { DEMO_SERIAL, SERIAL_DB, type SerialLookup } from "@/data/partners";
 
 export type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
-type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" | "asia";
+type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" | "materials";
 
 export type LandingCopy = {
   nav: { problem: string; impact: string; roles: string; solution: string; demos: string; forms: string };
@@ -57,9 +57,7 @@ export type LandingCopy = {
       pcb: string;
       setSolution: string;
       material: string;
-      componentsAbroad: string;
-      leakage: string;
-      export: string;
+      materialReturn: string;
     };
   };
   demos: {
@@ -226,12 +224,12 @@ export const copy: Record<Language, LandingCopy> = {
           solution: "Qualifizierte PCB-Ströme gehen mit Lösung und erwarteter Ausbeute zum Smelter.",
           next: "Charge prüfen",
         },
-        asia: {
-          title: "Asia / Export",
-          label: "Leakage",
-          problem: "Komponenten und Material verschwinden außerhalb des europäischen Loops.",
-          solution: "Der Verlustpfad wird sichtbar und kann Schritt für Schritt reduziert werden.",
-          next: "Leakage reduzieren",
+        materials: {
+          title: "Materials",
+          label: "Material",
+          problem: "Materialwerte werden ohne klare Rückführung nicht produktiv genutzt.",
+          solution: "Dokumentierte Materialien bleiben sichtbar und können gezielt in den Kreislauf zurückgeführt werden.",
+          next: "Material prüfen",
         },
       },
       values: [
@@ -248,9 +246,7 @@ export const copy: Record<Language, LandingCopy> = {
         pcb: "PCB",
         setSolution: "Lösung setzen",
         material: "Material",
-        componentsAbroad: "Komponenten ins Ausland",
-        leakage: "Verlustpfad",
-        export: "Asien / Export",
+        materialReturn: "Material zurück",
       },
     },
     demos: {
@@ -469,12 +465,12 @@ export const copy: Record<Language, LandingCopy> = {
           solution: "Qualified PCB streams go to the smelter with the right solution and expected yield.",
           next: "Review batch",
         },
-        asia: {
-          title: "Asia / Export",
-          label: "Leakage",
-          problem: "Components and material disappear outside the European loop.",
-          solution: "The leakage path becomes visible and can be reduced step by step.",
-          next: "Reduce leakage",
+        materials: {
+          title: "Materials",
+          label: "Material",
+          problem: "Material value is not productively used without a clear return path.",
+          solution: "Documented materials stay visible and can be routed deliberately back into the loop.",
+          next: "Review material",
         },
       },
       values: [
@@ -491,9 +487,7 @@ export const copy: Record<Language, LandingCopy> = {
         pcb: "PCB",
         setSolution: "Set solution",
         material: "Material",
-        componentsAbroad: "Components abroad",
-        leakage: "Leakage",
-        export: "Asia / Export",
+        materialReturn: "Material return",
       },
     },
     demos: {
@@ -711,12 +705,12 @@ export const copy: Record<Language, LandingCopy> = {
           solution: "合格 PCB 流带着方案和预期产出进入冶炼方。",
           next: "检查批次",
         },
-        asia: {
-          title: "亚洲 / 出口",
-          label: "流失",
-          problem: "组件和材料离开欧洲循环。",
-          solution: "流失路径被显示出来，并可逐步减少。",
-          next: "减少流失",
+        materials: {
+          title: "Materials",
+          label: "Material",
+          problem: "材料价值需要清晰的回流路径。",
+          solution: "被记录的材料保持可见，并能有目的地回到循环中。",
+          next: "检查材料",
         },
       },
       values: [
@@ -733,9 +727,7 @@ export const copy: Record<Language, LandingCopy> = {
         pcb: "PCB",
         setSolution: "设置方案",
         material: "材料",
-        componentsAbroad: "组件流向海外",
-        leakage: "流失路径",
-        export: "亚洲 / 出口",
+        materialReturn: "材料回流",
       },
     },
     demos: {
@@ -835,7 +827,7 @@ export const copy: Record<Language, LandingCopy> = {
 };
 
 export const roleOrder: RoleId[] = ["oem", "customer", "recycler", "smelter", "partner"];
-const graphOrder: GraphPoint[] = ["oem", "customer", "consulting", "disassembly", "smelter", "asia"];
+const graphOrder: GraphPoint[] = ["oem", "customer", "consulting", "disassembly", "smelter", "materials"];
 
 export const roleIcons: Record<RoleId, typeof Factory> = {
   oem: Factory,
@@ -851,7 +843,7 @@ const graphIcons: Record<GraphPoint, typeof Factory> = {
   consulting: Handshake,
   disassembly: Wrench,
   smelter: Flame,
-  asia: Globe2,
+  materials: PackageCheck,
 };
 
 const roleToPoint: Record<RoleId, GraphPoint> = {
@@ -1189,7 +1181,7 @@ const ProcessGraph = ({
     consulting: { x: 453, y: mainRowY, width: 214 },
     disassembly: { x: 657, y: topRowY, width: 196, height: topRowHeight },
     smelter: { x: 858, y: mainRowY, width: 184 },
-    asia: { x: 596, y: 510, width: 224 },
+    materials: { x: 448, y: 510, width: 224 },
   };
 
   const pointToRole: Partial<Record<GraphPoint, RoleId>> = {
@@ -1279,25 +1271,25 @@ const ProcessGraph = ({
       tone: "neutral",
     },
     {
-      id: "smelter-asia",
+      id: "smelter-materials",
       from: "smelter",
-      to: "asia",
-      path: "M934 434 C900 506 852 556 834 582",
+      to: "materials",
+      path: "M934 434 C866 510 746 582 678 584",
       label: content.solution.flow.material,
-      labelX: 886,
+      labelX: 744,
       labelY: 514,
       duration: 8.4,
       delay: 2.2,
       tone: "neutral",
     },
     {
-      id: "asia-oem",
-      from: "asia",
+      id: "materials-oem",
+      from: "materials",
       to: "oem",
-      path: "M582 598 C442 612 312 552 200 444",
-      label: content.solution.flow.componentsAbroad,
-      labelX: 330,
-      labelY: 568,
+      path: "M442 584 C356 570 248 514 200 444",
+      label: content.solution.flow.materialReturn,
+      labelX: 314,
+      labelY: 548,
       duration: 9.5,
       delay: 0.9,
       tone: "loop",
