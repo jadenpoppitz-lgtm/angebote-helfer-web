@@ -1202,6 +1202,7 @@ const ProcessGraph = ({
       labelX: 224,
       labelY: 260,
       duration: 7.4,
+      tone: "product",
     },
     {
       id: "customer-consulting",
@@ -1213,6 +1214,7 @@ const ProcessGraph = ({
       labelY: 260,
       duration: 7.8,
       delay: 0.7,
+      tone: "product",
     },
     {
       id: "consulting-oem",
@@ -1224,28 +1226,25 @@ const ProcessGraph = ({
       labelY: 354,
       duration: 8.2,
       delay: 1.1,
+      tone: "signal",
     },
     {
       id: "consulting-disassembly",
       from: "consulting",
       to: "disassembly",
       path: "M560 300 C620 274 714 274 755 242",
-      label: content.solution.flow.productPcb,
-      labelX: 626,
-      labelY: 260,
       duration: 8,
       delay: 1.7,
+      tone: "recycle",
     },
     {
       id: "disassembly-smelter",
       from: "disassembly",
       to: "smelter",
       path: "M755 242 C814 250 930 262 950 300",
-      label: content.solution.flow.pcb,
-      labelX: 880,
-      labelY: 260,
       duration: 7.2,
       delay: 0.4,
+      tone: "recycle",
     },
     {
       id: "consulting-smelter-pcb",
@@ -1257,6 +1256,7 @@ const ProcessGraph = ({
       labelY: 354,
       duration: 7.6,
       delay: 1.3,
+      tone: "signal",
     },
     {
       id: "smelter-consulting-solution",
@@ -1268,7 +1268,7 @@ const ProcessGraph = ({
       labelY: 424,
       duration: 8.2,
       delay: 2,
-      tone: "neutral",
+      tone: "signal",
     },
     {
       id: "smelter-materials",
@@ -1280,7 +1280,7 @@ const ProcessGraph = ({
       labelY: 516,
       duration: 8.4,
       delay: 2.2,
-      tone: "neutral",
+      tone: "material",
     },
     {
       id: "materials-oem",
@@ -1292,7 +1292,7 @@ const ProcessGraph = ({
       labelY: 516,
       duration: 9.5,
       delay: 0.9,
-      tone: "loop",
+      tone: "material",
     },
   ];
 
@@ -1315,8 +1315,17 @@ const ProcessGraph = ({
 
           <svg className="pointer-events-none absolute inset-0 z-10 h-full w-full" viewBox="0 0 1120 680" aria-hidden="true">
             <defs>
-              <marker id="flow-arrow-loop" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+              <marker id="flow-arrow-product" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
                 <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.9" strokeLinecap="round" />
+              </marker>
+              <marker id="flow-arrow-recycle" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(168 56% 34%)" strokeWidth="1.9" strokeLinecap="round" />
+              </marker>
+              <marker id="flow-arrow-signal" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(38 88% 44%)" strokeWidth="1.9" strokeLinecap="round" />
+              </marker>
+              <marker id="flow-arrow-material" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(142 28% 34%)" strokeWidth="1.9" strokeLinecap="round" />
               </marker>
               <marker id="flow-arrow-neutral" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
                 <path d="M2 2 L10 6 L2 10" fill="none" stroke="hsl(var(--foreground))" strokeWidth="1.9" strokeLinecap="round" />
@@ -1328,19 +1337,25 @@ const ProcessGraph = ({
             ))}
           </svg>
 
-          {edges.map((edge) => (
+          {edges.map((edge) => edge.label ? (
             <span
               key={`${edge.id}-label`}
               className={`pointer-events-none absolute z-20 rounded-full border px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur ${
-                edge.tone === "neutral"
-                    ? "border-foreground/10 bg-background/70 text-foreground/55"
-                    : "border-primary/15 bg-background/75 text-primary/75"
+                edge.tone === "signal"
+                  ? "border-amber-500/25 bg-amber-50/90 text-amber-800"
+                  : edge.tone === "recycle"
+                    ? "border-emerald-700/20 bg-emerald-50/90 text-emerald-800"
+                    : edge.tone === "material"
+                      ? "border-lime-800/15 bg-background/75 text-lime-900/80"
+                      : edge.tone === "neutral"
+                        ? "border-foreground/10 bg-background/70 text-foreground/55"
+                        : "border-primary/15 bg-background/75 text-primary/75"
               }`}
               style={{ left: edge.labelX, top: edge.labelY }}
             >
               {edge.label}
             </span>
-          ))}
+          ) : null)}
 
           {graphOrder.map((point) => {
             const Icon = graphIcons[point];
@@ -1416,21 +1431,27 @@ type FlowEdge = {
   from: GraphPoint;
   to: GraphPoint;
   path: string;
-  label: string;
-  labelX: number;
-  labelY: number;
-  tone?: "loop" | "neutral";
+  label?: string;
+  labelX?: number;
+  labelY?: number;
+  tone?: "product" | "recycle" | "signal" | "material" | "neutral";
   duration?: number;
   delay?: number;
 };
 
 // Beam styling follows Magic UI's MIT-licensed Animated Beam pattern, adapted to a fixed SVG process map.
 const FlowBeam = ({ edge, active }: { edge: FlowEdge; active: boolean }) => {
-  const tone = edge.tone ?? "loop";
+  const tone = edge.tone ?? "product";
   const gradientId = `flow-gradient-${edge.id}`;
-  const markerId = tone === "neutral" ? "flow-arrow-neutral" : "flow-arrow-loop";
-  const stroke = tone === "neutral" ? "hsl(var(--foreground))" : "hsl(var(--primary))";
-  const glow = "hsl(var(--primary-glow))";
+  const markerId = `flow-arrow-${tone}`;
+  const flowColors: Record<NonNullable<FlowEdge["tone"]>, { stroke: string; glow: string }> = {
+    product: { stroke: "hsl(var(--primary))", glow: "hsl(var(--primary-glow))" },
+    recycle: { stroke: "hsl(168 56% 34%)", glow: "hsl(168 65% 52%)" },
+    signal: { stroke: "hsl(38 88% 44%)", glow: "hsl(38 94% 58%)" },
+    material: { stroke: "hsl(142 28% 34%)", glow: "hsl(142 45% 48%)" },
+    neutral: { stroke: "hsl(var(--foreground))", glow: "hsl(var(--primary-glow))" },
+  };
+  const { stroke, glow } = flowColors[tone];
   const style = {
     "--beam-duration": `${edge.duration ?? 7.5}s`,
     "--beam-delay": `${edge.delay ?? 0}s`,
