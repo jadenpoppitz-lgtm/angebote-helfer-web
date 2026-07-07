@@ -1227,7 +1227,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   <span className="absolute left-2 top-2 z-10 h-5 w-5 rounded-full border-4 border-white bg-primary shadow-card md:left-1/2 md:-translate-x-1/2" />
                   <div className="overflow-hidden rounded-lg border border-border bg-background shadow-card">
                     {item.image ? (
-                      <img src={item.image} alt={item.imageAlt} className="h-44 w-full object-cover" loading="lazy" />
+                      <img src={item.image} alt={item.imageAlt} className="h-44 w-full object-cover object-top" loading="lazy" />
                     ) : null}
                     <div className="p-5">
                       <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{item.date}</p>
