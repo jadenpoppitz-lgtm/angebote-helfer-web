@@ -929,20 +929,24 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         ))}
       </div>
 
-      <section className="relative isolate min-h-screen overflow-hidden">
-        <div className="absolute inset-0 grid md:grid-cols-2">
-          <div className="relative min-h-full">
-            <img src="/rainforest.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-black/18 to-black/8" />
-          </div>
-          <div className="relative hidden min-h-full md:block">
-            <img src="/leaftronics-hero-pcb.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-l from-black/18 via-black/8 to-black/35" />
-          </div>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/8 via-black/10 to-black/72" />
-        <div className="absolute inset-y-0 left-1/2 hidden w-px bg-background/18 md:block" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-black" />
+      <section className={showHero ? "relative isolate min-h-screen overflow-hidden" : "relative z-10 bg-black text-background"}>
+        {showHero ? (
+          <>
+            <div className="absolute inset-0 grid md:grid-cols-2">
+              <div className="relative min-h-full">
+                <img src="/rainforest.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-black/18 to-black/8" />
+              </div>
+              <div className="relative hidden min-h-full md:block">
+                <img src="/leaftronics-hero-pcb.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-l from-black/18 via-black/8 to-black/35" />
+              </div>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-b from-black/8 via-black/10 to-black/72" />
+            <div className="absolute inset-y-0 left-1/2 hidden w-px bg-background/18 md:block" />
+            <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-black" />
+          </>
+        ) : null}
 
         <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
           <Link to="/" className="flex items-center gap-3">
@@ -972,27 +976,27 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
 
         {showHero ? (
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-7xl items-end px-5 pb-16 sm:px-8 lg:pb-24">
-          <div className="w-full rounded-lg border border-background/18 bg-black/62 p-5 shadow-elegant backdrop-blur-md sm:p-7 md:bg-black/56">
+          <div className="max-w-2xl rounded-lg border border-background/18 bg-black/54 p-4 shadow-elegant backdrop-blur-md sm:p-6 md:bg-black/48">
             {content.hero.eyebrow ? (
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-background/75">{content.hero.eyebrow}</p>
             ) : null}
-            <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.02] text-background [text-shadow:0_2px_28px_hsl(0_0%_0%/.45)] md:text-7xl">
+            <h1 className="mt-3 font-display text-4xl font-semibold leading-[1.04] text-background [text-shadow:0_2px_28px_hsl(0_0%_0%/.45)] md:text-5xl">
               {content.hero.title}
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-background/85 [text-shadow:0_1px_18px_hsl(0_0%_0%/.35)]">
+            <p className="mt-4 max-w-xl text-base leading-7 text-background/82 [text-shadow:0_1px_18px_hsl(0_0%_0%/.35)]">
               {content.hero.text}
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
                 to="/problem"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-background px-5 font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-background px-4 text-sm font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
               >
                 Das Problem
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 to="/produkt"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-background/25 bg-background/10 px-5 font-semibold text-background backdrop-blur transition-transform hover:-translate-y-0.5"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-background/25 bg-background/10 px-4 text-sm font-semibold text-background backdrop-blur transition-transform hover:-translate-y-0.5"
               >
                 Unser Produkt
                 <ArrowRight className="h-4 w-4" />
@@ -1000,16 +1004,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             </div>
           </div>
         </div>
-        ) : (
-          <div className="relative z-10 mx-auto flex min-h-[320px] w-full max-w-7xl items-end px-5 pb-12 sm:px-8">
-            <div className="max-w-3xl rounded-lg border border-background/18 bg-black/62 p-5 shadow-elegant backdrop-blur-md sm:p-7">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-primary">Leaftronics</p>
-              <h1 className="mt-4 font-display text-4xl font-semibold leading-tight text-background md:text-6xl">
-                {showProblem ? content.problem.title : showProduct ? content.solution.title : showTraction ? "Traction von Leaftronics" : content.demos.title}
-              </h1>
-            </div>
-          </div>
-        )}
+        ) : null}
       </section>
 
       {showProblem ? (
