@@ -1109,41 +1109,65 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
 
       {showCycle ? (
       <section id="demos" className="bg-black py-20 text-background md:py-28">
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.35fr_0.65fr]">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.demos.eyebrow}</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-5xl">{content.demos.title}</h2>
-            <p className="mt-5 text-base leading-7 text-background/70">{content.demos.text}</p>
-          </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            {roleOrder.map((role) => {
-              const Icon = roleIcons[role];
-              const card = content.roles.cards[role];
-              const surface = content.demos.surfaces[role];
-              return (
-                <Link
-                  key={role}
-                  to={`/demo/${role}`}
-                  className="group rounded-lg border border-background/15 bg-background/8 p-5 shadow-elegant backdrop-blur transition-all hover:-translate-y-1 hover:border-primary/55"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="grid h-11 w-11 place-items-center rounded-md bg-primary/15 text-primary">
-                      <Icon className="h-5 w-5" />
+        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.34fr_0.66fr]">
+          {(() => {
+            const Icon = roleIcons[activeRole];
+            const card = content.roles.cards[activeRole];
+            const surface = content.demos.surfaces[activeRole];
+            return (
+              <>
+                <aside>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.demos.eyebrow}</p>
+                  <div className="mt-5 flex items-center gap-4">
+                    <span className="grid h-14 w-14 place-items-center rounded-lg bg-primary/15 text-primary">
+                      <Icon className="h-7 w-7" />
                     </span>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-background/15 px-3 py-1 text-xs font-semibold text-background/70 group-hover:text-background">
-                      {content.demos.liveLabel}
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </span>
+                    <div>
+                      <h2 className="font-display text-4xl font-semibold leading-tight md:text-5xl">{card.title}</h2>
+                      <p className="mt-1 text-sm text-background/55">{surface.subtitle}</p>
+                    </div>
                   </div>
-                  <h3 className="mt-5 font-display text-2xl font-semibold">{card.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-background/65">{surface.subtitle}</p>
-                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
-                    {content.form.demoId} {reference}
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
+                  <p className="mt-6 max-w-xl text-base leading-7 text-background/70">{content.demos.text}</p>
+
+                  <div className="mt-6 rounded-lg border border-background/10 bg-background/8 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-background/45">Problem</p>
+                    <p className="mt-2 text-sm leading-6 text-background/75">{card.problem}</p>
+                    <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Value</p>
+                    <p className="mt-2 text-sm leading-6 text-background/75">{card.value}</p>
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {roleOrder.map((role) => {
+                      const RoleIcon = roleIcons[role];
+                      return (
+                        <button
+                          key={role}
+                          type="button"
+                          onClick={() => chooseRole(role)}
+                          className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-semibold transition-colors ${
+                            role === activeRole
+                              ? "border-primary bg-primary/15 text-background"
+                              : "border-background/15 text-background/65 hover:text-background"
+                          }`}
+                        >
+                          <RoleIcon className="h-4 w-4" />
+                          {content.roles.cards[role].title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </aside>
+
+                <section>
+                  {activeRole === "customer" ? (
+                    <CustomerReturnDemo content={content} language={language} reference={reference} />
+                  ) : (
+                    <DemoSurface content={content} surface={surface} reference={reference} />
+                  )}
+                </section>
+              </>
+            );
+          })()}
         </div>
       </section>
       ) : null}
@@ -1332,6 +1356,7 @@ const ProcessGraph = ({
   chooseRole: (role: RoleId) => void;
   jumpTo: (id: "demos" | "forms") => void;
 }) => {
+  const [hoveredPoint, setHoveredPoint] = useState<GraphPoint | null>(null);
   const topRowY = 88;
   const mainRowY = 304;
   const topRowHeight = 148;
@@ -1351,6 +1376,7 @@ const ProcessGraph = ({
     consulting: "partner",
     disassembly: "recycler",
     smelter: "smelter",
+    materials: "smelter",
   };
 
   const edges: FlowEdge[] = [
@@ -1462,6 +1488,7 @@ const ProcessGraph = ({
     const role = pointToRole[point];
     if (role) {
       chooseRole(role);
+      setActivePoint(point);
       jumpTo("demos");
       return;
     }
@@ -1522,15 +1549,29 @@ const ProcessGraph = ({
             const Icon = graphIcons[point];
             const node = content.solution.nodes[point];
             const position = positions[point];
+            const tooltipStyle: CSSProperties = point === "materials"
+              ? { bottom: "calc(100% + 0.75rem)", left: 0 }
+              : point === "smelter" || point === "disassembly"
+                ? { top: "calc(100% + 0.75rem)", right: 0 }
+                : { top: "calc(100% + 0.75rem)", left: 0 };
             return (
               <button
                 key={point}
                 type="button"
-                onMouseEnter={() => setActivePoint(point)}
-                onFocus={() => setActivePoint(point)}
+                data-graph-point={point}
+                onMouseEnter={() => {
+                  setActivePoint(point);
+                  setHoveredPoint(point);
+                }}
+                onMouseLeave={() => setHoveredPoint(null)}
+                onFocus={() => {
+                  setActivePoint(point);
+                  setHoveredPoint(point);
+                }}
+                onBlur={() => setHoveredPoint(null)}
                 onClick={() => handleNode(point)}
                 aria-pressed={activePoint === point}
-                className={`absolute z-30 flex min-h-[126px] flex-col rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:-translate-y-1 ${
+                className={`group absolute z-30 flex min-h-[126px] flex-col rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:z-40 hover:-translate-y-1 ${
                   activePoint === point
                     ? "border-primary ring-2 ring-primary/20"
                     : "border-border"
@@ -1547,6 +1588,19 @@ const ProcessGraph = ({
                 </span>
                 <span className="mt-4 block font-display text-lg font-semibold leading-tight">{node.title}</span>
                 <span className="mt-2 block text-xs leading-5 text-muted-foreground">{node.next}</span>
+                <span
+                  className={`pointer-events-none absolute z-50 w-72 rounded-lg border border-primary/20 bg-background/95 p-4 text-left shadow-elegant backdrop-blur group-hover:block group-focus:block ${
+                    hoveredPoint === point ? "block" : "hidden"
+                  }`}
+                  style={tooltipStyle}
+                >
+                  <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">
+                    {content.solution.hoverLabel}
+                  </span>
+                  <span className="mt-2 block font-display text-xl font-semibold text-foreground">{node.title}</span>
+                  <span className="mt-2 block text-xs font-semibold leading-5 text-primary/80">{node.problem}</span>
+                  <span className="mt-2 block text-xs leading-5 text-muted-foreground">{node.solution}</span>
+                </span>
               </button>
             );
           })}
