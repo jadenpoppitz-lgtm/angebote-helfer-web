@@ -955,20 +955,20 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             </span>
             <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
           </Link>
-          <nav className="hidden items-center gap-5 text-sm font-semibold text-background/75 md:flex">
-            <Link to="/problem" className="transition-colors hover:text-background">
+          <nav className="hidden items-center gap-1 rounded-lg border border-background/18 bg-black/54 p-1 text-sm font-semibold text-background/75 shadow-elegant backdrop-blur-md md:flex">
+            <Link to="/problem" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
               {content.nav.problem}
             </Link>
-            <Link to="/produkt" className="transition-colors hover:text-background">
+            <Link to="/produkt" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
               Unser Produkt
             </Link>
-            <Link to="/traction" className="transition-colors hover:text-background">
+            <Link to="/traction" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
               Traction
             </Link>
-            <Link to="/zyklus" className="transition-colors hover:text-background">
+            <Link to="/zyklus" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
               Praktischer Zyklus
             </Link>
-            <a href="/#forms" className="transition-colors hover:text-background">
+            <a href="/#forms" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
               Kontakt
             </a>
           </nav>
@@ -976,31 +976,35 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
 
         {showHero ? (
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-7xl items-end px-5 pb-16 sm:px-8 lg:pb-24">
-          <div className="max-w-2xl rounded-lg border border-background/18 bg-black/54 p-4 shadow-elegant backdrop-blur-md sm:p-6 md:bg-black/48">
-            {content.hero.eyebrow ? (
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-background/75">{content.hero.eyebrow}</p>
-            ) : null}
-            <h1 className="mt-3 font-display text-4xl font-semibold leading-[1.04] text-background [text-shadow:0_2px_28px_hsl(0_0%_0%/.45)] md:text-5xl">
-              {content.hero.title}
-            </h1>
-            <p className="mt-4 max-w-xl text-base leading-7 text-background/82 [text-shadow:0_1px_18px_hsl(0_0%_0%/.35)]">
-              {content.hero.text}
-            </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Link
-                to="/problem"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-background px-4 text-sm font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
-              >
-                Das Problem
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                to="/produkt"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-background/25 bg-background/10 px-4 text-sm font-semibold text-background backdrop-blur transition-transform hover:-translate-y-0.5"
-              >
-                Unser Produkt
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+          <div className="w-full max-w-5xl rounded-lg border border-background/18 bg-black/54 p-4 shadow-elegant backdrop-blur-md sm:p-5 md:bg-black/48 lg:grid lg:grid-cols-[1.08fr_0.92fr] lg:items-end lg:gap-8">
+            <div>
+              {content.hero.eyebrow ? (
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-background/75">{content.hero.eyebrow}</p>
+              ) : null}
+              <h1 className="mt-3 font-display text-4xl font-semibold leading-[1.04] text-background [text-shadow:0_2px_28px_hsl(0_0%_0%/.45)] md:text-5xl">
+                {content.hero.title}
+              </h1>
+            </div>
+            <div className="mt-4 lg:mt-0">
+              <p className="max-w-xl text-base leading-7 text-background/82 [text-shadow:0_1px_18px_hsl(0_0%_0%/.35)]">
+                {content.hero.text}
+              </p>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  to="/problem"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-background px-4 text-sm font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
+                >
+                  Das Problem
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  to="/produkt"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-background/25 bg-background/10 px-4 text-sm font-semibold text-background backdrop-blur transition-transform hover:-translate-y-0.5"
+                >
+                  Unser Produkt
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -1147,27 +1151,101 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       {showProduct ? <DeviceImpact language={language} /> : null}
 
       {showTraction ? (
-      <section id="roles" className="bg-[hsl(42_31%_91%)] py-16 text-foreground md:py-24">
-        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+      <section id="traction" className="bg-white py-16 text-foreground md:py-24">
+        <div className="mx-auto w-full max-w-5xl px-5 sm:px-8">
           <div className="max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Traction</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">Was Leaftronics bereits messbar macht.</h2>
+            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">Der Leaftronics-Lebenslauf.</h2>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
-              Die Prototyp-Daten zeigen, welche Prozesspunkte bereits als nutzbare Produktoberflaechen, Ruecklaufdaten und Materialkennzahlen abgebildet sind.
+              Foerderung, Accelerator, Auszeichnungen und Nominierungen in einer chronologischen Uebersicht.
             </p>
           </div>
-          <div className="mt-10 grid gap-4 md:grid-cols-4">
-            {[
-              { value: "128", label: "erfasste Demo-Ruecklaeufer" },
-              { value: "420 kg", label: "PCB im qualifizierten Materialstrom" },
-              { value: "89%", label: "modellierte Smelter-Ausbeute" },
-              { value: "12", label: "Reporting-faehige Prozessnachweise" },
-            ].map((item) => (
-              <div key={item.label} className="rounded-lg border border-border bg-background p-5 shadow-card">
-                <p className="font-display text-4xl font-semibold text-primary">{item.value}</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.label}</p>
-              </div>
-            ))}
+
+          <div className="relative mt-14">
+            <div className="absolute bottom-0 left-4 top-0 w-px bg-primary/25 md:left-1/2" aria-hidden="true" />
+            <div className="grid gap-8">
+              {[
+                {
+                  date: "Maerz 2025",
+                  title: "Start in der EXIST-Foerderung",
+                  text: "Leaftronics wird seit Maerz 2025 ueber EXIST beim Transfer aus der Wissenschaft in die Gruendung unterstuetzt.",
+                  href: "https://www.exist.de/EXIST/Navigation/DE/Gruendungsfoerderung/Exist-Gruenderstipendium/exist-gruenderstipendium.html",
+                  link: "EXIST Gruenderstipendium",
+                },
+                {
+                  date: "2025",
+                  title: "Hello Tomorrow Deep Tech Pioneer",
+                  text: "Leaftronics wird im internationalen Deep-Tech-Umfeld sichtbar und als Hello Tomorrow Deep Tech Pioneer gefuehrt.",
+                  href: "https://hello-tomorrow.org/",
+                  link: "Hello Tomorrow",
+                },
+                {
+                  date: "2025",
+                  title: "Richard-Hartmann-Preis",
+                  text: "Leaftronics gewinnt den Richard-Hartmann-Preis als regionale Anerkennung fuer Gruendung und Technologie.",
+                  href: "https://www.chemnitz.ihk24.de/",
+                  link: "IHK Chemnitz",
+                },
+                {
+                  date: "April 2026",
+                  title: "EXCITE Lab Accelerator",
+                  text: "Seit April 2026 ist Leaftronics Teil des EXCITE Lab Accelerators und arbeitet dort an Marktvalidierung und Skalierung.",
+                  href: "https://excite-dresden.de/",
+                  link: "EXCITE Dresden",
+                },
+                {
+                  date: "2026",
+                  title: "Goldberg Award",
+                  text: "Rakesh und Anton Weissbach gewinnen den Goldberg Award fuer ihre wissenschaftlich-technologische Arbeit im Leaftronics-Kontext.",
+                  href: "https://tu-dresden.de/",
+                  link: "TU Dresden",
+                },
+                {
+                  date: "2026",
+                  title: "Saechsischer Industry Award",
+                  text: "Leaftronics gewinnt den Saechsischen Industry Award und positioniert sich als industrienahe Deep-Tech-Ausgruendung.",
+                  href: "https://www.futuresax.de/",
+                  link: "futureSAX",
+                },
+                {
+                  date: "2026",
+                  title: "Gustav-Hertz-Preis fuer Hans Kleemann",
+                  text: "Hans Kleemann gewinnt den Hertz-Preis; die Auszeichnung staerkt den wissenschaftlichen Rueckhalt des Teams.",
+                  href: "https://www.dpg-physik.de/auszeichnungen/dpg-preise/gustav-hertz-preis",
+                  link: "DPG Gustav-Hertz-Preis",
+                },
+                {
+                  date: "2026",
+                  title: "Nominierung als bester Newcomer",
+                  text: "Leaftronics wird fuer den Gruenderpreis in der Kategorie bester Newcomer nominiert.",
+                  href: "https://www.deutscher-gruenderpreis.de/",
+                  link: "Deutscher Gruenderpreis",
+                },
+              ].map((item, index) => (
+                <article
+                  key={`${item.date}-${item.title}`}
+                  className={`relative pl-12 md:grid md:grid-cols-2 md:gap-12 md:pl-0 ${
+                    index % 2 === 0 ? "" : "md:[&>div]:col-start-2"
+                  }`}
+                >
+                  <span className="absolute left-2 top-2 z-10 h-5 w-5 rounded-full border-4 border-white bg-primary shadow-card md:left-1/2 md:-translate-x-1/2" />
+                  <div className="rounded-lg border border-border bg-background p-5 shadow-card">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{item.date}</p>
+                    <h3 className="mt-3 font-display text-2xl font-semibold">{item.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.text}</p>
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/75"
+                    >
+                      {item.link}
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
