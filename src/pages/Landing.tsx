@@ -55,7 +55,7 @@ export type LandingCopy = {
       sellPcb: string;
       productPcb: string;
       pcb: string;
-      setSolution: string;
+      sellSolution: string;
       material: string;
       materialReturn: string;
     };
@@ -244,7 +244,7 @@ export const copy: Record<Language, LandingCopy> = {
         sellPcb: "PCB verkaufen",
         productPcb: "Produkt - PCB",
         pcb: "PCB",
-        setSolution: "Sell Solution",
+        sellSolution: "Sell Solution",
         material: "Material",
         materialReturn: "Material zurück",
       },
@@ -485,7 +485,7 @@ export const copy: Record<Language, LandingCopy> = {
         sellPcb: "Sell PCB",
         productPcb: "Product - PCB",
         pcb: "PCB",
-        setSolution: "Sell Solution",
+        sellSolution: "Sell Solution",
         material: "Material",
         materialReturn: "Material return",
       },
@@ -725,7 +725,7 @@ export const copy: Record<Language, LandingCopy> = {
         sellPcb: "出售 PCB",
         productPcb: "产品 - PCB",
         pcb: "PCB",
-        setSolution: "Sell Solution",
+        sellSolution: "Sell Solution",
         material: "材料",
         materialReturn: "材料回流",
       },
@@ -1263,7 +1263,7 @@ const ProcessGraph = ({
       from: "consulting",
       to: "smelter",
       path: "M674 414 C728 414 782 414 836 414",
-      label: content.solution.flow.setSolution,
+      label: content.solution.flow.sellSolution,
       labelX: 704,
       labelY: 424,
       duration: 8.2,
