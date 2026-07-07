@@ -1205,8 +1205,6 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   text: "Leaftronics ist im EXCITE Lab Startup-Portfolio in Batch #4 gelistet. Die Programmliste beschreibt Leaftronics als Entwickler auflösbarer PCB-Substrate für kreislauffähige Elektronik und Rückgewinnung von Edelmetallen.",
                   href: "https://www.excitelab.co/startups#filter=.4",
                   link: "EXCITE Lab Batch #4",
-                  image: "/traction-excite-lab.jpg",
-                  imageAlt: "EXCITE Lab Accelerator",
                 },
                 {
                   date: "17.06.2026 / 19.06.2026",
