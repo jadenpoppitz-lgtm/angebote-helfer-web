@@ -242,17 +242,17 @@ const translations = {
     },
     landingStory: {
       hero: {
-        eyebrow: "Materialien beginnen in der Natur",
+        eyebrow: "",
         title: "Was wir abbauen, muss im Kreislauf bleiben.",
         text:
-          "Kernbeisser verbindet Produkt, Rückgabe, Demontage und Verwertung so, dass wertvolle Metalle nicht aus dem System verschwinden.",
+          "Leaftronics verbindet Produkt, Rückgabe, Demontage und Verwertung so, dass wertvolle Metalle nicht aus dem System verschwinden.",
         nav: "Zum Problem",
       },
       problem: {
         eyebrow: "Das Problem",
         title: "Wertvolle Materialien verlieren ihren Weg zurück in die Produktion.",
         text:
-          "Alte Produkte werden exportiert, unscharf gesammelt oder nicht sauber auseinandergenommen. Dabei gehen Materialien verloren: teils physisch im Ausland, teils im Prozess, weil bestimmte Fraktionen gar nicht erst gefiltert werden. Langfristig müssen kritische Rohstoffe und CMA-relevante Materialien stärker in Europa bleiben. Mit Kernbeisser lassen sich B2B-Produkte reiner recyceln, Materialhoheit bei OEMs halten und ein Ökosystem fördern, in dem Produktion in Europa wieder wirtschaftlich sinnvoller wird.",
+          "Alte Produkte werden exportiert, unscharf gesammelt oder nicht sauber auseinandergenommen. Dabei gehen Materialien verloren: teils physisch im Ausland, teils im Prozess, weil bestimmte Fraktionen gar nicht erst gefiltert werden. Langfristig müssen kritische Rohstoffe und CMA-relevante Materialien stärker in Europa bleiben. Mit Leaftronics lassen sich B2B-Produkte reiner recyceln, Materialhoheit bei OEMs halten und ein Ökosystem fördern, in dem Produktion in Europa wieder wirtschaftlich sinnvoller wird.",
         cta: "Zu unserer Lösung",
         imageA: "Export und Mischsammlung trennen Produkte von Herkunft, Qualität und OEM-Verantwortung.",
         imageB: "Nicht gefilterte Fraktionen verlieren Kupfer, Edelmetalle und CMA-relevante Materialien im Prozess.",
@@ -268,12 +268,12 @@ const translations = {
         eyebrow: "Unsere Lösung",
         title: "Ein steuerbarer Kreislauf statt eines blinden Recyclingwegs.",
         text:
-          "Der Graph zeigt, wo Kernbeisser Transparenz, Rücknahme und Materialrückführung verbindet. Fahre über einen Punkt, um zu sehen, welche Rolle Kernbeisser dort übernimmt.",
-        hoverLabel: "Kernbeisser löst hier",
+          "Der Graph zeigt, wo Leaftronics Transparenz, Rücknahme und Materialrückführung verbindet. Fahre über einen Punkt, um zu sehen, welche Rolle Leaftronics dort übernimmt.",
+        hoverLabel: "Leaftronics löst hier",
         points: {
           customer: {
             title: "Customer Rückgabe",
-            text: "Kunden starten die Rückgabe über Seriennummer oder QR-Code. Kernbeisser ordnet das Produkt direkt dem richtigen Kreislauf zu.",
+            text: "Kunden starten die Rückgabe über Seriennummer oder QR-Code. Leaftronics ordnet das Produkt direkt dem richtigen Kreislauf zu.",
           },
           oem: {
             title: "OEM Steuerung",
@@ -281,7 +281,7 @@ const translations = {
           },
           consulting: {
             title: "Consulting & Daten",
-            text: "Kernbeisser bewertet Material, Partner und nächste Schritte, damit PCB nicht anonym verkauft, sondern gezielt rückgeführt wird.",
+            text: "Leaftronics bewertet Material, Partner und nächste Schritte, damit PCB nicht anonym verkauft, sondern gezielt rückgeführt wird.",
           },
           product: {
             title: "Produkt-Identität",
@@ -293,7 +293,7 @@ const translations = {
           },
           smelter: {
             title: "Smelter Netzwerk",
-            text: "Smelter erhalten qualifizierte PCB-Ströme. Kernbeisser dokumentiert Lösung, Materialausbeute und Rückführung.",
+            text: "Smelter erhalten qualifizierte PCB-Ströme. Leaftronics dokumentiert Lösung, Materialausbeute und Rückführung.",
           },
           asia: {
             title: "Auslandsrisiko",
@@ -472,17 +472,17 @@ const translations = {
     },
     landingStory: {
       hero: {
-        eyebrow: "Materials begin in nature",
+        eyebrow: "",
         title: "What we extract must stay in the loop.",
         text:
-          "Kernbeisser connects product, return, disassembly and recovery so valuable metals do not disappear from the system.",
+          "Leaftronics connects product, return, disassembly and recovery so valuable metals do not disappear from the system.",
         nav: "See the problem",
       },
       problem: {
         eyebrow: "The problem",
         title: "Valuable materials lose their path back into production.",
         text:
-          "Old products are exported, collected too broadly or not disassembled cleanly. Materials are lost along the way: physically abroad, and inside the process when specific fractions are never filtered in the first place. In the long run, critical raw materials and CMA-relevant materials need to stay in Europe more often. With Kernbeisser, B2B products can be recycled more purely, OEMs can keep material sovereignty, and a stronger ecosystem can make production in Europe economically attractive again.",
+          "Old products are exported, collected too broadly or not disassembled cleanly. Materials are lost along the way: physically abroad, and inside the process when specific fractions are never filtered in the first place. In the long run, critical raw materials and CMA-relevant materials need to stay in Europe more often. With Leaftronics, B2B products can be recycled more purely, OEMs can keep material sovereignty, and a stronger ecosystem can make production in Europe economically attractive again.",
         cta: "See our solution",
         imageA: "Export and mixed collection separate products from origin, quality and OEM responsibility.",
         imageB: "Unfiltered fractions lose copper, precious metals and CMA-relevant materials inside the process.",
@@ -498,12 +498,12 @@ const translations = {
         eyebrow: "Our solution",
         title: "A controllable loop instead of a blind recycling path.",
         text:
-          "The graph shows where Kernbeisser connects transparency, take-back and material recovery. Hover a point to see what Kernbeisser solves there.",
-        hoverLabel: "Kernbeisser solves here",
+          "The graph shows where Leaftronics connects transparency, take-back and material recovery. Hover a point to see what Leaftronics solves there.",
+        hoverLabel: "Leaftronics solves here",
         points: {
           customer: {
             title: "Customer return",
-            text: "Customers start the return with a serial number or QR code. Kernbeisser routes the product into the right loop immediately.",
+            text: "Customers start the return with a serial number or QR code. Leaftronics routes the product into the right loop immediately.",
           },
           oem: {
             title: "OEM control",
@@ -511,7 +511,7 @@ const translations = {
           },
           consulting: {
             title: "Consulting & data",
-            text: "Kernbeisser evaluates material, partners and next steps so PCB is not sold anonymously but recovered deliberately.",
+            text: "Leaftronics evaluates material, partners and next steps so PCB is not sold anonymously but recovered deliberately.",
           },
           product: {
             title: "Product identity",
@@ -523,7 +523,7 @@ const translations = {
           },
           smelter: {
             title: "Smelter network",
-            text: "Smelters receive qualified PCB streams. Kernbeisser documents solution, material yield and return path.",
+            text: "Smelters receive qualified PCB streams. Leaftronics documents solution, material yield and return path.",
           },
           asia: {
             title: "Export risk",
@@ -700,14 +700,14 @@ const translations = {
       hero: {
         eyebrow: "材料源于自然",
         title: "被开采的材料，必须留在循环中。",
-        text: "Kernbeisser 连接产品、回收、拆解和再利用，让有价值的金属不再从系统中消失。",
+        text: "Leaftronics 连接产品、回收、拆解和再利用，让有价值的金属不再从系统中消失。",
         nav: "查看问题",
       },
       problem: {
         eyebrow: "问题",
         title: "有价值的材料正在失去回到生产中的路径。",
         text:
-          "旧产品被出口、被混合收集，或没有被清晰拆解。材料会在途中流失：一部分流向海外，一部分在处理过程中因为特定材料没有被过滤出来而消失。长期来看，关键原材料和与 CMA 相关的材料需要更多留在欧洲。通过 Kernbeisser，B2B 产品可以被更纯净地回收，OEM 可以保留材料主权，并推动一个让欧洲生产更有经济意义的生态系统。",
+          "旧产品被出口、被混合收集，或没有被清晰拆解。材料会在途中流失：一部分流向海外，一部分在处理过程中因为特定材料没有被过滤出来而消失。长期来看，关键原材料和与 CMA 相关的材料需要更多留在欧洲。通过 Leaftronics，B2B 产品可以被更纯净地回收，OEM 可以保留材料主权，并推动一个让欧洲生产更有经济意义的生态系统。",
         cta: "查看我们的解决方案",
         imageA: "出口和混合收集会切断产品来源、质量和 OEM 责任。",
         imageB: "未被过滤的材料组分会让铜、贵金属和 CMA 相关材料在过程中流失。",
@@ -722,12 +722,12 @@ const translations = {
       solution: {
         eyebrow: "我们的解决方案",
         title: "可控的循环，而不是盲目的回收路径。",
-        text: "这张图展示 Kernbeisser 如何连接透明度、回收和材料回流。悬停在节点上，可查看对应解决方式。",
-        hoverLabel: "Kernbeisser 在这里解决",
+        text: "这张图展示 Leaftronics 如何连接透明度、回收和材料回流。悬停在节点上，可查看对应解决方式。",
+        hoverLabel: "Leaftronics 在这里解决",
         points: {
           customer: {
             title: "客户回收",
-            text: "客户通过序列号或二维码启动回收。Kernbeisser 立即把产品导入正确的循环。",
+            text: "客户通过序列号或二维码启动回收。Leaftronics 立即把产品导入正确的循环。",
           },
           oem: {
             title: "OEM 控制",
@@ -735,7 +735,7 @@ const translations = {
           },
           consulting: {
             title: "咨询与数据",
-            text: "Kernbeisser 评估材料、合作方和下一步，让 PCB 不再匿名出售，而是被有目标地回收。",
+            text: "Leaftronics 评估材料、合作方和下一步，让 PCB 不再匿名出售，而是被有目标地回收。",
           },
           product: {
             title: "产品身份",
@@ -747,7 +747,7 @@ const translations = {
           },
           smelter: {
             title: "冶炼网络",
-            text: "冶炼方接收经过确认的 PCB 流。Kernbeisser 记录方案、材料产出和回流路径。",
+            text: "冶炼方接收经过确认的 PCB 流。Leaftronics 记录方案、材料产出和回流路径。",
           },
           asia: {
             title: "出口风险",

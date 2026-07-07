@@ -26,7 +26,7 @@ export type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
 type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" | "materials";
 
 export type LandingCopy = {
-  nav: { problem: string; impact: string; roles: string; solution: string; demos: string; forms: string };
+  nav: { problem: string; process: string; impact: string; roles: string; solution: string; demos: string; forms: string };
   hero: { eyebrow: string; title: string; text: string; cta: string };
   problem: {
     eyebrow: string;
@@ -102,19 +102,19 @@ export type LandingCopy = {
 
 export const copy: Record<Language, LandingCopy> = {
   de: {
-    nav: { problem: "Problem", impact: "Device Impact", roles: "Rollen", solution: "Kreislauf", demos: "Demos", forms: "Starten" },
+    nav: { problem: "Problem", process: "Prozess", impact: "Device Impact", roles: "Rollen", solution: "Kreislauf", demos: "Demos", forms: "Starten" },
     hero: {
-      eyebrow: "Materialien beginnen in der Natur",
+      eyebrow: "",
       title: "Was wir abbauen, muss im Kreislauf bleiben.",
       text:
-        "Kernbeisser macht aus Recycling einen steuerbaren B2B-Prozess: Produkt identifizieren, sauber demontieren, Materialdaten sichern und Wertstoffe in Europa halten.",
+        "Leaftronics macht aus Recycling einen steuerbaren B2B-Prozess: Produkt identifizieren, sauber demontieren, Materialdaten sichern und Wertstoffe in Europa halten.",
       cta: "Rolle auswählen",
     },
     problem: {
       eyebrow: "Das Problem",
       title: "Materialien verschwinden, bevor sie wieder Produktion werden.",
       text:
-        "Alte Produkte werden exportiert, unscharf gesammelt oder nicht sauber demontiert. Bestimmte Fraktionen werden im Prozess nicht gefiltert, OEMs verlieren Materialhoheit und Europa verliert Rohstoffsicherheit. Kernbeisser setzt dort an, wo Produktdaten, Demontage und Materialrückführung bisher getrennt sind.",
+        "Alte Produkte werden exportiert, unscharf gesammelt oder nicht sauber demontiert. Bestimmte Fraktionen werden im Prozess nicht gefiltert, OEMs verlieren Materialhoheit und Europa verliert Rohstoffsicherheit. Leaftronics setzt dort an, wo Produktdaten, Demontage und Materialrückführung bisher getrennt sind.",
       cta: "Zur Lösung",
       stats: [
         { value: "Export", label: "Kontrolle geht verloren" },
@@ -185,7 +185,7 @@ export const copy: Record<Language, LandingCopy> = {
       eyebrow: "Interaktiver Wertstrom",
       title: "Produkt, PCB und Material laufen getrennt durch den Loop.",
       text:
-        "Die Animation folgt dem Prozess aus der Skizze: OEM liefert Produkt, der Kunde gibt zurück, Kernbeisser routet PCB und Produkt, der Smelter gewinnt Material und Exportpfade werden sichtbar.",
+        "Die Animation folgt dem Prozess aus der Skizze: OEM liefert Produkt, der Kunde gibt zurück, Leaftronics routet PCB und Produkt, der Smelter gewinnt Material und Exportpfade werden sichtbar.",
       hoverLabel: "Aktiver Prozesspunkt",
       nextStep: "Nächster Schritt",
       nodes: {
@@ -205,9 +205,9 @@ export const copy: Record<Language, LandingCopy> = {
         },
         consulting: {
           title: "Consulting",
-          label: "Kernbeisser",
+          label: "Leaftronics",
           problem: "Ohne Bewertung wird PCB anonym verkauft oder falsch geroutet.",
-          solution: "Kernbeisser bewertet Produkt und PCB, verkauft oder ordnet PCB zu und setzt die passende Lösung.",
+          solution: "Leaftronics bewertet Produkt und PCB, verkauft oder ordnet PCB zu und setzt die passende Lösung.",
           next: "Routing prüfen",
         },
         disassembly: {
@@ -256,7 +256,7 @@ export const copy: Record<Language, LandingCopy> = {
       liveLabel: "Live-Demo",
       customerLive: {
         title: "Live-Demo: Customer Rückgabe",
-        text: "Gib eine Seriennummer ein. Kernbeisser erkennt Produkt und Standort, zeigt Rückgabepartner und mögliche OEM-Rabatte.",
+        text: "Gib eine Seriennummer ein. Leaftronics erkennt Produkt und Standort, zeigt Rückgabepartner und mögliche OEM-Rabatte.",
         serialLabel: "Seriennummer",
         serialPlaceholder: "z. B. KB-DD-0001",
         detect: "Standort automatisch erkennen",
@@ -271,7 +271,7 @@ export const copy: Record<Language, LandingCopy> = {
         oemOffers: [
           { oem: "YETI Industrial", offer: "12% Rabatt auf Service-PCB", condition: "nach bestätigter Rückgabe" },
           { oem: "Leaftronics OEM", offer: "85 EUR Materialgutschrift", condition: "für sortenreine Leiterplatten" },
-          { oem: "Kernbeisser Network", offer: "CO2-Zertifikat + Einkaufsvorteil", condition: "für ESG-fähige Rückläufer" },
+          { oem: "Leaftronics Network", offer: "CO2-Zertifikat + Einkaufsvorteil", condition: "für ESG-fähige Rückläufer" },
         ],
       },
       surfaces: {
@@ -344,19 +344,19 @@ export const copy: Record<Language, LandingCopy> = {
     },
   },
   en: {
-    nav: { problem: "Problem", impact: "Device impact", roles: "Roles", solution: "Loop", demos: "Demos", forms: "Start" },
+    nav: { problem: "Problem", process: "Process", impact: "Device impact", roles: "Roles", solution: "Loop", demos: "Demos", forms: "Start" },
     hero: {
-      eyebrow: "Materials begin in nature",
+      eyebrow: "",
       title: "What we extract must stay in the loop.",
       text:
-        "Kernbeisser turns recycling into a controllable B2B process: identify products, disassemble cleanly, preserve material data and keep value in Europe.",
+        "Leaftronics turns recycling into a controllable B2B process: identify products, disassemble cleanly, preserve material data and keep value in Europe.",
       cta: "Select role",
     },
     problem: {
       eyebrow: "The problem",
       title: "Materials disappear before they become production again.",
       text:
-        "Old products are exported, collected too broadly or not disassembled cleanly. Specific fractions are never filtered, OEMs lose material sovereignty and Europe loses raw-material security. Kernbeisser connects the product data, disassembly and material return paths that are currently separated.",
+        "Old products are exported, collected too broadly or not disassembled cleanly. Specific fractions are never filtered, OEMs lose material sovereignty and Europe loses raw-material security. Leaftronics connects the product data, disassembly and material return paths that are currently separated.",
       cta: "See solution",
       stats: [
         { value: "Export", label: "control gets lost" },
@@ -426,7 +426,7 @@ export const copy: Record<Language, LandingCopy> = {
     solution: {
       eyebrow: "Interactive value flow",
       title: "Product, PCB and material move through separate loop paths.",
-      text: "The animation follows the sketched process: OEM ships product, the customer returns it, Kernbeisser routes product and PCB, the smelter recovers material and export leakage becomes visible.",
+      text: "The animation follows the sketched process: OEM ships product, the customer returns it, Leaftronics routes product and PCB, the smelter recovers material and export leakage becomes visible.",
       hoverLabel: "Active process point",
       nextStep: "Next step",
       nodes: {
@@ -446,9 +446,9 @@ export const copy: Record<Language, LandingCopy> = {
         },
         consulting: {
           title: "Consulting",
-          label: "Kernbeisser",
+          label: "Leaftronics",
           problem: "Without evaluation, PCB is sold anonymously or routed incorrectly.",
-          solution: "Kernbeisser evaluates product and PCB, sells or assigns PCB and sets the suitable solution.",
+          solution: "Leaftronics evaluates product and PCB, sells or assigns PCB and sets the suitable solution.",
           next: "Review routing",
         },
         disassembly: {
@@ -497,7 +497,7 @@ export const copy: Record<Language, LandingCopy> = {
       liveLabel: "Live demo",
       customerLive: {
         title: "Live demo: customer return",
-        text: "Enter a serial number. Kernbeisser detects product and location, then shows return partners and possible OEM discounts.",
+        text: "Enter a serial number. Leaftronics detects product and location, then shows return partners and possible OEM discounts.",
         serialLabel: "Serial number",
         serialPlaceholder: "e.g. KB-DD-0001",
         detect: "Detect location automatically",
@@ -512,7 +512,7 @@ export const copy: Record<Language, LandingCopy> = {
         oemOffers: [
           { oem: "YETI Industrial", offer: "12% discount on service PCB", condition: "after confirmed return" },
           { oem: "Leaftronics OEM", offer: "85 EUR material credit", condition: "for sorted circuit boards" },
-          { oem: "Kernbeisser Network", offer: "CO2 certificate + purchase benefit", condition: "for ESG-ready returns" },
+          { oem: "Leaftronics Network", offer: "CO2 certificate + purchase benefit", condition: "for ESG-ready returns" },
         ],
       },
       surfaces: {
@@ -585,18 +585,18 @@ export const copy: Record<Language, LandingCopy> = {
     },
   },
   zh: {
-    nav: { problem: "问题", impact: "设备影响", roles: "角色", solution: "循环", demos: "演示", forms: "开始" },
+    nav: { problem: "问题", process: "过程", impact: "设备影响", roles: "角色", solution: "循环", demos: "演示", forms: "开始" },
     hero: {
-      eyebrow: "材料源于自然",
+      eyebrow: "",
       title: "被开采的材料必须留在循环中。",
-      text: "Kernbeisser 将回收变成可控的 B2B 流程：识别产品、清晰拆解、保留材料数据，并把价值留在欧洲。",
+      text: "Leaftronics 将回收变成可控的 B2B 流程：识别产品、清晰拆解、保留材料数据，并把价值留在欧洲。",
       cta: "选择角色",
     },
     problem: {
       eyebrow: "问题",
       title: "材料在重新进入生产之前就消失了。",
       text:
-        "旧产品被出口、混合收集或没有被清晰拆解。部分材料组分没有被过滤，OEM 失去材料主权，欧洲失去原材料安全。Kernbeisser 连接产品数据、拆解和材料回流路径。",
+        "旧产品被出口、混合收集或没有被清晰拆解。部分材料组分没有被过滤，OEM 失去材料主权，欧洲失去原材料安全。Leaftronics 连接产品数据、拆解和材料回流路径。",
       cta: "查看解决方案",
       stats: [
         { value: "出口", label: "控制流失" },
@@ -666,7 +666,7 @@ export const copy: Record<Language, LandingCopy> = {
     solution: {
       eyebrow: "交互式价值流",
       title: "产品、PCB 和材料沿着不同路径进入循环。",
-      text: "动画按照草图展示流程：OEM 交付产品，客户退回，Kernbeisser 路由产品和 PCB，冶炼方回收材料，同时显示出口流失路径。",
+      text: "动画按照草图展示流程：OEM 交付产品，客户退回，Leaftronics 路由产品和 PCB，冶炼方回收材料，同时显示出口流失路径。",
       hoverLabel: "当前流程点",
       nextStep: "下一步",
       nodes: {
@@ -686,9 +686,9 @@ export const copy: Record<Language, LandingCopy> = {
         },
         consulting: {
           title: "咨询 / 路由",
-          label: "Kernbeisser",
+          label: "Leaftronics",
           problem: "没有评估时，PCB 会被匿名出售或错误路由。",
-          solution: "Kernbeisser 评估产品和 PCB，分配或出售 PCB，并设置合适方案。",
+          solution: "Leaftronics 评估产品和 PCB，分配或出售 PCB，并设置合适方案。",
           next: "检查路由",
         },
         disassembly: {
@@ -737,7 +737,7 @@ export const copy: Record<Language, LandingCopy> = {
       liveLabel: "实时演示",
       customerLive: {
         title: "实时演示：客户退回",
-        text: "输入序列号。Kernbeisser 会识别产品和位置，并显示退回伙伴与可能的 OEM 折扣。",
+        text: "输入序列号。Leaftronics 会识别产品和位置，并显示退回伙伴与可能的 OEM 折扣。",
         serialLabel: "序列号",
         serialPlaceholder: "例如 KB-DD-0001",
         detect: "自动识别位置",
@@ -752,7 +752,7 @@ export const copy: Record<Language, LandingCopy> = {
         oemOffers: [
           { oem: "YETI Industrial", offer: "服务 PCB 12% 折扣", condition: "确认退回后" },
           { oem: "Leaftronics OEM", offer: "85 欧元材料积分", condition: "适用于分类电路板" },
-          { oem: "Kernbeisser Network", offer: "CO2 证书 + 采购优惠", condition: "适用于 ESG 可追踪退回" },
+          { oem: "Leaftronics Network", offer: "CO2 证书 + 采购优惠", condition: "适用于 ESG 可追踪退回" },
         ],
       },
       surfaces: {
@@ -891,7 +891,7 @@ const Landing = () => {
     };
 
     try {
-      window.localStorage.setItem(`kernbeisser-request-${id}`, JSON.stringify(payload));
+      window.localStorage.setItem(`leaftronics-request-${id}`, JSON.stringify(payload));
     } catch {
       // The prototype should still confirm submissions when storage is blocked.
     }
@@ -931,19 +931,16 @@ const Landing = () => {
         <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
           <Link to="/" className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-background shadow-elegant">
-              <img src="/logo.png" alt="Kernbeisser Logo" className="h-full w-full object-cover" />
+              <img src="/logo.png" alt="Leaftronics Logo" className="h-full w-full object-cover" />
             </span>
-            <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Kernbeisser</span>
+            <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
           </Link>
           <nav className="hidden items-center gap-5 text-sm font-semibold text-background/75 md:flex">
             <a href="#problem" className="transition-colors hover:text-background">
               {content.nav.problem}
             </a>
-            <a href="#device-impact" className="transition-colors hover:text-background">
-              {content.nav.impact}
-            </a>
-            <a href="#roles" className="transition-colors hover:text-background">
-              {content.nav.roles}
+            <a href="#process" className="transition-colors hover:text-background">
+              {content.nav.process}
             </a>
             <a href="#solution" className="transition-colors hover:text-background">
               {content.nav.solution}
@@ -951,12 +948,23 @@ const Landing = () => {
             <a href="#demos" className="transition-colors hover:text-background">
               {content.nav.demos}
             </a>
+            <a href="#device-impact" className="transition-colors hover:text-background">
+              {content.nav.impact}
+            </a>
+            <a href="#roles" className="transition-colors hover:text-background">
+              {content.nav.roles}
+            </a>
+            <a href="#forms" className="transition-colors hover:text-background">
+              {content.nav.forms}
+            </a>
           </nav>
         </header>
 
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-7xl items-end px-5 pb-16 sm:px-8 lg:pb-24">
           <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-background/75">{content.hero.eyebrow}</p>
+            {content.hero.eyebrow ? (
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-background/75">{content.hero.eyebrow}</p>
+            ) : null}
             <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.02] text-background [text-shadow:0_2px_28px_hsl(0_0%_0%/.45)] md:text-7xl">
               {content.hero.title}
             </h1>
@@ -1004,6 +1012,28 @@ const Landing = () => {
                   <p className="font-display text-xl font-semibold">{tile.title}</p>
                   <p className="mt-2 text-sm font-medium leading-6 text-background/78">{tile.text}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="process" className="bg-black pb-24 text-background md:pb-32">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr_1fr]">
+            {[
+              { src: "/leaftronics-lab-beaker.jpg", alt: "Leaftronics Laborprozess" },
+              { src: "/leaftronics-separated-components.jpg", alt: "Getrennte Elektronikkomponenten" },
+              { src: "/leaftronics-pcb-prototype.jpg", alt: "Leaftronics PCB Prototyp" },
+            ].map((image, index) => (
+              <div
+                key={image.src}
+                className={`relative overflow-hidden rounded-lg border border-background/12 bg-background/5 shadow-elegant ${
+                  index === 1 ? "md:translate-y-8" : ""
+                }`}
+              >
+                <img src={image.src} alt={image.alt} className="h-72 w-full object-cover md:h-96" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/32 via-transparent to-transparent" />
               </div>
             ))}
           </div>

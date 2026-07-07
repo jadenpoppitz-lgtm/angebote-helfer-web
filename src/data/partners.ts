@@ -81,7 +81,7 @@ export const SERIAL_DB: Record<string, SerialLookup> = {
     partners: [
       {
         id: "p1",
-        name: "Kernbeißer Hub Mitte",
+        name: "Leaftronics Hub Mitte",
         street: "Friedrichstr. 110, 10117 Berlin",
         hours: "Mo–Fr 08:00–20:00",
         distanceKm: 0.6,

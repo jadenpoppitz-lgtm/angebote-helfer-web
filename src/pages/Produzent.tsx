@@ -48,7 +48,7 @@ const copy = {
     loopViz: [
       ["OEM", "Produktion & Hoheit über Material"],
       ["Kunde", "Gibt Gerät / PCB zurück"],
-      ["Kernbeißer", "Sammelt, sortiert, dokumentiert"],
+      ["Leaftronics", "Sammelt, sortiert, dokumentiert"],
       ["Hochofen / Refining", "Verarbeitet auf Weisung des OEM"],
     ],
     metalBack: "Edelmetall zurück an OEM",
@@ -122,7 +122,7 @@ const copy = {
     loopViz: [
       ["OEM", "Production & material ownership"],
       ["Customer", "Returns device / PCB"],
-      ["Kernbeißer", "Collects, sorts, documents"],
+      ["Leaftronics", "Collects, sorts, documents"],
       ["Smelter / refining", "Processes on OEM instruction"],
     ],
     metalBack: "Precious metal back to OEM",
@@ -195,7 +195,7 @@ const copy = {
     loopViz: [
       ["OEM", "生产与材料所有权"],
       ["客户", "退回设备 / PCB"],
-      ["Kernbeißer", "收集、分类、记录"],
+      ["Leaftronics", "收集、分类、记录"],
       ["冶炼 / 精炼", "按 OEM 指示处理"],
     ],
     metalBack: "贵金属回到 OEM",

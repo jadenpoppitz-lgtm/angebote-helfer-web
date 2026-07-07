@@ -225,7 +225,7 @@ const Index = () => {
               <Leaf className="h-4 w-4" />
             </span>
             <span className="font-display text-sm font-semibold uppercase tracking-[0.16em] sm:text-base sm:tracking-[0.2em]">
-              Kernbeißer
+              Leaftronics
             </span>
           </Link>
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
@@ -391,7 +391,7 @@ const Index = () => {
 
       <footer className="border-t border-border/60 py-8">
         <div className="container text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Kernbeißer · {copy.prototype}
+          © {new Date().getFullYear()} Leaftronics · {copy.prototype}
         </div>
       </footer>
     </div>
