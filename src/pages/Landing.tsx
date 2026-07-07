@@ -1108,7 +1108,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       ) : null}
 
       {showCycle ? (
-      <section id="demos" className="bg-[radial-gradient(circle_at_72%_18%,hsl(151_76%_24%/.35),transparent_34%),linear-gradient(135deg,hsl(160_44%_7%),hsl(0_0%_2%)_58%,hsl(43_85%_12%/.75))] py-20 text-background md:py-28">
+      <section id="demos" className="bg-[linear-gradient(90deg,hsl(45_52%_92%/.78)_1px,transparent_1px),linear-gradient(180deg,hsl(45_52%_92%/.78)_1px,transparent_1px),radial-gradient(circle_at_76%_20%,hsl(151_48%_82%/.72),transparent_32%),linear-gradient(120deg,hsl(43_53%_92%),hsl(47_48%_96%)_48%,hsl(155_38%_90%))] bg-[size:56px_56px,56px_56px,100%_100%,100%_100%] py-20 text-foreground md:py-28">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.34fr_0.66fr]">
           {(() => {
             const Icon = roleIcons[activeRole];
@@ -1124,16 +1124,16 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                     </span>
                     <div>
                       <h2 className="font-display text-4xl font-semibold leading-tight md:text-5xl">{card.title}</h2>
-                      <p className="mt-1 text-sm text-background/55">{surface.subtitle}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{surface.subtitle}</p>
                     </div>
                   </div>
-                  <p className="mt-6 max-w-xl text-base leading-7 text-background/70">{content.demos.text}</p>
+                  <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground">{content.demos.text}</p>
 
-                  <div className="mt-6 rounded-lg border border-primary/20 bg-primary/10 p-4 shadow-card">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-background/45">Problem</p>
-                    <p className="mt-2 text-sm leading-6 text-background/75">{card.problem}</p>
+                  <div className="mt-6 rounded-lg border border-primary/20 bg-background/80 p-4 shadow-card backdrop-blur">
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">Problem</p>
+                    <p className="mt-2 text-sm leading-6 text-foreground/75">{card.problem}</p>
                     <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Value</p>
-                    <p className="mt-2 text-sm leading-6 text-background/75">{card.value}</p>
+                    <p className="mt-2 text-sm leading-6 text-foreground/75">{card.value}</p>
                   </div>
 
                   <div className="mt-6 flex flex-wrap gap-2">
@@ -1146,8 +1146,8 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                           onClick={() => chooseRole(role)}
                           className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-semibold transition-colors ${
                             role === activeRole
-                              ? "border-primary bg-primary/15 text-background"
-                              : "border-background/15 text-background/65 hover:text-background"
+                              ? "border-primary bg-primary text-primary-foreground"
+                              : "border-primary/20 bg-background/70 text-foreground/65 hover:text-foreground"
                           }`}
                         >
                           <RoleIcon className="h-4 w-4" />
@@ -1734,32 +1734,32 @@ const DemoWindow = ({
   subtitle: string;
   children: ReactNode;
 }) => (
-  <div className="relative overflow-hidden rounded-lg border border-primary/35 bg-[linear-gradient(145deg,hsl(156_62%_24%/.95),hsl(166_48%_10%/.98)_34%,hsl(0_0%_3%/.98))] p-1 shadow-[0_26px_90px_hsl(156_70%_20%/.38)]">
-    <div className="absolute inset-x-8 top-0 h-px bg-primary/80" aria-hidden="true" />
-    <div className="rounded-md border border-background/12 bg-black/72 backdrop-blur-xl">
-      <div className="flex flex-col gap-4 border-b border-background/12 bg-background/10 px-4 py-3 md:flex-row md:items-center md:justify-between">
+  <div className="relative overflow-hidden rounded-lg border border-primary/25 bg-[linear-gradient(145deg,hsl(42_55%_98%),hsl(152_42%_92%)_48%,hsl(43_45%_96%))] p-1 shadow-[0_26px_70px_hsl(151_31%_34%/.22)]">
+    <div className="absolute inset-x-8 top-0 h-px bg-primary/65" aria-hidden="true" />
+    <div className="rounded-md border border-primary/14 bg-background/92 backdrop-blur-xl">
+      <div className="flex flex-col gap-4 border-b border-primary/12 bg-[linear-gradient(90deg,hsl(45_55%_96%),hsl(153_42%_93%))] px-4 py-3 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
           <span className="flex gap-1.5" aria-hidden="true">
             <span className="h-2.5 w-2.5 rounded-full bg-red-400/90" />
             <span className="h-2.5 w-2.5 rounded-full bg-amber-300/90" />
             <span className="h-2.5 w-2.5 rounded-full bg-primary" />
           </span>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-background/55">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
             {content.form.demoId} {reference}
           </p>
         </div>
-        <span className="inline-flex h-9 items-center gap-2 rounded-md border border-primary/35 bg-primary/15 px-3 text-sm font-semibold text-primary shadow-[0_0_24px_hsl(156_70%_42%/.28)]">
+        <span className="inline-flex h-9 items-center gap-2 rounded-md border border-primary/25 bg-primary/10 px-3 text-sm font-semibold text-primary shadow-[0_10px_28px_hsl(151_40%_40%/.16)]">
           {icon}
           {content.demos.liveLabel}
         </span>
       </div>
 
-      <div className="border-b border-background/10 bg-[radial-gradient(circle_at_18%_0%,hsl(156_72%_36%/.25),transparent_36%)] px-5 py-5">
+      <div className="border-b border-primary/10 bg-[radial-gradient(circle_at_18%_0%,hsl(156_52%_82%/.72),transparent_38%)] px-5 py-5">
         <h3 className="font-display text-3xl font-semibold">{title}</h3>
-        <p className="mt-1 max-w-2xl text-sm leading-6 text-background/68">{subtitle}</p>
+        <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{subtitle}</p>
       </div>
 
-      <div className="bg-[linear-gradient(180deg,hsl(160_38%_7%/.88),hsl(0_0%_2%/.96))] p-5">
+      <div className="bg-[linear-gradient(180deg,hsl(43_54%_97%/.96),hsl(154_32%_94%/.72))] p-5">
         {children}
       </div>
     </div>
@@ -1770,19 +1770,19 @@ export const DemoSurface = ({ content, surface, reference }: { content: LandingC
   <DemoWindow content={content} reference={reference} icon={<BarChart3 className="h-4 w-4" />} title={surface.title} subtitle={surface.subtitle}>
     <div className="grid gap-3 md:grid-cols-3">
       {surface.metrics.map((metric) => (
-        <div key={metric.label} className="rounded-md border border-primary/18 bg-primary/10 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.08)]">
-          <p className="text-xs uppercase tracking-[0.22em] text-background/45">{metric.label}</p>
+        <div key={metric.label} className="rounded-md border border-primary/18 bg-background/82 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
+          <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">{metric.label}</p>
           <p className="mt-2 font-display text-3xl font-semibold">{metric.value}</p>
         </div>
       ))}
     </div>
     <div className="mt-5 grid gap-3">
       {surface.steps.map((step, index) => (
-        <div key={step} className="flex items-center gap-3 rounded-md border border-background/12 bg-background/8 px-4 py-3 shadow-[inset_0_1px_0_hsl(0_0%_100%/.06)]">
+        <div key={step} className="flex items-center gap-3 rounded-md border border-primary/14 bg-background/76 px-4 py-3 shadow-[inset_0_1px_0_hsl(0_0%_100%/.65)]">
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
             {index + 1}
           </span>
-          <span className="text-sm font-medium text-background/80">{step}</span>
+          <span className="text-sm font-medium text-foreground/78">{step}</span>
         </div>
       ))}
     </div>
@@ -1827,7 +1827,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
             event.preventDefault();
             checkSerial();
           }}
-          className="rounded-lg border border-primary/18 bg-primary/10 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.08)]"
+          className="rounded-lg border border-primary/18 bg-background/82 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]"
         >
           <label className="grid gap-2 text-sm font-semibold">
             {copy.serialLabel}
@@ -1835,11 +1835,11 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
               value={serial}
               onChange={(event) => setSerial(event.target.value)}
               placeholder={copy.serialPlaceholder}
-              className="h-11 rounded-md border border-background/15 bg-black/45 px-3 font-mono text-sm text-background outline-none focus:border-primary"
+              className="h-11 rounded-md border border-primary/18 bg-background px-3 font-mono text-sm text-foreground outline-none focus:border-primary"
             />
           </label>
           <div className="mt-3 flex flex-wrap gap-2">
-            <button type="submit" className="inline-flex h-10 items-center gap-2 rounded-md bg-background px-4 text-sm font-semibold text-foreground">
+            <button type="submit" className="inline-flex h-10 items-center gap-2 rounded-md bg-foreground px-4 text-sm font-semibold text-background shadow-card">
               <SearchCheck className="h-4 w-4" />
               {copy.check}
             </button>
@@ -1849,7 +1849,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                 setSerial(DEMO_SERIAL);
                 checkSerial(DEMO_SERIAL);
               }}
-              className="inline-flex h-10 items-center gap-2 rounded-md border border-background/15 px-4 text-sm font-semibold text-background/75 hover:text-background"
+              className="inline-flex h-10 items-center gap-2 rounded-md border border-primary/18 bg-background/70 px-4 text-sm font-semibold text-foreground/65 hover:text-foreground"
             >
               {copy.useDemo}
             </button>
@@ -1864,14 +1864,14 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
             {detecting ? copy.locationPending : copy.detect}
           </button>
 
-          <div className="mt-4 rounded-md border border-background/12 bg-background/8 p-3">
-            <p className="text-xs uppercase tracking-[0.22em] text-background/45">{copy.detected}</p>
+          <div className="mt-4 rounded-md border border-primary/14 bg-primary/8 p-3">
+            <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">{copy.detected}</p>
             <p className="mt-1 font-display text-2xl font-semibold">{location}</p>
           </div>
         </form>
 
         <div className="grid gap-4">
-          <div className="rounded-lg border border-background/12 bg-background/8 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.06)]">
+          <div className="rounded-lg border border-primary/14 bg-background/78 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.65)]">
             {lookup ? (
               <>
                 <div className="flex items-start justify-between gap-3">
@@ -1881,13 +1881,13 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                   </div>
                   <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">{lookup.postalCode}</span>
                 </div>
-                <p className="mt-4 text-sm font-semibold text-background/80">{copy.returnPoints}</p>
+                <p className="mt-4 text-sm font-semibold text-foreground/78">{copy.returnPoints}</p>
                 <div className="mt-3 grid gap-2">
                   {lookup.partners.slice(0, 3).map((partner) => (
-                    <div key={partner.id} className="flex items-center justify-between gap-3 rounded-md border border-background/12 bg-black/25 px-3 py-2">
+                    <div key={partner.id} className="flex items-center justify-between gap-3 rounded-md border border-primary/12 bg-primary/8 px-3 py-2">
                       <span>
                         <span className="block text-sm font-semibold">{partner.name}</span>
-                        <span className="block text-xs text-background/50">{partner.street}</span>
+                        <span className="block text-xs text-muted-foreground">{partner.street}</span>
                       </span>
                       <span className="text-sm font-semibold text-primary">{partner.distanceKm.toFixed(1)} km</span>
                     </div>
