@@ -1108,7 +1108,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       ) : null}
 
       {showCycle ? (
-      <section id="demos" className="bg-black py-20 text-background md:py-28">
+      <section id="demos" className="bg-[radial-gradient(circle_at_72%_18%,hsl(151_76%_24%/.35),transparent_34%),linear-gradient(135deg,hsl(160_44%_7%),hsl(0_0%_2%)_58%,hsl(43_85%_12%/.75))] py-20 text-background md:py-28">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.34fr_0.66fr]">
           {(() => {
             const Icon = roleIcons[activeRole];
@@ -1129,7 +1129,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   </div>
                   <p className="mt-6 max-w-xl text-base leading-7 text-background/70">{content.demos.text}</p>
 
-                  <div className="mt-6 rounded-lg border border-background/10 bg-background/8 p-4">
+                  <div className="mt-6 rounded-lg border border-primary/20 bg-primary/10 p-4 shadow-card">
                     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-background/45">Problem</p>
                     <p className="mt-2 text-sm leading-6 text-background/75">{card.problem}</p>
                     <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Value</p>
@@ -1719,22 +1719,58 @@ const InfoPanel = ({ content, activeNode }: { content: LandingCopy; activeNode: 
   </div>
 );
 
-export const DemoSurface = ({ content, surface, reference }: { content: LandingCopy; surface: LandingCopy["demos"]["surfaces"][RoleId]; reference: string }) => (
-  <div className="rounded-lg border border-background/15 bg-background/8 p-5 shadow-elegant backdrop-blur">
-    <div className="flex flex-col justify-between gap-4 border-b border-background/15 pb-5 md:flex-row md:items-center">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{content.form.demoId} {reference}</p>
-        <h3 className="mt-2 font-display text-3xl font-semibold">{surface.title}</h3>
-        <p className="mt-1 text-sm text-background/65">{surface.subtitle}</p>
+const DemoWindow = ({
+  content,
+  reference,
+  icon,
+  title,
+  subtitle,
+  children,
+}: {
+  content: LandingCopy;
+  reference: string;
+  icon: ReactNode;
+  title: string;
+  subtitle: string;
+  children: ReactNode;
+}) => (
+  <div className="relative overflow-hidden rounded-lg border border-primary/35 bg-[linear-gradient(145deg,hsl(156_62%_24%/.95),hsl(166_48%_10%/.98)_34%,hsl(0_0%_3%/.98))] p-1 shadow-[0_26px_90px_hsl(156_70%_20%/.38)]">
+    <div className="absolute inset-x-8 top-0 h-px bg-primary/80" aria-hidden="true" />
+    <div className="rounded-md border border-background/12 bg-black/72 backdrop-blur-xl">
+      <div className="flex flex-col gap-4 border-b border-background/12 bg-background/10 px-4 py-3 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <span className="flex gap-1.5" aria-hidden="true">
+            <span className="h-2.5 w-2.5 rounded-full bg-red-400/90" />
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-300/90" />
+            <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+          </span>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-background/55">
+            {content.form.demoId} {reference}
+          </p>
+        </div>
+        <span className="inline-flex h-9 items-center gap-2 rounded-md border border-primary/35 bg-primary/15 px-3 text-sm font-semibold text-primary shadow-[0_0_24px_hsl(156_70%_42%/.28)]">
+          {icon}
+          {content.demos.liveLabel}
+        </span>
       </div>
-      <span className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">
-        <BarChart3 className="h-4 w-4" />
-        {content.demos.liveLabel}
-      </span>
+
+      <div className="border-b border-background/10 bg-[radial-gradient(circle_at_18%_0%,hsl(156_72%_36%/.25),transparent_36%)] px-5 py-5">
+        <h3 className="font-display text-3xl font-semibold">{title}</h3>
+        <p className="mt-1 max-w-2xl text-sm leading-6 text-background/68">{subtitle}</p>
+      </div>
+
+      <div className="bg-[linear-gradient(180deg,hsl(160_38%_7%/.88),hsl(0_0%_2%/.96))] p-5">
+        {children}
+      </div>
     </div>
-    <div className="mt-5 grid gap-3 md:grid-cols-3">
+  </div>
+);
+
+export const DemoSurface = ({ content, surface, reference }: { content: LandingCopy; surface: LandingCopy["demos"]["surfaces"][RoleId]; reference: string }) => (
+  <DemoWindow content={content} reference={reference} icon={<BarChart3 className="h-4 w-4" />} title={surface.title} subtitle={surface.subtitle}>
+    <div className="grid gap-3 md:grid-cols-3">
       {surface.metrics.map((metric) => (
-        <div key={metric.label} className="rounded-md border border-background/10 bg-black/25 p-4">
+        <div key={metric.label} className="rounded-md border border-primary/18 bg-primary/10 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.08)]">
           <p className="text-xs uppercase tracking-[0.22em] text-background/45">{metric.label}</p>
           <p className="mt-2 font-display text-3xl font-semibold">{metric.value}</p>
         </div>
@@ -1742,15 +1778,15 @@ export const DemoSurface = ({ content, surface, reference }: { content: LandingC
     </div>
     <div className="mt-5 grid gap-3">
       {surface.steps.map((step, index) => (
-        <div key={step} className="flex items-center gap-3 rounded-md border border-background/10 bg-black/20 px-4 py-3">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 text-xs font-semibold text-primary">
+        <div key={step} className="flex items-center gap-3 rounded-md border border-background/12 bg-background/8 px-4 py-3 shadow-[inset_0_1px_0_hsl(0_0%_100%/.06)]">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
             {index + 1}
           </span>
           <span className="text-sm font-medium text-background/80">{step}</span>
         </div>
       ))}
     </div>
-  </div>
+  </DemoWindow>
 );
 
 export const CustomerReturnDemo = ({ content, language, reference }: { content: LandingCopy; language: Language; reference: string }) => {
@@ -1784,26 +1820,14 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
   const device = lookup ? localizeDevice(lookup.device, language) : null;
 
   return (
-    <div className="rounded-lg border border-background/15 bg-background/8 p-5 shadow-elegant backdrop-blur">
-      <div className="flex flex-col justify-between gap-4 border-b border-background/15 pb-5 md:flex-row md:items-center">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{content.form.demoId} {reference}</p>
-          <h3 className="mt-2 font-display text-3xl font-semibold">{copy.title}</h3>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-background/65">{copy.text}</p>
-        </div>
-        <span className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">
-          <QrCode className="h-4 w-4" />
-          {content.demos.liveLabel}
-        </span>
-      </div>
-
-      <div className="mt-5 grid gap-4 lg:grid-cols-[0.45fr_0.55fr]">
+    <DemoWindow content={content} reference={reference} icon={<QrCode className="h-4 w-4" />} title={copy.title} subtitle={copy.text}>
+      <div className="grid gap-4 lg:grid-cols-[0.45fr_0.55fr]">
         <form
           onSubmit={(event) => {
             event.preventDefault();
             checkSerial();
           }}
-          className="rounded-lg border border-background/10 bg-black/25 p-4"
+          className="rounded-lg border border-primary/18 bg-primary/10 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.08)]"
         >
           <label className="grid gap-2 text-sm font-semibold">
             {copy.serialLabel}
@@ -1811,7 +1835,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
               value={serial}
               onChange={(event) => setSerial(event.target.value)}
               placeholder={copy.serialPlaceholder}
-              className="h-11 rounded-md border border-background/15 bg-black/30 px-3 font-mono text-sm text-background outline-none focus:border-primary"
+              className="h-11 rounded-md border border-background/15 bg-black/45 px-3 font-mono text-sm text-background outline-none focus:border-primary"
             />
           </label>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -1840,14 +1864,14 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
             {detecting ? copy.locationPending : copy.detect}
           </button>
 
-          <div className="mt-4 rounded-md border border-background/10 bg-black/20 p-3">
+          <div className="mt-4 rounded-md border border-background/12 bg-background/8 p-3">
             <p className="text-xs uppercase tracking-[0.22em] text-background/45">{copy.detected}</p>
             <p className="mt-1 font-display text-2xl font-semibold">{location}</p>
           </div>
         </form>
 
         <div className="grid gap-4">
-          <div className="rounded-lg border border-background/10 bg-black/25 p-4">
+          <div className="rounded-lg border border-background/12 bg-background/8 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.06)]">
             {lookup ? (
               <>
                 <div className="flex items-start justify-between gap-3">
@@ -1860,7 +1884,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                 <p className="mt-4 text-sm font-semibold text-background/80">{copy.returnPoints}</p>
                 <div className="mt-3 grid gap-2">
                   {lookup.partners.slice(0, 3).map((partner) => (
-                    <div key={partner.id} className="flex items-center justify-between gap-3 rounded-md border border-background/10 bg-black/20 px-3 py-2">
+                    <div key={partner.id} className="flex items-center justify-between gap-3 rounded-md border border-background/12 bg-black/25 px-3 py-2">
                       <span>
                         <span className="block text-sm font-semibold">{partner.name}</span>
                         <span className="block text-xs text-background/50">{partner.street}</span>
@@ -1871,17 +1895,17 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                 </div>
               </>
             ) : notFound ? (
-              <div className="rounded-md border border-background/10 bg-black/20 p-4 text-sm text-background/70">{copy.unknown}</div>
+              <div className="rounded-md border border-background/12 bg-black/25 p-4 text-sm text-background/70">{copy.unknown}</div>
             ) : (
-              <div className="rounded-md border border-background/10 bg-black/20 p-4 text-sm text-background/70">{copy.text}</div>
+              <div className="rounded-md border border-background/12 bg-black/25 p-4 text-sm text-background/70">{copy.text}</div>
             )}
           </div>
 
-          <div className="rounded-lg border border-background/10 bg-black/25 p-4">
+          <div className="rounded-lg border border-background/12 bg-background/8 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.06)]">
             <p className="text-sm font-semibold text-background/85">{copy.discounts}</p>
             <div className="mt-3 grid gap-2">
               {copy.oemOffers.map((offer) => (
-                <div key={offer.oem} className="rounded-md border border-background/10 bg-black/20 p-3">
+                <div key={offer.oem} className="rounded-md border border-background/12 bg-black/25 p-3">
                   <div className="flex items-start justify-between gap-3">
                     <p className="font-display text-lg font-semibold">{offer.oem}</p>
                     <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
@@ -1904,7 +1928,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
           </div>
         </div>
       </div>
-    </div>
+    </DemoWindow>
   );
 };
 
