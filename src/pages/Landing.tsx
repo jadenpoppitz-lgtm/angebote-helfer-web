@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
-  ArrowDown,
   ArrowRight,
   BarChart3,
   CheckCircle2,
@@ -24,6 +23,7 @@ import { DEMO_SERIAL, SERIAL_DB, type SerialLookup } from "@/data/partners";
 
 export type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
 type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" | "materials";
+type LandingPage = "home" | "problem" | "product" | "traction" | "cycle";
 
 export type LandingCopy = {
   nav: { problem: string; process: string; impact: string; roles: string; solution: string; demos: string; forms: string };
@@ -854,7 +854,7 @@ const roleToPoint: Record<RoleId, GraphPoint> = {
   partner: "consulting",
 };
 
-const Landing = () => {
+const Landing = ({ page = "home" }: { page?: LandingPage }) => {
   const [activeRole, setActiveRole] = useState<RoleId>("oem");
   const [activePoint, setActivePoint] = useState<GraphPoint>("oem");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -864,6 +864,12 @@ const Landing = () => {
 
   const activeNode = content.solution.nodes[activePoint];
   const reference = useMemo(() => `KB-${new Date().getFullYear()}-${String(Math.floor(100 + Math.random() * 900))}`, []);
+  const showHero = page === "home";
+  const showProblem = page === "problem";
+  const showProduct = page === "product";
+  const showTraction = page === "traction";
+  const showCycle = page === "cycle";
+  const showContact = page === "home";
 
   const chooseRole = (role: RoleId) => {
     setActiveRole(role);
@@ -946,30 +952,25 @@ const Landing = () => {
             <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
           </Link>
           <nav className="hidden items-center gap-5 text-sm font-semibold text-background/75 md:flex">
-            <a href="#problem" className="transition-colors hover:text-background">
+            <Link to="/problem" className="transition-colors hover:text-background">
               {content.nav.problem}
-            </a>
-            <a href="#process" className="transition-colors hover:text-background">
-              {content.nav.process}
-            </a>
-            <a href="#solution" className="transition-colors hover:text-background">
-              {content.nav.solution}
-            </a>
-            <a href="#demos" className="transition-colors hover:text-background">
-              {content.nav.demos}
-            </a>
-            <a href="#device-impact" className="transition-colors hover:text-background">
-              {content.nav.impact}
-            </a>
-            <a href="#roles" className="transition-colors hover:text-background">
-              {content.nav.roles}
-            </a>
-            <a href="#forms" className="transition-colors hover:text-background">
-              {content.nav.forms}
+            </Link>
+            <Link to="/produkt" className="transition-colors hover:text-background">
+              Unser Produkt
+            </Link>
+            <Link to="/traction" className="transition-colors hover:text-background">
+              Traction
+            </Link>
+            <Link to="/zyklus" className="transition-colors hover:text-background">
+              Praktischer Zyklus
+            </Link>
+            <a href="/#forms" className="transition-colors hover:text-background">
+              Kontakt
             </a>
           </nav>
         </header>
 
+        {showHero ? (
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-7xl items-end px-5 pb-16 sm:px-8 lg:pb-24">
           <div className="w-full rounded-lg border border-background/18 bg-black/62 p-5 shadow-elegant backdrop-blur-md sm:p-7 md:bg-black/56">
             {content.hero.eyebrow ? (
@@ -981,17 +982,37 @@ const Landing = () => {
             <p className="mt-6 max-w-2xl text-lg leading-8 text-background/85 [text-shadow:0_1px_18px_hsl(0_0%_0%/.35)]">
               {content.hero.text}
             </p>
-            <a
-              href="#roles"
-              className="mt-8 inline-flex h-12 items-center gap-2 rounded-md bg-background px-5 font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
-            >
-              {content.hero.cta}
-              <ArrowDown className="h-4 w-4" />
-            </a>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link
+                to="/problem"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-background px-5 font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
+              >
+                Das Problem
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                to="/produkt"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-background/25 bg-background/10 px-5 font-semibold text-background backdrop-blur transition-transform hover:-translate-y-0.5"
+              >
+                Unser Produkt
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
+        ) : (
+          <div className="relative z-10 mx-auto flex min-h-[320px] w-full max-w-7xl items-end px-5 pb-12 sm:px-8">
+            <div className="max-w-3xl rounded-lg border border-background/18 bg-black/62 p-5 shadow-elegant backdrop-blur-md sm:p-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-primary">Leaftronics</p>
+              <h1 className="mt-4 font-display text-4xl font-semibold leading-tight text-background md:text-6xl">
+                {showProblem ? content.problem.title : showProduct ? content.solution.title : showTraction ? "Traction von Leaftronics" : content.demos.title}
+              </h1>
+            </div>
+          </div>
+        )}
       </section>
 
+      {showProblem ? (
       <section id="problem" className="relative isolate overflow-hidden bg-black py-24 text-background md:py-32">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,hsl(150_80%_35%/.18),transparent_32%),radial-gradient(circle_at_80%_80%,hsl(40_90%_45%/.14),transparent_30%)]" />
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[0.46fr_0.54fr]">
@@ -1027,7 +1048,9 @@ const Landing = () => {
           </div>
         </div>
       </section>
+      ) : null}
 
+      {showProduct ? (
       <section id="process" className="bg-black pb-24 text-background md:pb-32">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
           <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr_1fr]">
@@ -1049,7 +1072,9 @@ const Landing = () => {
           </div>
         </div>
       </section>
+      ) : null}
 
+      {showProduct || showCycle ? (
       <section id="solution" className="bg-[hsl(42_31%_91%)] pb-16 text-foreground md:pb-24">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
           <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
@@ -1061,13 +1086,15 @@ const Landing = () => {
             <InfoPanel content={content} activeNode={activeNode} />
           </div>
 
-          <ProcessGraph
-            content={content}
-            activePoint={activePoint}
-            setActivePoint={setActivePoint}
-            chooseRole={chooseRole}
-            jumpTo={jumpTo}
-          />
+          {showCycle ? (
+            <ProcessGraph
+              content={content}
+              activePoint={activePoint}
+              setActivePoint={setActivePoint}
+              chooseRole={chooseRole}
+              jumpTo={jumpTo}
+            />
+          ) : null}
 
           <div className="mt-6 grid gap-3 md:grid-cols-5">
             {content.solution.values.map((item) => (
@@ -1079,7 +1106,9 @@ const Landing = () => {
           </div>
         </div>
       </section>
+      ) : null}
 
+      {showCycle ? (
       <section id="demos" className="bg-black py-20 text-background md:py-28">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.35fr_0.65fr]">
           <div>
@@ -1118,19 +1147,38 @@ const Landing = () => {
           </div>
         </div>
       </section>
+      ) : null}
 
-      <DeviceImpact language={language} />
+      {showProduct ? <DeviceImpact language={language} /> : null}
 
+      {showTraction ? (
       <section id="roles" className="bg-[hsl(42_31%_91%)] py-16 text-foreground md:py-24">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
           <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.roles.eyebrow}</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.roles.title}</h2>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.roles.text}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Traction</p>
+            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">Was Leaftronics bereits messbar macht.</h2>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
+              Die Prototyp-Daten zeigen, welche Prozesspunkte bereits als nutzbare Produktoberflaechen, Ruecklaufdaten und Materialkennzahlen abgebildet sind.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-4">
+            {[
+              { value: "128", label: "erfasste Demo-Ruecklaeufer" },
+              { value: "420 kg", label: "PCB im qualifizierten Materialstrom" },
+              { value: "89%", label: "modellierte Smelter-Ausbeute" },
+              { value: "12", label: "Reporting-faehige Prozessnachweise" },
+            ].map((item) => (
+              <div key={item.label} className="rounded-lg border border-border bg-background p-5 shadow-card">
+                <p className="font-display text-4xl font-semibold text-primary">{item.value}</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
+      ) : null}
 
+      {showContact ? (
       <section id="forms" className="bg-[hsl(42_31%_91%)] py-16 text-foreground md:py-24">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.42fr_0.58fr]">
           <div>
@@ -1194,6 +1242,7 @@ const Landing = () => {
           </form>
         </div>
       </section>
+      ) : null}
     </div>
   );
 };
