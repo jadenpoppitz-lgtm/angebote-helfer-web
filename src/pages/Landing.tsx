@@ -924,8 +924,18 @@ const Landing = () => {
       </div>
 
       <section className="relative isolate min-h-screen overflow-hidden">
-        <img src="/rainforest.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/80" />
+        <div className="absolute inset-0 grid md:grid-cols-2">
+          <div className="relative min-h-full">
+            <img src="/rainforest.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-black/18 to-black/8" />
+          </div>
+          <div className="relative hidden min-h-full md:block">
+            <img src="/leaftronics-hero-pcb.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-l from-black/18 via-black/8 to-black/35" />
+          </div>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/8 via-black/10 to-black/72" />
+        <div className="absolute inset-y-0 left-1/2 hidden w-px bg-background/18 md:block" />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-black" />
 
         <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
@@ -961,7 +971,7 @@ const Landing = () => {
         </header>
 
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-7xl items-end px-5 pb-16 sm:px-8 lg:pb-24">
-          <div className="max-w-3xl">
+          <div className="max-w-3xl rounded-lg border border-background/18 bg-black/34 p-5 shadow-elegant backdrop-blur-md sm:p-7 md:bg-black/28">
             {content.hero.eyebrow ? (
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-background/75">{content.hero.eyebrow}</p>
             ) : null}
