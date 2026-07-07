@@ -1157,7 +1157,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Traction</p>
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">Der Leaftronics-Lebenslauf.</h2>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
-              Foerderung, Accelerator, Auszeichnungen und Nominierungen in einer chronologischen Uebersicht.
+              Förderung, Accelerator, Auszeichnungen und Nominierungen in einer chronologischen Übersicht.
             </p>
           </div>
 
@@ -1166,60 +1166,56 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             <div className="grid gap-8">
               {[
                 {
-                  date: "Maerz 2025",
-                  title: "Start in der EXIST-Foerderung",
-                  text: "Leaftronics wird seit Maerz 2025 ueber EXIST beim Transfer aus der Wissenschaft in die Gruendung unterstuetzt.",
-                  href: "https://tu-dresden.de/mn/physik/iap/optoelektronik/forschung/projekte/exist-gruendungsstipendium-leaftronics",
-                  link: "TU Dresden EXIST-Projekt",
-                },
-                {
-                  date: "2025",
-                  title: "Hello Tomorrow Deep Tech Pioneer",
-                  text: "Leaftronics wird im internationalen Deep-Tech-Umfeld sichtbar und als Hello Tomorrow Deep Tech Pioneer gefuehrt.",
-                  href: "https://hello-tomorrow.org/",
-                  link: "Hello Tomorrow",
-                },
-                {
-                  date: "2025",
-                  title: "Richard-Hartmann-Preis",
-                  text: "Leaftronics gewinnt den Richard-Hartmann-Preis als regionale Anerkennung fuer Gruendung und Technologie.",
-                  href: "https://tu-dresden.de/tu-dresden/newsportal/news/industrieverein-sachsen-zeichnet-dr-rakesh-nair-mit-foerderpreis-richard-hartmann-aus",
-                  link: "TU Dresden News",
-                },
-                {
-                  date: "April 2026",
-                  title: "EXCITE Lab Accelerator",
-                  text: "Seit April 2026 ist Leaftronics Teil des EXCITE Lab Accelerators und arbeitet dort an Marktvalidierung und Skalierung.",
-                  href: "https://www.excitelab.co/startups#filter=.4",
-                  link: "EXCITE Lab Batch 4",
-                },
-                {
-                  date: "2026",
-                  title: "Goldberg Award",
-                  text: "Rakesh und Anton Weissbach gewinnen den Goldberg Award fuer ihre wissenschaftlich-technologische Arbeit im Leaftronics-Kontext.",
+                  date: "2024 / 2025",
+                  title: "Emanuel-Goldberg-Preis",
+                  text: "Anton Weißbach ist für die 2023 abgeschlossene Arbeit gelistet, Rakesh Rajendran Nair für die 2024 abgeschlossene Leaftronics-Dissertation. Die Preisverleihung erfolgt laut Quelle jeweils im Folgejahr.",
                   href: "https://tu-dresden.de/dcpc/iapp/r-l-stiftung/emanuel-goldberg-preis",
                   link: "Emanuel-Goldberg-Preis",
+                  image: "/traction-goldberg.jpg",
+                  imageAlt: "Emanuel-Goldberg-Preis an der TU Dresden",
                 },
                 {
-                  date: "2026",
-                  title: "Saechsischer Industry Award",
-                  text: "Leaftronics gewinnt den Saechsischen Industry Award und positioniert sich als industrienahe Deep-Tech-Ausgruendung.",
-                  href: "https://tu-dresden.de/tu-dresden/newsportal/news/industrieverein-sachsen-zeichnet-dr-rakesh-nair-mit-foerderpreis-richard-hartmann-aus",
-                  link: "Industrieverein Sachsen",
+                  date: "01.03.2025 - 28.02.2027",
+                  title: "EXIST-Forschungstransfer",
+                  text: "Das Leaftronics-Projekt läuft an der TU Dresden mit BMWK-Förderung. Die Quelle nennt 1.146.357,09 Euro Fördersumme und das Ziel eines biobasierten, recycelbaren Leiterplattensubstrats.",
+                  href: "https://tu-dresden.de/mn/physik/iap/optoelektronik/forschung/projekte/exist-gruendungsstipendium-leaftronics",
+                  link: "TU Dresden EXIST-Projekt",
+                  image: "/traction-exist-leaftronics.jpg",
+                  imageAlt: "Leaftronics-Projektbild der TU Dresden",
                 },
                 {
-                  date: "2026",
-                  title: "Gustav-Hertz-Preis fuer Hans Kleemann",
-                  text: "Hans Kleemann gewinnt den Hertz-Preis; die Auszeichnung staerkt den wissenschaftlichen Rueckhalt des Teams.",
+                  date: "02.07.2025 / 30.09.2025",
+                  title: "Joachim Herz Preis 2025",
+                  text: "Hans Kleemann erhält den mit 500.000 Euro dotierten Joachim Herz Preis 2025 für das Projekt UnbeLEAFable. Die Stiftung nennt die Verleihung am 30. September 2025 in Hamburg.",
                   href: "https://www.joachim-herz-stiftung.de/presse/meldung/dresdner-wissenschaftler-hans-kleemann-erhaelt-joachim-herz-preis",
                   link: "Joachim Herz Stiftung",
                 },
                 {
-                  date: "2026",
-                  title: "Nominierung auf der Innovationskonferenz",
-                  text: "Leaftronics wird im Umfeld der dresden|exists Innovationskonferenz fuer den Gruenderpreis als bester Newcomer nominiert.",
+                  date: "23.02.2026",
+                  title: "Förderpreis Richard Hartmann",
+                  text: "Dr. Rakesh Nair wird vom Industrieverein Sachsen 1828 e.V. für Arbeiten zu nachhaltiger, biologisch abbaubarer Elektronik auf Basis natürlicher Lignocellulose-Strukturen ausgezeichnet.",
+                  href: "https://tu-dresden.de/tu-dresden/newsportal/news/industrieverein-sachsen-zeichnet-dr-rakesh-nair-mit-foerderpreis-richard-hartmann-aus",
+                  link: "TU Dresden News",
+                  image: "/traction-richard-hartmann.jpg",
+                  imageAlt: "Rakesh Nair bei der Richard-Hartmann-Preisverleihung",
+                },
+                {
+                  date: "April 2026",
+                  title: "EXCITE Lab Accelerator",
+                  text: "Leaftronics ist im EXCITE Lab Startup-Portfolio in Batch #4 gelistet. Die Programmliste beschreibt Leaftronics als Entwickler auflösbarer PCB-Substrate für kreislauffähige Elektronik und Rückgewinnung von Edelmetallen.",
+                  href: "https://www.excitelab.co/startups#filter=.4",
+                  link: "EXCITE Lab Batch #4",
+                  image: "/traction-excite-lab.jpg",
+                  imageAlt: "EXCITE Lab Accelerator",
+                },
+                {
+                  date: "17.06.2026 / 19.06.2026",
+                  title: "Sächsischer Gründerpreis: Nominierung",
+                  text: "Auf der Sächsischen Innovationskonferenz 2026 wird Oxaphil Newcomer des Jahres. Leaftronics wird in der dresden|exists-Quelle als für den Sächsischen Gründerpreis nominiert genannt.",
                   href: "https://www.dresden-exists.de/blog/2026/06/19/oxaphil-wird-newcomer-des-jahres-ein-tag-zwischen-konferenztrubel-und-echtem-startup-moment/",
                   link: "dresden|exists Innovationskonferenz",
+                  image: "/traction-innovationskonferenz-leaftronics.jpg",
+                  imageAlt: "Leaftronics bei der Saechsischen Innovationskonferenz",
                 },
               ].map((item, index) => (
                 <article
@@ -1229,19 +1225,24 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   }`}
                 >
                   <span className="absolute left-2 top-2 z-10 h-5 w-5 rounded-full border-4 border-white bg-primary shadow-card md:left-1/2 md:-translate-x-1/2" />
-                  <div className="rounded-lg border border-border bg-background p-5 shadow-card">
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{item.date}</p>
-                    <h3 className="mt-3 font-display text-2xl font-semibold">{item.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.text}</p>
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/75"
-                    >
-                      {item.link}
-                      <ArrowRight className="h-4 w-4" />
-                    </a>
+                  <div className="overflow-hidden rounded-lg border border-border bg-background shadow-card">
+                    {item.image ? (
+                      <img src={item.image} alt={item.imageAlt} className="h-44 w-full object-cover" loading="lazy" />
+                    ) : null}
+                    <div className="p-5">
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{item.date}</p>
+                      <h3 className="mt-3 font-display text-2xl font-semibold">{item.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.text}</p>
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/75"
+                      >
+                        {item.link}
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
+                    </div>
                   </div>
                 </article>
               ))}
