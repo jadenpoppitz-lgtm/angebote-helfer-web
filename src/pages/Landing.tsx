@@ -971,7 +971,7 @@ const Landing = () => {
         </header>
 
         <div className="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-7xl items-end px-5 pb-16 sm:px-8 lg:pb-24">
-          <div className="max-w-3xl rounded-lg border border-background/18 bg-black/34 p-5 shadow-elegant backdrop-blur-md sm:p-7 md:bg-black/28">
+          <div className="w-full rounded-lg border border-background/18 bg-black/62 p-5 shadow-elegant backdrop-blur-md sm:p-7 md:bg-black/56">
             {content.hero.eyebrow ? (
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-background/75">{content.hero.eyebrow}</p>
             ) : null}
