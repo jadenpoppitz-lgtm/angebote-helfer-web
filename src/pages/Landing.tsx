@@ -1596,6 +1596,55 @@ const materialStreamLabels = [
   { label: "Substrat", className: "product-stream product-stream-4" },
 ];
 
+const boardTraceClasses = [
+  "product-trace product-trace-1",
+  "product-trace product-trace-2",
+  "product-trace product-trace-3",
+  "product-trace product-trace-4",
+  "product-trace product-trace-5",
+  "product-trace product-trace-6",
+  "product-trace product-trace-7",
+  "product-trace product-trace-8",
+  "product-trace product-trace-9",
+  "product-trace product-trace-10",
+  "product-trace product-trace-11",
+  "product-trace product-trace-12",
+  "product-trace product-trace-13",
+  "product-trace product-trace-14",
+  "product-trace product-trace-15",
+  "product-trace product-trace-16",
+  "product-trace product-trace-17",
+  "product-trace product-trace-18",
+];
+
+const boardComponentClasses = [
+  "product-component product-component-1",
+  "product-component product-component-2",
+  "product-component product-component-3",
+  "product-component product-component-4",
+  "product-component product-component-5",
+  "product-component product-component-6",
+  "product-component product-component-7",
+  "product-component product-component-8",
+  "product-component product-component-9",
+  "product-component product-component-10",
+  "product-component product-component-11",
+  "product-component product-component-12",
+];
+
+const boardVias = [
+  ["7%", "12%"], ["12%", "18%"], ["17%", "14%"], ["24%", "18%"], ["30%", "13%"], ["36%", "18%"], ["43%", "14%"], ["50%", "18%"],
+  ["57%", "14%"], ["64%", "18%"], ["71%", "14%"], ["80%", "18%"], ["88%", "13%"], ["93%", "20%"], ["9%", "33%"], ["15%", "39%"],
+  ["24%", "36%"], ["32%", "43%"], ["40%", "38%"], ["49%", "44%"], ["58%", "39%"], ["68%", "45%"], ["78%", "38%"], ["88%", "43%"],
+  ["11%", "58%"], ["18%", "66%"], ["27%", "61%"], ["36%", "68%"], ["45%", "62%"], ["54%", "69%"], ["64%", "63%"], ["74%", "69%"],
+  ["84%", "62%"], ["92%", "70%"], ["8%", "84%"], ["16%", "79%"], ["28%", "85%"], ["40%", "80%"], ["53%", "85%"], ["66%", "80%"],
+  ["78%", "86%"], ["90%", "80%"],
+];
+
+const boardMounts = [
+  ["7%", "9%"], ["92%", "10%"], ["7%", "88%"], ["92%", "88%"],
+];
+
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 const progressBetween = (value: number, start: number, end: number) => clamp01((value - start) / (end - start));
 
@@ -1628,7 +1677,7 @@ const ProductTechnologyPage = () => {
       <section className="relative isolate overflow-hidden bg-[hsl(156_34%_9%)] text-background">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,hsl(150_68%_32%/.28),transparent_34%),radial-gradient(circle_at_86%_18%,hsl(31_92%_55%/.16),transparent_28%),linear-gradient(180deg,hsl(156_34%_9%),hsl(150_26%_13%))]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[hsl(42_38%_94%)]" />
-        <div className="relative mx-auto grid min-h-[calc(100vh-92px)] w-full max-w-7xl items-center gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[0.48fr_0.52fr]">
+        <div className="relative mx-auto grid min-h-[calc(100vh-92px)] w-full max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[0.45fr_0.55fr]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.34em] text-background/60">Leaftronics Technologie</p>
             <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.02] md:text-7xl">
@@ -1654,7 +1703,12 @@ const ProductTechnologyPage = () => {
               </a>
             </div>
           </div>
-          <ProductPcbScene progress={0.5} activeIndex={3} hero />
+          <div className="product-hero-visual">
+            <figure className="product-reference-photo">
+              <img src="/leaftronics-hand-pcb.png" alt="Leaftronics Leiterplattenprototyp in einem Laborhandschuh" />
+            </figure>
+            <ProductPcbScene progress={0.5} activeIndex={3} hero />
+          </div>
         </div>
       </section>
 
@@ -1741,11 +1795,13 @@ const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: nu
   const components = hero ? 1 : progressBetween(progress, 0.36, 0.5);
   const product = hero ? 0.36 : progressBetween(progress, 0.48, 0.62);
   const solution = hero ? 0 : progressBetween(progress, 0.62, 0.76);
+  const release = hero ? 0 : progressBetween(progress, 0.66, 0.84);
   const streams = hero ? 0 : progressBetween(progress, 0.74, 0.9);
   const loop = hero ? 0 : progressBetween(progress, 0.86, 1);
   const tilt = hero ? 58 : 62 - progress * 24;
   const rotate = hero ? -13 : -16 + progress * 24;
   const sink = solution * 44;
+  const componentOpacity = components * (hero ? 1 : 1 - release * 0.18);
 
   return (
     <div className={`product-scene-shell ${hero ? "min-h-[440px]" : "min-h-[540px] lg:h-full"}`}>
@@ -1770,14 +1826,36 @@ const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: nu
           <div className="product-pcb-shadow" />
           <div className="product-layer product-fiber-layer" />
           <div className="product-layer product-polymer-layer" style={{ opacity: polymer }} />
-          <div className="product-trace-layer" style={{ opacity: traces }}>
-            {Array.from({ length: 18 }).map((_, index) => (
-              <span key={index} className={`product-trace product-trace-${index + 1}`} />
+          <div className="product-board-detail-layer" style={{ opacity: traces }}>
+            <div className="product-silk product-silk-brand">LEAFTRONICS</div>
+            <div className="product-silk product-silk-io">DIGITAL I/O</div>
+            <div className="product-silk product-silk-power">POWER</div>
+            <div className="product-header product-header-top" />
+            <div className="product-header product-header-bottom" />
+            <div className="product-usb-port" />
+            <div className="product-power-jack" />
+            {boardMounts.map(([left, top]) => (
+              <span key={`${left}-${top}`} className="product-mount-hole" style={{ left, top }} />
+            ))}
+            {boardVias.map(([left, top]) => (
+              <span key={`${left}-${top}`} className="product-via" style={{ left, top }} />
             ))}
           </div>
-          <div className="product-component-layer" style={{ opacity: components, transform: `translateZ(${18 + components * 16}px)` }}>
-            {Array.from({ length: 12 }).map((_, index) => (
-              <span key={index} className={`product-component product-component-${index + 1}`} />
+          <div className="product-trace-layer" style={{ opacity: traces }}>
+            {boardTraceClasses.map((className) => (
+              <span key={className} className={className} />
+            ))}
+          </div>
+          <div
+            className="product-component-layer"
+            style={{
+              opacity: componentOpacity,
+              transform: `translateZ(${18 + components * 16}px)`,
+              "--component-release": release,
+            } as CSSProperties}
+          >
+            {boardComponentClasses.map((className) => (
+              <span key={className} className={className} />
             ))}
           </div>
         </div>

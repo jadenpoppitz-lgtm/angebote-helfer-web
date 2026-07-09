@@ -145,6 +145,37 @@ All colors MUST be HSL.
     box-shadow: 0 26px 80px -48px hsl(152 55% 18% / 0.76);
   }
 
+  .product-hero-visual {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    padding-top: 5.5rem;
+  }
+
+  .product-hero-visual .product-scene-shell {
+    min-height: 420px;
+  }
+
+  .product-reference-photo {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 30;
+    width: min(46vw, 320px);
+    overflow: hidden;
+    border: 1px solid hsl(60 30% 98% / 0.22);
+    border-radius: 0.5rem;
+    background: hsl(156 32% 10% / 0.52);
+    box-shadow: 0 22px 46px -28px hsl(0 0% 0% / 0.78);
+  }
+
+  .product-reference-photo img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1.34 / 1;
+    object-fit: cover;
+  }
+
   .product-scene-grid {
     position: absolute;
     inset: 0;
@@ -217,7 +248,7 @@ All colors MUST be HSL.
       repeating-linear-gradient(18deg, hsl(45 42% 78% / 0.18) 0 2px, transparent 2px 13px),
       repeating-linear-gradient(112deg, hsl(150 34% 32% / 0.16) 0 1px, transparent 1px 16px),
       radial-gradient(circle at 28% 18%, hsl(42 48% 82% / 0.48), transparent 24%),
-      linear-gradient(135deg, hsl(50 39% 86% / 0.82), hsl(96 22% 70% / 0.72));
+      linear-gradient(135deg, hsl(43 42% 76% / 0.84), hsl(158 42% 42% / 0.62));
     opacity: 0.95;
   }
 
@@ -241,8 +272,9 @@ All colors MUST be HSL.
 
   .product-polymer-layer {
     background:
-      linear-gradient(135deg, hsl(55 34% 96% / 0.82), hsl(150 42% 88% / 0.58)),
-      radial-gradient(circle at 60% 34%, hsl(0 0% 100% / 0.7), transparent 34%);
+      radial-gradient(circle at 18% 20%, hsl(0 0% 100% / 0.4), transparent 20%),
+      linear-gradient(135deg, hsl(169 54% 43% / 0.68), hsl(42 50% 78% / 0.56)),
+      repeating-linear-gradient(0deg, hsl(0 0% 100% / 0.12) 0 1px, transparent 1px 14px);
     border-color: hsl(152 34% 72% / 0.42);
     transform: translateZ(8px);
     z-index: 2;
@@ -259,14 +291,14 @@ All colors MUST be HSL.
   }
 
   .product-trace-layer {
-    z-index: 4;
+    z-index: 5;
     transform: translateZ(34px);
   }
 
   .product-trace-layer::before {
     content: "";
     position: absolute;
-    inset: 12% 8%;
+    inset: 9% 7%;
     border-radius: 0.35rem;
     background:
       linear-gradient(90deg, transparent 0 8%, hsl(28 92% 42% / 0.78) 8% 9%, transparent 9%),
@@ -280,7 +312,7 @@ All colors MUST be HSL.
   }
 
   .product-component-layer {
-    z-index: 5;
+    z-index: 6;
   }
 
   .product-component-layer::before {
@@ -301,6 +333,111 @@ All colors MUST be HSL.
       -20px 82px 0 -21px hsl(34 64% 50%),
       88px 84px 0 -20px hsl(34 64% 50%),
       0 18px 24px -16px hsl(155 30% 8% / 0.76);
+    transform: translateY(calc(var(--component-release, 0) * 108px)) rotate(calc(var(--component-release, 0) * -10deg));
+    transition: transform 260ms ease-out;
+  }
+
+  .product-board-detail-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    transform: translateZ(22px);
+    pointer-events: none;
+    transition: opacity 260ms ease-out;
+  }
+
+  .product-via,
+  .product-mount-hole {
+    position: absolute;
+    border-radius: 999px;
+    transform: translate(-50%, -50%);
+    background: hsl(45 64% 76%);
+    box-shadow:
+      inset 0 0 0 2px hsl(27 76% 43% / 0.76),
+      0 0 0 1px hsl(0 0% 100% / 0.38);
+  }
+
+  .product-via {
+    width: 9px;
+    height: 9px;
+  }
+
+  .product-mount-hole {
+    width: 24px;
+    height: 24px;
+    background: hsl(0 0% 96% / 0.85);
+    box-shadow:
+      inset 0 0 0 5px hsl(160 48% 32% / 0.45),
+      inset 0 0 0 7px hsl(0 0% 100% / 0.82);
+  }
+
+  .product-header {
+    position: absolute;
+    height: 24px;
+    border-radius: 0.22rem;
+    background:
+      repeating-linear-gradient(90deg, hsl(160 10% 4%) 0 11px, hsl(160 10% 16%) 11px 15px, hsl(160 10% 4%) 15px 26px);
+    box-shadow: inset 0 2px 0 hsl(0 0% 100% / 0.12), 0 9px 14px -11px hsl(0 0% 0% / 0.74);
+  }
+
+  .product-header-top {
+    left: 34%;
+    right: 8%;
+    top: 6%;
+  }
+
+  .product-header-bottom {
+    left: 37%;
+    right: 11%;
+    bottom: 7%;
+  }
+
+  .product-usb-port {
+    position: absolute;
+    left: 4%;
+    top: 18%;
+    width: 82px;
+    height: 54px;
+    border-radius: 0.2rem;
+    background: linear-gradient(145deg, hsl(0 0% 94%), hsl(0 0% 54%));
+    box-shadow: inset 0 0 0 5px hsl(0 0% 78%), inset 0 0 0 8px hsl(0 0% 96%), 0 18px 20px -18px hsl(0 0% 0% / 0.8);
+  }
+
+  .product-power-jack {
+    position: absolute;
+    left: 7%;
+    bottom: 12%;
+    width: 64px;
+    height: 48px;
+    border-radius: 0.42rem;
+    background: radial-gradient(circle at 45% 50%, hsl(0 0% 8%) 0 24%, hsl(0 0% 22%) 25% 52%, hsl(0 0% 7%) 53%);
+    box-shadow: 0 16px 20px -16px hsl(0 0% 0% / 0.8);
+  }
+
+  .product-silk {
+    position: absolute;
+    color: hsl(0 0% 100% / 0.78);
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-shadow: 0 1px 1px hsl(155 30% 12% / 0.35);
+  }
+
+  .product-silk-brand {
+    left: 47%;
+    top: 38%;
+    font-size: 1.25rem;
+    letter-spacing: 0.08em;
+  }
+
+  .product-silk-io {
+    left: 43%;
+    top: 20%;
+  }
+
+  .product-silk-power {
+    left: 50%;
+    bottom: 18%;
   }
 
   .product-trace {
@@ -351,6 +488,8 @@ All colors MUST be HSL.
     box-shadow:
       inset 0 1px 0 hsl(0 0% 100% / 0.16),
       0 12px 20px -12px hsl(155 30% 6% / 0.78);
+    transform: translateY(calc(var(--component-release, 0) * var(--fall-y, 0px))) translateX(calc(var(--component-release, 0) * var(--fall-x, 0px))) rotate(calc(var(--component-release, 0) * var(--fall-rotate, 0deg)));
+    transition: transform 260ms ease-out, opacity 260ms ease-out;
   }
 
   .product-component::before,
@@ -367,10 +506,10 @@ All colors MUST be HSL.
   .product-component::before { left: -5px; }
   .product-component::after { right: -5px; }
 
-  .product-component-1 { left: 39%; top: 33%; width: 74px; height: 58px; }
-  .product-component-2 { left: 14%; top: 22%; width: 54px; height: 34px; }
-  .product-component-3 { left: 67%; top: 21%; width: 58px; height: 38px; }
-  .product-component-4 { left: 70%; top: 64%; width: 66px; height: 42px; }
+  .product-component-1 { left: 43%; top: 36%; width: 92px; height: 44px; --fall-y: 150px; --fall-x: 12px; --fall-rotate: 7deg; }
+  .product-component-2 { left: 27%; top: 35%; width: 54px; height: 34px; --fall-y: 124px; --fall-x: -18px; --fall-rotate: -9deg; }
+  .product-component-3 { left: 70%; top: 27%; width: 58px; height: 38px; --fall-y: 136px; --fall-x: 22px; --fall-rotate: 10deg; }
+  .product-component-4 { left: 74%; top: 57%; width: 66px; height: 42px; --fall-y: 116px; --fall-x: 32px; --fall-rotate: 14deg; }
   .product-component-5,
   .product-component-6,
   .product-component-7,
@@ -385,14 +524,14 @@ All colors MUST be HSL.
     background: linear-gradient(145deg, hsl(42 52% 76%), hsl(29 64% 44%));
   }
 
-  .product-component-5 { left: 20%; top: 56%; }
-  .product-component-6 { left: 28%; top: 56%; }
-  .product-component-7 { left: 58%; top: 56%; }
-  .product-component-8 { left: 65%; top: 56%; }
-  .product-component-9 { left: 24%; top: 72%; }
-  .product-component-10 { left: 34%; top: 72%; }
-  .product-component-11 { left: 56%; top: 72%; }
-  .product-component-12 { left: 82%; top: 42%; }
+  .product-component-5 { left: 20%; top: 56%; --fall-y: 118px; --fall-x: -22px; --fall-rotate: -18deg; }
+  .product-component-6 { left: 28%; top: 56%; --fall-y: 132px; --fall-x: -10px; --fall-rotate: 12deg; }
+  .product-component-7 { left: 58%; top: 56%; --fall-y: 110px; --fall-x: 8px; --fall-rotate: -12deg; }
+  .product-component-8 { left: 65%; top: 56%; --fall-y: 126px; --fall-x: 18px; --fall-rotate: 14deg; }
+  .product-component-9 { left: 24%; top: 72%; --fall-y: 88px; --fall-x: -14px; --fall-rotate: 16deg; }
+  .product-component-10 { left: 34%; top: 72%; --fall-y: 96px; --fall-x: -3px; --fall-rotate: -15deg; }
+  .product-component-11 { left: 56%; top: 72%; --fall-y: 92px; --fall-x: 12px; --fall-rotate: 12deg; }
+  .product-component-12 { left: 82%; top: 42%; --fall-y: 142px; --fall-x: 32px; --fall-rotate: -14deg; }
 
   .product-housing {
     position: absolute;
@@ -554,9 +693,28 @@ All colors MUST be HSL.
   .product-energy-lines span {
     animation: none;
   }
+
+  .product-component,
+  .product-component-layer::before {
+    transition: none;
+  }
 }
 
 @media (max-width: 900px) {
+  .product-hero-visual {
+    padding-top: 0;
+  }
+
+  .product-reference-photo {
+    position: relative;
+    width: min(100%, 420px);
+    justify-self: end;
+  }
+
+  .product-hero-visual .product-scene-shell {
+    min-height: 360px;
+  }
+
   .product-pcb-assembly {
     width: min(86vw, 460px);
   }
@@ -569,5 +727,30 @@ All colors MUST be HSL.
     right: 1rem;
     align-items: flex-start;
     border-radius: 0.5rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .product-reference-photo {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .product-silk-brand {
+    font-size: 0.8rem;
+  }
+
+  .product-usb-port {
+    width: 52px;
+    height: 36px;
+  }
+
+  .product-power-jack {
+    width: 44px;
+    height: 36px;
+  }
+
+  .product-header {
+    height: 18px;
   }
 }
