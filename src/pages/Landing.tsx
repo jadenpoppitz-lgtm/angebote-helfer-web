@@ -373,7 +373,7 @@ export const copy: Record<Language, LandingCopy> = {
     traction: {
       eyebrow: "Traction",
       title: "Der Leaftronics-Lebenslauf.",
-      text: "Förderung, Accelerator, Auszeichnungen und Nominierungen in einer chronologischen Übersicht.",
+      text: "Die neuesten Meilensteine zuerst: Förderung, Accelerator, Auszeichnungen und Nominierungen als dynamischer Unternehmens- und Technologie-Lebenslauf.",
       events: [
         {
           date: "2024 / 2025",
@@ -691,7 +691,7 @@ export const copy: Record<Language, LandingCopy> = {
     traction: {
       eyebrow: "Traction",
       title: "The Leaftronics track record.",
-      text: "Funding, accelerators, awards and nominations in chronological order.",
+      text: "Latest milestones first: funding, accelerators, awards and nominations as a dynamic company and technology track record.",
       events: [
         {
           date: "2024 / 2025",
@@ -1008,7 +1008,7 @@ export const copy: Record<Language, LandingCopy> = {
     traction: {
       eyebrow: "进展",
       title: "Leaftronics 发展路径。",
-      text: "按时间顺序展示资助、加速器、奖项和提名。",
+      text: "最新里程碑优先展示：资助、加速器、奖项和提名构成 Leaftronics 的企业与技术发展路径。",
       events: [
         {
           date: "2024 / 2025",
@@ -1406,50 +1406,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       ) : null}
 
       {showTraction ? (
-      <section id="traction" className="bg-white py-16 text-foreground md:py-24">
-        <div className="mx-auto w-full max-w-5xl px-5 sm:px-8">
-          <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.traction.eyebrow}</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.traction.title}</h2>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.traction.text}</p>
-          </div>
-
-          <div className="relative mt-14">
-            <div className="absolute bottom-0 left-4 top-0 w-px bg-primary/25 md:left-1/2" aria-hidden="true" />
-            <div className="grid gap-8">
-              {content.traction.events.map((item, index) => (
-                <article
-                  key={`${item.date}-${item.title}`}
-                  className={`relative pl-12 md:grid md:grid-cols-2 md:gap-12 md:pl-0 ${
-                    index % 2 === 0 ? "" : "md:[&>div]:col-start-2"
-                  }`}
-                >
-                  <span className="absolute left-2 top-2 z-10 h-5 w-5 rounded-full border-4 border-white bg-primary shadow-card md:left-1/2 md:-translate-x-1/2" />
-                  <div className="overflow-hidden rounded-lg border border-border bg-background shadow-card">
-                    {item.image ? (
-                      <img src={item.image} alt={item.imageAlt} className="h-44 w-full object-cover object-top" loading="lazy" />
-                    ) : null}
-                    <div className="p-5">
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{item.date}</p>
-                      <h3 className="mt-3 font-display text-2xl font-semibold">{item.title}</h3>
-                      <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.text}</p>
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/75"
-                      >
-                        {item.link}
-                        <ArrowRight className="h-4 w-4" />
-                      </a>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <TractionTimeline content={content.traction} />
       ) : null}
 
       {showContact ? (
@@ -1518,6 +1475,127 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       </section>
       ) : null}
     </div>
+  );
+};
+
+const tractionEventRank = (event: LandingCopy["traction"]["events"][number]) => {
+  const key = `${event.href} ${event.title}`;
+  if (key.includes("dresden-exists")) return 20260619;
+  if (key.includes("excitelab")) return 20260401;
+  if (key.includes("richard-hartmann")) return 20260223;
+  if (key.includes("joachim-herz")) return 20250930;
+  if (key.includes("exist-gruendungsstipendium")) return 20250301;
+  if (key.includes("emanuel-goldberg")) return 20250101;
+  return 0;
+};
+
+const TractionTimeline = ({ content }: { content: LandingCopy["traction"] }) => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const itemRefs = useRef<Array<HTMLElement | null>>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [lineProgress, setLineProgress] = useState(0);
+
+  const events = useMemo(
+    () => [...content.events].sort((a, b) => tractionEventRank(b) - tractionEventRank(a)),
+    [content.events],
+  );
+
+  useEffect(() => {
+    let frame = 0;
+
+    const updateTimeline = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const section = sectionRef.current;
+        if (!section) return;
+
+        const rect = section.getBoundingClientRect();
+        const progressDistance = Math.max(1, rect.height - window.innerHeight * 0.38);
+        setLineProgress(clamp01((window.innerHeight * 0.58 - rect.top) / progressDistance));
+
+        const viewportFocus = window.innerHeight * 0.48;
+        let closestIndex = 0;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        itemRefs.current.forEach((item, index) => {
+          if (!item) return;
+          const itemRect = item.getBoundingClientRect();
+          const itemCenter = itemRect.top + itemRect.height * 0.42;
+          const distance = Math.abs(itemCenter - viewportFocus);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+
+        setActiveIndex(closestIndex);
+      });
+    };
+
+    updateTimeline();
+    window.addEventListener("scroll", updateTimeline, { passive: true });
+    window.addEventListener("resize", updateTimeline);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updateTimeline);
+      window.removeEventListener("resize", updateTimeline);
+    };
+  }, [events.length]);
+
+  return (
+    <section
+      id="traction"
+      ref={sectionRef}
+      className="traction-timeline-section"
+      style={{ "--timeline-progress": lineProgress } as CSSProperties}
+    >
+      <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+        <div className="traction-timeline-intro">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.eyebrow}</p>
+          <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.title}</h2>
+          <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.text}</p>
+        </div>
+
+        <div className="traction-timeline">
+          <div className="traction-timeline-line" aria-hidden="true">
+            <span />
+          </div>
+          <div className="traction-timeline-list">
+            {events.map((item, index) => {
+              const stateClass = index === activeIndex ? "is-active" : index < activeIndex ? "is-past" : "is-future";
+              return (
+                <article
+                  key={`${item.date}-${item.title}`}
+                  ref={(node) => {
+                    itemRefs.current[index] = node;
+                  }}
+                  className={`traction-timeline-item ${stateClass}`}
+                >
+                  <div className="traction-timeline-date" aria-hidden="true">
+                    <span>{item.date}</span>
+                  </div>
+                  <span className="traction-timeline-dot" aria-hidden="true" />
+                  <div className="traction-timeline-card">
+                    {item.image ? (
+                      <img src={item.image} alt={item.imageAlt} className="traction-timeline-image" loading="lazy" />
+                    ) : null}
+                    <div className="traction-timeline-card-body">
+                      <p className="traction-timeline-mobile-date">{item.date}</p>
+                      <h3>{item.title}</h3>
+                      <p>{item.text}</p>
+                      <a href={item.href} target="_blank" rel="noreferrer">
+                        {item.link}
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 

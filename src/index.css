@@ -236,6 +236,285 @@ All colors MUST be HSL.
     stroke-dashoffset: 878;
   }
 
+  .traction-timeline-section {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 12% 9%, hsl(152 55% 28% / 0.08), transparent 28%),
+      radial-gradient(circle at 82% 18%, hsl(38 70% 62% / 0.08), transparent 26%),
+      linear-gradient(180deg, hsl(0 0% 100%), hsl(150 30% 97%) 62%, hsl(0 0% 100%));
+    color: hsl(var(--foreground));
+    padding: 5rem 0 6rem;
+  }
+
+  .traction-timeline-intro {
+    position: sticky;
+    top: 5.5rem;
+    z-index: 4;
+    max-width: 48rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(180deg, hsl(0 0% 100% / 0.88), hsl(0 0% 100% / 0.62));
+    padding: 1rem 0 1.35rem;
+    backdrop-filter: blur(16px);
+  }
+
+  .traction-timeline {
+    position: relative;
+    margin-top: 4.25rem;
+    padding-bottom: 2rem;
+  }
+
+  .traction-timeline-line {
+    position: absolute;
+    bottom: 1.75rem;
+    left: 1.1rem;
+    top: 0.25rem;
+    width: 2px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: hsl(152 28% 78% / 0.62);
+  }
+
+  .traction-timeline-line span {
+    display: block;
+    height: 100%;
+    width: 100%;
+    border-radius: inherit;
+    background: linear-gradient(180deg, hsl(var(--primary)), hsl(38 82% 46% / 0.9));
+    box-shadow: 0 0 24px hsl(var(--primary) / 0.24);
+    transform: scaleY(var(--timeline-progress, 0));
+    transform-origin: top center;
+    transition: transform 120ms linear;
+  }
+
+  .traction-timeline-list {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .traction-timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 3.25rem;
+    opacity: 0.64;
+    transform: translateY(18px) scale(0.985);
+    transition:
+      opacity 420ms ease,
+      transform 420ms ease,
+      filter 420ms ease;
+  }
+
+  .traction-timeline-item.is-active {
+    z-index: 3;
+    opacity: 1;
+    filter: none;
+    transform: translateY(0) scale(1);
+  }
+
+  .traction-timeline-item.is-past {
+    opacity: 0.78;
+    transform: translateY(0) scale(0.992);
+  }
+
+  .traction-timeline-dot {
+    position: absolute;
+    left: 0.45rem;
+    top: 1.45rem;
+    z-index: 2;
+    height: 1.42rem;
+    width: 1.42rem;
+    border-radius: 999px;
+    border: 5px solid hsl(0 0% 100%);
+    background: hsl(152 28% 74%);
+    box-shadow: 0 0 0 1px hsl(152 36% 68% / 0.45), 0 16px 28px -18px hsl(155 30% 12% / 0.52);
+    transition:
+      background 340ms ease,
+      box-shadow 340ms ease,
+      transform 340ms ease;
+  }
+
+  .traction-timeline-item.is-active .traction-timeline-dot {
+    background: hsl(var(--primary));
+    box-shadow: 0 0 0 7px hsl(var(--primary) / 0.12), 0 0 28px hsl(var(--primary) / 0.28);
+    transform: scale(1.14);
+  }
+
+  .traction-timeline-card {
+    overflow: hidden;
+    border: 1px solid hsl(150 18% 84% / 0.86);
+    border-radius: 0.5rem;
+    background: hsl(0 0% 100% / 0.92);
+    box-shadow: 0 18px 46px -34px hsl(155 30% 12% / 0.5);
+    transition:
+      border-color 360ms ease,
+      box-shadow 360ms ease,
+      background 360ms ease,
+      transform 360ms ease;
+  }
+
+  .traction-timeline-item.is-active .traction-timeline-card {
+    border-color: hsl(var(--primary) / 0.28);
+    background: hsl(0 0% 100%);
+    box-shadow: 0 28px 70px -42px hsl(var(--primary) / 0.48);
+    transform: translateY(-2px);
+  }
+
+  .traction-timeline-image {
+    display: block;
+    height: 14rem;
+    width: 100%;
+    object-fit: cover;
+    object-position: center top;
+    filter: saturate(0.92);
+    transition: filter 360ms ease, transform 480ms ease;
+  }
+
+  .traction-timeline-item.is-active .traction-timeline-image {
+    filter: saturate(1.04);
+    transform: scale(1.015);
+  }
+
+  .traction-timeline-card-body {
+    padding: 1.35rem;
+  }
+
+  .traction-timeline-card-body h3 {
+    font-family: theme("fontFamily.display");
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    font-weight: 600;
+    line-height: 1.08;
+  }
+
+  .traction-timeline-card-body > p:not(.traction-timeline-mobile-date) {
+    margin-top: 0.85rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .traction-timeline-card-body a {
+    margin-top: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: hsl(var(--primary));
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .traction-timeline-card-body a:hover {
+    color: hsl(var(--primary) / 0.76);
+  }
+
+  .traction-timeline-mobile-date {
+    margin-bottom: 0.8rem;
+    color: hsl(var(--primary));
+    font-size: 0.73rem;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .traction-timeline-date {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .traction-timeline-section {
+      padding: 6rem 0 7rem;
+    }
+
+    .traction-timeline {
+      margin-top: 5rem;
+    }
+
+    .traction-timeline-line {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .traction-timeline-list {
+      gap: 1.5rem;
+    }
+
+    .traction-timeline-item {
+      min-height: 23rem;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 4.5rem;
+      padding-left: 0;
+    }
+
+    .traction-timeline-item:nth-child(odd) .traction-timeline-card {
+      grid-column: 2;
+    }
+
+    .traction-timeline-item:nth-child(even) .traction-timeline-card {
+      grid-column: 1;
+    }
+
+    .traction-timeline-item:nth-child(even) .traction-timeline-date {
+      grid-column: 2;
+      justify-self: start;
+      text-align: left;
+    }
+
+    .traction-timeline-dot {
+      left: 50%;
+      top: 2rem;
+      transform: translateX(-50%);
+    }
+
+    .traction-timeline-item.is-active .traction-timeline-dot {
+      transform: translateX(-50%) scale(1.16);
+    }
+
+    .traction-timeline-date {
+      position: sticky;
+      top: 12rem;
+      display: block;
+      grid-column: 1;
+      align-self: start;
+      justify-self: end;
+      max-width: 18rem;
+      padding-top: 1.85rem;
+      color: hsl(var(--primary) / 0.76);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.26em;
+      line-height: 1.7;
+      text-align: right;
+      text-transform: uppercase;
+      transition: color 360ms ease, transform 360ms ease, opacity 360ms ease;
+    }
+
+    .traction-timeline-date span {
+      display: inline-flex;
+      border-radius: 999px;
+      border: 1px solid hsl(var(--primary) / 0.14);
+      background: hsl(0 0% 100% / 0.76);
+      padding: 0.5rem 0.7rem;
+      box-shadow: 0 14px 30px -24px hsl(155 30% 12% / 0.45);
+      backdrop-filter: blur(10px);
+    }
+
+    .traction-timeline-item.is-active .traction-timeline-date {
+      color: hsl(var(--primary));
+      opacity: 1;
+      transform: translateY(-0.2rem);
+    }
+
+    .traction-timeline-mobile-date {
+      display: none;
+    }
+
+    .traction-timeline-card-body {
+      padding: 1.55rem;
+    }
+  }
+
   .product-scene-shell {
     position: relative;
     display: grid;
@@ -938,8 +1217,22 @@ All colors MUST be HSL.
   .product-model-frame,
   .product-fiber-layer,
   .product-polymer-layer,
-  .product-substrate-fragments {
+  .product-substrate-fragments,
+  .traction-timeline-line span,
+  .traction-timeline-item,
+  .traction-timeline-card,
+  .traction-timeline-image,
+  .traction-timeline-dot,
+  .traction-timeline-date {
     transition: none;
+  }
+
+  .traction-timeline-item,
+  .traction-timeline-item.is-active,
+  .traction-timeline-item.is-past,
+  .traction-timeline-item.is-future {
+    opacity: 1;
+    transform: none;
   }
 }
 
