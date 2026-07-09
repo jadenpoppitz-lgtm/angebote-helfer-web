@@ -130,6 +130,394 @@ All colors MUST be HSL.
     animation-delay: var(--beam-delay, 0s);
     filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.28));
   }
+
+  .product-scene-shell {
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid hsl(150 22% 22% / 0.24);
+    border-radius: 0.5rem;
+    background:
+      radial-gradient(circle at 50% 42%, hsl(154 64% 34% / 0.18), transparent 34%),
+      radial-gradient(circle at 68% 64%, hsl(30 82% 50% / 0.12), transparent 28%),
+      linear-gradient(135deg, hsl(154 32% 12%), hsl(43 35% 94%) 54%, hsl(152 32% 88%));
+    box-shadow: 0 26px 80px -48px hsl(152 55% 18% / 0.76);
+  }
+
+  .product-scene-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(hsl(154 28% 12% / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(154 28% 12% / 0.055) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(circle at center, black 0%, transparent 78%);
+  }
+
+  .product-stage-label {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    z-index: 20;
+    display: flex;
+    gap: 0.75rem;
+    border-radius: 999px;
+    border: 1px solid hsl(152 45% 24% / 0.18);
+    background: hsl(60 30% 98% / 0.7);
+    padding: 0.55rem 0.8rem;
+    color: hsl(155 30% 12% / 0.78);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    backdrop-filter: blur(14px);
+  }
+
+  .product-pcb-viewport {
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+  }
+
+  .product-pcb-assembly {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    width: min(68vw, 520px);
+    aspect-ratio: 1.55 / 1;
+    transform-style: preserve-3d;
+    transition: transform 260ms ease-out;
+  }
+
+  .product-pcb-shadow {
+    position: absolute;
+    inset: 9%;
+    border-radius: 0.5rem;
+    background: hsl(155 30% 10% / 0.34);
+    filter: blur(28px);
+    transform: translateZ(-40px) translateY(42px);
+  }
+
+  .product-layer {
+    position: absolute;
+    inset: 0;
+    border-radius: 0.55rem;
+    border: 1px solid hsl(48 48% 78% / 0.32);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.46),
+      0 18px 44px -28px hsl(155 34% 10% / 0.7);
+    transform-style: preserve-3d;
+  }
+
+  .product-fiber-layer {
+    background:
+      repeating-linear-gradient(18deg, hsl(45 42% 78% / 0.18) 0 2px, transparent 2px 13px),
+      repeating-linear-gradient(112deg, hsl(150 34% 32% / 0.16) 0 1px, transparent 1px 16px),
+      radial-gradient(circle at 28% 18%, hsl(42 48% 82% / 0.48), transparent 24%),
+      linear-gradient(135deg, hsl(50 39% 86% / 0.82), hsl(96 22% 70% / 0.72));
+    opacity: 0.95;
+  }
+
+  .product-fiber-layer::before,
+  .product-fiber-layer::after {
+    content: "";
+    position: absolute;
+    inset: 8%;
+    border-radius: inherit;
+    background:
+      radial-gradient(ellipse at 15% 22%, transparent 0 18%, hsl(150 28% 24% / 0.24) 19% 20%, transparent 21%),
+      radial-gradient(ellipse at 74% 58%, transparent 0 22%, hsl(42 42% 52% / 0.22) 23% 24%, transparent 25%);
+    mix-blend-mode: multiply;
+  }
+
+  .product-fiber-layer::after {
+    inset: 12%;
+    transform: rotate(9deg);
+    opacity: 0.7;
+  }
+
+  .product-polymer-layer {
+    background:
+      linear-gradient(135deg, hsl(55 34% 96% / 0.82), hsl(150 42% 88% / 0.58)),
+      radial-gradient(circle at 60% 34%, hsl(0 0% 100% / 0.7), transparent 34%);
+    border-color: hsl(152 34% 72% / 0.42);
+    transform: translateZ(8px);
+    z-index: 2;
+    backdrop-filter: blur(4px);
+    transition: opacity 260ms ease-out;
+  }
+
+  .product-trace-layer,
+  .product-component-layer {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: opacity 260ms ease-out, transform 260ms ease-out;
+  }
+
+  .product-trace-layer {
+    z-index: 4;
+    transform: translateZ(34px);
+  }
+
+  .product-trace-layer::before {
+    content: "";
+    position: absolute;
+    inset: 12% 8%;
+    border-radius: 0.35rem;
+    background:
+      linear-gradient(90deg, transparent 0 8%, hsl(28 92% 42% / 0.78) 8% 9%, transparent 9%),
+      linear-gradient(90deg, transparent 0 18%, hsl(38 88% 54% / 0.84) 18% 72%, transparent 72%),
+      linear-gradient(90deg, transparent 0 22%, hsl(28 92% 42% / 0.72) 22% 23%, transparent 23%),
+      linear-gradient(180deg, transparent 0 16%, hsl(28 92% 42% / 0.8) 16% 17%, transparent 17%),
+      linear-gradient(180deg, transparent 0 34%, hsl(38 88% 54% / 0.82) 34% 35%, transparent 35%),
+      linear-gradient(180deg, transparent 0 56%, hsl(28 92% 42% / 0.78) 56% 57%, transparent 57%),
+      linear-gradient(180deg, transparent 0 75%, hsl(38 88% 54% / 0.76) 75% 76%, transparent 76%);
+    filter: drop-shadow(0 4px 5px hsl(155 30% 12% / 0.18));
+  }
+
+  .product-component-layer {
+    z-index: 5;
+  }
+
+  .product-component-layer::before {
+    content: "";
+    position: absolute;
+    left: 40%;
+    top: 34%;
+    z-index: 9;
+    width: 86px;
+    height: 68px;
+    border-radius: 0.32rem;
+    background: linear-gradient(145deg, hsl(160 12% 18%), hsl(160 12% 5%));
+    box-shadow:
+      -92px -46px 0 -16px hsl(160 12% 14%),
+      142px -34px 0 -13px hsl(160 12% 14%),
+      166px 58px 0 -12px hsl(160 12% 12%),
+      -74px 76px 0 -20px hsl(34 64% 50%),
+      -20px 82px 0 -21px hsl(34 64% 50%),
+      88px 84px 0 -20px hsl(34 64% 50%),
+      0 18px 24px -16px hsl(155 30% 8% / 0.76);
+  }
+
+  .product-trace {
+    position: absolute;
+    height: 5px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, hsl(28 92% 41%), hsl(42 86% 64%), hsl(23 74% 44%));
+    box-shadow: 0 0 14px hsl(32 82% 38% / 0.32), 0 2px 5px hsl(155 30% 12% / 0.16);
+    transform: translateZ(38px);
+  }
+
+  .product-trace::after {
+    content: "";
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: hsl(42 84% 67%);
+    transform: translateY(-50%);
+    box-shadow: 0 0 0 3px hsl(42 84% 67% / 0.16);
+  }
+
+  .product-trace-1 { left: 10%; top: 20%; width: 34%; transform: rotate(0deg); }
+  .product-trace-2 { left: 20%; top: 30%; width: 58%; transform: rotate(0deg); }
+  .product-trace-3 { left: 14%; top: 44%; width: 32%; transform: rotate(0deg); }
+  .product-trace-4 { left: 49%; top: 44%; width: 30%; transform: rotate(0deg); }
+  .product-trace-5 { left: 24%; top: 62%; width: 48%; transform: rotate(0deg); }
+  .product-trace-6 { left: 58%; top: 18%; width: 28%; transform: rotate(90deg); transform-origin: left center; }
+  .product-trace-7 { left: 34%; top: 22%; width: 32%; transform: rotate(90deg); transform-origin: left center; }
+  .product-trace-8 { left: 76%; top: 30%; width: 28%; transform: rotate(90deg); transform-origin: left center; }
+  .product-trace-9 { left: 12%; top: 75%; width: 28%; }
+  .product-trace-10 { left: 46%; top: 75%; width: 40%; }
+  .product-trace-11 { left: 15%; top: 13%; width: 10%; }
+  .product-trace-12 { left: 68%; top: 13%; width: 15%; }
+  .product-trace-13 { left: 7%; top: 56%; width: 18%; }
+  .product-trace-14 { left: 78%; top: 56%; width: 13%; }
+  .product-trace-15 { left: 27%; top: 82%; width: 13%; }
+  .product-trace-16 { left: 52%; top: 82%; width: 15%; }
+  .product-trace-17 { left: 42%; top: 12%; width: 18%; }
+  .product-trace-18 { left: 33%; top: 52%; width: 38%; }
+
+  .product-component {
+    position: absolute;
+    border-radius: 0.18rem;
+    background: linear-gradient(145deg, hsl(158 16% 16%), hsl(170 14% 6%));
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.16),
+      0 12px 20px -12px hsl(155 30% 6% / 0.78);
+  }
+
+  .product-component::before,
+  .product-component::after {
+    content: "";
+    position: absolute;
+    top: 18%;
+    bottom: 18%;
+    width: 5px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(180deg, hsl(42 46% 72%) 0 4px, transparent 4px 8px);
+  }
+
+  .product-component::before { left: -5px; }
+  .product-component::after { right: -5px; }
+
+  .product-component-1 { left: 39%; top: 33%; width: 74px; height: 58px; }
+  .product-component-2 { left: 14%; top: 22%; width: 54px; height: 34px; }
+  .product-component-3 { left: 67%; top: 21%; width: 58px; height: 38px; }
+  .product-component-4 { left: 70%; top: 64%; width: 66px; height: 42px; }
+  .product-component-5,
+  .product-component-6,
+  .product-component-7,
+  .product-component-8,
+  .product-component-9,
+  .product-component-10,
+  .product-component-11,
+  .product-component-12 {
+    width: 26px;
+    height: 14px;
+    border-radius: 0.12rem;
+    background: linear-gradient(145deg, hsl(42 52% 76%), hsl(29 64% 44%));
+  }
+
+  .product-component-5 { left: 20%; top: 56%; }
+  .product-component-6 { left: 28%; top: 56%; }
+  .product-component-7 { left: 58%; top: 56%; }
+  .product-component-8 { left: 65%; top: 56%; }
+  .product-component-9 { left: 24%; top: 72%; }
+  .product-component-10 { left: 34%; top: 72%; }
+  .product-component-11 { left: 56%; top: 72%; }
+  .product-component-12 { left: 82%; top: 42%; }
+
+  .product-housing {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    z-index: 7;
+    width: min(74vw, 620px);
+    aspect-ratio: 1.78 / 1;
+    border-radius: 1rem;
+    border: 1px solid hsl(155 24% 22% / 0.2);
+    background:
+      linear-gradient(135deg, transparent 38%, hsl(155 22% 12% / 0.12) 38% 39%, transparent 39%),
+      linear-gradient(180deg, hsl(0 0% 100% / 0.34), hsl(154 18% 70% / 0.18));
+    box-shadow: inset 0 0 0 18px hsl(155 24% 12% / 0.08);
+    transition: opacity 260ms ease-out, transform 260ms ease-out;
+  }
+
+  .product-energy-lines {
+    position: absolute;
+    inset: 0;
+    z-index: 18;
+    pointer-events: none;
+    transition: opacity 260ms ease-out;
+  }
+
+  .product-energy-lines span {
+    position: absolute;
+    left: 22%;
+    right: 22%;
+    top: 50%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(42 92% 62% / 0.64), transparent);
+    animation: product-pulse 2.4s ease-in-out infinite;
+  }
+
+  .product-energy-lines span:nth-child(2) {
+    top: 43%;
+    animation-delay: 0.45s;
+  }
+
+  .product-energy-lines span:nth-child(3) {
+    top: 57%;
+    animation-delay: 0.9s;
+  }
+
+  .product-solution-vessel {
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    z-index: 9;
+    width: min(70vw, 600px);
+    aspect-ratio: 1.75 / 1;
+    border-radius: 0.7rem;
+    border: 1px solid hsl(190 50% 72% / 0.5);
+    background: linear-gradient(180deg, hsl(190 74% 92% / 0.14), hsl(174 70% 76% / 0.28));
+    transform: translate(-50%, -50%);
+    transition: opacity 260ms ease-out;
+    backdrop-filter: blur(2px);
+  }
+
+  .product-liquid {
+    position: absolute;
+    inset: 48% 4% 6%;
+    border-radius: 0 0 0.55rem 0.55rem;
+    background: linear-gradient(180deg, hsl(179 70% 82% / 0.28), hsl(178 74% 64% / 0.22));
+    box-shadow: inset 0 20px 28px hsl(0 0% 100% / 0.18);
+  }
+
+  .product-material-streams {
+    position: absolute;
+    inset: 0;
+    z-index: 21;
+    pointer-events: none;
+    transition: opacity 260ms ease-out;
+  }
+
+  .product-stream {
+    position: absolute;
+    border-radius: 999px;
+    border: 1px solid hsl(152 44% 28% / 0.18);
+    background: hsl(60 30% 98% / 0.82);
+    padding: 0.45rem 0.75rem;
+    color: hsl(155 30% 12% / 0.78);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 14px 28px -18px hsl(155 30% 12% / 0.5);
+    backdrop-filter: blur(12px);
+  }
+
+  .product-stream::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 130px;
+    height: 2px;
+    transform-origin: left center;
+    background: linear-gradient(90deg, currentColor, transparent);
+    opacity: 0.44;
+  }
+
+  .product-stream-1 { left: 8%; top: 20%; color: hsl(156 42% 30%); }
+  .product-stream-1::before { transform: rotate(18deg); }
+  .product-stream-2 { right: 9%; top: 22%; color: hsl(26 82% 42%); }
+  .product-stream-2::before { transform: rotate(160deg); }
+  .product-stream-3 { right: 12%; bottom: 18%; color: hsl(42 74% 42%); }
+  .product-stream-3::before { transform: rotate(204deg); }
+  .product-stream-4 { left: 11%; bottom: 19%; color: hsl(92 30% 38%); }
+  .product-stream-4::before { transform: rotate(-24deg); }
+
+  .product-loop-ring {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    z-index: 6;
+    width: min(78vw, 660px);
+    aspect-ratio: 1 / 1;
+    border-radius: 999px;
+    border: 2px solid hsl(152 55% 28% / 0.22);
+    background: conic-gradient(from 30deg, transparent, hsl(152 55% 28% / 0.18), hsl(38 88% 54% / 0.18), transparent 72%);
+    mask: radial-gradient(circle, transparent 58%, black 59%);
+    transition: opacity 260ms ease-out, transform 260ms ease-out;
+  }
 }
 
 @keyframes flow-beam-move {
@@ -142,11 +530,44 @@ All colors MUST be HSL.
   }
 }
 
+@keyframes product-pulse {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scaleX(0.88);
+  }
+
+  50% {
+    opacity: 0.72;
+    transform: scaleX(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .flow-beam-trace {
     animation: none;
     stroke-dasharray: none;
     stroke-dashoffset: 0;
     opacity: 0.42;
+  }
+
+  .product-energy-lines span {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .product-pcb-assembly {
+    width: min(86vw, 460px);
+  }
+
+  .product-stream::before {
+    width: 74px;
+  }
+
+  .product-stage-label {
+    right: 1rem;
+    align-items: flex-start;
+    border-radius: 0.5rem;
   }
 }

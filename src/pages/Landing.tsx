@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -18,7 +18,6 @@ import {
   Wrench,
 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
-import { DeviceImpact } from "@/components/DeviceImpact";
 import { languages, type Language, useLanguage } from "@/lib/i18n";
 import { DEMO_SERIAL, SERIAL_DB, type SerialLookup } from "@/data/partners";
 
@@ -1123,7 +1122,6 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
   const { language, setLanguage } = useLanguage();
   const content = copy[language];
 
-  const activeNode = content.solution.nodes[activePoint];
   const reference = useMemo(() => `KB-${new Date().getFullYear()}-${String(Math.floor(100 + Math.random() * 900))}`, []);
   const showHero = page === "home";
   const showProblem = page === "problem";
@@ -1310,31 +1308,9 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       </section>
       ) : null}
 
-      {showProduct ? (
-      <section id="process" className="bg-black pb-24 text-background md:pb-32">
-        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-          <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr_1fr]">
-            {[
-              { src: "/leaftronics-lab-beaker.jpg", alt: "Leaftronics Laborprozess" },
-              { src: "/leaftronics-separated-components.jpg", alt: "Getrennte Elektronikkomponenten" },
-              { src: "/leaftronics-pcb-prototype.jpg", alt: "Leaftronics PCB Prototyp" },
-            ].map((image, index) => (
-              <div
-                key={image.src}
-                className={`relative overflow-hidden rounded-lg border border-background/12 bg-background/5 shadow-elegant ${
-                  index === 1 ? "md:translate-y-8" : ""
-                }`}
-              >
-                <img src={image.src} alt={image.alt} className="h-72 w-full object-cover md:h-96" />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/32 via-transparent to-transparent" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      ) : null}
+      {showProduct ? <ProductTechnologyPage /> : null}
 
-      {showProduct || showCycle ? (
+      {showCycle ? (
       <section id="solution" className="bg-[hsl(42_31%_91%)] pb-16 text-foreground md:pb-24">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
           <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
@@ -1343,29 +1319,15 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.solution.title}</h2>
               <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.solution.text}</p>
             </div>
-            {showProduct ? <InfoPanel content={content} activeNode={activeNode} /> : null}
           </div>
 
-          {showCycle ? (
-            <ProcessGraph
-              content={content}
-              activePoint={activePoint}
-              setActivePoint={setActivePoint}
-              chooseRole={chooseRole}
-              jumpTo={jumpTo}
-            />
-          ) : null}
-
-          {showProduct ? (
-            <div className="mt-6 grid gap-3 md:grid-cols-5">
-              {content.solution.values.map((item) => (
-                <div key={item.role} className="rounded-lg border border-border bg-background/80 p-4 shadow-card">
-                  <p className="font-display text-lg font-semibold">{item.role}</p>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.value}</p>
-                </div>
-              ))}
-            </div>
-          ) : null}
+          <ProcessGraph
+            content={content}
+            activePoint={activePoint}
+            setActivePoint={setActivePoint}
+            chooseRole={chooseRole}
+            jumpTo={jumpTo}
+          />
         </div>
       </section>
       ) : null}
@@ -1441,8 +1403,6 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         </div>
       </section>
       ) : null}
-
-      {showProduct ? <DeviceImpact language={language} /> : null}
 
       {showTraction ? (
       <section id="traction" className="bg-white py-16 text-foreground md:py-24">
@@ -1556,6 +1516,288 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         </div>
       </section>
       ) : null}
+    </div>
+  );
+};
+
+const productStorySteps = [
+  {
+    index: "01",
+    section: "Vom natürlichen Gerüst zum technischen Substrat",
+    title: "Das Trägermaterial neu gedacht.",
+    text: "Eine faserige, organische Struktur bildet die Basis. Sie bleibt sichtbar, leicht und materialbewusst statt als anonyme schwarze Trägerplatte zu verschwinden.",
+  },
+  {
+    index: "02",
+    section: "Vom natürlichen Gerüst zum technischen Substrat",
+    title: "Ein stabiles Substrat für elektronische Anwendungen.",
+    text: "Eine lösbare Polymermatrix stabilisiert das Gerüst mechanisch. Die Schicht macht aus dem Material eine belastbare Plattform für Elektronik.",
+  },
+  {
+    index: "03",
+    section: "Stabil genug für Elektronik",
+    title: "Leiterbahnen, Lötstellen und elektrische Funktion bleiben erhalten.",
+    text: "Kupferne Leiterbahnen werden präzise aufgebracht. Die elektrische Funktion bleibt klassischer PCB-Logik nahe, während das Substrat neu gedacht ist.",
+  },
+  {
+    index: "04",
+    section: "Stabil genug für Elektronik",
+    title: "Stabil während Herstellung und Nutzung.",
+    text: "Chips, Widerstände, Kondensatoren und Kontakte sitzen auf der Platte. Das Modul wirkt wie echte, funktionsfähige Elektronik.",
+  },
+  {
+    index: "05",
+    section: "Designed for Disassembly",
+    title: "Für moderne Elektronik entwickelt.",
+    text: "Im Produkt bleibt die Leiterplatte belastbar. Energie- und Datenlinien zeigen: Die neue Materiallogik ersetzt nicht Funktion, sondern ermöglicht ihren Kreislauf.",
+  },
+  {
+    index: "06",
+    section: "Designed for Disassembly",
+    title: "Am Lebensende gezielt lösbar.",
+    text: "In einer kontrollierten Lösung gibt das Substrat nach. Bauteile und Metalle bleiben erhalten, statt im Verbund untrennbar verloren zu gehen.",
+  },
+  {
+    index: "07",
+    section: "Wertstoffe zurück in den Kreislauf",
+    title: "Wertstoffe werden sortenreiner zurückgewonnen.",
+    text: "Bauteile, Kupfer, Edelmetalle und Substrat trennen sich in erkennbare Materialströme. Genau hier entsteht der Unterschied zur klassischen Leiterplatte.",
+  },
+  {
+    index: "08",
+    section: "Eine neue Materiallogik für Elektronik",
+    title: "Elektronik für die Kreislaufwirtschaft.",
+    text: "Metalle gehen zurück in die Produktion, Bauteile können geprüft werden, das Substrat wird abgebaut. Der Kreislauf wird zur Designentscheidung.",
+  },
+];
+
+const proofImages = [
+  {
+    src: "/leaftronics-pcb-prototype.jpg",
+    title: "Funktionsfähiger PCB-Prototyp",
+    text: "Die Technologie bleibt anschlussfähig an reale Elektronik und bestehende Fertigungslogik.",
+  },
+  {
+    src: "/leaftronics-lab-beaker.jpg",
+    title: "Kontrollierte Lösung",
+    text: "Die Trennung passiert nicht zufällig, sondern in einer steuerbaren Recyclingumgebung.",
+  },
+  {
+    src: "/leaftronics-separated-components.jpg",
+    title: "Sortenreinere Rückgewinnung",
+    text: "Bauteile und Materialfraktionen werden sichtbar getrennt und können gezielter bewertet werden.",
+  },
+];
+
+const materialStreamLabels = [
+  { label: "Bauteile", className: "product-stream product-stream-1" },
+  { label: "Kupfer", className: "product-stream product-stream-2" },
+  { label: "Edelmetalle", className: "product-stream product-stream-3" },
+  { label: "Substrat", className: "product-stream product-stream-4" },
+];
+
+const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+const progressBetween = (value: number, start: number, end: number) => clamp01((value - start) / (end - start));
+
+const ProductTechnologyPage = () => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const scrollable = Math.max(1, section.offsetHeight - window.innerHeight);
+      setProgress(clamp01(-rect.top / scrollable));
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    return () => {
+      window.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", updateProgress);
+    };
+  }, []);
+
+  const activeIndex = Math.min(productStorySteps.length - 1, Math.floor(progress * productStorySteps.length));
+
+  return (
+    <main className="bg-[hsl(42_38%_94%)] text-foreground">
+      <section className="relative isolate overflow-hidden bg-[hsl(156_34%_9%)] text-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,hsl(150_68%_32%/.28),transparent_34%),radial-gradient(circle_at_86%_18%,hsl(31_92%_55%/.16),transparent_28%),linear-gradient(180deg,hsl(156_34%_9%),hsl(150_26%_13%))]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[hsl(42_38%_94%)]" />
+        <div className="relative mx-auto grid min-h-[calc(100vh-92px)] w-full max-w-7xl items-center gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[0.48fr_0.52fr]">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-background/60">Leaftronics Technologie</p>
+            <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.02] md:text-7xl">
+              Die Leiterplatte, die sich am Ende wieder trennen lässt.
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-8 text-background/72 md:text-lg">
+              Leaftronics denkt das Substrat neu: stabil während der Nutzung, kontrolliert lösbar am Ende des Produktlebens.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#technology-scroll"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-background px-5 text-sm font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
+              >
+                Technologie ansehen
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <a
+                href="/#forms"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-background/20 bg-background/8 px-5 text-sm font-semibold text-background backdrop-blur transition-transform hover:-translate-y-0.5"
+              >
+                Pilotprojekt anfragen
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+          <ProductPcbScene progress={0.5} activeIndex={3} hero />
+        </div>
+      </section>
+
+      <section id="technology-scroll" ref={sectionRef} className="relative mx-auto grid w-full max-w-7xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[0.42fr_0.58fr] lg:py-24">
+        <div className="grid gap-8 lg:pb-[34vh]">
+          {productStorySteps.map((step, index) => {
+            const active = index === activeIndex;
+            return (
+              <article
+                key={step.index}
+                className={`min-h-[52vh] rounded-lg border p-5 transition-all duration-500 md:p-6 ${
+                  active
+                    ? "border-primary/25 bg-background/86 shadow-elegant"
+                    : "border-transparent bg-transparent opacity-55"
+                }`}
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">{step.section}</p>
+                <div className="mt-6 flex items-start gap-4">
+                  <span className="font-mono text-xs font-semibold text-muted-foreground">{step.index}</span>
+                  <div>
+                    <h2 className="font-display text-3xl font-semibold leading-tight md:text-5xl">{step.title}</h2>
+                    <p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground">{step.text}</p>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
+          <ProductPcbScene progress={progress} activeIndex={activeIndex} />
+        </div>
+      </section>
+
+      <section className="bg-[hsl(156_28%_12%)] py-20 text-background md:py-28">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-glow">Proof of process</p>
+            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">
+              Die Materiallogik wird im Labor sichtbar.
+            </h2>
+          </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {proofImages.map((item) => (
+              <article key={item.src} className="overflow-hidden rounded-lg border border-background/12 bg-background/6 shadow-elegant">
+                <img src={item.src} alt="" className="h-72 w-full object-cover" loading="lazy" />
+                <div className="p-5">
+                  <h3 className="font-display text-2xl font-semibold">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-background/70">{item.text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[hsl(42_38%_94%)] py-20 md:py-28">
+        <div className="mx-auto grid w-full max-w-7xl items-end gap-8 px-5 sm:px-8 lg:grid-cols-[0.65fr_0.35fr]">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Eine neue Materiallogik für Elektronik</p>
+            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">
+              Klassische Funktion. Kontrollierbares Ende.
+            </h2>
+            <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
+              Eine klassische Leiterplatte ist schwer zu trennen, weil Substrat, Metalle und Bauteile fest verbunden bleiben. Leaftronics verändert das Trägermaterial so, dass Nutzung und Rückgewinnung zusammen gedacht werden.
+            </p>
+          </div>
+          <a
+            href="/#forms"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
+          >
+            Pilotprojekt anfragen
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: number; activeIndex: number; hero?: boolean }) => {
+  const polymer = hero ? 1 : progressBetween(progress, 0.1, 0.22);
+  const traces = hero ? 1 : progressBetween(progress, 0.23, 0.36);
+  const components = hero ? 1 : progressBetween(progress, 0.36, 0.5);
+  const product = hero ? 0.36 : progressBetween(progress, 0.48, 0.62);
+  const solution = hero ? 0 : progressBetween(progress, 0.62, 0.76);
+  const streams = hero ? 0 : progressBetween(progress, 0.74, 0.9);
+  const loop = hero ? 0 : progressBetween(progress, 0.86, 1);
+  const tilt = hero ? 58 : 62 - progress * 24;
+  const rotate = hero ? -13 : -16 + progress * 24;
+  const sink = solution * 44;
+
+  return (
+    <div className={`product-scene-shell ${hero ? "min-h-[440px]" : "min-h-[540px] lg:h-full"}`}>
+      <div className="product-scene-grid" />
+      <div className="product-stage-label">
+        <span>{productStorySteps[activeIndex]?.index ?? "01"}</span>
+        <span>{productStorySteps[activeIndex]?.section ?? "Leaftronics"}</span>
+      </div>
+
+      <div className="product-housing" style={{ opacity: product, transform: `translate(-50%, -50%) scale(${0.82 + product * 0.1})` }} />
+      <div className="product-solution-vessel" style={{ opacity: solution }}>
+        <div className="product-liquid" />
+      </div>
+
+      <div className="product-pcb-viewport">
+        <div
+          className="product-pcb-assembly"
+          style={{
+            transform: `translate3d(-50%, calc(-50% + ${sink}px), 0) rotateX(${tilt}deg) rotateZ(${rotate}deg)`,
+          }}
+        >
+          <div className="product-pcb-shadow" />
+          <div className="product-layer product-fiber-layer" />
+          <div className="product-layer product-polymer-layer" style={{ opacity: polymer }} />
+          <div className="product-trace-layer" style={{ opacity: traces }}>
+            {Array.from({ length: 18 }).map((_, index) => (
+              <span key={index} className={`product-trace product-trace-${index + 1}`} />
+            ))}
+          </div>
+          <div className="product-component-layer" style={{ opacity: components, transform: `translateZ(${18 + components * 16}px)` }}>
+            {Array.from({ length: 12 }).map((_, index) => (
+              <span key={index} className={`product-component product-component-${index + 1}`} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="product-energy-lines" style={{ opacity: product }}>
+        <span />
+        <span />
+        <span />
+      </div>
+
+      <div className="product-material-streams" style={{ opacity: streams }}>
+        {materialStreamLabels.map((stream) => (
+          <span key={stream.label} className={stream.className}>
+            {stream.label}
+          </span>
+        ))}
+      </div>
+
+      <div className="product-loop-ring" style={{ opacity: loop, transform: `translate(-50%, -50%) scale(${0.86 + loop * 0.18})` }} />
     </div>
   );
 };
