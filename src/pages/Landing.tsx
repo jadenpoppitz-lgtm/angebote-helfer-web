@@ -1338,7 +1338,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
 
       {showCycle ? (
       <section id="demos" className="bg-[linear-gradient(90deg,hsl(45_52%_92%/.78)_1px,transparent_1px),linear-gradient(180deg,hsl(45_52%_92%/.78)_1px,transparent_1px),radial-gradient(circle_at_76%_20%,hsl(151_48%_82%/.72),transparent_32%),linear-gradient(120deg,hsl(43_53%_92%),hsl(47_48%_96%)_48%,hsl(155_38%_90%))] bg-[size:56px_56px,56px_56px,100%_100%,100%_100%] py-20 text-foreground md:py-28">
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.34fr_0.66fr]">
+        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,34fr)_minmax(0,66fr)]">
           {(() => {
             const demoRole = demoRoleOrder.includes(activeRole) ? activeRole : "customer";
             const Icon = roleIcons[demoRole];
@@ -1348,12 +1348,12 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               <>
                 <aside>
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.demos.eyebrow}</p>
-                  <div className="mt-5 flex items-center gap-4">
-                    <span className="grid h-14 w-14 place-items-center rounded-lg bg-primary/15 text-primary">
+                  <div className="mt-5 flex min-w-0 items-center gap-4">
+                    <span className="grid h-14 w-14 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary">
                       <Icon className="h-7 w-7" />
                     </span>
-                    <div>
-                      <h2 className="font-display text-4xl font-semibold leading-tight md:text-5xl">{card.title}</h2>
+                    <div className="min-w-0">
+                      <h2 className="break-words font-display text-4xl font-semibold leading-tight md:text-5xl lg:text-[2.65rem]">{card.title}</h2>
                       <p className="mt-1 text-sm text-muted-foreground">{surface.subtitle}</p>
                     </div>
                   </div>
@@ -1392,7 +1392,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   </div>
                 </aside>
 
-                <section>
+                <section className="min-w-0">
                   {demoRole === "customer" ? (
                     <CustomerReturnDemo content={content} language={language} reference={reference} />
                   ) : demoRole === "smelter" ? (
@@ -2511,43 +2511,48 @@ export const SmelterDashboard = ({
     title={surface.title}
     subtitle="Nächste Lieferungen, Materialanteile und Mengen im Überblick."
   >
-    <div className="grid gap-3 md:grid-cols-3">
-      <div className="rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
-        <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">nächste charge</p>
-        <p className="mt-2 font-display text-3xl font-semibold">{smelterDeliveries[0].tonnes} t</p>
+    <div className="grid gap-3 sm:grid-cols-3">
+      <div className="min-w-0 rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
+        <p className="text-xs uppercase leading-5 tracking-[0.18em] text-muted-foreground">nächste charge</p>
+        <p className="mt-2 font-display text-3xl font-semibold leading-none">{smelterDeliveries[0].tonnes} t</p>
       </div>
-      <div className="rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
-        <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">angemeldet</p>
-        <p className="mt-2 font-display text-3xl font-semibold">93 t</p>
+      <div className="min-w-0 rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
+        <p className="text-xs uppercase leading-5 tracking-[0.18em] text-muted-foreground">angemeldet</p>
+        <p className="mt-2 font-display text-3xl font-semibold leading-none">93 t</p>
       </div>
-      <div className="rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
-        <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">planung</p>
-        <p className="mt-2 font-display text-3xl font-semibold">3 Lieferungen</p>
+      <div className="min-w-0 rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
+        <p className="text-xs uppercase leading-5 tracking-[0.18em] text-muted-foreground">planung</p>
+        <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-0">
+          <p className="font-display text-3xl font-semibold leading-none">3</p>
+          <p className="text-sm font-semibold leading-5 text-foreground/72">Lieferungen</p>
+        </div>
       </div>
     </div>
 
     <div className="mt-5 grid gap-3">
       {smelterDeliveries.map((delivery) => (
-        <div key={delivery.id} className="rounded-lg border border-primary/14 bg-background/88 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.65)]">
+        <div key={delivery.id} className="min-w-0 rounded-lg border border-primary/14 bg-background/88 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.65)]">
           <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">{delivery.id} · {delivery.date}</p>
-              <h4 className="mt-2 font-display text-2xl font-semibold">{delivery.source}</h4>
+            <div className="min-w-0">
+              <p className="break-words text-xs font-semibold uppercase leading-5 tracking-[0.18em] text-primary">{delivery.id} · {delivery.date}</p>
+              <h4 className="mt-2 break-words font-display text-2xl font-semibold leading-tight">{delivery.source}</h4>
             </div>
-            <div className="text-left sm:text-right">
+            <div className="shrink-0 text-left sm:text-right">
               <p className="font-display text-4xl font-semibold text-primary">{delivery.tonnes} t</p>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{delivery.status}</p>
             </div>
           </div>
           <div className="mt-4 grid gap-2 md:grid-cols-4">
             {delivery.materials.map((material) => (
-              <div key={material.label} className="rounded-md border border-primary/10 bg-primary/6 p-3">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{material.label}</p>
-                  <p className="text-sm font-semibold text-primary">{material.share}%</p>
+              <div key={material.label} className="flex min-w-0 flex-col rounded-md border border-primary/10 bg-primary/6 p-3">
+                <p className="min-h-8 break-words text-[10px] font-semibold uppercase leading-4 tracking-[0.12em] text-muted-foreground">
+                  {material.label}
+                </p>
+                <div className="mt-2 flex min-w-0 items-baseline justify-between gap-2">
+                  <p className="shrink-0 whitespace-nowrap font-display text-2xl font-semibold leading-none">{material.tonnes.toFixed(1)} t</p>
+                  <p className="shrink-0 text-xs font-semibold text-primary">{material.share}%</p>
                 </div>
-                <p className="mt-2 font-display text-2xl font-semibold">{material.tonnes.toFixed(1)} t</p>
-                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-primary/10">
+                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-primary/10">
                   <span className="block h-full rounded-full bg-primary" style={{ width: `${material.share}%` }} />
                 </div>
               </div>
