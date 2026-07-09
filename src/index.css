@@ -597,53 +597,6 @@ All colors MUST be HSL.
     transform-style: preserve-3d;
   }
 
-  .product-model-frame {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    z-index: 16;
-    width: calc(100% - 2.5rem);
-    max-width: 700px;
-    aspect-ratio: 1.55 / 1;
-    overflow: hidden;
-    border: 1px solid hsl(152 32% 26% / 0.22);
-    border-radius: 0.55rem;
-    background:
-      radial-gradient(circle at 50% 46%, hsl(178 60% 84% / 0.22), transparent 52%),
-      linear-gradient(135deg, hsl(150 18% 12% / 0.92), hsl(45 40% 94% / 0.86));
-    box-shadow:
-      0 34px 74px -48px hsl(155 30% 6% / 0.82),
-      inset 0 1px 0 hsl(0 0% 100% / 0.42);
-    transform: translate(-50%, -50%) rotateX(1deg);
-    transition: opacity 260ms ease-out;
-  }
-
-  .product-model-frame iframe {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    background: transparent;
-    pointer-events: none;
-  }
-
-  .product-model-credit {
-    position: absolute;
-    right: 0.65rem;
-    bottom: 0.55rem;
-    z-index: 2;
-    border-radius: 999px;
-    background: hsl(60 30% 98% / 0.72);
-    padding: 0.28rem 0.5rem;
-    color: hsl(155 30% 12% / 0.62);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration: none;
-    backdrop-filter: blur(10px);
-  }
-
   .product-pcb-assembly {
     position: absolute;
     left: 50%;
@@ -1214,7 +1167,6 @@ All colors MUST be HSL.
   .product-component-layer::before,
   .product-trace,
   .product-fragment,
-  .product-model-frame,
   .product-fiber-layer,
   .product-polymer-layer,
   .product-substrate-fragments,
@@ -1249,11 +1201,6 @@ All colors MUST be HSL.
 
   .product-hero-visual .product-scene-shell {
     min-height: 360px;
-  }
-
-  .product-model-frame {
-    width: calc(100% - 1.5rem);
-    max-width: 520px;
   }
 
   .product-pcb-assembly {
