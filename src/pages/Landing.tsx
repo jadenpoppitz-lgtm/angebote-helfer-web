@@ -1596,6 +1596,9 @@ const materialStreamLabels = [
   { label: "Substrat", className: "product-stream product-stream-4" },
 ];
 
+const sketchfabPcbEmbedUrl =
+  "https://sketchfab.com/models/e76bb27e678a44af8c6dad347a7782a0/embed?autostart=1&ui_infos=0&ui_controls=0&ui_stop=0&ui_watermark=0";
+
 const boardTraceClasses = [
   "product-trace product-trace-1",
   "product-trace product-trace-2",
@@ -1827,6 +1830,7 @@ const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: nu
   const polymerOpacity = polymer * (hero ? 1 : 1 - substrateDissolve * 0.82);
   const detailOpacity = traces * (hero ? 1 : 1 - substrateDissolve * 0.44);
   const traceOpacity = traces * (hero ? 1 : 1 - copperRelease * 0.08);
+  const modelOpacity = hero ? 0.92 : clamp01(1 - progressBetween(progress, 0.42, 0.7));
 
   return (
     <div className={`product-scene-shell ${hero ? "min-h-[440px]" : "min-h-[540px] lg:h-full"}`}>
@@ -1842,6 +1846,22 @@ const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: nu
       </div>
 
       <div className="product-pcb-viewport">
+        <div className="product-model-frame" style={{ opacity: modelOpacity }}>
+          <iframe
+            title="Electronic Power Board Component - 3D Model"
+            src={sketchfabPcbEmbedUrl}
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            allowFullScreen
+          />
+          <a
+            className="product-model-credit"
+            href="https://sketchfab.com/3d-models/electronic-power-board-component-3d-model-e76bb27e678a44af8c6dad347a7782a0"
+            target="_blank"
+            rel="noreferrer"
+          >
+            3D model on Sketchfab
+          </a>
+        </div>
         <div
           className="product-pcb-assembly"
           style={{
