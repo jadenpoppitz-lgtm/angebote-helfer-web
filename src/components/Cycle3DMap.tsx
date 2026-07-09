@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import type { CSSProperties, FocusEvent, MouseEvent, PointerEvent } from "react";
+import { createPortal } from "react-dom";
 import type { GraphPoint, LandingCopy, RoleId } from "@/pages/Landing";
 
 type CyclePosition = {
@@ -260,161 +261,166 @@ export const Cycle3DMap = ({ content, activePoint, setActivePoint, chooseRole, j
     setPopupPosition(null);
   };
 
-  return (
-    <div
-      className="cycle-map-stage relative -mx-2 overflow-x-auto px-2 py-10 sm:mx-0 sm:px-0 md:py-12"
-      onPointerMove={moveStage}
-      onPointerLeave={resetStage}
-      style={
-        {
-          "--cycle-tilt-x": `${tilt.x}deg`,
-          "--cycle-tilt-y": `${tilt.y}deg`,
-        } as CSSProperties
-      }
-    >
-      <div className="cycle-map-plane relative aspect-[2048/1171] min-w-[820px] md:min-w-[900px] lg:min-w-0">
-        <img
-          src="/zyklus/flow-map.png"
-          alt=""
-          draggable={false}
-          className="pointer-events-none absolute inset-0 z-10 h-full w-full select-none object-contain opacity-90"
-        />
+  const popup =
+    popupPoint && popupNode && popupPosition ? (
+      <div
+        className="cycle-map-popup"
+        style={
+          {
+            "--cycle-popup-left": `${popupPosition.left}px`,
+            "--cycle-popup-top": `${popupPosition.top}px`,
+          } as CSSProperties
+        }
+      >
+        <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">
+          {popupNode.label}
+        </span>
+        <span className="mt-1 block font-display text-lg font-semibold leading-tight text-foreground">{popupTitle}</span>
+        <span className="mt-2 block text-xs font-semibold leading-5 text-primary/80">{popupNode.problem}</span>
+        <span className="mt-1.5 block text-xs leading-5 text-muted-foreground">{popupNode.solution}</span>
+        <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-primary">
+          {popupNode.next}
+          <ArrowRight className="h-3.5 w-3.5" />
+        </span>
+      </div>
+    ) : null;
 
-        <svg className="pointer-events-none absolute inset-0 z-30 h-full w-full" viewBox="0 0 2048 1171" aria-hidden="true">
-          <defs>
-            {Object.entries(edgeToneClasses).map(([tone, colors]) => (
-              <marker
-                key={tone}
-                id={colors.marker}
-                viewBox="0 0 16 16"
-                refX="13"
-                refY="8"
-                markerWidth="12"
-                markerHeight="12"
-                orient="auto"
-              >
-                <path d="M2 2 L14 8 L2 14" fill="none" stroke={colors.stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-              </marker>
-            ))}
-          </defs>
-          {cycleEdges.map((edge) => {
-            const colors = edgeToneClasses[edge.tone];
-            const isActive =
-              edge.id.includes(highlightedPoint) ||
-              (highlightedPoint === "consulting" && edge.id.includes("leaftronics")) ||
-              (highlightedPoint === "oem" && edge.id.includes("oem"));
-            const style = {
-              "--cycle-flow-duration": `${edge.duration}s`,
-              "--cycle-flow-delay": `${edge.delay ?? 0}s`,
-              "--cycle-flow-glow": colors.glow,
-            } as CSSProperties;
+  return (
+    <>
+      <div
+        className="cycle-map-stage relative -mx-2 overflow-x-auto px-2 py-10 sm:mx-0 sm:px-0 md:py-12"
+        onPointerMove={moveStage}
+        onPointerLeave={resetStage}
+        style={
+          {
+            "--cycle-tilt-x": `${tilt.x}deg`,
+            "--cycle-tilt-y": `${tilt.y}deg`,
+          } as CSSProperties
+        }
+      >
+        <div className="cycle-map-plane relative aspect-[2048/1171] min-w-[820px] md:min-w-[900px] lg:min-w-0">
+          <img
+            src="/zyklus/flow-map.png"
+            alt=""
+            draggable={false}
+            className="pointer-events-none absolute inset-0 z-10 h-full w-full select-none object-contain opacity-90"
+          />
+
+          <svg className="pointer-events-none absolute inset-0 z-30 h-full w-full" viewBox="0 0 2048 1171" aria-hidden="true">
+            <defs>
+              {Object.entries(edgeToneClasses).map(([tone, colors]) => (
+                <marker
+                  key={tone}
+                  id={colors.marker}
+                  viewBox="0 0 16 16"
+                  refX="13"
+                  refY="8"
+                  markerWidth="12"
+                  markerHeight="12"
+                  orient="auto"
+                >
+                  <path d="M2 2 L14 8 L2 14" fill="none" stroke={colors.stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                </marker>
+              ))}
+            </defs>
+            {cycleEdges.map((edge) => {
+              const colors = edgeToneClasses[edge.tone];
+              const isActive =
+                edge.id.includes(highlightedPoint) ||
+                (highlightedPoint === "consulting" && edge.id.includes("leaftronics")) ||
+                (highlightedPoint === "oem" && edge.id.includes("oem"));
+              const style = {
+                "--cycle-flow-duration": `${edge.duration}s`,
+                "--cycle-flow-delay": `${edge.delay ?? 0}s`,
+                "--cycle-flow-glow": colors.glow,
+              } as CSSProperties;
+
+              return (
+                <g key={edge.id}>
+                  <path
+                    d={edge.path}
+                    fill="none"
+                    stroke="hsl(60 30% 98% / 0.92)"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={isActive ? 14 : 11}
+                  />
+                  <path
+                    d={edge.path}
+                    fill="none"
+                    stroke={colors.stroke}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeOpacity={isActive ? 0.9 : 0.64}
+                    strokeWidth={isActive ? 6.5 : 4.8}
+                    markerEnd={`url(#${colors.marker})`}
+                  />
+                  <path
+                    d={edge.path}
+                    className="cycle-flow-beam"
+                    fill="none"
+                    stroke={colors.stroke}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={isActive ? 10 : 8}
+                    style={style}
+                  />
+                </g>
+              );
+            })}
+          </svg>
+
+          {cycleOrder.map((point) => {
+            const position = cyclePositions[point];
+            const node = content.solution.nodes[point];
+            const isHovered = hoveredPoint === point;
+            const iconWidth = `${(position.suggestedIconWidth / 2048) * 100}%`;
+            const displayTitle = position.title ?? node.title;
 
             return (
-              <g key={edge.id}>
-                <path
-                  d={edge.path}
-                  fill="none"
-                  stroke="hsl(60 30% 98% / 0.92)"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={isActive ? 14 : 11}
+              <button
+                key={point}
+                type="button"
+                data-cycle-point={point}
+                className={`cycle-map-node group absolute z-40 aspect-square text-center outline-none ${
+                  isHovered ? "cycle-map-node-active" : ""
+                }`}
+                style={{
+                  left: `${position.leftPercent}%`,
+                  top: `${position.topPercent}%`,
+                  width: iconWidth,
+                }}
+                onMouseEnter={(event: MouseEvent<HTMLButtonElement>) => showPoint(point, event.currentTarget)}
+                onMouseLeave={() => {
+                  setHoveredPoint(null);
+                  setPopupPosition(null);
+                }}
+                onFocus={(event: FocusEvent<HTMLButtonElement>) => showPoint(point, event.currentTarget)}
+                onBlur={() => {
+                  setHoveredPoint(null);
+                  setPopupPosition(null);
+                }}
+                onClick={() => openPoint(point)}
+                aria-label={`${displayTitle}: ${node.next}`}
+              >
+                <span className="cycle-map-lens absolute inset-0 rounded-full" aria-hidden="true" />
+                <img
+                  src={position.asset}
+                  alt=""
+                  draggable={false}
+                  className="cycle-map-icon h-full w-full select-none object-contain"
+                  loading="eager"
                 />
-                <path
-                  d={edge.path}
-                  fill="none"
-                  stroke={colors.stroke}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeOpacity={isActive ? 0.9 : 0.64}
-                  strokeWidth={isActive ? 6.5 : 4.8}
-                  markerEnd={`url(#${colors.marker})`}
-                />
-                <path
-                  d={edge.path}
-                  className="cycle-flow-beam"
-                  fill="none"
-                  stroke={colors.stroke}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={isActive ? 10 : 8}
-                  style={style}
-                />
-              </g>
+                <span className="cycle-map-title absolute left-1/2 top-[86%] w-max max-w-[9.5rem] -translate-x-1/2 rounded-md bg-background/92 px-2.5 py-1 text-[11px] font-semibold text-foreground shadow-[0_10px_24px_hsl(151_31%_34%/.14)] backdrop-blur md:text-xs">
+                  {displayTitle}
+                </span>
+              </button>
             );
           })}
-        </svg>
-
-        {cycleOrder.map((point) => {
-          const position = cyclePositions[point];
-          const node = content.solution.nodes[point];
-          const isHovered = hoveredPoint === point;
-          const iconWidth = `${(position.suggestedIconWidth / 2048) * 100}%`;
-          const displayTitle = position.title ?? node.title;
-
-          return (
-            <button
-              key={point}
-              type="button"
-              data-cycle-point={point}
-              className={`cycle-map-node group absolute z-40 aspect-square text-center outline-none ${
-                isHovered ? "cycle-map-node-active" : ""
-              }`}
-              style={{
-                left: `${position.leftPercent}%`,
-                top: `${position.topPercent}%`,
-                width: iconWidth,
-              }}
-              onMouseEnter={(event: MouseEvent<HTMLButtonElement>) => showPoint(point, event.currentTarget)}
-              onMouseLeave={() => {
-                setHoveredPoint(null);
-                setPopupPosition(null);
-              }}
-              onFocus={(event: FocusEvent<HTMLButtonElement>) => showPoint(point, event.currentTarget)}
-              onBlur={() => {
-                setHoveredPoint(null);
-                setPopupPosition(null);
-              }}
-              onClick={() => openPoint(point)}
-              aria-label={`${displayTitle}: ${node.next}`}
-            >
-              <span className="cycle-map-lens absolute inset-0 rounded-full" aria-hidden="true" />
-              <img
-                src={position.asset}
-                alt=""
-                draggable={false}
-                className="cycle-map-icon h-full w-full select-none object-contain"
-                loading="eager"
-              />
-              <span className="cycle-map-title absolute left-1/2 top-[86%] w-max max-w-[9.5rem] -translate-x-1/2 rounded-md bg-background/92 px-2.5 py-1 text-[11px] font-semibold text-foreground shadow-[0_10px_24px_hsl(151_31%_34%/.14)] backdrop-blur md:text-xs">
-                {displayTitle}
-              </span>
-            </button>
-          );
-        })}
+        </div>
       </div>
 
-      {popupPoint && popupNode && popupPosition ? (
-        <div
-          className="cycle-map-popup"
-          style={
-            {
-              "--cycle-popup-left": `${popupPosition.left}px`,
-              "--cycle-popup-top": `${popupPosition.top}px`,
-            } as CSSProperties
-          }
-        >
-          <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">
-            {popupNode.label}
-          </span>
-          <span className="mt-1 block font-display text-lg font-semibold leading-tight text-foreground">{popupTitle}</span>
-          <span className="mt-2 block text-xs font-semibold leading-5 text-primary/80">{popupNode.problem}</span>
-          <span className="mt-1.5 block text-xs leading-5 text-muted-foreground">{popupNode.solution}</span>
-          <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-primary">
-            {popupNode.next}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </span>
-        </div>
-      ) : null}
-    </div>
+      {popup && typeof document !== "undefined" ? createPortal(popup, document.body) : null}
+    </>
   );
 };
