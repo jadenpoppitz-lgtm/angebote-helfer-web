@@ -9,6 +9,7 @@ import {
   Flame,
   Globe2,
   Handshake,
+  Leaf,
   PackageCheck,
   QrCode,
   Recycle,
@@ -244,7 +245,7 @@ export const copy: Record<Language, LandingCopy> = {
           next: "Rückgabe starten",
         },
         consulting: {
-          title: "Consulting",
+          title: "Leaftronics",
           label: "Leaftronics",
           problem: "Ohne Bewertung wird PCB anonym verkauft oder falsch geroutet.",
           solution: "Leaftronics bewertet Produkt und PCB, verkauft oder ordnet PCB zu und setzt die passende Lösung.",
@@ -562,7 +563,7 @@ export const copy: Record<Language, LandingCopy> = {
           next: "Start return",
         },
         consulting: {
-          title: "Consulting",
+          title: "Leaftronics",
           label: "Leaftronics",
           problem: "Without evaluation, PCB is sold anonymously or routed incorrectly.",
           solution: "Leaftronics evaluates product and PCB, sells or assigns PCB and sets the suitable solution.",
@@ -879,7 +880,7 @@ export const copy: Record<Language, LandingCopy> = {
           next: "启动退回",
         },
         consulting: {
-          title: "咨询 / 路由",
+          title: "Leaftronics",
           label: "Leaftronics",
           problem: "没有评估时，PCB 会被匿名出售或错误路由。",
           solution: "Leaftronics 评估产品和 PCB，分配或出售 PCB，并设置合适方案。",
@@ -1086,6 +1087,7 @@ export const copy: Record<Language, LandingCopy> = {
 };
 
 export const roleOrder: RoleId[] = ["oem", "customer", "recycler", "smelter", "partner"];
+const demoRoleOrder: RoleId[] = ["oem", "customer", "smelter"];
 const graphOrder: GraphPoint[] = ["oem", "customer", "consulting", "disassembly", "smelter", "materials"];
 
 export const roleIcons: Record<RoleId, typeof Factory> = {
@@ -1099,7 +1101,7 @@ export const roleIcons: Record<RoleId, typeof Factory> = {
 const graphIcons: Record<GraphPoint, typeof Factory> = {
   oem: Factory,
   customer: UserRound,
-  consulting: Handshake,
+  consulting: Leaf,
   disassembly: Wrench,
   smelter: Flame,
   materials: PackageCheck,
@@ -1372,9 +1374,10 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       <section id="demos" className="bg-[linear-gradient(90deg,hsl(45_52%_92%/.78)_1px,transparent_1px),linear-gradient(180deg,hsl(45_52%_92%/.78)_1px,transparent_1px),radial-gradient(circle_at_76%_20%,hsl(151_48%_82%/.72),transparent_32%),linear-gradient(120deg,hsl(43_53%_92%),hsl(47_48%_96%)_48%,hsl(155_38%_90%))] bg-[size:56px_56px,56px_56px,100%_100%,100%_100%] py-20 text-foreground md:py-28">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.34fr_0.66fr]">
           {(() => {
-            const Icon = roleIcons[activeRole];
-            const card = content.roles.cards[activeRole];
-            const surface = content.demos.surfaces[activeRole];
+            const demoRole = demoRoleOrder.includes(activeRole) ? activeRole : "customer";
+            const Icon = roleIcons[demoRole];
+            const card = content.roles.cards[demoRole];
+            const surface = content.demos.surfaces[demoRole];
             return (
               <>
                 <aside>
@@ -1402,7 +1405,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   </div>
 
                   <div className="mt-6 flex flex-wrap gap-2">
-                    {roleOrder.map((role) => {
+                    {demoRoleOrder.map((role) => {
                       const RoleIcon = roleIcons[role];
                       return (
                         <button
@@ -1410,7 +1413,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                           type="button"
                           onClick={() => chooseRole(role)}
                           className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-semibold transition-colors ${
-                            role === activeRole
+                            role === demoRole
                               ? "border-primary bg-primary text-primary-foreground"
                               : "border-primary/20 bg-background/70 text-foreground/65 hover:text-foreground"
                           }`}
@@ -1424,8 +1427,10 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                 </aside>
 
                 <section>
-                  {activeRole === "customer" ? (
+                  {demoRole === "customer" ? (
                     <CustomerReturnDemo content={content} language={language} reference={reference} />
+                  ) : demoRole === "smelter" ? (
+                    <SmelterDashboard content={content} surface={surface} reference={reference} />
                   ) : (
                     <DemoSurface content={content} surface={surface} reference={reference} />
                   )}
@@ -1585,11 +1590,9 @@ const ProcessGraph = ({
   const pointToRole: Partial<Record<GraphPoint, RoleId>> = {
     oem: "oem",
     customer: "customer",
-    consulting: "partner",
-    disassembly: "recycler",
     smelter: "smelter",
-    materials: "smelter",
   };
+  const mutedPoints = new Set<GraphPoint>(["disassembly", "materials"]);
 
   const edges: FlowEdge[] = [
     {
@@ -1704,7 +1707,6 @@ const ProcessGraph = ({
       jumpTo("demos");
       return;
     }
-    jumpTo("forms");
   };
 
   return (
@@ -1761,6 +1763,8 @@ const ProcessGraph = ({
             const Icon = graphIcons[point];
             const node = content.solution.nodes[point];
             const position = positions[point];
+            const hasDemo = Boolean(pointToRole[point]);
+            const isMuted = mutedPoints.has(point);
             const tooltipStyle: CSSProperties = point === "materials"
               ? { bottom: "calc(100% + 0.75rem)", left: 0 }
               : point === "smelter" || point === "disassembly"
@@ -1783,18 +1787,26 @@ const ProcessGraph = ({
                 onBlur={() => setHoveredPoint(null)}
                 onClick={() => handleNode(point)}
                 aria-pressed={activePoint === point}
-                className={`group absolute z-30 flex min-h-[126px] flex-col rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:z-40 hover:-translate-y-1 ${
+                className={`group absolute z-30 flex min-h-[126px] flex-col rounded-lg border p-4 text-left shadow-card transition-all hover:z-40 hover:-translate-y-1 ${
                   activePoint === point
-                    ? "border-primary ring-2 ring-primary/20"
-                    : "border-border"
-                }`}
+                    ? isMuted
+                      ? "border-primary bg-stone-100/95 ring-2 ring-primary/20"
+                      : "border-primary bg-background/95 ring-2 ring-primary/20"
+                    : isMuted
+                      ? "border-stone-200 bg-stone-100/90 text-foreground/72"
+                      : "border-border bg-background/95"
+                } ${hasDemo ? "cursor-pointer" : "cursor-default"}`}
                 style={{ left: position.x, top: position.y, width: position.width ?? 160, height: position.height }}
               >
                 <span className="flex items-start justify-between gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                    isMuted ? "bg-stone-200 text-foreground/55" : "bg-primary/10 text-primary"
+                  }`}>
                     <Icon className="h-5 w-5" />
                   </span>
-                  <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  <span className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${
+                    isMuted ? "bg-stone-200/80 text-foreground/48" : "bg-muted text-muted-foreground"
+                  }`}>
                     {node.label}
                   </span>
                 </span>
@@ -1823,19 +1835,24 @@ const ProcessGraph = ({
         {graphOrder.map((point, index) => {
           const Icon = graphIcons[point];
           const node = content.solution.nodes[point];
+          const isMuted = mutedPoints.has(point);
           return (
             <button
               key={point}
               type="button"
               onClick={() => handleNode(point)}
-              className={`relative flex items-start gap-3 rounded-lg border bg-background p-4 text-left shadow-card ${
+              className={`relative flex items-start gap-3 rounded-lg border p-4 text-left shadow-card ${
                 activePoint === point
-                  ? "border-primary ring-2 ring-primary/20"
-                  : "border-border"
-              }`}
-            >
+                  ? "border-primary bg-background ring-2 ring-primary/20"
+                  : isMuted
+                    ? "border-stone-200 bg-stone-100/90"
+                    : "border-border bg-background"
+                }`}
+              >
               {index < graphOrder.length - 1 ? <span aria-hidden className="absolute left-8 top-14 h-[calc(100%+8px)] w-px bg-primary/18" /> : null}
-              <span className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <span className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                isMuted ? "bg-stone-200 text-foreground/55" : "bg-primary/10 text-primary"
+              }`}>
                 <Icon className="h-5 w-5" />
               </span>
               <span>
@@ -2001,12 +2018,119 @@ export const DemoSurface = ({ content, surface, reference }: { content: LandingC
   </DemoWindow>
 );
 
+const smelterDeliveries = [
+  {
+    id: "LT-0726-18",
+    date: "18.07.2026",
+    source: "Leaftronics Dresden",
+    tonnes: 38,
+    status: "freigegeben",
+    materials: [
+      { label: "Kupfer", share: 41, tonnes: 15.6 },
+      { label: "Substrat", share: 34, tonnes: 12.9 },
+      { label: "Edelmetalle", share: 8, tonnes: 3.0 },
+      { label: "Lötmetalle", share: 17, tonnes: 6.5 },
+    ],
+  },
+  {
+    id: "LT-0726-24",
+    date: "24.07.2026",
+    source: "OEM-Rückläufer Süd",
+    tonnes: 31,
+    status: "angemeldet",
+    materials: [
+      { label: "Kupfer", share: 38, tonnes: 11.8 },
+      { label: "Substrat", share: 37, tonnes: 11.5 },
+      { label: "Edelmetalle", share: 7, tonnes: 2.2 },
+      { label: "Lötmetalle", share: 18, tonnes: 5.6 },
+    ],
+  },
+  {
+    id: "LT-0726-31",
+    date: "31.07.2026",
+    source: "Industriechargen Ost",
+    tonnes: 24,
+    status: "in Prüfung",
+    materials: [
+      { label: "Kupfer", share: 44, tonnes: 10.6 },
+      { label: "Substrat", share: 31, tonnes: 7.4 },
+      { label: "Edelmetalle", share: 9, tonnes: 2.2 },
+      { label: "Lötmetalle", share: 16, tonnes: 3.8 },
+    ],
+  },
+];
+
+export const SmelterDashboard = ({
+  content,
+  surface,
+  reference,
+}: {
+  content: LandingCopy;
+  surface: LandingCopy["demos"]["surfaces"][RoleId];
+  reference: string;
+}) => (
+  <DemoWindow
+    content={content}
+    reference={reference}
+    icon={<Flame className="h-4 w-4" />}
+    title={surface.title}
+    subtitle="Nächste Lieferungen, Materialanteile und Mengen im Überblick."
+  >
+    <div className="grid gap-3 md:grid-cols-3">
+      <div className="rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">nächste charge</p>
+        <p className="mt-2 font-display text-3xl font-semibold">{smelterDeliveries[0].tonnes} t</p>
+      </div>
+      <div className="rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">angemeldet</p>
+        <p className="mt-2 font-display text-3xl font-semibold">93 t</p>
+      </div>
+      <div className="rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">planung</p>
+        <p className="mt-2 font-display text-3xl font-semibold">3 Lieferungen</p>
+      </div>
+    </div>
+
+    <div className="mt-5 grid gap-3">
+      {smelterDeliveries.map((delivery) => (
+        <div key={delivery.id} className="rounded-lg border border-primary/14 bg-background/88 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.65)]">
+          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">{delivery.id} · {delivery.date}</p>
+              <h4 className="mt-2 font-display text-2xl font-semibold">{delivery.source}</h4>
+            </div>
+            <div className="text-left sm:text-right">
+              <p className="font-display text-4xl font-semibold text-primary">{delivery.tonnes} t</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{delivery.status}</p>
+            </div>
+          </div>
+          <div className="mt-4 grid gap-2 md:grid-cols-4">
+            {delivery.materials.map((material) => (
+              <div key={material.label} className="rounded-md border border-primary/10 bg-primary/6 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{material.label}</p>
+                  <p className="text-sm font-semibold text-primary">{material.share}%</p>
+                </div>
+                <p className="mt-2 font-display text-2xl font-semibold">{material.tonnes.toFixed(1)} t</p>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-primary/10">
+                  <span className="block h-full rounded-full bg-primary" style={{ width: `${material.share}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </DemoWindow>
+);
+
 export const CustomerReturnDemo = ({ content, language, reference }: { content: LandingCopy; language: Language; reference: string }) => {
   const [serial, setSerial] = useState(DEMO_SERIAL);
   const [lookup, setLookup] = useState<SerialLookup | null>(SERIAL_DB[DEMO_SERIAL]);
   const [notFound, setNotFound] = useState(false);
   const [location, setLocation] = useState(SERIAL_DB[DEMO_SERIAL].city);
   const [detecting, setDetecting] = useState(false);
+  const [returnConfirmed, setReturnConfirmed] = useState(false);
   const copy = content.demos.customerLive;
 
   const checkSerial = (value = serial) => {
@@ -2014,6 +2138,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
     const result = SERIAL_DB[key];
     setLookup(result ?? null);
     setNotFound(!result && key.length > 0);
+    setReturnConfirmed(false);
     if (result) {
       setLocation(result.city);
     }
@@ -2045,25 +2170,28 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
             {copy.serialLabel}
             <input
               value={serial}
-              onChange={(event) => setSerial(event.target.value)}
+              onChange={(event) => {
+                setSerial(event.target.value);
+                setReturnConfirmed(false);
+              }}
               placeholder={copy.serialPlaceholder}
               className="h-11 rounded-md border border-primary/18 bg-background px-3 font-mono text-sm text-foreground outline-none focus:border-primary"
             />
           </label>
+          <button
+            type="button"
+            onClick={() => {
+              setSerial(DEMO_SERIAL);
+              checkSerial(DEMO_SERIAL);
+            }}
+            className="mt-2 inline-flex text-sm font-semibold text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            {copy.useDemo}
+          </button>
           <div className="mt-3 flex flex-wrap gap-2">
             <button type="submit" className="inline-flex h-10 items-center gap-2 rounded-md bg-foreground px-4 text-sm font-semibold text-background shadow-card">
               <SearchCheck className="h-4 w-4" />
               {copy.check}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setSerial(DEMO_SERIAL);
-                checkSerial(DEMO_SERIAL);
-              }}
-              className="inline-flex h-10 items-center gap-2 rounded-md border border-primary/18 bg-background/70 px-4 text-sm font-semibold text-foreground/65 hover:text-foreground"
-            >
-              {copy.useDemo}
             </button>
           </div>
 
@@ -2105,6 +2233,17 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                     </div>
                   ))}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setReturnConfirmed(true);
+                    toast.success(copy.confirm, { description: lookup.serial });
+                  }}
+                  className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  {copy.confirm}
+                </button>
               </>
             ) : notFound ? (
               <div className="rounded-md border border-background/12 bg-black/25 p-4 text-sm text-background/70">{copy.unknown}</div>
@@ -2113,31 +2252,36 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
             )}
           </div>
 
-          <div className="rounded-lg border border-background/12 bg-background/8 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.06)]">
-            <p className="text-sm font-semibold text-background/85">{copy.discounts}</p>
-            <div className="mt-3 grid gap-2">
-              {copy.oemOffers.map((offer) => (
-                <div key={offer.oem} className="rounded-md border border-background/12 bg-black/25 p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="font-display text-lg font-semibold">{offer.oem}</p>
-                    <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-                      OEM
-                    </span>
-                  </div>
-                  <p className="mt-1 text-sm font-semibold text-background/85">{offer.offer}</p>
-                  <p className="mt-1 text-xs text-background/50">{offer.condition}</p>
-                </div>
-              ))}
+          {returnConfirmed && lookup ? (
+            <div className="rounded-lg border border-primary/18 bg-primary/10 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.45)]">
+              <p className="text-sm font-semibold text-primary">{copy.discounts}</p>
+              <div className="mt-3 grid gap-2">
+                {copy.oemOffers.map((offer) => {
+                  const percent = offer.offer.match(/\d+\s?%/)?.[0];
+                  const remainder = percent ? offer.offer.replace(percent, "").trim() : offer.offer;
+                  return (
+                    <div key={offer.oem} className="rounded-md border border-primary/14 bg-background/90 p-3 shadow-sm">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="font-display text-lg font-semibold">{offer.oem}</p>
+                        <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+                          OEM
+                        </span>
+                      </div>
+                      {percent ? (
+                        <div className="mt-2 flex items-end gap-2">
+                          <p className="font-display text-5xl font-semibold leading-none text-primary">{percent}</p>
+                          <p className="pb-1 text-sm font-semibold text-foreground/72">{remainder}</p>
+                        </div>
+                      ) : (
+                        <p className="mt-2 font-display text-2xl font-semibold text-primary">{offer.offer}</p>
+                      )}
+                      <p className="mt-2 text-xs text-muted-foreground">{offer.condition}</p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <button
-              type="button"
-              onClick={() => toast.success(copy.confirm, { description: lookup?.serial ?? serial })}
-              className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
-            >
-              <CheckCircle2 className="h-4 w-4" />
-              {copy.confirm}
-            </button>
-          </div>
+          ) : null}
         </div>
       </div>
     </DemoWindow>
