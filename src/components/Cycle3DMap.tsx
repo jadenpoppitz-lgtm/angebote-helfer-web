@@ -288,7 +288,7 @@ export const Cycle3DMap = ({ content, activePoint, setActivePoint, chooseRole, j
   return (
     <>
       <div
-        className="cycle-map-stage relative -mx-2 overflow-x-auto px-2 py-10 sm:mx-0 sm:px-0 md:py-12"
+        className="cycle-map-stage relative -mx-2 overflow-x-auto px-2 pb-8 pt-2 sm:mx-0 sm:px-0 md:pb-10 md:pt-3"
         onPointerMove={moveStage}
         onPointerLeave={resetStage}
         style={

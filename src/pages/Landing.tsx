@@ -224,9 +224,9 @@ export const copy: Record<Language, LandingCopy> = {
     },
     solution: {
       eyebrow: "Interaktiver Wertstrom",
-      title: "Produkt, PCB und Material laufen getrennt durch den Loop.",
+      title: "Vom Produkt zurück zum Material.",
       text:
-        "Die Animation folgt dem Prozess aus der Skizze: OEM liefert Produkt, der Kunde gibt zurück, Leaftronics routet PCB und Produkt, der Smelter gewinnt Material und Exportpfade werden sichtbar.",
+        "Sechs Stationen bilden einen kontrollierten Kreislauf: Produkte, Leiterplatten, Daten und Wertstoffe bleiben sichtbar und fließen gezielt zum OEM zurück.",
       hoverLabel: "Aktiver Prozesspunkt",
       nextStep: "Nächster Schritt",
       nodes: {
@@ -543,8 +543,9 @@ export const copy: Record<Language, LandingCopy> = {
     },
     solution: {
       eyebrow: "Interactive value flow",
-      title: "Product, PCB and material move through separate loop paths.",
-      text: "The animation follows the sketched process: OEM ships product, the customer returns it, Leaftronics routes product and PCB, the smelter recovers material and export leakage becomes visible.",
+      title: "From product back to material.",
+      text:
+        "Six stations form one controlled loop: products, circuit boards, data and valuable materials stay visible and flow deliberately back to the OEM.",
       hoverLabel: "Active process point",
       nextStep: "Next step",
       nodes: {
@@ -860,8 +861,8 @@ export const copy: Record<Language, LandingCopy> = {
     },
     solution: {
       eyebrow: "交互式价值流",
-      title: "产品、PCB 和材料沿着不同路径进入循环。",
-      text: "动画按照草图展示流程：OEM 交付产品，客户退回，Leaftronics 路由产品和 PCB，冶炼方回收材料，同时显示出口流失路径。",
+      title: "从产品回到材料。",
+      text: "六个环节组成一个可控闭环：产品、电路板、数据和高价值材料始终可见，并有目的地回流至 OEM。",
       hoverLabel: "当前流程点",
       nextStep: "下一步",
       nodes: {
@@ -1312,14 +1313,16 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       {showProduct ? <ProductTechnologyPage /> : null}
 
       {showCycle ? (
-      <section id="solution" className="bg-[hsl(42_31%_91%)] pb-16 text-foreground md:pb-24">
+      <section id="solution" className="scroll-mt-8 bg-[hsl(42_31%_91%)] pb-16 pt-20 text-foreground md:pb-24 md:pt-24">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-          <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
-            <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.solution.eyebrow}</p>
-              <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.solution.title}</h2>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.solution.text}</p>
+          <div className="mb-2 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-end lg:gap-16">
+            <div className="max-w-4xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">{content.solution.eyebrow}</p>
+              <h2 className="mt-4 max-w-4xl font-display text-4xl font-semibold leading-[1.08] md:text-5xl">
+                {content.solution.title}
+              </h2>
             </div>
+            <p className="max-w-xl text-base leading-7 text-muted-foreground md:text-lg md:leading-8">{content.solution.text}</p>
           </div>
 
           <Cycle3DMap
