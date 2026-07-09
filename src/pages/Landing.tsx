@@ -26,7 +26,19 @@ type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" 
 type LandingPage = "home" | "problem" | "product" | "traction" | "cycle";
 
 export type LandingCopy = {
-  nav: { problem: string; process: string; impact: string; roles: string; solution: string; demos: string; forms: string };
+  nav: {
+    problem: string;
+    process: string;
+    product: string;
+    traction: string;
+    cycle: string;
+    contact: string;
+    impact: string;
+    roles: string;
+    solution: string;
+    demos: string;
+    forms: string;
+  };
   hero: { eyebrow: string; title: string; text: string; cta: string };
   problem: {
     eyebrow: string;
@@ -102,7 +114,19 @@ export type LandingCopy = {
 
 export const copy: Record<Language, LandingCopy> = {
   de: {
-    nav: { problem: "Problem", process: "Prozess", impact: "Device Impact", roles: "Rollen", solution: "Kreislauf", demos: "Demos", forms: "Starten" },
+    nav: {
+      problem: "Problem",
+      process: "Prozess",
+      product: "Unser Produkt",
+      traction: "Traction",
+      cycle: "Praktischer Zyklus",
+      contact: "Kontakt",
+      impact: "Device Impact",
+      roles: "Rollen",
+      solution: "Kreislauf",
+      demos: "Demos",
+      forms: "Starten",
+    },
     hero: {
       eyebrow: "",
       title: "Was wir abbauen, muss im Kreislauf bleiben.",
@@ -344,7 +368,19 @@ export const copy: Record<Language, LandingCopy> = {
     },
   },
   en: {
-    nav: { problem: "Problem", process: "Process", impact: "Device impact", roles: "Roles", solution: "Loop", demos: "Demos", forms: "Start" },
+    nav: {
+      problem: "Problem",
+      process: "Process",
+      product: "Our product",
+      traction: "Traction",
+      cycle: "Practical cycle",
+      contact: "Contact",
+      impact: "Device impact",
+      roles: "Roles",
+      solution: "Loop",
+      demos: "Demos",
+      forms: "Start",
+    },
     hero: {
       eyebrow: "",
       title: "What we extract must stay in the loop.",
@@ -585,7 +621,19 @@ export const copy: Record<Language, LandingCopy> = {
     },
   },
   zh: {
-    nav: { problem: "问题", process: "过程", impact: "设备影响", roles: "角色", solution: "循环", demos: "演示", forms: "开始" },
+    nav: {
+      problem: "问题",
+      process: "过程",
+      product: "我们的产品",
+      traction: "进展",
+      cycle: "实用循环",
+      contact: "联系",
+      impact: "设备影响",
+      roles: "角色",
+      solution: "循环",
+      demos: "演示",
+      forms: "开始",
+    },
     hero: {
       eyebrow: "",
       title: "被开采的材料必须留在循环中。",
@@ -960,16 +1008,16 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               {content.nav.problem}
             </Link>
             <Link to="/produkt" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
-              Unser Produkt
+              {content.nav.product}
             </Link>
             <Link to="/traction" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
-              Traction
+              {content.nav.traction}
             </Link>
             <Link to="/zyklus" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
-              Praktischer Zyklus
+              {content.nav.cycle}
             </Link>
             <a href="/#forms" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
-              Kontakt
+              {content.nav.contact}
             </a>
           </nav>
         </header>
@@ -994,14 +1042,14 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   to="/problem"
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-background px-4 text-sm font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
                 >
-                  Das Problem
+                  {content.nav.problem}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   to="/produkt"
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-background/25 bg-background/10 px-4 text-sm font-semibold text-background backdrop-blur transition-transform hover:-translate-y-0.5"
                 >
-                  Unser Produkt
+                  {content.nav.product}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -1019,13 +1067,13 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             <p className="text-xs font-semibold uppercase tracking-[0.32em] text-primary">{content.problem.eyebrow}</p>
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.problem.title}</h2>
             <p className="mt-6 max-w-xl text-base leading-8 text-background/72">{content.problem.text}</p>
-            <a
-              href="#solution"
+            <Link
+              to="/produkt"
               className="mt-8 inline-flex h-12 items-center gap-2 rounded-md bg-background px-5 font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
             >
               {content.problem.cta}
               <ArrowRight className="h-4 w-4" />
-            </a>
+            </Link>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
