@@ -139,9 +139,9 @@ All colors MUST be HSL.
     border: 1px solid hsl(150 22% 22% / 0.24);
     border-radius: 0.5rem;
     background:
-      radial-gradient(circle at 50% 42%, hsl(154 64% 34% / 0.18), transparent 34%),
-      radial-gradient(circle at 68% 64%, hsl(30 82% 50% / 0.12), transparent 28%),
-      linear-gradient(135deg, hsl(154 32% 12%), hsl(43 35% 94%) 54%, hsl(152 32% 88%));
+      radial-gradient(circle at 52% 48%, hsl(178 68% 72% / 0.14), transparent 35%),
+      radial-gradient(circle at 68% 68%, hsl(31 82% 50% / 0.08), transparent 30%),
+      linear-gradient(135deg, hsl(154 18% 16%), hsl(43 38% 95%) 52%, hsl(152 32% 90%));
     box-shadow: 0 26px 80px -48px hsl(152 55% 18% / 0.76);
   }
 
@@ -217,7 +217,7 @@ All colors MUST be HSL.
     position: absolute;
     left: 50%;
     top: 52%;
-    width: min(68vw, 520px);
+    width: min(72vw, 680px);
     aspect-ratio: 1.55 / 1;
     transform-style: preserve-3d;
     transition: transform 260ms ease-out;
@@ -250,6 +250,9 @@ All colors MUST be HSL.
       radial-gradient(circle at 28% 18%, hsl(42 48% 82% / 0.48), transparent 24%),
       linear-gradient(135deg, hsl(43 42% 76% / 0.84), hsl(158 42% 42% / 0.62));
     opacity: 0.95;
+    filter: blur(calc(var(--substrate-dissolve, 0) * 1.4px)) saturate(calc(1 - var(--substrate-dissolve, 0) * 0.32));
+    transform: translateZ(calc(var(--substrate-dissolve, 0) * -10px)) scale(calc(1 - var(--substrate-dissolve, 0) * 0.025));
+    transition: opacity 260ms ease-out, filter 260ms ease-out, transform 260ms ease-out;
   }
 
   .product-fiber-layer::before,
@@ -279,7 +282,8 @@ All colors MUST be HSL.
     transform: translateZ(8px);
     z-index: 2;
     backdrop-filter: blur(4px);
-    transition: opacity 260ms ease-out;
+    filter: blur(calc(var(--substrate-dissolve, 0) * 1px));
+    transition: opacity 260ms ease-out, filter 260ms ease-out;
   }
 
   .product-trace-layer,
@@ -344,6 +348,33 @@ All colors MUST be HSL.
     transform: translateZ(22px);
     pointer-events: none;
     transition: opacity 260ms ease-out;
+  }
+
+  .product-substrate-fragments {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    transform: translateZ(18px);
+    pointer-events: none;
+    transition: opacity 260ms ease-out;
+  }
+
+  .product-fragment {
+    position: absolute;
+    width: var(--fragment-w, 44px);
+    height: var(--fragment-h, 22px);
+    border-radius: 999px;
+    background:
+      linear-gradient(135deg, hsl(44 38% 88% / 0.58), hsl(168 42% 74% / 0.36)),
+      repeating-linear-gradient(28deg, hsl(0 0% 100% / 0.24) 0 2px, transparent 2px 9px);
+    box-shadow: 0 12px 24px -20px hsl(155 30% 12% / 0.46);
+    transform:
+      translateX(calc(var(--substrate-dissolve, 0) * var(--fragment-x, 0px)))
+      translateY(calc(var(--substrate-dissolve, 0) * var(--fragment-y, 0px)))
+      rotate(calc(var(--fragment-angle, 0deg) + var(--substrate-dissolve, 0) * var(--fragment-rotate, 0deg)))
+      scale(calc(0.72 + var(--substrate-dissolve, 0) * 0.28));
+    opacity: calc(0.12 + var(--substrate-dissolve, 0) * 0.78);
+    transition: transform 260ms ease-out, opacity 260ms ease-out;
   }
 
   .product-via,
@@ -446,7 +477,13 @@ All colors MUST be HSL.
     border-radius: 999px;
     background: linear-gradient(90deg, hsl(28 92% 41%), hsl(42 86% 64%), hsl(23 74% 44%));
     box-shadow: 0 0 14px hsl(32 82% 38% / 0.32), 0 2px 5px hsl(155 30% 12% / 0.16);
-    transform: translateZ(38px);
+    transform:
+      translateZ(38px)
+      translateX(calc(var(--copper-release, 0) * var(--trace-fall-x, 0px)))
+      translateY(calc(var(--copper-release, 0) * var(--trace-fall-y, 0px)))
+      rotate(calc(var(--trace-angle, 0deg) + var(--copper-release, 0) * var(--trace-release-rotate, 0deg)));
+    transform-origin: left center;
+    transition: transform 260ms ease-out, opacity 260ms ease-out;
   }
 
   .product-trace::after {
@@ -462,24 +499,37 @@ All colors MUST be HSL.
     box-shadow: 0 0 0 3px hsl(42 84% 67% / 0.16);
   }
 
-  .product-trace-1 { left: 10%; top: 20%; width: 34%; transform: rotate(0deg); }
-  .product-trace-2 { left: 20%; top: 30%; width: 58%; transform: rotate(0deg); }
-  .product-trace-3 { left: 14%; top: 44%; width: 32%; transform: rotate(0deg); }
-  .product-trace-4 { left: 49%; top: 44%; width: 30%; transform: rotate(0deg); }
-  .product-trace-5 { left: 24%; top: 62%; width: 48%; transform: rotate(0deg); }
-  .product-trace-6 { left: 58%; top: 18%; width: 28%; transform: rotate(90deg); transform-origin: left center; }
-  .product-trace-7 { left: 34%; top: 22%; width: 32%; transform: rotate(90deg); transform-origin: left center; }
-  .product-trace-8 { left: 76%; top: 30%; width: 28%; transform: rotate(90deg); transform-origin: left center; }
-  .product-trace-9 { left: 12%; top: 75%; width: 28%; }
-  .product-trace-10 { left: 46%; top: 75%; width: 40%; }
-  .product-trace-11 { left: 15%; top: 13%; width: 10%; }
-  .product-trace-12 { left: 68%; top: 13%; width: 15%; }
-  .product-trace-13 { left: 7%; top: 56%; width: 18%; }
-  .product-trace-14 { left: 78%; top: 56%; width: 13%; }
-  .product-trace-15 { left: 27%; top: 82%; width: 13%; }
-  .product-trace-16 { left: 52%; top: 82%; width: 15%; }
-  .product-trace-17 { left: 42%; top: 12%; width: 18%; }
-  .product-trace-18 { left: 33%; top: 52%; width: 38%; }
+  .product-trace-1 { left: 10%; top: 20%; width: 34%; --trace-angle: 0deg; --trace-fall-y: 132px; --trace-fall-x: -18px; --trace-release-rotate: -8deg; }
+  .product-trace-2 { left: 20%; top: 30%; width: 58%; --trace-angle: 0deg; --trace-fall-y: 154px; --trace-fall-x: 8px; --trace-release-rotate: 5deg; }
+  .product-trace-3 { left: 14%; top: 44%; width: 32%; --trace-angle: 0deg; --trace-fall-y: 118px; --trace-fall-x: -24px; --trace-release-rotate: 11deg; }
+  .product-trace-4 { left: 49%; top: 44%; width: 30%; --trace-angle: 0deg; --trace-fall-y: 140px; --trace-fall-x: 28px; --trace-release-rotate: -9deg; }
+  .product-trace-5 { left: 24%; top: 62%; width: 48%; --trace-angle: 0deg; --trace-fall-y: 124px; --trace-fall-x: 14px; --trace-release-rotate: 7deg; }
+  .product-trace-6 { left: 58%; top: 18%; width: 28%; --trace-angle: 90deg; --trace-fall-y: 152px; --trace-fall-x: 24px; --trace-release-rotate: 8deg; }
+  .product-trace-7 { left: 34%; top: 22%; width: 32%; --trace-angle: 90deg; --trace-fall-y: 132px; --trace-fall-x: -12px; --trace-release-rotate: -11deg; }
+  .product-trace-8 { left: 76%; top: 30%; width: 28%; --trace-angle: 90deg; --trace-fall-y: 146px; --trace-fall-x: 22px; --trace-release-rotate: 13deg; }
+  .product-trace-9 { left: 12%; top: 75%; width: 28%; --trace-fall-y: 82px; --trace-fall-x: -24px; --trace-release-rotate: -14deg; }
+  .product-trace-10 { left: 46%; top: 75%; width: 40%; --trace-fall-y: 96px; --trace-fall-x: 22px; --trace-release-rotate: 10deg; }
+  .product-trace-11 { left: 15%; top: 13%; width: 10%; --trace-fall-y: 142px; --trace-fall-x: -18px; --trace-release-rotate: 18deg; }
+  .product-trace-12 { left: 68%; top: 13%; width: 15%; --trace-fall-y: 158px; --trace-fall-x: 20px; --trace-release-rotate: -16deg; }
+  .product-trace-13 { left: 7%; top: 56%; width: 18%; --trace-fall-y: 104px; --trace-fall-x: -30px; --trace-release-rotate: -12deg; }
+  .product-trace-14 { left: 78%; top: 56%; width: 13%; --trace-fall-y: 112px; --trace-fall-x: 36px; --trace-release-rotate: 15deg; }
+  .product-trace-15 { left: 27%; top: 82%; width: 13%; --trace-fall-y: 72px; --trace-fall-x: -16px; --trace-release-rotate: 20deg; }
+  .product-trace-16 { left: 52%; top: 82%; width: 15%; --trace-fall-y: 80px; --trace-fall-x: 16px; --trace-release-rotate: -18deg; }
+  .product-trace-17 { left: 42%; top: 12%; width: 18%; --trace-fall-y: 162px; --trace-fall-x: 6px; --trace-release-rotate: 12deg; }
+  .product-trace-18 { left: 33%; top: 52%; width: 38%; --trace-fall-y: 110px; --trace-fall-x: 4px; --trace-release-rotate: -6deg; }
+
+  .product-fragment-1 { left: 12%; top: 16%; --fragment-w: 74px; --fragment-h: 18px; --fragment-x: -54px; --fragment-y: 116px; --fragment-angle: -4deg; --fragment-rotate: -18deg; }
+  .product-fragment-2 { left: 34%; top: 14%; --fragment-w: 56px; --fragment-h: 20px; --fragment-x: -12px; --fragment-y: 138px; --fragment-angle: 8deg; --fragment-rotate: 13deg; }
+  .product-fragment-3 { left: 62%; top: 16%; --fragment-w: 72px; --fragment-h: 18px; --fragment-x: 34px; --fragment-y: 128px; --fragment-angle: -8deg; --fragment-rotate: 20deg; }
+  .product-fragment-4 { left: 78%; top: 25%; --fragment-w: 48px; --fragment-h: 22px; --fragment-x: 56px; --fragment-y: 122px; --fragment-angle: 12deg; --fragment-rotate: -14deg; }
+  .product-fragment-5 { left: 18%; top: 40%; --fragment-w: 64px; --fragment-h: 24px; --fragment-x: -64px; --fragment-y: 86px; --fragment-angle: 6deg; --fragment-rotate: 18deg; }
+  .product-fragment-6 { left: 43%; top: 42%; --fragment-w: 88px; --fragment-h: 18px; --fragment-x: -8px; --fragment-y: 108px; --fragment-angle: -10deg; --fragment-rotate: -10deg; }
+  .product-fragment-7 { left: 70%; top: 45%; --fragment-w: 58px; --fragment-h: 22px; --fragment-x: 48px; --fragment-y: 98px; --fragment-angle: 4deg; --fragment-rotate: 16deg; }
+  .product-fragment-8 { left: 10%; top: 66%; --fragment-w: 52px; --fragment-h: 20px; --fragment-x: -44px; --fragment-y: 70px; --fragment-angle: -13deg; --fragment-rotate: -20deg; }
+  .product-fragment-9 { left: 30%; top: 70%; --fragment-w: 72px; --fragment-h: 18px; --fragment-x: -20px; --fragment-y: 66px; --fragment-angle: 7deg; --fragment-rotate: 14deg; }
+  .product-fragment-10 { left: 56%; top: 72%; --fragment-w: 80px; --fragment-h: 20px; --fragment-x: 20px; --fragment-y: 72px; --fragment-angle: -6deg; --fragment-rotate: -16deg; }
+  .product-fragment-11 { left: 80%; top: 70%; --fragment-w: 50px; --fragment-h: 22px; --fragment-x: 58px; --fragment-y: 82px; --fragment-angle: 11deg; --fragment-rotate: 21deg; }
+  .product-fragment-12 { left: 44%; top: 86%; --fragment-w: 96px; --fragment-h: 18px; --fragment-x: 10px; --fragment-y: 48px; --fragment-angle: 3deg; --fragment-rotate: -12deg; }
 
   .product-component {
     position: absolute;
@@ -695,7 +745,12 @@ All colors MUST be HSL.
   }
 
   .product-component,
-  .product-component-layer::before {
+  .product-component-layer::before,
+  .product-trace,
+  .product-fragment,
+  .product-fiber-layer,
+  .product-polymer-layer,
+  .product-substrate-fragments {
     transition: none;
   }
 }

@@ -1632,6 +1632,21 @@ const boardComponentClasses = [
   "product-component product-component-12",
 ];
 
+const boardFragmentClasses = [
+  "product-fragment product-fragment-1",
+  "product-fragment product-fragment-2",
+  "product-fragment product-fragment-3",
+  "product-fragment product-fragment-4",
+  "product-fragment product-fragment-5",
+  "product-fragment product-fragment-6",
+  "product-fragment product-fragment-7",
+  "product-fragment product-fragment-8",
+  "product-fragment product-fragment-9",
+  "product-fragment product-fragment-10",
+  "product-fragment product-fragment-11",
+  "product-fragment product-fragment-12",
+];
+
 const boardVias = [
   ["7%", "12%"], ["12%", "18%"], ["17%", "14%"], ["24%", "18%"], ["30%", "13%"], ["36%", "18%"], ["43%", "14%"], ["50%", "18%"],
   ["57%", "14%"], ["64%", "18%"], ["71%", "14%"], ["80%", "18%"], ["88%", "13%"], ["93%", "20%"], ["9%", "33%"], ["15%", "39%"],
@@ -1712,14 +1727,14 @@ const ProductTechnologyPage = () => {
         </div>
       </section>
 
-      <section id="technology-scroll" ref={sectionRef} className="relative mx-auto grid w-full max-w-7xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[0.42fr_0.58fr] lg:py-24">
-        <div className="grid gap-8 lg:pb-[34vh]">
+      <section id="technology-scroll" ref={sectionRef} className="relative mx-auto grid w-full max-w-[92rem] gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[minmax(0,0.36fr)_minmax(0,0.64fr)] lg:gap-12 lg:py-24">
+        <div className="grid min-w-0 gap-8 lg:pb-[34vh]">
           {productStorySteps.map((step, index) => {
             const active = index === activeIndex;
             return (
               <article
                 key={step.index}
-                className={`min-h-[52vh] rounded-lg border p-5 transition-all duration-500 md:p-6 ${
+                className={`min-h-[34vh] rounded-lg border p-5 transition-all duration-500 md:min-h-[52vh] md:p-6 ${
                   active
                     ? "border-primary/25 bg-background/86 shadow-elegant"
                     : "border-transparent bg-transparent opacity-55"
@@ -1730,7 +1745,11 @@ const ProductTechnologyPage = () => {
                   <span className="font-mono text-xs font-semibold text-muted-foreground">{step.index}</span>
                   <div>
                     <h2 className="font-display text-3xl font-semibold leading-tight md:text-5xl">{step.title}</h2>
-                    <p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground">{step.text}</p>
+                    <p className="mt-5 hidden max-w-xl text-base leading-8 text-muted-foreground md:block">{step.text}</p>
+                    <details className="mt-4 rounded-md border border-primary/15 bg-background/70 p-3 md:hidden" open={active}>
+                      <summary className="cursor-pointer text-sm font-semibold text-primary">Details anzeigen</summary>
+                      <p className="mt-3 text-sm leading-7 text-muted-foreground">{step.text}</p>
+                    </details>
                   </div>
                 </div>
               </article>
@@ -1738,7 +1757,7 @@ const ProductTechnologyPage = () => {
           })}
         </div>
 
-        <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
+        <div className="min-w-0 lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
           <ProductPcbScene progress={progress} activeIndex={activeIndex} />
         </div>
       </section>
@@ -1796,12 +1815,18 @@ const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: nu
   const product = hero ? 0.36 : progressBetween(progress, 0.48, 0.62);
   const solution = hero ? 0 : progressBetween(progress, 0.62, 0.76);
   const release = hero ? 0 : progressBetween(progress, 0.66, 0.84);
+  const substrateDissolve = hero ? 0 : progressBetween(progress, 0.7, 0.92);
+  const copperRelease = hero ? 0 : progressBetween(progress, 0.7, 0.9);
   const streams = hero ? 0 : progressBetween(progress, 0.74, 0.9);
   const loop = hero ? 0 : progressBetween(progress, 0.86, 1);
   const tilt = hero ? 58 : 62 - progress * 24;
   const rotate = hero ? -13 : -16 + progress * 24;
   const sink = solution * 44;
   const componentOpacity = components * (hero ? 1 : 1 - release * 0.18);
+  const substrateOpacity = hero ? 0.95 : 0.95 - substrateDissolve * 0.66;
+  const polymerOpacity = polymer * (hero ? 1 : 1 - substrateDissolve * 0.82);
+  const detailOpacity = traces * (hero ? 1 : 1 - substrateDissolve * 0.44);
+  const traceOpacity = traces * (hero ? 1 : 1 - copperRelease * 0.08);
 
   return (
     <div className={`product-scene-shell ${hero ? "min-h-[440px]" : "min-h-[540px] lg:h-full"}`}>
@@ -1821,12 +1846,20 @@ const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: nu
           className="product-pcb-assembly"
           style={{
             transform: `translate3d(-50%, calc(-50% + ${sink}px), 0) rotateX(${tilt}deg) rotateZ(${rotate}deg)`,
-          }}
+            "--substrate-dissolve": substrateDissolve,
+            "--copper-release": copperRelease,
+            "--component-release": release,
+          } as CSSProperties}
         >
           <div className="product-pcb-shadow" />
-          <div className="product-layer product-fiber-layer" />
-          <div className="product-layer product-polymer-layer" style={{ opacity: polymer }} />
-          <div className="product-board-detail-layer" style={{ opacity: traces }}>
+          <div className="product-layer product-fiber-layer" style={{ opacity: substrateOpacity }} />
+          <div className="product-layer product-polymer-layer" style={{ opacity: polymerOpacity }} />
+          <div className="product-substrate-fragments" style={{ opacity: substrateDissolve }}>
+            {boardFragmentClasses.map((className) => (
+              <span key={className} className={className} />
+            ))}
+          </div>
+          <div className="product-board-detail-layer" style={{ opacity: detailOpacity }}>
             <div className="product-silk product-silk-brand">LEAFTRONICS</div>
             <div className="product-silk product-silk-io">DIGITAL I/O</div>
             <div className="product-silk product-silk-power">POWER</div>
@@ -1841,7 +1874,7 @@ const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: nu
               <span key={`${left}-${top}`} className="product-via" style={{ left, top }} />
             ))}
           </div>
-          <div className="product-trace-layer" style={{ opacity: traces }}>
+          <div className="product-trace-layer" style={{ opacity: traceOpacity }}>
             {boardTraceClasses.map((className) => (
               <span key={className} className={className} />
             ))}
