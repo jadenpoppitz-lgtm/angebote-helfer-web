@@ -1,0 +1,58 @@
+{
+  "canvas": {
+    "width": 2048,
+    "height": 1171,
+    "aspectRatio": 1.748932536293766
+  },
+  "positions": {
+    "oem": {
+      "x": 306,
+      "y": 622,
+      "leftPercent": 14.941,
+      "topPercent": 53.117,
+      "suggestedIconWidth": 250,
+      "suggestedIconHeight": 250
+    },
+    "customer": {
+      "x": 638,
+      "y": 269,
+      "leftPercent": 31.152,
+      "topPercent": 22.972,
+      "suggestedIconWidth": 250,
+      "suggestedIconHeight": 250
+    },
+    "leaftronics": {
+      "x": 966,
+      "y": 622,
+      "leftPercent": 47.168,
+      "topPercent": 53.117,
+      "suggestedIconWidth": 270,
+      "suggestedIconHeight": 270
+    },
+    "disassembly": {
+      "x": 1295,
+      "y": 269,
+      "leftPercent": 63.232,
+      "topPercent": 22.972,
+      "suggestedIconWidth": 250,
+      "suggestedIconHeight": 250
+    },
+    "smelter": {
+      "x": 1620,
+      "y": 622,
+      "leftPercent": 79.102,
+      "topPercent": 53.117,
+      "suggestedIconWidth": 250,
+      "suggestedIconHeight": 250
+    },
+    "materials": {
+      "x": 966,
+      "y": 972,
+      "leftPercent": 47.168,
+      "topPercent": 83.006,
+      "suggestedIconWidth": 270,
+      "suggestedIconHeight": 270
+    }
+  },
+  "note": "Position icons with transform: translate(-50%, -50%) so each icon center aligns to x/y. Map contains no text and no arrowheads."
+}

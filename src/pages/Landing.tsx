@@ -18,11 +18,12 @@ import {
   Wrench,
 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
+import { Cycle3DMap } from "@/components/Cycle3DMap";
 import { languages, type Language, useLanguage } from "@/lib/i18n";
 import { DEMO_SERIAL, SERIAL_DB, type SerialLookup } from "@/data/partners";
 
 export type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
-type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" | "materials";
+export type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" | "materials";
 type LandingPage = "home" | "problem" | "product" | "traction" | "cycle";
 
 export type LandingCopy = {
@@ -1321,7 +1322,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             </div>
           </div>
 
-          <ProcessGraph
+          <Cycle3DMap
             content={content}
             activePoint={activePoint}
             setActivePoint={setActivePoint}

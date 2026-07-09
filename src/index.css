@@ -131,6 +131,107 @@ All colors MUST be HSL.
     filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.28));
   }
 
+  .cycle-map-stage {
+    perspective: 1500px;
+  }
+
+  .cycle-map-plane {
+    transform: rotateX(var(--cycle-tilt-x, 4deg)) rotateY(var(--cycle-tilt-y, -3deg)) translateZ(0);
+    transform-style: preserve-3d;
+    transform-origin: center;
+    transition: transform 220ms ease-out;
+  }
+
+  .cycle-map-node {
+    transform: translate3d(-50%, -50%, 44px);
+    transform-style: preserve-3d;
+    transition: filter 220ms ease, transform 220ms ease;
+  }
+
+  .cycle-map-icon {
+    filter: drop-shadow(0 18px 18px hsl(151 31% 18% / 0.22));
+    transform: translateZ(28px) scale(1);
+    transition: filter 220ms ease, transform 220ms ease;
+  }
+
+  .cycle-map-lens {
+    background:
+      radial-gradient(circle at 42% 34%, hsl(60 30% 98% / 0.48), transparent 44%),
+      radial-gradient(circle, hsl(var(--primary) / 0.18), transparent 68%);
+    box-shadow:
+      inset 0 0 0 1px hsl(var(--primary) / 0.24),
+      0 20px 42px hsl(151 31% 34% / 0.18);
+    opacity: 0;
+    transform: translateZ(30px) scale(0.76);
+    transition: opacity 220ms ease, transform 220ms ease;
+  }
+
+  .cycle-map-title {
+    transform: translate3d(-50%, 0, 76px);
+    transition: background-color 220ms ease, color 220ms ease, transform 220ms ease;
+  }
+
+  .cycle-map-popup {
+    position: fixed;
+    left: var(--cycle-popup-left, 1rem);
+    top: var(--cycle-popup-top, 1rem);
+    z-index: 80;
+    width: min(20rem, calc(100vw - 2rem));
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(var(--primary) / 0.18);
+    background: hsl(var(--background) / 0.96);
+    box-shadow: 0 22px 55px hsl(151 31% 18% / 0.18);
+    display: block;
+    opacity: 1;
+    padding: 0.9rem;
+    pointer-events: none;
+    text-align: left;
+    transform: translate3d(0, 0, 0) scale(1);
+    animation: cycle-popup-in 160ms ease-out;
+    backdrop-filter: blur(14px);
+  }
+
+  .cycle-map-node:hover,
+  .cycle-map-node:focus-visible,
+  .cycle-map-node-active {
+    z-index: 60;
+  }
+
+  .cycle-map-node:hover .cycle-map-icon,
+  .cycle-map-node:focus-visible .cycle-map-icon {
+    filter: drop-shadow(0 28px 28px hsl(151 31% 18% / 0.34));
+    transform: translateZ(92px) scale(1.18);
+  }
+
+  .cycle-map-node-active .cycle-map-icon {
+    transform: translateZ(92px) scale(1.18);
+  }
+
+  .cycle-map-node:hover .cycle-map-lens,
+  .cycle-map-node:focus-visible .cycle-map-lens,
+  .cycle-map-node-active .cycle-map-lens {
+    opacity: 1;
+    transform: translateZ(68px) scale(1.18);
+  }
+
+  .cycle-map-node:hover .cycle-map-title,
+  .cycle-map-node:focus-visible .cycle-map-title,
+  .cycle-map-node-active .cycle-map-title {
+    background-color: hsl(var(--foreground));
+    color: hsl(var(--background));
+    transform: translate3d(-50%, 2px, 106px);
+  }
+
+  .cycle-flow-beam {
+    animation: cycle-flow-move var(--cycle-flow-duration, 8s) linear infinite;
+    animation-delay: var(--cycle-flow-delay, 0s);
+    filter: drop-shadow(0 0 10px var(--cycle-flow-glow, hsl(var(--primary-glow) / 0.45)));
+    opacity: 0.85;
+    stroke-dasharray: 118 760;
+    stroke-dashoffset: 878;
+  }
+
   .product-scene-shell {
     position: relative;
     display: grid;
@@ -766,6 +867,28 @@ All colors MUST be HSL.
   }
 }
 
+@keyframes cycle-flow-move {
+  from {
+    stroke-dashoffset: 878;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cycle-popup-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.35rem, 0) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @keyframes product-pulse {
   0%,
   100% {
@@ -787,10 +910,23 @@ All colors MUST be HSL.
     opacity: 0.42;
   }
 
+  .cycle-flow-beam {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    opacity: 0.42;
+  }
+
   .product-energy-lines span {
     animation: none;
   }
 
+  .cycle-map-plane,
+  .cycle-map-icon,
+  .cycle-map-lens,
+  .cycle-map-node,
+  .cycle-map-popup,
+  .cycle-map-title,
   .product-component,
   .product-component-layer::before,
   .product-trace,
