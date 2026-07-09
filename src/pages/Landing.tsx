@@ -1082,7 +1082,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.solution.title}</h2>
               <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.solution.text}</p>
             </div>
-            <InfoPanel content={content} activeNode={activeNode} />
+            {showProduct ? <InfoPanel content={content} activeNode={activeNode} /> : null}
           </div>
 
           {showCycle ? (
@@ -1095,14 +1095,16 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             />
           ) : null}
 
-          <div className="mt-6 grid gap-3 md:grid-cols-5">
-            {content.solution.values.map((item) => (
-              <div key={item.role} className="rounded-lg border border-border bg-background/80 p-4 shadow-card">
-                <p className="font-display text-lg font-semibold">{item.role}</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.value}</p>
-              </div>
-            ))}
-          </div>
+          {showProduct ? (
+            <div className="mt-6 grid gap-3 md:grid-cols-5">
+              {content.solution.values.map((item) => (
+                <div key={item.role} className="rounded-lg border border-border bg-background/80 p-4 shadow-card">
+                  <p className="font-display text-lg font-semibold">{item.role}</p>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.value}</p>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
       </section>
       ) : null}
