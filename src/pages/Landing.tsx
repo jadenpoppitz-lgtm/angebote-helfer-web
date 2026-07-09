@@ -77,6 +77,8 @@ export type LandingCopy = {
     title: string;
     text: string;
     liveLabel: string;
+    problemLabel: string;
+    valueLabel: string;
     customerLive: {
       title: string;
       text: string;
@@ -94,6 +96,20 @@ export type LandingCopy = {
       oemOffers: Array<{ oem: string; offer: string; condition: string }>;
     };
     surfaces: Record<RoleId, { title: string; subtitle: string; metrics: Array<{ label: string; value: string }>; steps: string[] }>;
+  };
+  traction: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    events: Array<{
+      date: string;
+      title: string;
+      text: string;
+      href: string;
+      link: string;
+      image?: string;
+      imageAlt?: string;
+    }>;
   };
   form: {
     eyebrow: string;
@@ -278,6 +294,8 @@ export const copy: Record<Language, LandingCopy> = {
       title: "So fühlt sich das Netzwerk als Produkt an.",
       text: "Jede Rolle bekommt eine kleine Oberfläche mit Demo-Daten, damit der Prototyp nicht nur erklärt, sondern bedienbar wirkt.",
       liveLabel: "Live-Demo",
+      problemLabel: "Problem",
+      valueLabel: "Wert",
       customerLive: {
         title: "Live-Demo: Customer Rückgabe",
         text: "Gib eine Seriennummer ein. Leaftronics erkennt Produkt und Standort, zeigt Rückgabepartner und mögliche OEM-Rabatte.",
@@ -350,6 +368,69 @@ export const copy: Record<Language, LandingCopy> = {
           steps: ["Partner zugeordnet", "ESG-Daten synchronisiert", "Nächste Aktion geplant"],
         },
       },
+    },
+    traction: {
+      eyebrow: "Traction",
+      title: "Der Leaftronics-Lebenslauf.",
+      text: "Förderung, Accelerator, Auszeichnungen und Nominierungen in einer chronologischen Übersicht.",
+      events: [
+        {
+          date: "2024 / 2025",
+          title: "Emanuel-Goldberg-Preis",
+          text:
+            "Anton Weißbach ist für die 2023 abgeschlossene Arbeit gelistet, Rakesh Rajendran Nair für die 2024 abgeschlossene Leaftronics-Dissertation. Die Preisverleihung erfolgt laut Quelle jeweils im Folgejahr.",
+          href: "https://tu-dresden.de/dcpc/iapp/r-l-stiftung/emanuel-goldberg-preis",
+          link: "Emanuel-Goldberg-Preis",
+          image: "/traction-goldberg.jpg",
+          imageAlt: "Emanuel-Goldberg-Preis an der TU Dresden",
+        },
+        {
+          date: "01.03.2025 - 28.02.2027",
+          title: "EXIST-Forschungstransfer",
+          text:
+            "Das Leaftronics-Projekt läuft an der TU Dresden mit BMWK-Förderung. Die Quelle nennt 1.146.357,09 Euro Fördersumme und das Ziel eines biobasierten, recycelbaren Leiterplattensubstrats.",
+          href: "https://tu-dresden.de/mn/physik/iap/optoelektronik/forschung/projekte/exist-gruendungsstipendium-leaftronics",
+          link: "TU Dresden EXIST-Projekt",
+          image: "/traction-exist-leaftronics.jpg",
+          imageAlt: "Leaftronics-Projektbild der TU Dresden",
+        },
+        {
+          date: "02.07.2025 / 30.09.2025",
+          title: "Joachim Herz Preis 2025",
+          text:
+            "Hans Kleemann erhält den mit 500.000 Euro dotierten Joachim Herz Preis 2025 für das Projekt UnbeLEAFable. Die Stiftung nennt die Verleihung am 30. September 2025 in Hamburg.",
+          href: "https://www.joachim-herz-stiftung.de/presse/meldung/dresdner-wissenschaftler-hans-kleemann-erhaelt-joachim-herz-preis",
+          link: "Joachim Herz Stiftung",
+        },
+        {
+          date: "23.02.2026",
+          title: "Förderpreis Richard Hartmann",
+          text:
+            "Dr. Rakesh Nair wird vom Industrieverein Sachsen 1828 e.V. für Arbeiten zu nachhaltiger, biologisch abbaubarer Elektronik auf Basis natürlicher Lignocellulose-Strukturen ausgezeichnet.",
+          href: "https://tu-dresden.de/tu-dresden/newsportal/news/industrieverein-sachsen-zeichnet-dr-rakesh-nair-mit-foerderpreis-richard-hartmann-aus",
+          link: "TU Dresden News",
+          image: "/traction-richard-hartmann.jpg",
+          imageAlt: "Rakesh Nair bei der Richard-Hartmann-Preisverleihung",
+        },
+        {
+          date: "April 2026",
+          title: "EXCITE Lab Accelerator",
+          text:
+            "Leaftronics ist im EXCITE Lab Startup-Portfolio in Batch #4 gelistet. Die Programmliste beschreibt Leaftronics als Entwickler auflösbarer PCB-Substrate für kreislauffähige Elektronik und Rückgewinnung von Edelmetallen.",
+          href: "https://www.excitelab.co/startups#filter=.4",
+          link: "EXCITE Lab Batch #4",
+        },
+        {
+          date: "17.06.2026 / 19.06.2026",
+          title: "Sächsischer Gründerpreis: Nominierung",
+          text:
+            "Auf der Sächsischen Innovationskonferenz 2026 wird Oxaphil Newcomer des Jahres. Leaftronics wird in der dresden|exists-Quelle als für den Sächsischen Gründerpreis nominiert genannt.",
+          href: "https://www.dresden-exists.de/blog/2026/06/19/oxaphil-wird-newcomer-des-jahres-ein-tag-zwischen-konferenztrubel-und-echtem-startup-moment/",
+          link: "dresden|exists Innovationskonferenz",
+          image: "/traction-innovationskonferenz-leaftronics.jpg",
+          imageAlt: "Leaftronics bei der Sächsischen Innovationskonferenz",
+        },
+      ],
     },
     form: {
       eyebrow: "Conversion",
@@ -531,6 +612,8 @@ export const copy: Record<Language, LandingCopy> = {
       title: "How the network feels as a product.",
       text: "Each role gets a small interface with demo data, so the prototype feels usable.",
       liveLabel: "Live demo",
+      problemLabel: "Problem",
+      valueLabel: "Value",
       customerLive: {
         title: "Live demo: customer return",
         text: "Enter a serial number. Leaftronics detects product and location, then shows return partners and possible OEM discounts.",
@@ -603,6 +686,69 @@ export const copy: Record<Language, LandingCopy> = {
           steps: ["Partner matched", "ESG data synced", "Next action planned"],
         },
       },
+    },
+    traction: {
+      eyebrow: "Traction",
+      title: "The Leaftronics track record.",
+      text: "Funding, accelerators, awards and nominations in chronological order.",
+      events: [
+        {
+          date: "2024 / 2025",
+          title: "Emanuel Goldberg Prize",
+          text:
+            "Anton Weißbach is listed for the work completed in 2023, Rakesh Rajendran Nair for the Leaftronics dissertation completed in 2024. According to the source, each award ceremony takes place in the following year.",
+          href: "https://tu-dresden.de/dcpc/iapp/r-l-stiftung/emanuel-goldberg-preis",
+          link: "Emanuel Goldberg Prize",
+          image: "/traction-goldberg.jpg",
+          imageAlt: "Emanuel Goldberg Prize at TU Dresden",
+        },
+        {
+          date: "01.03.2025 - 28.02.2027",
+          title: "EXIST Research Transfer",
+          text:
+            "The Leaftronics project runs at TU Dresden with BMWK funding. The source lists EUR 1,146,357.09 in funding and the goal of a bio-based, recyclable circuit-board substrate.",
+          href: "https://tu-dresden.de/mn/physik/iap/optoelektronik/forschung/projekte/exist-gruendungsstipendium-leaftronics",
+          link: "TU Dresden EXIST project",
+          image: "/traction-exist-leaftronics.jpg",
+          imageAlt: "Leaftronics project image from TU Dresden",
+        },
+        {
+          date: "02.07.2025 / 30.09.2025",
+          title: "Joachim Herz Prize 2025",
+          text:
+            "Hans Kleemann receives the EUR 500,000 Joachim Herz Prize 2025 for the project UnbeLEAFable. The foundation lists the award ceremony on September 30, 2025 in Hamburg.",
+          href: "https://www.joachim-herz-stiftung.de/presse/meldung/dresdner-wissenschaftler-hans-kleemann-erhaelt-joachim-herz-preis",
+          link: "Joachim Herz Foundation",
+        },
+        {
+          date: "23.02.2026",
+          title: "Richard Hartmann Sponsorship Award",
+          text:
+            "Dr. Rakesh Nair is recognized by Industrieverein Sachsen 1828 e.V. for work on sustainable, biodegradable electronics based on natural lignocellulose structures.",
+          href: "https://tu-dresden.de/tu-dresden/newsportal/news/industrieverein-sachsen-zeichnet-dr-rakesh-nair-mit-foerderpreis-richard-hartmann-aus",
+          link: "TU Dresden news",
+          image: "/traction-richard-hartmann.jpg",
+          imageAlt: "Rakesh Nair at the Richard Hartmann award ceremony",
+        },
+        {
+          date: "April 2026",
+          title: "EXCITE Lab Accelerator",
+          text:
+            "Leaftronics is listed in the EXCITE Lab startup portfolio in Batch #4. The program list describes Leaftronics as developing dissolvable PCB substrates for circular electronics and precious-metal recovery.",
+          href: "https://www.excitelab.co/startups#filter=.4",
+          link: "EXCITE Lab Batch #4",
+        },
+        {
+          date: "17.06.2026 / 19.06.2026",
+          title: "Saxon Founder Award: nomination",
+          text:
+            "At the Saxon Innovation Conference 2026, Oxaphil becomes newcomer of the year. The dresden|exists source lists Leaftronics as nominated for the Saxon Founder Award.",
+          href: "https://www.dresden-exists.de/blog/2026/06/19/oxaphil-wird-newcomer-des-jahres-ein-tag-zwischen-konferenztrubel-und-echtem-startup-moment/",
+          link: "dresden|exists Innovation Conference",
+          image: "/traction-innovationskonferenz-leaftronics.jpg",
+          imageAlt: "Leaftronics at the Saxon Innovation Conference",
+        },
+      ],
     },
     form: {
       eyebrow: "Conversion",
@@ -783,6 +929,8 @@ export const copy: Record<Language, LandingCopy> = {
       title: "网络作为产品的体验。",
       text: "每个角色都有包含演示数据的小界面，让原型更像可用产品。",
       liveLabel: "实时演示",
+      problemLabel: "问题",
+      valueLabel: "价值",
       customerLive: {
         title: "实时演示：客户退回",
         text: "输入序列号。Leaftronics 会识别产品和位置，并显示退回伙伴与可能的 OEM 折扣。",
@@ -855,6 +1003,69 @@ export const copy: Record<Language, LandingCopy> = {
           steps: ["伙伴已匹配", "ESG 数据已同步", "下一步已计划"],
         },
       },
+    },
+    traction: {
+      eyebrow: "进展",
+      title: "Leaftronics 发展路径。",
+      text: "按时间顺序展示资助、加速器、奖项和提名。",
+      events: [
+        {
+          date: "2024 / 2025",
+          title: "Emanuel Goldberg 奖",
+          text:
+            "Anton Weißbach 因 2023 年完成的工作被列出，Rakesh Rajendran Nair 因 2024 年完成的 Leaftronics 博士论文被列出。根据来源，颁奖通常在下一年进行。",
+          href: "https://tu-dresden.de/dcpc/iapp/r-l-stiftung/emanuel-goldberg-preis",
+          link: "Emanuel Goldberg 奖",
+          image: "/traction-goldberg.jpg",
+          imageAlt: "德累斯顿工业大学 Emanuel Goldberg 奖",
+        },
+        {
+          date: "01.03.2025 - 28.02.2027",
+          title: "EXIST 研究转化",
+          text:
+            "Leaftronics 项目在德累斯顿工业大学获得 BMWK 资助。来源列出资助金额为 1,146,357.09 欧元，目标是开发生物基、可回收的电路板基材。",
+          href: "https://tu-dresden.de/mn/physik/iap/optoelektronik/forschung/projekte/exist-gruendungsstipendium-leaftronics",
+          link: "德累斯顿工业大学 EXIST 项目",
+          image: "/traction-exist-leaftronics.jpg",
+          imageAlt: "德累斯顿工业大学 Leaftronics 项目图",
+        },
+        {
+          date: "02.07.2025 / 30.09.2025",
+          title: "2025 Joachim Herz 奖",
+          text:
+            "Hans Kleemann 因 UnbeLEAFable 项目获得 50 万欧元 Joachim Herz Prize 2025。基金会列出的颁奖时间为 2025 年 9 月 30 日，地点在汉堡。",
+          href: "https://www.joachim-herz-stiftung.de/presse/meldung/dresdner-wissenschaftler-hans-kleemann-erhaelt-joachim-herz-preis",
+          link: "Joachim Herz 基金会",
+        },
+        {
+          date: "23.02.2026",
+          title: "Richard Hartmann 资助奖",
+          text:
+            "Dr. Rakesh Nair 因基于天然木质纤维素结构的可持续、可生物降解电子技术研究，获得 Industrieverein Sachsen 1828 e.V. 表彰。",
+          href: "https://tu-dresden.de/tu-dresden/newsportal/news/industrieverein-sachsen-zeichnet-dr-rakesh-nair-mit-foerderpreis-richard-hartmann-aus",
+          link: "德累斯顿工业大学新闻",
+          image: "/traction-richard-hartmann.jpg",
+          imageAlt: "Rakesh Nair 在 Richard Hartmann 颁奖现场",
+        },
+        {
+          date: "April 2026",
+          title: "EXCITE Lab 加速器",
+          text:
+            "Leaftronics 被列入 EXCITE Lab 第 4 批创业项目组合。项目列表描述 Leaftronics 正在开发可溶解 PCB 基材，用于循环电子产品和贵金属回收。",
+          href: "https://www.excitelab.co/startups#filter=.4",
+          link: "EXCITE Lab 第 4 批",
+        },
+        {
+          date: "17.06.2026 / 19.06.2026",
+          title: "萨克森创业奖：提名",
+          text:
+            "在 2026 年萨克森创新大会上，Oxaphil 成为年度新人。dresden|exists 来源列出 Leaftronics 获得萨克森创业奖提名。",
+          href: "https://www.dresden-exists.de/blog/2026/06/19/oxaphil-wird-newcomer-des-jahres-ein-tag-zwischen-konferenztrubel-und-echtem-startup-moment/",
+          link: "dresden|exists 创新大会",
+          image: "/traction-innovationskonferenz-leaftronics.jpg",
+          imageAlt: "Leaftronics 在萨克森创新大会",
+        },
+      ],
     },
     form: {
       eyebrow: "转化",
@@ -1180,9 +1391,13 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground">{content.demos.text}</p>
 
                   <div className="mt-6 rounded-lg border border-primary/20 bg-background/80 p-4 shadow-card backdrop-blur">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">Problem</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                      {content.demos.problemLabel}
+                    </p>
                     <p className="mt-2 text-sm leading-6 text-foreground/75">{card.problem}</p>
-                    <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Value</p>
+                    <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                      {content.demos.valueLabel}
+                    </p>
                     <p className="mt-2 text-sm leading-6 text-foreground/75">{card.value}</p>
                   </div>
 
@@ -1228,68 +1443,15 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       <section id="traction" className="bg-white py-16 text-foreground md:py-24">
         <div className="mx-auto w-full max-w-5xl px-5 sm:px-8">
           <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Traction</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">Der Leaftronics-Lebenslauf.</h2>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
-              Förderung, Accelerator, Auszeichnungen und Nominierungen in einer chronologischen Übersicht.
-            </p>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.traction.eyebrow}</p>
+            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.traction.title}</h2>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.traction.text}</p>
           </div>
 
           <div className="relative mt-14">
             <div className="absolute bottom-0 left-4 top-0 w-px bg-primary/25 md:left-1/2" aria-hidden="true" />
             <div className="grid gap-8">
-              {[
-                {
-                  date: "2024 / 2025",
-                  title: "Emanuel-Goldberg-Preis",
-                  text: "Anton Weißbach ist für die 2023 abgeschlossene Arbeit gelistet, Rakesh Rajendran Nair für die 2024 abgeschlossene Leaftronics-Dissertation. Die Preisverleihung erfolgt laut Quelle jeweils im Folgejahr.",
-                  href: "https://tu-dresden.de/dcpc/iapp/r-l-stiftung/emanuel-goldberg-preis",
-                  link: "Emanuel-Goldberg-Preis",
-                  image: "/traction-goldberg.jpg",
-                  imageAlt: "Emanuel-Goldberg-Preis an der TU Dresden",
-                },
-                {
-                  date: "01.03.2025 - 28.02.2027",
-                  title: "EXIST-Forschungstransfer",
-                  text: "Das Leaftronics-Projekt läuft an der TU Dresden mit BMWK-Förderung. Die Quelle nennt 1.146.357,09 Euro Fördersumme und das Ziel eines biobasierten, recycelbaren Leiterplattensubstrats.",
-                  href: "https://tu-dresden.de/mn/physik/iap/optoelektronik/forschung/projekte/exist-gruendungsstipendium-leaftronics",
-                  link: "TU Dresden EXIST-Projekt",
-                  image: "/traction-exist-leaftronics.jpg",
-                  imageAlt: "Leaftronics-Projektbild der TU Dresden",
-                },
-                {
-                  date: "02.07.2025 / 30.09.2025",
-                  title: "Joachim Herz Preis 2025",
-                  text: "Hans Kleemann erhält den mit 500.000 Euro dotierten Joachim Herz Preis 2025 für das Projekt UnbeLEAFable. Die Stiftung nennt die Verleihung am 30. September 2025 in Hamburg.",
-                  href: "https://www.joachim-herz-stiftung.de/presse/meldung/dresdner-wissenschaftler-hans-kleemann-erhaelt-joachim-herz-preis",
-                  link: "Joachim Herz Stiftung",
-                },
-                {
-                  date: "23.02.2026",
-                  title: "Förderpreis Richard Hartmann",
-                  text: "Dr. Rakesh Nair wird vom Industrieverein Sachsen 1828 e.V. für Arbeiten zu nachhaltiger, biologisch abbaubarer Elektronik auf Basis natürlicher Lignocellulose-Strukturen ausgezeichnet.",
-                  href: "https://tu-dresden.de/tu-dresden/newsportal/news/industrieverein-sachsen-zeichnet-dr-rakesh-nair-mit-foerderpreis-richard-hartmann-aus",
-                  link: "TU Dresden News",
-                  image: "/traction-richard-hartmann.jpg",
-                  imageAlt: "Rakesh Nair bei der Richard-Hartmann-Preisverleihung",
-                },
-                {
-                  date: "April 2026",
-                  title: "EXCITE Lab Accelerator",
-                  text: "Leaftronics ist im EXCITE Lab Startup-Portfolio in Batch #4 gelistet. Die Programmliste beschreibt Leaftronics als Entwickler auflösbarer PCB-Substrate für kreislauffähige Elektronik und Rückgewinnung von Edelmetallen.",
-                  href: "https://www.excitelab.co/startups#filter=.4",
-                  link: "EXCITE Lab Batch #4",
-                },
-                {
-                  date: "17.06.2026 / 19.06.2026",
-                  title: "Sächsischer Gründerpreis: Nominierung",
-                  text: "Auf der Sächsischen Innovationskonferenz 2026 wird Oxaphil Newcomer des Jahres. Leaftronics wird in der dresden|exists-Quelle als für den Sächsischen Gründerpreis nominiert genannt.",
-                  href: "https://www.dresden-exists.de/blog/2026/06/19/oxaphil-wird-newcomer-des-jahres-ein-tag-zwischen-konferenztrubel-und-echtem-startup-moment/",
-                  link: "dresden|exists Innovationskonferenz",
-                  image: "/traction-innovationskonferenz-leaftronics.jpg",
-                  imageAlt: "Leaftronics bei der Saechsischen Innovationskonferenz",
-                },
-              ].map((item, index) => (
+              {content.traction.events.map((item, index) => (
                 <article
                   key={`${item.date}-${item.title}`}
                   className={`relative pl-12 md:grid md:grid-cols-2 md:gap-12 md:pl-0 ${
