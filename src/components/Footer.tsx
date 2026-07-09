@@ -10,7 +10,7 @@ export function Footer() {
         <div className="md:col-span-2">
           <div className="flex items-center gap-2">
             <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-background ring-1 ring-border">
-              <img src="/logo.png" alt="Leaftronics Logo" className="h-full w-full object-cover" />
+              <img src="/logo1.png" alt="Leaftronics Logo" className="h-full w-full object-cover" />
             </span>
             <span className="font-display text-lg font-semibold">
               Recycling<span className="text-primary">Angebote</span>

@@ -23,7 +23,7 @@ export function Header({ onRequest }: HeaderProps) {
       <div className="container flex h-16 items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2">
           <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-background shadow-card ring-1 ring-border">
-            <img src="/logo.png" alt="Leaftronics Logo" className="h-full w-full object-cover" />
+            <img src="/logo1.png" alt="Leaftronics Logo" className="h-full w-full object-cover" />
           </span>
           <span className="font-display text-lg font-semibold tracking-tight">Leaftronics</span>
         </Link>

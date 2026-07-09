@@ -951,7 +951,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
           <Link to="/" className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-background shadow-elegant">
-              <img src="/logo.png" alt="Leaftronics Logo" className="h-full w-full object-cover" />
+              <img src="/logo1.png" alt="Leaftronics Logo" className="h-full w-full object-cover" />
             </span>
             <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
           </Link>
