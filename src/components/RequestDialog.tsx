@@ -80,9 +80,9 @@ export function RequestDialog({ open, onOpenChange, offer }: Props) {
         description: t.referenceMessage(result.request.id, name),
       });
       onOpenChange(false);
-    } catch (error) {
+    } catch {
       toast.error(t.requestFailed, {
-        description: error instanceof Error ? error.message : t.retry,
+        description: t.retry,
       });
     } finally {
       setIsSubmitting(false);

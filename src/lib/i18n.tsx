@@ -78,6 +78,32 @@ const cityLabels: Record<Language, Record<string, string>> = {
   },
 };
 
+const offerConditionLabels: Record<Language, Record<string, string>> = {
+  de: {},
+  en: {
+    "Ab 500 kg, sortenrein, Mischschrott möglich": "From 500 kg, sorted by type, mixed scrap possible",
+    "Kostenfreie Abholung ab 200 kg, zertifiziert nach ElektroG": "Free pickup from 200 kg, certified under ElektroG",
+    "Sortiertes Altpapier, keine Verbundstoffe": "Sorted waste paper, no composite materials",
+    "PE/PP sortenrein, Folien gepresst": "Sorted PE/PP, pressed films",
+    "Nach Farben getrennt, ohne Fremdstoffe": "Separated by color, no foreign materials",
+    "A1-A3, behandelt nach Absprache": "A1-A3, treated wood by arrangement",
+    "Li-Ion gesondert, GRS-zertifiziert": "Li-ion separated, GRS certified",
+    "Container ab 1 t, Eisenmetalle": "Container from 1 t, ferrous metals",
+    "IT-Geräte mit Datenträgerlöschung": "IT devices with data-carrier erasure",
+  },
+  zh: {
+    "Ab 500 kg, sortenrein, Mischschrott möglich": "500 kg 起，按类型分类，也可处理混合废金属",
+    "Kostenfreie Abholung ab 200 kg, zertifiziert nach ElektroG": "200 kg 起免费上门取件，符合 ElektroG 认证",
+    "Sortiertes Altpapier, keine Verbundstoffe": "分类废纸，不含复合材料",
+    "PE/PP sortenrein, Folien gepresst": "PE/PP 分类，薄膜已压缩",
+    "Nach Farben getrennt, ohne Fremdstoffe": "按颜色分离，无杂质",
+    "A1-A3, behandelt nach Absprache": "A1-A3，处理木材需协商",
+    "Li-Ion gesondert, GRS-zertifiziert": "锂离子电池单独处理，GRS 认证",
+    "Container ab 1 t, Eisenmetalle": "1 吨起提供集装箱，铁基金属",
+    "IT-Geräte mit Datenträgerlöschung": "IT 设备，包含数据载体清除",
+  },
+};
+
 const translations = {
   de: {
     navOffers: "Angebote",
@@ -88,6 +114,7 @@ const translations = {
     viewOffers: "Angebote ansehen",
     language: "Sprache",
     menu: "Menü",
+    siteTitle: "Leaftronics – Elektronik im Kreislauf",
     customerLink: "Für Kunden",
     producerNavLoop: "Kreislauf",
     producerNavMetals: "Metalle",
@@ -164,6 +191,8 @@ const translations = {
       ["Abholung oder Anlieferung", "Termin nach Absprache, deutschlandweit organisiert."],
       ["Vergütung erhalten", "Transparente Abrechnung und schnelle Auszahlung."],
     ],
+    footerBrandPrefix: "Recycling",
+    footerBrandAccent: "Angebote",
     footerText:
       "Die unabhängige Plattform für faire Recycling-Angebote in Deutschland. Verbinden Sie sich mit zertifizierten Entsorgern.",
     legal: "Rechtliches",
@@ -314,6 +343,8 @@ const translations = {
     serialPlaceholder: "Seriennummer eingeben ...",
     scanQr: "QR-Code scannen",
     viewAllOffers: "Alle Angebote ansehen ↓",
+    notFoundTitle: "Seite nicht gefunden",
+    notFoundAction: "Zur Startseite",
   },
   en: {
     navOffers: "Offers",
@@ -324,6 +355,7 @@ const translations = {
     viewOffers: "View offers",
     language: "Language",
     menu: "Menu",
+    siteTitle: "Leaftronics – Electronics in the Loop",
     customerLink: "For customers",
     producerNavLoop: "Loop",
     producerNavMetals: "Metals",
@@ -394,6 +426,8 @@ const translations = {
       ["Pickup or drop-off", "Appointments arranged across Germany."],
       ["Receive payment", "Transparent billing and fast payout."],
     ],
+    footerBrandPrefix: "Recycling",
+    footerBrandAccent: "Offers",
     footerText:
       "The independent platform for fair recycling offers in Germany. Connect with certified recyclers.",
     legal: "Legal",
@@ -544,6 +578,8 @@ const translations = {
     serialPlaceholder: "Enter serial number ...",
     scanQr: "Scan QR code",
     viewAllOffers: "View all offers ↓",
+    notFoundTitle: "Page not found",
+    notFoundAction: "Return to home",
   },
   zh: {
     navOffers: "报价",
@@ -554,6 +590,7 @@ const translations = {
     viewOffers: "查看报价",
     language: "语言",
     menu: "菜单",
+    siteTitle: "Leaftronics – 电子产品闭环",
     customerLink: "客户入口",
     producerNavLoop: "循环",
     producerNavMetals: "金属",
@@ -623,6 +660,8 @@ const translations = {
       ["取件或送达", "按约定时间在德国全境安排。"],
       ["收到付款", "透明结算，快速付款。"],
     ],
+    footerBrandPrefix: "回收",
+    footerBrandAccent: "报价",
     footerText: "德国公平回收报价的独立平台，连接认证回收服务商。",
     legal: "法律信息",
     imprint: "版本说明",
@@ -767,6 +806,8 @@ const translations = {
     serialPlaceholder: "输入序列号 ...",
     scanQr: "扫描二维码",
     viewAllOffers: "查看所有报价 ↓",
+    notFoundTitle: "未找到页面",
+    notFoundAction: "返回首页",
   },
 } as const;
 
@@ -779,6 +820,7 @@ interface LanguageContextValue {
   materialLabel: (material: Material) => string;
   modeLabel: (mode: DeliveryMode) => string;
   availabilityLabel: (availability: Offer["availability"]) => string;
+  offerConditionLabel: (condition: string) => string;
   cityLabel: (city: string) => string;
   locale: string;
 }
@@ -806,6 +848,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = language === "zh" ? "zh-CN" : language;
+    document.title = translations[language].siteTitle;
   }, [language]);
 
   const value = useMemo<LanguageContextValue>(
@@ -816,6 +859,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       materialLabel: (material) => materialLabels[language][material],
       modeLabel: (mode) => modeLabels[language][mode],
       availabilityLabel: (availability) => availabilityLabels[language][availability],
+      offerConditionLabel: (condition) => offerConditionLabels[language][condition] ?? condition,
       cityLabel: (city) => cityLabels[language][city] ?? city,
       locale: language === "de" ? "de-DE" : language === "zh" ? "zh-CN" : "en-US",
     }),

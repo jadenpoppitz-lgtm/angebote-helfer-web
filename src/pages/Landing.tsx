@@ -10,12 +10,14 @@ import {
   Globe2,
   Handshake,
   Leaf,
+  Menu,
   PackageCheck,
   QrCode,
   Recycle,
   SearchCheck,
   UserRound,
   Wrench,
+  X,
 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { Cycle3DMap } from "@/components/Cycle3DMap";
@@ -1120,8 +1122,9 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
   const [activeRole, setActiveRole] = useState<RoleId>("oem");
   const [activePoint, setActivePoint] = useState<GraphPoint>("oem");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [confirmation, setConfirmation] = useState<{ id: string; role: RoleId } | null>(null);
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const content = copy[language];
 
   const reference = useMemo(() => `KB-${new Date().getFullYear()}-${String(Math.floor(100 + Math.random() * 900))}`, []);
@@ -1209,7 +1212,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
           </>
         ) : null}
 
-        <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
+        <header className="relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
           <Link to="/" className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-background shadow-elegant">
               <img src="/logo1.png" alt="Leaftronics Logo" className="h-full w-full object-cover" />
@@ -1233,6 +1236,38 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               {content.nav.contact}
             </a>
           </nav>
+          <button
+            type="button"
+            onClick={() => setMobileNavOpen((open) => !open)}
+            aria-label={t.menu}
+            aria-controls="landing-mobile-navigation"
+            aria-expanded={mobileNavOpen}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-background/25 bg-black/45 text-background backdrop-blur md:hidden"
+          >
+            {mobileNavOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+          </button>
+          {mobileNavOpen ? (
+            <nav
+              id="landing-mobile-navigation"
+              className="mt-3 grid w-full gap-1 rounded-lg border border-background/16 bg-black/95 p-2 text-sm font-semibold text-background shadow-elegant backdrop-blur-xl md:hidden"
+            >
+              <Link to="/problem" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                {content.nav.problem}
+              </Link>
+              <Link to="/produkt" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                {content.nav.product}
+              </Link>
+              <Link to="/traction" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                {content.nav.traction}
+              </Link>
+              <Link to="/zyklus" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                {content.nav.cycle}
+              </Link>
+              <a href="/#forms" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                {content.nav.contact}
+              </a>
+            </nav>
+          ) : null}
         </header>
 
         {showHero ? (
@@ -1310,7 +1345,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       </section>
       ) : null}
 
-      {showProduct ? <ProductTechnologyPage /> : null}
+      {showProduct ? <ProductTechnologyPage language={language} /> : null}
 
       {showCycle ? (
       <section id="solution" className="scroll-mt-8 bg-[hsl(42_31%_91%)] pb-16 pt-20 text-foreground md:pb-24 md:pt-24">
@@ -1602,81 +1637,135 @@ const TractionTimeline = ({ content }: { content: LandingCopy["traction"] }) => 
   );
 };
 
-const productStorySteps = [
-  {
-    index: "01",
-    section: "Vom natürlichen Gerüst zum technischen Substrat",
-    title: "Das Trägermaterial neu gedacht.",
-    text: "Eine faserige, organische Struktur bildet die Basis. Sie bleibt sichtbar, leicht und materialbewusst statt als anonyme schwarze Trägerplatte zu verschwinden.",
-  },
-  {
-    index: "02",
-    section: "Vom natürlichen Gerüst zum technischen Substrat",
-    title: "Ein stabiles Substrat für elektronische Anwendungen.",
-    text: "Eine lösbare Polymermatrix stabilisiert das Gerüst mechanisch. Die Schicht macht aus dem Material eine belastbare Plattform für Elektronik.",
-  },
-  {
-    index: "03",
-    section: "Stabil genug für Elektronik",
-    title: "Leiterbahnen, Lötstellen und elektrische Funktion bleiben erhalten.",
-    text: "Kupferne Leiterbahnen werden präzise aufgebracht. Die elektrische Funktion bleibt klassischer PCB-Logik nahe, während das Substrat neu gedacht ist.",
-  },
-  {
-    index: "04",
-    section: "Stabil genug für Elektronik",
-    title: "Stabil während Herstellung und Nutzung.",
-    text: "Chips, Widerstände, Kondensatoren und Kontakte sitzen auf der Platte. Das Modul wirkt wie echte, funktionsfähige Elektronik.",
-  },
-  {
-    index: "05",
-    section: "Designed for Disassembly",
-    title: "Für moderne Elektronik entwickelt.",
-    text: "Im Produkt bleibt die Leiterplatte belastbar. Energie- und Datenlinien zeigen: Die neue Materiallogik ersetzt nicht Funktion, sondern ermöglicht ihren Kreislauf.",
-  },
-  {
-    index: "06",
-    section: "Designed for Disassembly",
-    title: "Am Lebensende gezielt lösbar.",
-    text: "In einer kontrollierten Lösung gibt das Substrat nach. Bauteile und Metalle bleiben erhalten, statt im Verbund untrennbar verloren zu gehen.",
-  },
-  {
-    index: "07",
-    section: "Wertstoffe zurück in den Kreislauf",
-    title: "Wertstoffe werden sortenreiner zurückgewonnen.",
-    text: "Bauteile, Kupfer, Edelmetalle und Substrat trennen sich in erkennbare Materialströme. Genau hier entsteht der Unterschied zur klassischen Leiterplatte.",
-  },
-  {
-    index: "08",
-    section: "Eine neue Materiallogik für Elektronik",
-    title: "Elektronik für die Kreislaufwirtschaft.",
-    text: "Metalle gehen zurück in die Produktion, Bauteile können geprüft werden, das Substrat wird abgebaut. Der Kreislauf wird zur Designentscheidung.",
-  },
-];
+type ProductTechnologyContent = {
+  heroEyebrow: string;
+  heroTitle: string;
+  heroText: string;
+  heroPrimary: string;
+  heroSecondary: string;
+  heroImageAlt: string;
+  details: string;
+  proofEyebrow: string;
+  proofTitle: string;
+  finalEyebrow: string;
+  finalTitle: string;
+  finalText: string;
+  finalCta: string;
+  steps: Array<{ index: string; section: string; title: string; text: string }>;
+  proofImages: Array<{ src: string; title: string; text: string }>;
+  materialStreams: Array<{ label: string; className: string }>;
+};
 
-const proofImages = [
-  {
-    src: "/leaftronics-pcb-prototype.jpg",
-    title: "Funktionsfähiger PCB-Prototyp",
-    text: "Die Technologie bleibt anschlussfähig an reale Elektronik und bestehende Fertigungslogik.",
+const productTechnologyCopy: Record<Language, ProductTechnologyContent> = {
+  de: {
+    heroEyebrow: "Leaftronics Technologie",
+    heroTitle: "Die Leiterplatte, die sich am Ende wieder trennen lässt.",
+    heroText: "Leaftronics denkt das Substrat neu: stabil während der Nutzung, kontrolliert lösbar am Ende des Produktlebens.",
+    heroPrimary: "Technologie ansehen",
+    heroSecondary: "Pilotprojekt anfragen",
+    heroImageAlt: "Leaftronics Leiterplattenprototyp in einem Laborhandschuh",
+    details: "Details anzeigen",
+    proofEyebrow: "Prozessnachweis",
+    proofTitle: "Die Materiallogik wird im Labor sichtbar.",
+    finalEyebrow: "Eine neue Materiallogik für Elektronik",
+    finalTitle: "Klassische Funktion. Kontrollierbares Ende.",
+    finalText: "Eine klassische Leiterplatte ist schwer zu trennen, weil Substrat, Metalle und Bauteile fest verbunden bleiben. Leaftronics verändert das Trägermaterial so, dass Nutzung und Rückgewinnung zusammen gedacht werden.",
+    finalCta: "Pilotprojekt anfragen",
+    steps: [
+      { index: "01", section: "Vom natürlichen Gerüst zum technischen Substrat", title: "Das Trägermaterial neu gedacht.", text: "Eine faserige, organische Struktur bildet die Basis. Sie bleibt sichtbar, leicht und materialbewusst statt als anonyme schwarze Trägerplatte zu verschwinden." },
+      { index: "02", section: "Vom natürlichen Gerüst zum technischen Substrat", title: "Ein stabiles Substrat für elektronische Anwendungen.", text: "Eine lösbare Polymermatrix stabilisiert das Gerüst mechanisch. Die Schicht macht aus dem Material eine belastbare Plattform für Elektronik." },
+      { index: "03", section: "Stabil genug für Elektronik", title: "Leiterbahnen, Lötstellen und elektrische Funktion bleiben erhalten.", text: "Kupferne Leiterbahnen werden präzise aufgebracht. Die elektrische Funktion bleibt klassischer PCB-Logik nahe, während das Substrat neu gedacht ist." },
+      { index: "04", section: "Stabil genug für Elektronik", title: "Stabil während Herstellung und Nutzung.", text: "Chips, Widerstände, Kondensatoren und Kontakte sitzen auf der Platte. Das Modul wirkt wie echte, funktionsfähige Elektronik." },
+      { index: "05", section: "Designed for Disassembly", title: "Für moderne Elektronik entwickelt.", text: "Im Produkt bleibt die Leiterplatte belastbar. Energie- und Datenlinien zeigen: Die neue Materiallogik ersetzt nicht Funktion, sondern ermöglicht ihren Kreislauf." },
+      { index: "06", section: "Designed for Disassembly", title: "Am Lebensende gezielt lösbar.", text: "In einer kontrollierten Lösung gibt das Substrat nach. Bauteile und Metalle bleiben erhalten, statt im Verbund untrennbar verloren zu gehen." },
+      { index: "07", section: "Wertstoffe zurück in den Kreislauf", title: "Wertstoffe werden sortenreiner zurückgewonnen.", text: "Bauteile, Kupfer, Edelmetalle und Substrat trennen sich in erkennbare Materialströme. Genau hier entsteht der Unterschied zur klassischen Leiterplatte." },
+      { index: "08", section: "Eine neue Materiallogik für Elektronik", title: "Elektronik für die Kreislaufwirtschaft.", text: "Metalle gehen zurück in die Produktion, Bauteile können geprüft werden, das Substrat wird abgebaut. Der Kreislauf wird zur Designentscheidung." },
+    ],
+    proofImages: [
+      { src: "/leaftronics-pcb-prototype.jpg", title: "Funktionsfähiger PCB-Prototyp", text: "Die Technologie bleibt anschlussfähig an reale Elektronik und bestehende Fertigungslogik." },
+      { src: "/leaftronics-lab-beaker.jpg", title: "Kontrollierte Lösung", text: "Die Trennung passiert nicht zufällig, sondern in einer steuerbaren Recyclingumgebung." },
+      { src: "/leaftronics-separated-components.jpg", title: "Sortenreinere Rückgewinnung", text: "Bauteile und Materialfraktionen werden sichtbar getrennt und können gezielter bewertet werden." },
+    ],
+    materialStreams: [
+      { label: "Bauteile", className: "product-stream product-stream-1" },
+      { label: "Kupfer", className: "product-stream product-stream-2" },
+      { label: "Edelmetalle", className: "product-stream product-stream-3" },
+      { label: "Substrat", className: "product-stream product-stream-4" },
+    ],
   },
-  {
-    src: "/leaftronics-lab-beaker.jpg",
-    title: "Kontrollierte Lösung",
-    text: "Die Trennung passiert nicht zufällig, sondern in einer steuerbaren Recyclingumgebung.",
+  en: {
+    heroEyebrow: "Leaftronics technology",
+    heroTitle: "The circuit board designed to come apart at the end.",
+    heroText: "Leaftronics rethinks the substrate: stable in use and controllably separable at the end of the product life cycle.",
+    heroPrimary: "Explore the technology",
+    heroSecondary: "Request a pilot project",
+    heroImageAlt: "Leaftronics circuit board prototype held in a laboratory glove",
+    details: "Show details",
+    proofEyebrow: "Proof of process",
+    proofTitle: "The material logic becomes visible in the lab.",
+    finalEyebrow: "A new material logic for electronics",
+    finalTitle: "Classic function. A controllable end.",
+    finalText: "A conventional circuit board is difficult to separate because the substrate, metals and components remain permanently bonded. Leaftronics changes the carrier material so use and recovery can be designed together.",
+    finalCta: "Request a pilot project",
+    steps: [
+      { index: "01", section: "From natural structure to technical substrate", title: "Rethinking the carrier material.", text: "A fibrous organic structure forms the basis. It remains visible, lightweight and material-conscious instead of disappearing into an anonymous black board." },
+      { index: "02", section: "From natural structure to technical substrate", title: "A stable substrate for electronic applications.", text: "A separable polymer matrix mechanically stabilizes the structure and turns the material into a robust platform for electronics." },
+      { index: "03", section: "Stable enough for electronics", title: "Traces, solder joints and electrical function remain intact.", text: "Copper traces are applied precisely. Electrical function stays close to conventional PCB logic while the substrate is redesigned." },
+      { index: "04", section: "Stable enough for electronics", title: "Stable through manufacturing and use.", text: "Chips, resistors, capacitors and contacts sit on the board. The module behaves like real, functional electronics." },
+      { index: "05", section: "Designed for disassembly", title: "Built for modern electronics.", text: "The circuit board remains robust inside the product. Power and data lines show that the new material logic preserves function while enabling circularity." },
+      { index: "06", section: "Designed for disassembly", title: "Deliberately separable at end of life.", text: "In a controlled solution, the substrate releases. Components and metals remain intact instead of becoming inseparably trapped in the composite." },
+      { index: "07", section: "Returning valuable materials to the loop", title: "Valuable materials are recovered in cleaner fractions.", text: "Components, copper, precious metals and substrate separate into recognizable material streams. This is where the design differs from a conventional circuit board." },
+      { index: "08", section: "A new material logic for electronics", title: "Electronics for the circular economy.", text: "Metals return to production, components can be tested and the substrate is broken down. Circularity becomes a design decision." },
+    ],
+    proofImages: [
+      { src: "/leaftronics-pcb-prototype.jpg", title: "Functional PCB prototype", text: "The technology remains compatible with real electronics and established manufacturing processes." },
+      { src: "/leaftronics-lab-beaker.jpg", title: "Controlled solution", text: "Separation does not happen by chance, but in a controlled recycling environment." },
+      { src: "/leaftronics-separated-components.jpg", title: "Cleaner material recovery", text: "Components and material fractions are visibly separated and can be evaluated more precisely." },
+    ],
+    materialStreams: [
+      { label: "Components", className: "product-stream product-stream-1" },
+      { label: "Copper", className: "product-stream product-stream-2" },
+      { label: "Precious metals", className: "product-stream product-stream-3" },
+      { label: "Substrate", className: "product-stream product-stream-4" },
+    ],
   },
-  {
-    src: "/leaftronics-separated-components.jpg",
-    title: "Sortenreinere Rückgewinnung",
-    text: "Bauteile und Materialfraktionen werden sichtbar getrennt und können gezielter bewertet werden.",
+  zh: {
+    heroEyebrow: "Leaftronics 技术",
+    heroTitle: "一块在寿命终点可以重新分离的电路板。",
+    heroText: "Leaftronics 重新设计基材：使用期间稳定，产品寿命结束时可受控分离。",
+    heroPrimary: "查看技术",
+    heroSecondary: "申请试点项目",
+    heroImageAlt: "实验室手套中拿着的 Leaftronics 电路板原型",
+    details: "查看详情",
+    proofEyebrow: "流程验证",
+    proofTitle: "材料逻辑在实验室中清晰可见。",
+    finalEyebrow: "电子产品的新材料逻辑",
+    finalTitle: "传统功能，可控的终点。",
+    finalText: "传统电路板难以分离，因为基材、金属和元器件始终牢固结合。Leaftronics 改变载体材料，让使用与回收从设计阶段就被共同考虑。",
+    finalCta: "申请试点项目",
+    steps: [
+      { index: "01", section: "从天然结构到技术基材", title: "重新思考载体材料。", text: "纤维状有机结构构成基础。它保持可见、轻量且体现材料属性，而不是消失在匿名的黑色基板中。" },
+      { index: "02", section: "从天然结构到技术基材", title: "适用于电子应用的稳定基材。", text: "可分离的聚合物基体在机械上稳定这一结构，使材料成为可靠的电子平台。" },
+      { index: "03", section: "足够稳定，可用于电子产品", title: "线路、焊点和电气功能保持完整。", text: "铜线路被精确施加。电气功能接近传统 PCB 逻辑，同时基材得到重新设计。" },
+      { index: "04", section: "足够稳定，可用于电子产品", title: "在制造和使用期间保持稳定。", text: "芯片、电阻、电容和触点安装在板上，模块具备真实、可运行的电子功能。" },
+      { index: "05", section: "为拆解而设计", title: "为现代电子产品而开发。", text: "电路板在产品内部保持可靠。电源和数据线路表明，新材料逻辑保留功能并支持循环利用。" },
+      { index: "06", section: "为拆解而设计", title: "在寿命终点可有针对性地分离。", text: "在受控溶液中，基材会释放。元器件和金属得以保留，不再不可分离地困在复合结构中。" },
+      { index: "07", section: "让高价值材料回到循环", title: "以更纯净的材料组分进行回收。", text: "元器件、铜、贵金属和基材分离成清晰可辨的材料流，这正是它与传统电路板的区别。" },
+      { index: "08", section: "电子产品的新材料逻辑", title: "面向循环经济的电子产品。", text: "金属回到生产，元器件可以被检测，基材得到分解。循环利用成为设计决策。" },
+    ],
+    proofImages: [
+      { src: "/leaftronics-pcb-prototype.jpg", title: "可运行的 PCB 原型", text: "该技术能够兼容真实电子产品和现有制造流程。" },
+      { src: "/leaftronics-lab-beaker.jpg", title: "受控溶液", text: "分离并非偶然发生，而是在可控的回收环境中进行。" },
+      { src: "/leaftronics-separated-components.jpg", title: "更纯净的材料回收", text: "元器件和材料组分被清晰分开，可以进行更有针对性的评估。" },
+    ],
+    materialStreams: [
+      { label: "元器件", className: "product-stream product-stream-1" },
+      { label: "铜", className: "product-stream product-stream-2" },
+      { label: "贵金属", className: "product-stream product-stream-3" },
+      { label: "基材", className: "product-stream product-stream-4" },
+    ],
   },
-];
-
-const materialStreamLabels = [
-  { label: "Bauteile", className: "product-stream product-stream-1" },
-  { label: "Kupfer", className: "product-stream product-stream-2" },
-  { label: "Edelmetalle", className: "product-stream product-stream-3" },
-  { label: "Substrat", className: "product-stream product-stream-4" },
-];
+};
 
 const boardTraceClasses = [
   "product-trace product-trace-1",
@@ -1745,9 +1834,10 @@ const boardMounts = [
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 const progressBetween = (value: number, start: number, end: number) => clamp01((value - start) / (end - start));
 
-const ProductTechnologyPage = () => {
+const ProductTechnologyPage = ({ language }: { language: Language }) => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [progress, setProgress] = useState(0);
+  const technology = productTechnologyCopy[language];
 
   useEffect(() => {
     const updateProgress = () => {
@@ -1767,7 +1857,7 @@ const ProductTechnologyPage = () => {
     };
   }, []);
 
-  const activeIndex = Math.min(productStorySteps.length - 1, Math.floor(progress * productStorySteps.length));
+  const activeIndex = Math.min(technology.steps.length - 1, Math.floor(progress * technology.steps.length));
 
   return (
     <main className="bg-[hsl(42_38%_94%)] text-foreground">
@@ -1776,42 +1866,42 @@ const ProductTechnologyPage = () => {
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[hsl(42_38%_94%)]" />
         <div className="relative mx-auto grid min-h-[calc(100vh-92px)] w-full max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[0.45fr_0.55fr]">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-background/60">Leaftronics Technologie</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-background/60">{technology.heroEyebrow}</p>
             <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.02] md:text-7xl">
-              Die Leiterplatte, die sich am Ende wieder trennen lässt.
+              {technology.heroTitle}
             </h1>
             <p className="mt-6 max-w-xl text-base leading-8 text-background/72 md:text-lg">
-              Leaftronics denkt das Substrat neu: stabil während der Nutzung, kontrolliert lösbar am Ende des Produktlebens.
+              {technology.heroText}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#technology-scroll"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-background px-5 text-sm font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
               >
-                Technologie ansehen
+                {technology.heroPrimary}
                 <ArrowRight className="h-4 w-4" />
               </a>
               <a
                 href="/#forms"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-background/20 bg-background/8 px-5 text-sm font-semibold text-background backdrop-blur transition-transform hover:-translate-y-0.5"
               >
-                Pilotprojekt anfragen
+                {technology.heroSecondary}
                 <ArrowRight className="h-4 w-4" />
               </a>
             </div>
           </div>
           <div className="product-hero-visual">
             <figure className="product-reference-photo">
-              <img src="/leaftronics-hand-pcb.png" alt="Leaftronics Leiterplattenprototyp in einem Laborhandschuh" />
+              <img src="/leaftronics-hand-pcb.png" alt={technology.heroImageAlt} />
             </figure>
-            <ProductPcbScene progress={0.5} activeIndex={3} hero />
+            <ProductPcbScene progress={0.5} activeIndex={3} language={language} hero />
           </div>
         </div>
       </section>
 
       <section id="technology-scroll" ref={sectionRef} className="relative mx-auto grid w-full max-w-[92rem] gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[minmax(0,0.36fr)_minmax(0,0.64fr)] lg:gap-12 lg:py-24">
         <div className="grid min-w-0 gap-8 lg:pb-[34vh]">
-          {productStorySteps.map((step, index) => {
+          {technology.steps.map((step, index) => {
             const active = index === activeIndex;
             return (
               <article
@@ -1829,7 +1919,7 @@ const ProductTechnologyPage = () => {
                     <h2 className="font-display text-3xl font-semibold leading-tight md:text-5xl">{step.title}</h2>
                     <p className="mt-5 hidden max-w-xl text-base leading-8 text-muted-foreground md:block">{step.text}</p>
                     <details className="mt-4 rounded-md border border-primary/15 bg-background/70 p-3 md:hidden" open={active}>
-                      <summary className="cursor-pointer text-sm font-semibold text-primary">Details anzeigen</summary>
+                      <summary className="cursor-pointer text-sm font-semibold text-primary">{technology.details}</summary>
                       <p className="mt-3 text-sm leading-7 text-muted-foreground">{step.text}</p>
                     </details>
                   </div>
@@ -1840,22 +1930,22 @@ const ProductTechnologyPage = () => {
         </div>
 
         <div className="min-w-0 lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
-          <ProductPcbScene progress={progress} activeIndex={activeIndex} />
+          <ProductPcbScene progress={progress} activeIndex={activeIndex} language={language} />
         </div>
       </section>
 
       <section className="bg-[hsl(156_28%_12%)] py-20 text-background md:py-28">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
           <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-glow">Proof of process</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-glow">{technology.proofEyebrow}</p>
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">
-              Die Materiallogik wird im Labor sichtbar.
+              {technology.proofTitle}
             </h2>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {proofImages.map((item) => (
+            {technology.proofImages.map((item) => (
               <article key={item.src} className="overflow-hidden rounded-lg border border-background/12 bg-background/6 shadow-elegant">
-                <img src={item.src} alt="" className="h-72 w-full object-cover" loading="lazy" />
+                <img src={item.src} alt={item.title} className="h-72 w-full object-cover" loading="lazy" />
                 <div className="p-5">
                   <h3 className="font-display text-2xl font-semibold">{item.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-background/70">{item.text}</p>
@@ -1869,19 +1959,19 @@ const ProductTechnologyPage = () => {
       <section className="bg-[hsl(42_38%_94%)] py-20 md:py-28">
         <div className="mx-auto grid w-full max-w-7xl items-end gap-8 px-5 sm:px-8 lg:grid-cols-[0.65fr_0.35fr]">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Eine neue Materiallogik für Elektronik</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{technology.finalEyebrow}</p>
             <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">
-              Klassische Funktion. Kontrollierbares Ende.
+              {technology.finalTitle}
             </h2>
             <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
-              Eine klassische Leiterplatte ist schwer zu trennen, weil Substrat, Metalle und Bauteile fest verbunden bleiben. Leaftronics verändert das Trägermaterial so, dass Nutzung und Rückgewinnung zusammen gedacht werden.
+              {technology.finalText}
             </p>
           </div>
           <a
             href="/#forms"
             className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
           >
-            Pilotprojekt anfragen
+            {technology.finalCta}
             <ArrowRight className="h-4 w-4" />
           </a>
         </div>
@@ -1890,7 +1980,18 @@ const ProductTechnologyPage = () => {
   );
 };
 
-const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: number; activeIndex: number; hero?: boolean }) => {
+const ProductPcbScene = ({
+  progress,
+  activeIndex,
+  language,
+  hero = false,
+}: {
+  progress: number;
+  activeIndex: number;
+  language: Language;
+  hero?: boolean;
+}) => {
+  const technology = productTechnologyCopy[language];
   const polymer = hero ? 1 : progressBetween(progress, 0.1, 0.22);
   const traces = hero ? 1 : progressBetween(progress, 0.23, 0.36);
   const components = hero ? 1 : progressBetween(progress, 0.36, 0.5);
@@ -1914,8 +2015,8 @@ const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: nu
     <div className={`product-scene-shell ${hero ? "min-h-[440px]" : "min-h-[540px] lg:h-full"}`}>
       <div className="product-scene-grid" />
       <div className="product-stage-label">
-        <span>{productStorySteps[activeIndex]?.index ?? "01"}</span>
-        <span>{productStorySteps[activeIndex]?.section ?? "Leaftronics"}</span>
+        <span>{technology.steps[activeIndex]?.index ?? "01"}</span>
+        <span>{technology.steps[activeIndex]?.section ?? "Leaftronics"}</span>
       </div>
 
       <div className="product-housing" style={{ opacity: product, transform: `translate(-50%, -50%) scale(${0.82 + product * 0.1})` }} />
@@ -1983,7 +2084,7 @@ const ProductPcbScene = ({ progress, activeIndex, hero = false }: { progress: nu
       </div>
 
       <div className="product-material-streams" style={{ opacity: streams }}>
-        {materialStreamLabels.map((stream) => (
+        {technology.materialStreams.map((stream) => (
           <span key={stream.label} className={stream.className}>
             {stream.label}
           </span>
@@ -2572,6 +2673,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
   const [detecting, setDetecting] = useState(false);
   const [returnConfirmed, setReturnConfirmed] = useState(false);
   const copy = content.demos.customerLive;
+  const displayLocation = localizeCity(location, language);
 
   const checkSerial = (value = serial) => {
     const key = value.trim().toUpperCase();
@@ -2590,7 +2692,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
       const next = lookup?.city ?? "Dresden";
       setLocation(next);
       setDetecting(false);
-      toast.success(copy.detected, { description: next });
+      toast.success(copy.detected, { description: localizeCity(next, language) });
     }, 650);
   };
 
@@ -2646,7 +2748,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
 
           <div className="mt-4 rounded-md border border-primary/14 bg-primary/8 p-3">
             <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">{copy.detected}</p>
-            <p className="mt-1 font-display text-2xl font-semibold">{location}</p>
+            <p className="mt-1 font-display text-2xl font-semibold">{displayLocation}</p>
           </div>
         </form>
 
@@ -2727,6 +2829,26 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
     </DemoWindow>
   );
 };
+
+function localizeCity(city: string, language: Language) {
+  if (language === "en") {
+    return city === "München" ? "Munich" : city === "Köln" ? "Cologne" : city;
+  }
+  if (language === "zh") {
+    const labels: Record<string, string> = {
+      Berlin: "柏林",
+      Hamburg: "汉堡",
+      München: "慕尼黑",
+      Köln: "科隆",
+      "Frankfurt am Main": "法兰克福",
+      Stuttgart: "斯图加特",
+      Leipzig: "莱比锡",
+      Dresden: "德累斯顿",
+    };
+    return labels[city] ?? city;
+  }
+  return city;
+}
 
 function localizeDevice(device: string, language: Language) {
   const normalized = device.replace(/Â·/g, "·");

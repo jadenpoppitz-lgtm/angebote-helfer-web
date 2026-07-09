@@ -13,7 +13,8 @@ export function Footer() {
               <img src="/logo1.png" alt="Leaftronics Logo" className="h-full w-full object-cover" />
             </span>
             <span className="font-display text-lg font-semibold">
-              Recycling<span className="text-primary">Angebote</span>
+              {t.footerBrandPrefix}{" "}
+              <span className="text-primary">{t.footerBrandAccent}</span>
             </span>
           </div>
           <p className="mt-4 max-w-md text-sm text-muted-foreground">{t.footerText}</p>
@@ -43,7 +44,9 @@ export function Footer() {
       </div>
       <div className="border-t border-border">
         <div className="container flex flex-col items-center justify-between gap-2 py-4 text-xs text-muted-foreground md:flex-row">
-          <p>© {new Date().getFullYear()} Recycling Angebote. {t.rights}</p>
+          <p>
+            © {new Date().getFullYear()} {t.footerBrandPrefix} {t.footerBrandAccent}. {t.rights}
+          </p>
           <p>{t.madeIn}</p>
         </div>
       </div>

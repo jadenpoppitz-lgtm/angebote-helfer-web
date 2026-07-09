@@ -20,7 +20,7 @@ const MATERIAL_COLOR: Record<string, string> = {
 };
 
 export function OfferCard({ offer, onRequest }: Props) {
-  const { t, materialLabel, modeLabel, availabilityLabel, cityLabel, locale } = useLanguage();
+  const { t, materialLabel, modeLabel, availabilityLabel, offerConditionLabel, cityLabel, locale } = useLanguage();
   const price = offer.pricePerTon;
   const isPay = price > 0;
   const isFree = price === 0;
@@ -54,7 +54,7 @@ export function OfferCard({ offer, onRequest }: Props) {
             </span>
           </div>
         </div>
-        <p className="text-sm text-muted-foreground">{offer.conditions}</p>
+        <p className="text-sm text-muted-foreground">{offerConditionLabel(offer.conditions)}</p>
       </div>
       <div className="flex shrink-0 flex-col items-stretch gap-3 border-t border-border pt-4 md:items-end md:border-l md:border-t-0 md:pl-6 md:pt-0">
         <div className="md:text-right">

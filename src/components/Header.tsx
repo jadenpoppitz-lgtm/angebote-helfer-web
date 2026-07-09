@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { languages, useLanguage } from "@/lib/i18n";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -68,15 +68,18 @@ export function Header({ onRequest }: HeaderProps) {
           </Button>
         </div>
         <button
+          type="button"
           className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border md:hidden"
           onClick={() => setOpen((value) => !value)}
           aria-label={t.menu}
+          aria-controls="producer-mobile-navigation"
+          aria-expanded={open}
         >
-          <Menu className="h-5 w-5" />
+          {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
         </button>
       </div>
       {open && (
-        <div className="border-t border-border bg-background md:hidden">
+        <div id="producer-mobile-navigation" className="border-t border-border bg-background md:hidden">
           <div className="container flex flex-col gap-3 py-4">
             {nav.map((item) => (
               <a

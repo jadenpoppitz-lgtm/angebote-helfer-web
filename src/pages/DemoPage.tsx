@@ -97,9 +97,13 @@ const DemoPage = () => {
             </div>
             <p className="mt-6 max-w-xl text-base leading-7 text-background/70">{labels.intro}</p>
             <div className="mt-6 rounded-lg border border-background/10 bg-background/8 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-background/45">Problem</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-background/45">
+                {content.demos.problemLabel}
+              </p>
               <p className="mt-2 text-sm leading-6 text-background/75">{card.problem}</p>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Value</p>
+              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                {content.demos.valueLabel}
+              </p>
               <p className="mt-2 text-sm leading-6 text-background/75">{card.value}</p>
             </div>
 
