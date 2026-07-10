@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { selectCycleRenderProfile } from "@/components/cycleRenderProfile";
 import type { GraphPoint } from "@/pages/Landing";
 
 export type CycleWorldScreenPoint = {
@@ -701,23 +702,27 @@ export const createCyclePrototypeWorld = (
 ): CycleWorldRuntime => {
   const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
   const hardwareConcurrency = navigator.hardwareConcurrency || 8;
-  const compactHighDensityScreen = window.matchMedia("(max-width: 767px)").matches && window.devicePixelRatio > 2;
-  const lowPowerDevice =
-    options.reducedMotion || deviceMemory <= 4 || hardwareConcurrency <= 4 || compactHighDensityScreen;
+  const renderProfile = selectCycleRenderProfile({
+    compactScreen: window.matchMedia("(max-width: 767px)").matches,
+    deviceMemory,
+    devicePixelRatio: window.devicePixelRatio || 1,
+    hardwareConcurrency,
+    reducedMotion: options.reducedMotion,
+  });
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
-    antialias: !lowPowerDevice,
-    powerPreference: lowPowerDevice ? "default" : "high-performance",
+    antialias: renderProfile.antialias,
+    powerPreference: renderProfile.efficient ? "default" : "high-performance",
   });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.18;
-  renderer.shadowMap.enabled = !lowPowerDevice;
+  renderer.shadowMap.enabled = renderProfile.shadows;
   renderer.shadowMap.type = THREE.PCFShadowMap;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPowerDevice ? 1.15 : 1.65));
-  canvas.dataset.renderProfile = lowPowerDevice ? "efficient" : "quality";
-  canvas.dataset.targetFps = String(options.reducedMotion ? 12 : lowPowerDevice ? 30 : 60);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, renderProfile.pixelRatioCap));
+  canvas.dataset.renderProfile = renderProfile.efficient ? "efficient" : "quality";
+  canvas.dataset.targetFps = String(renderProfile.targetFps);
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0xf4faf4, 0.033);
@@ -788,7 +793,7 @@ export const createCyclePrototypeWorld = (
   scene.add(hemisphere);
   const keyLight = new THREE.DirectionalLight(0xffffff, 3.8);
   keyLight.position.set(-5, 11, 8);
-  keyLight.castShadow = !lowPowerDevice;
+  keyLight.castShadow = renderProfile.shadows;
   keyLight.shadow.mapSize.set(1024, 1024);
   keyLight.shadow.camera.near = 0.5;
   keyLight.shadow.camera.far = 30;
@@ -819,7 +824,7 @@ export const createCyclePrototypeWorld = (
   let disposed = false;
   let sceneVisible = true;
   let lastRenderedAt = Number.NEGATIVE_INFINITY;
-  const frameInterval = options.reducedMotion ? 1000 / 12 : lowPowerDevice ? 1000 / 30 : 0;
+  const frameInterval = renderProfile.targetFps >= 60 ? 0 : 1000 / renderProfile.targetFps;
   const timer = new THREE.Timer();
   timer.connect(document);
   const projection = new THREE.Vector3();

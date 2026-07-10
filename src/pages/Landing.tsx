@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -10,6 +10,7 @@ import {
   Flame,
   Globe2,
   Handshake,
+  Leaf,
   Menu,
   PackageCheck,
   QrCode,
@@ -21,7 +22,6 @@ import {
 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { CyclePrototypeMap } from "@/components/CyclePrototypeMap";
-import { DeviceImpact } from "@/components/DeviceImpact";
 import { Footer } from "@/components/Footer";
 import { PilotProjectSection } from "@/components/PilotProjectSection";
 import { ProofOfProgress } from "@/components/ProofOfProgress";
@@ -253,7 +253,7 @@ export const copy: Record<Language, LandingCopy> = {
           next: "Rückgabe starten",
         },
         consulting: {
-          title: "Consulting",
+          title: "Leaftronics",
           label: "Leaftronics",
           problem: "Ohne Bewertung wird PCB anonym verkauft oder falsch geroutet.",
           solution: "Leaftronics bewertet Produkt und PCB, verkauft oder ordnet PCB zu und setzt die passende Lösung.",
@@ -381,7 +381,7 @@ export const copy: Record<Language, LandingCopy> = {
     traction: {
       eyebrow: "Traction",
       title: "Der Leaftronics-Lebenslauf.",
-      text: "Förderung, Accelerator, Auszeichnungen und Nominierungen in einer chronologischen Übersicht.",
+      text: "Die neuesten Meilensteine zuerst: Förderung, Accelerator, Auszeichnungen und Nominierungen als dynamischer Unternehmens- und Technologie-Lebenslauf.",
       events: [
         {
           date: "2024 / 2025",
@@ -572,7 +572,7 @@ export const copy: Record<Language, LandingCopy> = {
           next: "Start return",
         },
         consulting: {
-          title: "Consulting",
+          title: "Leaftronics",
           label: "Leaftronics",
           problem: "Without evaluation, PCB is sold anonymously or routed incorrectly.",
           solution: "Leaftronics evaluates product and PCB, sells or assigns PCB and sets the suitable solution.",
@@ -700,7 +700,7 @@ export const copy: Record<Language, LandingCopy> = {
     traction: {
       eyebrow: "Traction",
       title: "The Leaftronics track record.",
-      text: "Funding, accelerators, awards and nominations in chronological order.",
+      text: "Latest milestones first: funding, accelerators, awards and nominations as a dynamic company and technology track record.",
       events: [
         {
           date: "2024 / 2025",
@@ -890,7 +890,7 @@ export const copy: Record<Language, LandingCopy> = {
           next: "启动退回",
         },
         consulting: {
-          title: "咨询 / 路由",
+          title: "Leaftronics",
           label: "Leaftronics",
           problem: "没有评估时，PCB 会被匿名出售或错误路由。",
           solution: "Leaftronics 评估产品和 PCB，分配或出售 PCB，并设置合适方案。",
@@ -1018,7 +1018,7 @@ export const copy: Record<Language, LandingCopy> = {
     traction: {
       eyebrow: "进展",
       title: "Leaftronics 发展路径。",
-      text: "按时间顺序展示资助、加速器、奖项和提名。",
+      text: "最新里程碑优先展示：资助、加速器、奖项和提名构成 Leaftronics 的企业与技术发展路径。",
       events: [
         {
           date: "2024 / 2025",
@@ -1097,6 +1097,7 @@ export const copy: Record<Language, LandingCopy> = {
 };
 
 export const roleOrder: RoleId[] = ["oem", "customer", "recycler", "smelter", "partner"];
+const demoRoleOrder: RoleId[] = ["oem", "customer", "smelter"];
 const graphOrder: GraphPoint[] = ["oem", "customer", "consulting", "disassembly", "smelter", "materials"];
 
 export const roleIcons: Record<RoleId, typeof Factory> = {
@@ -1110,7 +1111,7 @@ export const roleIcons: Record<RoleId, typeof Factory> = {
 const graphIcons: Record<GraphPoint, typeof Factory> = {
   oem: Factory,
   customer: UserRound,
-  consulting: Handshake,
+  consulting: Leaf,
   disassembly: Wrench,
   smelter: Flame,
   materials: PackageCheck,
@@ -1139,7 +1140,6 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
   const { language, setLanguage, t } = useLanguage();
   const content = copy[language];
 
-  const activeNode = content.solution.nodes[activePoint];
   const reference = useMemo(() => `KB-${new Date().getFullYear()}-${String(Math.floor(100 + Math.random() * 900))}`, []);
   const showHero = page === "home";
   const showProblem = page === "problem";
@@ -1453,29 +1453,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       </section>
       ) : null}
 
-      {showProduct ? (
-      <section id="process" className="bg-black pb-24 text-background md:pb-32">
-        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-          <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr_1fr]">
-            {[
-              { src: "/leaftronics-lab-beaker.jpg", alt: "Leaftronics Laborprozess" },
-              { src: "/leaftronics-separated-components.jpg", alt: "Getrennte Elektronikkomponenten" },
-              { src: "/leaftronics-pcb-prototype.jpg", alt: "Leaftronics PCB Prototyp" },
-            ].map((image, index) => (
-              <div
-                key={image.src}
-                className={`relative overflow-hidden rounded-lg border border-background/12 bg-background/5 shadow-elegant ${
-                  index === 1 ? "md:translate-y-8" : ""
-                }`}
-              >
-                <img src={image.src} alt={image.alt} className="h-72 w-full object-cover md:h-96" />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/32 via-transparent to-transparent" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      ) : null}
+      {showProduct ? <ProductTechnologyPage language={language} /> : null}
 
       {showProduct || showCycle ? (
       <section
@@ -1555,19 +1533,20 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       <section id="demos" className="cycle-demo-section pb-20 pt-8 text-foreground md:pb-28 md:pt-12">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.34fr_0.66fr]">
           {(() => {
-            const Icon = roleIcons[activeRole];
-            const card = content.roles.cards[activeRole];
-            const surface = content.demos.surfaces[activeRole];
+            const demoRole = demoRoleOrder.includes(activeRole) ? activeRole : "customer";
+            const Icon = roleIcons[demoRole];
+            const card = content.roles.cards[demoRole];
+            const surface = content.demos.surfaces[demoRole];
             return (
               <>
                 <aside>
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.demos.eyebrow}</p>
-                  <div className="mt-5 flex items-center gap-4">
-                    <span className="grid h-14 w-14 place-items-center rounded-lg bg-primary/15 text-primary">
+                  <div className="mt-5 flex min-w-0 items-center gap-4">
+                    <span className="grid h-14 w-14 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary">
                       <Icon className="h-7 w-7" />
                     </span>
-                    <div>
-                      <h2 className="font-display text-4xl font-semibold leading-tight md:text-5xl">{card.title}</h2>
+                    <div className="min-w-0">
+                      <h2 className="break-words font-display text-4xl font-semibold leading-tight md:text-5xl lg:text-[2.65rem]">{card.title}</h2>
                       <p className="mt-1 text-sm text-muted-foreground">{surface.subtitle}</p>
                     </div>
                   </div>
@@ -1585,7 +1564,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   </div>
 
                   <div className="mt-6 flex flex-wrap gap-2">
-                    {roleOrder.map((role) => {
+                    {demoRoleOrder.map((role) => {
                       const RoleIcon = roleIcons[role];
                       return (
                         <button
@@ -1593,7 +1572,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                           type="button"
                           onClick={() => chooseRole(role)}
                           className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-semibold transition-colors ${
-                            role === activeRole
+                            role === demoRole
                               ? "border-primary bg-primary text-primary-foreground"
                               : "border-primary/20 bg-background/70 text-foreground/65 hover:text-foreground"
                           }`}
@@ -1606,9 +1585,11 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   </div>
                 </aside>
 
-                <section>
-                  {activeRole === "customer" ? (
+                <section className="min-w-0">
+                  {demoRole === "customer" ? (
                     <CustomerReturnDemo content={content} language={language} reference={reference} />
+                  ) : demoRole === "smelter" ? (
+                    <SmelterDashboard content={content} surface={surface} reference={reference} />
                   ) : (
                     <DemoSurface content={content} surface={surface} reference={reference} />
                   )}
@@ -1620,53 +1601,8 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       </section>
       ) : null}
 
-      {showProduct ? <DeviceImpact language={language} /> : null}
-
       {showTraction ? (
-      <section id="traction" className="bg-white py-16 text-foreground md:py-24">
-        <div className="mx-auto w-full max-w-5xl px-5 sm:px-8">
-          <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.traction.eyebrow}</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.traction.title}</h2>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.traction.text}</p>
-          </div>
-
-          <div className="relative mt-14">
-            <div className="absolute bottom-0 left-4 top-0 w-px bg-primary/25 md:left-1/2" aria-hidden="true" />
-            <div className="grid gap-8">
-              {content.traction.events.map((item, index) => (
-                <article
-                  key={`${item.date}-${item.title}`}
-                  className={`relative pl-12 md:grid md:grid-cols-2 md:gap-12 md:pl-0 ${
-                    index % 2 === 0 ? "" : "md:[&>div]:col-start-2"
-                  }`}
-                >
-                  <span className="absolute left-2 top-2 z-10 h-5 w-5 rounded-full border-4 border-white bg-primary shadow-card md:left-1/2 md:-translate-x-1/2" />
-                  <div className="overflow-hidden rounded-lg border border-border bg-background shadow-card">
-                    {item.image ? (
-                      <img src={item.image} alt={item.imageAlt} className="h-44 w-full object-cover object-top" loading="lazy" />
-                    ) : null}
-                    <div className="p-5">
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">{item.date}</p>
-                      <h3 className="mt-3 font-display text-2xl font-semibold">{item.title}</h3>
-                      <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.text}</p>
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/75"
-                      >
-                        {item.link}
-                        <ArrowRight className="h-4 w-4" />
-                      </a>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <TractionTimeline content={content.traction} />
       ) : null}
 
       {showContact ? (
@@ -1696,6 +1632,586 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         />
       ) : null}
       <Footer />
+    </div>
+  );
+};
+
+const tractionEventRank = (event: LandingCopy["traction"]["events"][number]) => {
+  const key = `${event.href} ${event.title}`;
+  if (key.includes("dresden-exists")) return 20260619;
+  if (key.includes("excitelab")) return 20260401;
+  if (key.includes("richard-hartmann")) return 20260223;
+  if (key.includes("joachim-herz")) return 20250930;
+  if (key.includes("exist-gruendungsstipendium")) return 20250301;
+  if (key.includes("emanuel-goldberg")) return 20250101;
+  return 0;
+};
+
+const TractionTimeline = ({ content }: { content: LandingCopy["traction"] }) => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const itemRefs = useRef<Array<HTMLElement | null>>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [lineProgress, setLineProgress] = useState(0);
+
+  const events = useMemo(
+    () => [...content.events].sort((a, b) => tractionEventRank(b) - tractionEventRank(a)),
+    [content.events],
+  );
+
+  useEffect(() => {
+    let frame = 0;
+
+    const updateTimeline = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const section = sectionRef.current;
+        if (!section) return;
+
+        const rect = section.getBoundingClientRect();
+        const progressDistance = Math.max(1, rect.height - window.innerHeight * 0.38);
+        setLineProgress(clamp01((window.innerHeight * 0.58 - rect.top) / progressDistance));
+
+        const viewportFocus = window.innerHeight * 0.48;
+        let closestIndex = 0;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        itemRefs.current.forEach((item, index) => {
+          if (!item) return;
+          const itemRect = item.getBoundingClientRect();
+          const itemCenter = itemRect.top + itemRect.height * 0.42;
+          const distance = Math.abs(itemCenter - viewportFocus);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+
+        setActiveIndex(closestIndex);
+      });
+    };
+
+    updateTimeline();
+    window.addEventListener("scroll", updateTimeline, { passive: true });
+    window.addEventListener("resize", updateTimeline);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updateTimeline);
+      window.removeEventListener("resize", updateTimeline);
+    };
+  }, [events.length]);
+
+  return (
+    <section
+      id="traction"
+      ref={sectionRef}
+      className="traction-timeline-section"
+      style={{ "--timeline-progress": lineProgress } as CSSProperties}
+    >
+      <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+        <div className="traction-timeline-intro">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.eyebrow}</p>
+          <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.title}</h2>
+          <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.text}</p>
+        </div>
+
+        <div className="traction-timeline">
+          <div className="traction-timeline-line" aria-hidden="true">
+            <span />
+          </div>
+          <div className="traction-timeline-list">
+            {events.map((item, index) => {
+              const stateClass = index === activeIndex ? "is-active" : index < activeIndex ? "is-past" : "is-future";
+              return (
+                <article
+                  key={`${item.date}-${item.title}`}
+                  ref={(node) => {
+                    itemRefs.current[index] = node;
+                  }}
+                  className={`traction-timeline-item ${stateClass}`}
+                >
+                  <div className="traction-timeline-date" aria-hidden="true">
+                    <span>{item.date}</span>
+                  </div>
+                  <span className="traction-timeline-dot" aria-hidden="true" />
+                  <div className="traction-timeline-card">
+                    {item.image ? (
+                      <img src={item.image} alt={item.imageAlt} className="traction-timeline-image" loading="lazy" />
+                    ) : null}
+                    <div className="traction-timeline-card-body">
+                      <p className="traction-timeline-mobile-date">{item.date}</p>
+                      <h3>{item.title}</h3>
+                      <p>{item.text}</p>
+                      <a href={item.href} target="_blank" rel="noreferrer">
+                        {item.link}
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+type ProductTechnologyContent = {
+  heroEyebrow: string;
+  heroTitle: string;
+  heroText: string;
+  heroPrimary: string;
+  heroSecondary: string;
+  heroImageAlt: string;
+  details: string;
+  proofEyebrow: string;
+  proofTitle: string;
+  finalEyebrow: string;
+  finalTitle: string;
+  finalText: string;
+  finalCta: string;
+  steps: Array<{ index: string; section: string; title: string; text: string }>;
+  proofImages: Array<{ src: string; title: string; text: string }>;
+  materialStreams: Array<{ label: string; className: string }>;
+};
+
+const productTechnologyCopy: Record<Language, ProductTechnologyContent> = {
+  de: {
+    heroEyebrow: "Leaftronics Technologie",
+    heroTitle: "Die Leiterplatte, die sich am Ende wieder trennen lässt.",
+    heroText: "Leaftronics denkt das Substrat neu: stabil während der Nutzung, kontrolliert lösbar am Ende des Produktlebens.",
+    heroPrimary: "Technologie ansehen",
+    heroSecondary: "Pilotprojekt anfragen",
+    heroImageAlt: "Leaftronics Leiterplattenprototyp in einem Laborhandschuh",
+    details: "Details anzeigen",
+    proofEyebrow: "Prozessnachweis",
+    proofTitle: "Die Materiallogik wird im Labor sichtbar.",
+    finalEyebrow: "Eine neue Materiallogik für Elektronik",
+    finalTitle: "Klassische Funktion. Kontrollierbares Ende.",
+    finalText: "Eine klassische Leiterplatte ist schwer zu trennen, weil Substrat, Metalle und Bauteile fest verbunden bleiben. Leaftronics verändert das Trägermaterial so, dass Nutzung und Rückgewinnung zusammen gedacht werden.",
+    finalCta: "Pilotprojekt anfragen",
+    steps: [
+      { index: "01", section: "Vom natürlichen Gerüst zum technischen Substrat", title: "Das Trägermaterial neu gedacht.", text: "Eine faserige, organische Struktur bildet die Basis. Sie bleibt sichtbar, leicht und materialbewusst statt als anonyme schwarze Trägerplatte zu verschwinden." },
+      { index: "02", section: "Vom natürlichen Gerüst zum technischen Substrat", title: "Ein stabiles Substrat für elektronische Anwendungen.", text: "Eine lösbare Polymermatrix stabilisiert das Gerüst mechanisch. Die Schicht macht aus dem Material eine belastbare Plattform für Elektronik." },
+      { index: "03", section: "Stabil genug für Elektronik", title: "Leiterbahnen, Lötstellen und elektrische Funktion bleiben erhalten.", text: "Kupferne Leiterbahnen werden präzise aufgebracht. Die elektrische Funktion bleibt klassischer PCB-Logik nahe, während das Substrat neu gedacht ist." },
+      { index: "04", section: "Stabil genug für Elektronik", title: "Stabil während Herstellung und Nutzung.", text: "Chips, Widerstände, Kondensatoren und Kontakte sitzen auf der Platte. Das Modul wirkt wie echte, funktionsfähige Elektronik." },
+      { index: "05", section: "Designed for Disassembly", title: "Für moderne Elektronik entwickelt.", text: "Im Produkt bleibt die Leiterplatte belastbar. Energie- und Datenlinien zeigen: Die neue Materiallogik ersetzt nicht Funktion, sondern ermöglicht ihren Kreislauf." },
+      { index: "06", section: "Designed for Disassembly", title: "Am Lebensende gezielt lösbar.", text: "In einer kontrollierten Lösung gibt das Substrat nach. Bauteile und Metalle bleiben erhalten, statt im Verbund untrennbar verloren zu gehen." },
+      { index: "07", section: "Wertstoffe zurück in den Kreislauf", title: "Wertstoffe werden sortenreiner zurückgewonnen.", text: "Bauteile, Kupfer, Edelmetalle und Substrat trennen sich in erkennbare Materialströme. Genau hier entsteht der Unterschied zur klassischen Leiterplatte." },
+      { index: "08", section: "Eine neue Materiallogik für Elektronik", title: "Elektronik für die Kreislaufwirtschaft.", text: "Metalle gehen zurück in die Produktion, Bauteile können geprüft werden, das Substrat wird abgebaut. Der Kreislauf wird zur Designentscheidung." },
+    ],
+    proofImages: [
+      { src: "/leaftronics-pcb-prototype.jpg", title: "Funktionsfähiger PCB-Prototyp", text: "Die Technologie bleibt anschlussfähig an reale Elektronik und bestehende Fertigungslogik." },
+      { src: "/leaftronics-lab-beaker.jpg", title: "Kontrollierte Lösung", text: "Die Trennung passiert nicht zufällig, sondern in einer steuerbaren Recyclingumgebung." },
+      { src: "/leaftronics-separated-components.jpg", title: "Sortenreinere Rückgewinnung", text: "Bauteile und Materialfraktionen werden sichtbar getrennt und können gezielter bewertet werden." },
+    ],
+    materialStreams: [
+      { label: "Bauteile", className: "product-stream product-stream-1" },
+      { label: "Kupfer", className: "product-stream product-stream-2" },
+      { label: "Edelmetalle", className: "product-stream product-stream-3" },
+      { label: "Substrat", className: "product-stream product-stream-4" },
+    ],
+  },
+  en: {
+    heroEyebrow: "Leaftronics technology",
+    heroTitle: "The circuit board designed to come apart at the end.",
+    heroText: "Leaftronics rethinks the substrate: stable in use and controllably separable at the end of the product life cycle.",
+    heroPrimary: "Explore the technology",
+    heroSecondary: "Request a pilot project",
+    heroImageAlt: "Leaftronics circuit board prototype held in a laboratory glove",
+    details: "Show details",
+    proofEyebrow: "Proof of process",
+    proofTitle: "The material logic becomes visible in the lab.",
+    finalEyebrow: "A new material logic for electronics",
+    finalTitle: "Classic function. A controllable end.",
+    finalText: "A conventional circuit board is difficult to separate because the substrate, metals and components remain permanently bonded. Leaftronics changes the carrier material so use and recovery can be designed together.",
+    finalCta: "Request a pilot project",
+    steps: [
+      { index: "01", section: "From natural structure to technical substrate", title: "Rethinking the carrier material.", text: "A fibrous organic structure forms the basis. It remains visible, lightweight and material-conscious instead of disappearing into an anonymous black board." },
+      { index: "02", section: "From natural structure to technical substrate", title: "A stable substrate for electronic applications.", text: "A separable polymer matrix mechanically stabilizes the structure and turns the material into a robust platform for electronics." },
+      { index: "03", section: "Stable enough for electronics", title: "Traces, solder joints and electrical function remain intact.", text: "Copper traces are applied precisely. Electrical function stays close to conventional PCB logic while the substrate is redesigned." },
+      { index: "04", section: "Stable enough for electronics", title: "Stable through manufacturing and use.", text: "Chips, resistors, capacitors and contacts sit on the board. The module behaves like real, functional electronics." },
+      { index: "05", section: "Designed for disassembly", title: "Built for modern electronics.", text: "The circuit board remains robust inside the product. Power and data lines show that the new material logic preserves function while enabling circularity." },
+      { index: "06", section: "Designed for disassembly", title: "Deliberately separable at end of life.", text: "In a controlled solution, the substrate releases. Components and metals remain intact instead of becoming inseparably trapped in the composite." },
+      { index: "07", section: "Returning valuable materials to the loop", title: "Valuable materials are recovered in cleaner fractions.", text: "Components, copper, precious metals and substrate separate into recognizable material streams. This is where the design differs from a conventional circuit board." },
+      { index: "08", section: "A new material logic for electronics", title: "Electronics for the circular economy.", text: "Metals return to production, components can be tested and the substrate is broken down. Circularity becomes a design decision." },
+    ],
+    proofImages: [
+      { src: "/leaftronics-pcb-prototype.jpg", title: "Functional PCB prototype", text: "The technology remains compatible with real electronics and established manufacturing processes." },
+      { src: "/leaftronics-lab-beaker.jpg", title: "Controlled solution", text: "Separation does not happen by chance, but in a controlled recycling environment." },
+      { src: "/leaftronics-separated-components.jpg", title: "Cleaner material recovery", text: "Components and material fractions are visibly separated and can be evaluated more precisely." },
+    ],
+    materialStreams: [
+      { label: "Components", className: "product-stream product-stream-1" },
+      { label: "Copper", className: "product-stream product-stream-2" },
+      { label: "Precious metals", className: "product-stream product-stream-3" },
+      { label: "Substrate", className: "product-stream product-stream-4" },
+    ],
+  },
+  zh: {
+    heroEyebrow: "Leaftronics 技术",
+    heroTitle: "一块在寿命终点可以重新分离的电路板。",
+    heroText: "Leaftronics 重新设计基材：使用期间稳定，产品寿命结束时可受控分离。",
+    heroPrimary: "查看技术",
+    heroSecondary: "申请试点项目",
+    heroImageAlt: "实验室手套中拿着的 Leaftronics 电路板原型",
+    details: "查看详情",
+    proofEyebrow: "流程验证",
+    proofTitle: "材料逻辑在实验室中清晰可见。",
+    finalEyebrow: "电子产品的新材料逻辑",
+    finalTitle: "传统功能，可控的终点。",
+    finalText: "传统电路板难以分离，因为基材、金属和元器件始终牢固结合。Leaftronics 改变载体材料，让使用与回收从设计阶段就被共同考虑。",
+    finalCta: "申请试点项目",
+    steps: [
+      { index: "01", section: "从天然结构到技术基材", title: "重新思考载体材料。", text: "纤维状有机结构构成基础。它保持可见、轻量且体现材料属性，而不是消失在匿名的黑色基板中。" },
+      { index: "02", section: "从天然结构到技术基材", title: "适用于电子应用的稳定基材。", text: "可分离的聚合物基体在机械上稳定这一结构，使材料成为可靠的电子平台。" },
+      { index: "03", section: "足够稳定，可用于电子产品", title: "线路、焊点和电气功能保持完整。", text: "铜线路被精确施加。电气功能接近传统 PCB 逻辑，同时基材得到重新设计。" },
+      { index: "04", section: "足够稳定，可用于电子产品", title: "在制造和使用期间保持稳定。", text: "芯片、电阻、电容和触点安装在板上，模块具备真实、可运行的电子功能。" },
+      { index: "05", section: "为拆解而设计", title: "为现代电子产品而开发。", text: "电路板在产品内部保持可靠。电源和数据线路表明，新材料逻辑保留功能并支持循环利用。" },
+      { index: "06", section: "为拆解而设计", title: "在寿命终点可有针对性地分离。", text: "在受控溶液中，基材会释放。元器件和金属得以保留，不再不可分离地困在复合结构中。" },
+      { index: "07", section: "让高价值材料回到循环", title: "以更纯净的材料组分进行回收。", text: "元器件、铜、贵金属和基材分离成清晰可辨的材料流，这正是它与传统电路板的区别。" },
+      { index: "08", section: "电子产品的新材料逻辑", title: "面向循环经济的电子产品。", text: "金属回到生产，元器件可以被检测，基材得到分解。循环利用成为设计决策。" },
+    ],
+    proofImages: [
+      { src: "/leaftronics-pcb-prototype.jpg", title: "可运行的 PCB 原型", text: "该技术能够兼容真实电子产品和现有制造流程。" },
+      { src: "/leaftronics-lab-beaker.jpg", title: "受控溶液", text: "分离并非偶然发生，而是在可控的回收环境中进行。" },
+      { src: "/leaftronics-separated-components.jpg", title: "更纯净的材料回收", text: "元器件和材料组分被清晰分开，可以进行更有针对性的评估。" },
+    ],
+    materialStreams: [
+      { label: "元器件", className: "product-stream product-stream-1" },
+      { label: "铜", className: "product-stream product-stream-2" },
+      { label: "贵金属", className: "product-stream product-stream-3" },
+      { label: "基材", className: "product-stream product-stream-4" },
+    ],
+  },
+};
+
+const boardTraceClasses = [
+  "product-trace product-trace-1",
+  "product-trace product-trace-2",
+  "product-trace product-trace-3",
+  "product-trace product-trace-4",
+  "product-trace product-trace-5",
+  "product-trace product-trace-6",
+  "product-trace product-trace-7",
+  "product-trace product-trace-8",
+  "product-trace product-trace-9",
+  "product-trace product-trace-10",
+  "product-trace product-trace-11",
+  "product-trace product-trace-12",
+  "product-trace product-trace-13",
+  "product-trace product-trace-14",
+  "product-trace product-trace-15",
+  "product-trace product-trace-16",
+  "product-trace product-trace-17",
+  "product-trace product-trace-18",
+];
+
+const boardComponentClasses = [
+  "product-component product-component-1",
+  "product-component product-component-2",
+  "product-component product-component-3",
+  "product-component product-component-4",
+  "product-component product-component-5",
+  "product-component product-component-6",
+  "product-component product-component-7",
+  "product-component product-component-8",
+  "product-component product-component-9",
+  "product-component product-component-10",
+  "product-component product-component-11",
+  "product-component product-component-12",
+];
+
+const boardFragmentClasses = [
+  "product-fragment product-fragment-1",
+  "product-fragment product-fragment-2",
+  "product-fragment product-fragment-3",
+  "product-fragment product-fragment-4",
+  "product-fragment product-fragment-5",
+  "product-fragment product-fragment-6",
+  "product-fragment product-fragment-7",
+  "product-fragment product-fragment-8",
+  "product-fragment product-fragment-9",
+  "product-fragment product-fragment-10",
+  "product-fragment product-fragment-11",
+  "product-fragment product-fragment-12",
+];
+
+const boardVias = [
+  ["7%", "12%"], ["12%", "18%"], ["17%", "14%"], ["24%", "18%"], ["30%", "13%"], ["36%", "18%"], ["43%", "14%"], ["50%", "18%"],
+  ["57%", "14%"], ["64%", "18%"], ["71%", "14%"], ["80%", "18%"], ["88%", "13%"], ["93%", "20%"], ["9%", "33%"], ["15%", "39%"],
+  ["24%", "36%"], ["32%", "43%"], ["40%", "38%"], ["49%", "44%"], ["58%", "39%"], ["68%", "45%"], ["78%", "38%"], ["88%", "43%"],
+  ["11%", "58%"], ["18%", "66%"], ["27%", "61%"], ["36%", "68%"], ["45%", "62%"], ["54%", "69%"], ["64%", "63%"], ["74%", "69%"],
+  ["84%", "62%"], ["92%", "70%"], ["8%", "84%"], ["16%", "79%"], ["28%", "85%"], ["40%", "80%"], ["53%", "85%"], ["66%", "80%"],
+  ["78%", "86%"], ["90%", "80%"],
+];
+
+const boardMounts = [
+  ["7%", "9%"], ["92%", "10%"], ["7%", "88%"], ["92%", "88%"],
+];
+
+const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+const progressBetween = (value: number, start: number, end: number) => clamp01((value - start) / (end - start));
+
+const ProductTechnologyPage = ({ language }: { language: Language }) => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [progress, setProgress] = useState(0);
+  const technology = productTechnologyCopy[language];
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const scrollable = Math.max(1, section.offsetHeight - window.innerHeight);
+      setProgress(clamp01(-rect.top / scrollable));
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    return () => {
+      window.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", updateProgress);
+    };
+  }, []);
+
+  const activeIndex = Math.min(technology.steps.length - 1, Math.floor(progress * technology.steps.length));
+
+  return (
+    <main className="bg-[hsl(42_38%_94%)] text-foreground">
+      <section className="relative isolate overflow-hidden bg-[hsl(156_34%_9%)] text-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,hsl(150_68%_32%/.28),transparent_34%),radial-gradient(circle_at_86%_18%,hsl(31_92%_55%/.16),transparent_28%),linear-gradient(180deg,hsl(156_34%_9%),hsl(150_26%_13%))]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[hsl(42_38%_94%)]" />
+        <div className="relative mx-auto grid min-h-[calc(100vh-92px)] w-full max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[0.45fr_0.55fr]">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-background/60">{technology.heroEyebrow}</p>
+            <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.02] md:text-7xl">
+              {technology.heroTitle}
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-8 text-background/72 md:text-lg">
+              {technology.heroText}
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#technology-scroll"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-background px-5 text-sm font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
+              >
+                {technology.heroPrimary}
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <a
+                href="/#forms"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-background/20 bg-background/8 px-5 text-sm font-semibold text-background backdrop-blur transition-transform hover:-translate-y-0.5"
+              >
+                {technology.heroSecondary}
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+          <div className="product-hero-visual">
+            <figure className="product-reference-photo">
+              <img src="/leaftronics-hand-pcb.png" alt={technology.heroImageAlt} />
+            </figure>
+            <ProductPcbScene progress={0.5} activeIndex={3} language={language} hero />
+          </div>
+        </div>
+      </section>
+
+      <section id="technology-scroll" ref={sectionRef} className="relative mx-auto grid w-full max-w-[92rem] gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[minmax(0,0.36fr)_minmax(0,0.64fr)] lg:gap-12 lg:py-24">
+        <div className="grid min-w-0 gap-8 lg:pb-[34vh]">
+          {technology.steps.map((step, index) => {
+            const active = index === activeIndex;
+            return (
+              <article
+                key={step.index}
+                className={`min-h-[34vh] rounded-lg border p-5 transition-all duration-500 md:min-h-[52vh] md:p-6 ${
+                  active
+                    ? "border-primary/25 bg-background/86 shadow-elegant"
+                    : "border-transparent bg-transparent opacity-55"
+                }`}
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">{step.section}</p>
+                <div className="mt-6 flex items-start gap-4">
+                  <span className="font-mono text-xs font-semibold text-muted-foreground">{step.index}</span>
+                  <div>
+                    <h2 className="font-display text-3xl font-semibold leading-tight md:text-5xl">{step.title}</h2>
+                    <p className="mt-5 hidden max-w-xl text-base leading-8 text-muted-foreground md:block">{step.text}</p>
+                    <details className="mt-4 rounded-md border border-primary/15 bg-background/70 p-3 md:hidden" open={active}>
+                      <summary className="cursor-pointer text-sm font-semibold text-primary">{technology.details}</summary>
+                      <p className="mt-3 text-sm leading-7 text-muted-foreground">{step.text}</p>
+                    </details>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="min-w-0 lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
+          <ProductPcbScene progress={progress} activeIndex={activeIndex} language={language} />
+        </div>
+      </section>
+
+      <section className="bg-[hsl(156_28%_12%)] py-20 text-background md:py-28">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-glow">{technology.proofEyebrow}</p>
+            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">
+              {technology.proofTitle}
+            </h2>
+          </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {technology.proofImages.map((item) => (
+              <article key={item.src} className="overflow-hidden rounded-lg border border-background/12 bg-background/6 shadow-elegant">
+                <img src={item.src} alt={item.title} className="h-72 w-full object-cover" loading="lazy" />
+                <div className="p-5">
+                  <h3 className="font-display text-2xl font-semibold">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-background/70">{item.text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[hsl(42_38%_94%)] py-20 md:py-28">
+        <div className="mx-auto grid w-full max-w-7xl items-end gap-8 px-5 sm:px-8 lg:grid-cols-[0.65fr_0.35fr]">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{technology.finalEyebrow}</p>
+            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">
+              {technology.finalTitle}
+            </h2>
+            <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
+              {technology.finalText}
+            </p>
+          </div>
+          <a
+            href="/#forms"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
+          >
+            {technology.finalCta}
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+const ProductPcbScene = ({
+  progress,
+  activeIndex,
+  language,
+  hero = false,
+}: {
+  progress: number;
+  activeIndex: number;
+  language: Language;
+  hero?: boolean;
+}) => {
+  const technology = productTechnologyCopy[language];
+  const polymer = hero ? 1 : progressBetween(progress, 0.1, 0.22);
+  const traces = hero ? 1 : progressBetween(progress, 0.23, 0.36);
+  const components = hero ? 1 : progressBetween(progress, 0.36, 0.5);
+  const product = hero ? 0.36 : progressBetween(progress, 0.48, 0.62);
+  const solution = hero ? 0 : progressBetween(progress, 0.62, 0.76);
+  const release = hero ? 0 : progressBetween(progress, 0.66, 0.84);
+  const substrateDissolve = hero ? 0 : progressBetween(progress, 0.7, 0.92);
+  const copperRelease = hero ? 0 : progressBetween(progress, 0.7, 0.9);
+  const streams = hero ? 0 : progressBetween(progress, 0.74, 0.9);
+  const loop = hero ? 0 : progressBetween(progress, 0.86, 1);
+  const tilt = hero ? 58 : 62 - progress * 24;
+  const rotate = hero ? -13 : -16 + progress * 24;
+  const sink = solution * 44;
+  const componentOpacity = components * (hero ? 1 : 1 - release * 0.18);
+  const substrateOpacity = hero ? 0.95 : 0.95 - substrateDissolve * 0.66;
+  const polymerOpacity = polymer * (hero ? 1 : 1 - substrateDissolve * 0.82);
+  const detailOpacity = traces * (hero ? 1 : 1 - substrateDissolve * 0.44);
+  const traceOpacity = traces * (hero ? 1 : 1 - copperRelease * 0.08);
+
+  return (
+    <div className={`product-scene-shell ${hero ? "min-h-[440px]" : "min-h-[540px] lg:h-full"}`}>
+      <div className="product-scene-grid" />
+      <div className="product-stage-label">
+        <span>{technology.steps[activeIndex]?.index ?? "01"}</span>
+        <span>{technology.steps[activeIndex]?.section ?? "Leaftronics"}</span>
+      </div>
+
+      <div className="product-housing" style={{ opacity: product, transform: `translate(-50%, -50%) scale(${0.82 + product * 0.1})` }} />
+      <div className="product-solution-vessel" style={{ opacity: solution }}>
+        <div className="product-liquid" />
+      </div>
+
+      <div className="product-pcb-viewport">
+        <div
+          className="product-pcb-assembly"
+          style={{
+            transform: `translate3d(-50%, calc(-50% + ${sink}px), 0) rotateX(${tilt}deg) rotateZ(${rotate}deg)`,
+            "--substrate-dissolve": substrateDissolve,
+            "--copper-release": copperRelease,
+            "--component-release": release,
+          } as CSSProperties}
+        >
+          <div className="product-pcb-shadow" />
+          <div className="product-layer product-fiber-layer" style={{ opacity: substrateOpacity }} />
+          <div className="product-layer product-polymer-layer" style={{ opacity: polymerOpacity }} />
+          <div className="product-substrate-fragments" style={{ opacity: substrateDissolve }}>
+            {boardFragmentClasses.map((className) => (
+              <span key={className} className={className} />
+            ))}
+          </div>
+          <div className="product-board-detail-layer" style={{ opacity: detailOpacity }}>
+            <div className="product-silk product-silk-brand">LEAFTRONICS</div>
+            <div className="product-silk product-silk-io">DIGITAL I/O</div>
+            <div className="product-silk product-silk-power">POWER</div>
+            <div className="product-header product-header-top" />
+            <div className="product-header product-header-bottom" />
+            <div className="product-usb-port" />
+            <div className="product-power-jack" />
+            {boardMounts.map(([left, top]) => (
+              <span key={`${left}-${top}`} className="product-mount-hole" style={{ left, top }} />
+            ))}
+            {boardVias.map(([left, top]) => (
+              <span key={`${left}-${top}`} className="product-via" style={{ left, top }} />
+            ))}
+          </div>
+          <div className="product-trace-layer" style={{ opacity: traceOpacity }}>
+            {boardTraceClasses.map((className) => (
+              <span key={className} className={className} />
+            ))}
+          </div>
+          <div
+            className="product-component-layer"
+            style={{
+              opacity: componentOpacity,
+              transform: `translateZ(${18 + components * 16}px)`,
+              "--component-release": release,
+            } as CSSProperties}
+          >
+            {boardComponentClasses.map((className) => (
+              <span key={className} className={className} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="product-energy-lines" style={{ opacity: product }}>
+        <span />
+        <span />
+        <span />
+      </div>
+
+      <div className="product-material-streams" style={{ opacity: streams }}>
+        {technology.materialStreams.map((stream) => (
+          <span key={stream.label} className={stream.className}>
+            {stream.label}
+          </span>
+        ))}
+      </div>
+
+      <div className="product-loop-ring" style={{ opacity: loop, transform: `translate(-50%, -50%) scale(${0.86 + loop * 0.18})` }} />
     </div>
   );
 };
@@ -1730,11 +2246,9 @@ const ProcessGraph = ({
   const pointToRole: Partial<Record<GraphPoint, RoleId>> = {
     oem: "oem",
     customer: "customer",
-    consulting: "partner",
-    disassembly: "recycler",
     smelter: "smelter",
-    materials: "smelter",
   };
+  const mutedPoints = new Set<GraphPoint>(["disassembly", "materials"]);
 
   const edges: FlowEdge[] = [
     {
@@ -1849,7 +2363,6 @@ const ProcessGraph = ({
       jumpTo("demos");
       return;
     }
-    jumpTo("forms");
   };
 
   return (
@@ -1906,6 +2419,8 @@ const ProcessGraph = ({
             const Icon = graphIcons[point];
             const node = content.solution.nodes[point];
             const position = positions[point];
+            const hasDemo = Boolean(pointToRole[point]);
+            const isMuted = mutedPoints.has(point);
             const tooltipStyle: CSSProperties = point === "materials"
               ? { bottom: "calc(100% + 0.75rem)", left: 0 }
               : point === "smelter" || point === "disassembly"
@@ -1928,18 +2443,26 @@ const ProcessGraph = ({
                 onBlur={() => setHoveredPoint(null)}
                 onClick={() => handleNode(point)}
                 aria-pressed={activePoint === point}
-                className={`group absolute z-30 flex min-h-[126px] flex-col rounded-lg border bg-background/95 p-4 text-left shadow-card transition-all hover:z-40 hover:-translate-y-1 ${
+                className={`group absolute z-30 flex min-h-[126px] flex-col rounded-lg border p-4 text-left shadow-card transition-all hover:z-40 hover:-translate-y-1 ${
                   activePoint === point
-                    ? "border-primary ring-2 ring-primary/20"
-                    : "border-border"
-                }`}
+                    ? isMuted
+                      ? "border-primary bg-stone-100/95 ring-2 ring-primary/20"
+                      : "border-primary bg-background/95 ring-2 ring-primary/20"
+                    : isMuted
+                      ? "border-stone-200 bg-stone-100/90 text-foreground/72"
+                      : "border-border bg-background/95"
+                } ${hasDemo ? "cursor-pointer" : "cursor-default"}`}
                 style={{ left: position.x, top: position.y, width: position.width ?? 160, height: position.height }}
               >
                 <span className="flex items-start justify-between gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                    isMuted ? "bg-stone-200 text-foreground/55" : "bg-primary/10 text-primary"
+                  }`}>
                     <Icon className="h-5 w-5" />
                   </span>
-                  <span className="rounded-full bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  <span className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${
+                    isMuted ? "bg-stone-200/80 text-foreground/48" : "bg-muted text-muted-foreground"
+                  }`}>
                     {node.label}
                   </span>
                 </span>
@@ -1968,19 +2491,24 @@ const ProcessGraph = ({
         {graphOrder.map((point, index) => {
           const Icon = graphIcons[point];
           const node = content.solution.nodes[point];
+          const isMuted = mutedPoints.has(point);
           return (
             <button
               key={point}
               type="button"
               onClick={() => handleNode(point)}
-              className={`relative flex items-start gap-3 rounded-lg border bg-background p-4 text-left shadow-card ${
+              className={`relative flex items-start gap-3 rounded-lg border p-4 text-left shadow-card ${
                 activePoint === point
-                  ? "border-primary ring-2 ring-primary/20"
-                  : "border-border"
-              }`}
-            >
+                  ? "border-primary bg-background ring-2 ring-primary/20"
+                  : isMuted
+                    ? "border-stone-200 bg-stone-100/90"
+                    : "border-border bg-background"
+                }`}
+              >
               {index < graphOrder.length - 1 ? <span aria-hidden className="absolute left-8 top-14 h-[calc(100%+8px)] w-px bg-primary/18" /> : null}
-              <span className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <span className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                isMuted ? "bg-stone-200 text-foreground/55" : "bg-primary/10 text-primary"
+              }`}>
                 <Icon className="h-5 w-5" />
               </span>
               <span>
@@ -2146,12 +2674,124 @@ export const DemoSurface = ({ content, surface, reference }: { content: LandingC
   </DemoWindow>
 );
 
+const smelterDeliveries = [
+  {
+    id: "LT-0726-18",
+    date: "18.07.2026",
+    source: "Leaftronics Dresden",
+    tonnes: 38,
+    status: "freigegeben",
+    materials: [
+      { label: "Kupfer", share: 41, tonnes: 15.6 },
+      { label: "Substrat", share: 34, tonnes: 12.9 },
+      { label: "Edelmetalle", share: 8, tonnes: 3.0 },
+      { label: "Lötmetalle", share: 17, tonnes: 6.5 },
+    ],
+  },
+  {
+    id: "LT-0726-24",
+    date: "24.07.2026",
+    source: "OEM-Rückläufer Süd",
+    tonnes: 31,
+    status: "angemeldet",
+    materials: [
+      { label: "Kupfer", share: 38, tonnes: 11.8 },
+      { label: "Substrat", share: 37, tonnes: 11.5 },
+      { label: "Edelmetalle", share: 7, tonnes: 2.2 },
+      { label: "Lötmetalle", share: 18, tonnes: 5.6 },
+    ],
+  },
+  {
+    id: "LT-0726-31",
+    date: "31.07.2026",
+    source: "Industriechargen Ost",
+    tonnes: 24,
+    status: "in Prüfung",
+    materials: [
+      { label: "Kupfer", share: 44, tonnes: 10.6 },
+      { label: "Substrat", share: 31, tonnes: 7.4 },
+      { label: "Edelmetalle", share: 9, tonnes: 2.2 },
+      { label: "Lötmetalle", share: 16, tonnes: 3.8 },
+    ],
+  },
+];
+
+export const SmelterDashboard = ({
+  content,
+  surface,
+  reference,
+}: {
+  content: LandingCopy;
+  surface: LandingCopy["demos"]["surfaces"][RoleId];
+  reference: string;
+}) => (
+  <DemoWindow
+    content={content}
+    reference={reference}
+    icon={<Flame className="h-4 w-4" />}
+    title={surface.title}
+    subtitle="Nächste Lieferungen, Materialanteile und Mengen im Überblick."
+  >
+    <div className="grid gap-3 sm:grid-cols-3">
+      <div className="min-w-0 rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
+        <p className="text-xs uppercase leading-5 tracking-[0.18em] text-muted-foreground">nächste charge</p>
+        <p className="mt-2 font-display text-3xl font-semibold leading-none">{smelterDeliveries[0].tonnes} t</p>
+      </div>
+      <div className="min-w-0 rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
+        <p className="text-xs uppercase leading-5 tracking-[0.18em] text-muted-foreground">angemeldet</p>
+        <p className="mt-2 font-display text-3xl font-semibold leading-none">93 t</p>
+      </div>
+      <div className="min-w-0 rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
+        <p className="text-xs uppercase leading-5 tracking-[0.18em] text-muted-foreground">planung</p>
+        <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-0">
+          <p className="font-display text-3xl font-semibold leading-none">3</p>
+          <p className="text-sm font-semibold leading-5 text-foreground/72">Lieferungen</p>
+        </div>
+      </div>
+    </div>
+
+    <div className="mt-5 grid gap-3">
+      {smelterDeliveries.map((delivery) => (
+        <div key={delivery.id} className="min-w-0 rounded-lg border border-primary/14 bg-background/88 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.65)]">
+          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+            <div className="min-w-0">
+              <p className="break-words text-xs font-semibold uppercase leading-5 tracking-[0.18em] text-primary">{delivery.id} · {delivery.date}</p>
+              <h4 className="mt-2 break-words font-display text-2xl font-semibold leading-tight">{delivery.source}</h4>
+            </div>
+            <div className="shrink-0 text-left sm:text-right">
+              <p className="font-display text-4xl font-semibold text-primary">{delivery.tonnes} t</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{delivery.status}</p>
+            </div>
+          </div>
+          <div className="mt-4 grid gap-2 md:grid-cols-4">
+            {delivery.materials.map((material) => (
+              <div key={material.label} className="flex min-w-0 flex-col rounded-md border border-primary/10 bg-primary/6 p-3">
+                <p className="min-h-8 break-words text-[10px] font-semibold uppercase leading-4 tracking-[0.12em] text-muted-foreground">
+                  {material.label}
+                </p>
+                <div className="mt-2 flex min-w-0 items-baseline justify-between gap-2">
+                  <p className="shrink-0 whitespace-nowrap font-display text-2xl font-semibold leading-none">{material.tonnes.toFixed(1)} t</p>
+                  <p className="shrink-0 text-xs font-semibold text-primary">{material.share}%</p>
+                </div>
+                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-primary/10">
+                  <span className="block h-full rounded-full bg-primary" style={{ width: `${material.share}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </DemoWindow>
+);
+
 export const CustomerReturnDemo = ({ content, language, reference }: { content: LandingCopy; language: Language; reference: string }) => {
   const [serial, setSerial] = useState(DEMO_SERIAL);
   const [lookup, setLookup] = useState<SerialLookup | null>(SERIAL_DB[DEMO_SERIAL]);
   const [notFound, setNotFound] = useState(false);
   const [location, setLocation] = useState(SERIAL_DB[DEMO_SERIAL].city);
   const [detecting, setDetecting] = useState(false);
+  const [returnConfirmed, setReturnConfirmed] = useState(false);
   const copy = content.demos.customerLive;
   const displayLocation = localizeCity(location, language);
 
@@ -2160,6 +2800,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
     const result = SERIAL_DB[key];
     setLookup(result ?? null);
     setNotFound(!result && key.length > 0);
+    setReturnConfirmed(false);
     if (result) {
       setLocation(result.city);
     }
@@ -2191,25 +2832,28 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
             {copy.serialLabel}
             <input
               value={serial}
-              onChange={(event) => setSerial(event.target.value)}
+              onChange={(event) => {
+                setSerial(event.target.value);
+                setReturnConfirmed(false);
+              }}
               placeholder={copy.serialPlaceholder}
               className="h-11 rounded-md border border-primary/18 bg-background px-3 font-mono text-sm text-foreground outline-none focus:border-primary"
             />
           </label>
+          <button
+            type="button"
+            onClick={() => {
+              setSerial(DEMO_SERIAL);
+              checkSerial(DEMO_SERIAL);
+            }}
+            className="mt-2 inline-flex text-sm font-semibold text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            {copy.useDemo}
+          </button>
           <div className="mt-3 flex flex-wrap gap-2">
             <button type="submit" className="inline-flex h-10 items-center gap-2 rounded-md bg-foreground px-4 text-sm font-semibold text-background shadow-card">
               <SearchCheck className="h-4 w-4" />
               {copy.check}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setSerial(DEMO_SERIAL);
-                checkSerial(DEMO_SERIAL);
-              }}
-              className="inline-flex h-10 items-center gap-2 rounded-md border border-primary/18 bg-background/70 px-4 text-sm font-semibold text-foreground/65 hover:text-foreground"
-            >
-              {copy.useDemo}
             </button>
           </div>
 
@@ -2251,6 +2895,17 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                     </div>
                   ))}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setReturnConfirmed(true);
+                    toast.success(copy.confirm, { description: lookup.serial });
+                  }}
+                  className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  {copy.confirm}
+                </button>
               </>
             ) : notFound ? (
               <div className="rounded-md border border-background/12 bg-black/25 p-4 text-sm text-background/70">{copy.unknown}</div>
@@ -2259,53 +2914,41 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
             )}
           </div>
 
-          <div className="rounded-lg border border-background/12 bg-background/8 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.06)]">
-            <p className="text-sm font-semibold text-background/85">{copy.discounts}</p>
-            <div className="mt-3 grid gap-2">
-              {copy.oemOffers.map((offer) => (
-                <div key={offer.oem} className="rounded-md border border-background/12 bg-black/25 p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="font-display text-lg font-semibold">{offer.oem}</p>
-                    <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-                      OEM
-                    </span>
-                  </div>
-                  <p className="mt-1 text-sm font-semibold text-background/85">{offer.offer}</p>
-                  <p className="mt-1 text-xs text-background/50">{offer.condition}</p>
-                </div>
-              ))}
+          {returnConfirmed && lookup ? (
+            <div className="rounded-lg border border-primary/18 bg-primary/10 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.45)]">
+              <p className="text-sm font-semibold text-primary">{copy.discounts}</p>
+              <div className="mt-3 grid gap-2">
+                {copy.oemOffers.map((offer) => {
+                  const percent = offer.offer.match(/\d+\s?%/)?.[0];
+                  const remainder = percent ? offer.offer.replace(percent, "").trim() : offer.offer;
+                  return (
+                    <div key={offer.oem} className="rounded-md border border-primary/14 bg-background/90 p-3 shadow-sm">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="font-display text-lg font-semibold">{offer.oem}</p>
+                        <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+                          OEM
+                        </span>
+                      </div>
+                      {percent ? (
+                        <div className="mt-2 flex items-end gap-2">
+                          <p className="font-display text-5xl font-semibold leading-none text-primary">{percent}</p>
+                          <p className="pb-1 text-sm font-semibold text-foreground/72">{remainder}</p>
+                        </div>
+                      ) : (
+                        <p className="mt-2 font-display text-2xl font-semibold text-primary">{offer.offer}</p>
+                      )}
+                      <p className="mt-2 text-xs text-muted-foreground">{offer.condition}</p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <button
-              type="button"
-              onClick={() => toast.success(copy.confirm, { description: lookup?.serial ?? serial })}
-              className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
-            >
-              <CheckCircle2 className="h-4 w-4" />
-              {copy.confirm}
-            </button>
-          </div>
+          ) : null}
         </div>
       </div>
     </DemoWindow>
   );
 };
-
-function localizeDevice(device: string, language: Language) {
-  const normalized = device.replace(/Â·/g, "·");
-  if (language === "en") {
-    return normalized
-      .replace("Steuerungsmodul · Leiterplatte Rev. C", "Control module · circuit board Rev. C")
-      .replace("Leiterplatte · Sensorboard", "Circuit board · sensor board")
-      .replace("Hauptplatine · Industriesteuerung", "Mainboard · industrial controller");
-  }
-  if (language === "zh") {
-    return normalized
-      .replace("Steuerungsmodul · Leiterplatte Rev. C", "控制模块 · 电路板 Rev. C")
-      .replace("Leiterplatte · Sensorboard", "电路板 · 传感器板")
-      .replace("Hauptplatine · Industriesteuerung", "主板 · 工业控制器");
-  }
-  return normalized;
-}
 
 function localizeCity(city: string, language: Language) {
   if (language === "en") {
@@ -2325,6 +2968,23 @@ function localizeCity(city: string, language: Language) {
     return labels[city] ?? city;
   }
   return city;
+}
+
+function localizeDevice(device: string, language: Language) {
+  const normalized = device.replace(/Â·/g, "·");
+  if (language === "en") {
+    return normalized
+      .replace("Steuerungsmodul · Leiterplatte Rev. C", "Control module · circuit board Rev. C")
+      .replace("Leiterplatte · Sensorboard", "Circuit board · sensor board")
+      .replace("Hauptplatine · Industriesteuerung", "Mainboard · industrial controller");
+  }
+  if (language === "zh") {
+    return normalized
+      .replace("Steuerungsmodul · Leiterplatte Rev. C", "控制模块 · 电路板 Rev. C")
+      .replace("Leiterplatte · Sensorboard", "电路板 · 传感器板")
+      .replace("Hauptplatine · Industriesteuerung", "主板 · 工业控制器");
+  }
+  return normalized;
 }
 
 export default Landing;
