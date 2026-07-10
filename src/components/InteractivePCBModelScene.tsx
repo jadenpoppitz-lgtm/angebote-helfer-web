@@ -89,6 +89,7 @@ const DEFAULT_MODEL_PATH = getPreferredModelPath();
 
 interface InteractivePCBModelSceneProps {
   modelPath?: string;
+  onReady?: () => void;
   scrollProgress?: number;
 }
 
@@ -251,7 +252,7 @@ function getProductBoardFlex(productProgress?: number) {
   const assembledTest =
     smoothstep(0.355, 0.405, productProgress) * (1 - smoothstep(0.515, 0.585, productProgress));
 
-  return Math.max(substrateTest * 0.78, assembledTest);
+  return Math.max(substrateTest * 0.9, assembledTest * 1.28);
 }
 
 function getProductStepWeight(productProgress: number | undefined, index: number) {
@@ -274,62 +275,62 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
 
   if (scrollProgress >= STORY_PRODUCT_START) {
     const productProgress = (scrollProgress - STORY_PRODUCT_START) / (1 - STORY_PRODUCT_START);
-    const productScale = sampleKeyframes(productProgress, [1.38, 1.78, 1.68, 0.9, 1.3, 0.84, 0.82, 0.9]);
-    const compactScale = productScale > 1.5 ? 0.5 : productScale > 1.2 ? 0.6 : 0.78;
+    const productScale = sampleKeyframes(productProgress, [1.38, 1.95, 1.78, 1.2, 2.02, 0.78, 0.84, 0.94]);
+    const compactScale = productScale > 1.75 ? 0.64 : productScale > 1.3 ? 0.72 : 0.86;
     return {
-      pitch: sampleKeyframes(productProgress, [0.04, 0.88, 0.16, 0.42, 0.24, 0, 0, 0]),
+      pitch: sampleKeyframes(productProgress, [0.04, 0.66, 0.16, -1.42, 0.26, 0.04, 0, 0]),
       scale: productScale * (isCompact ? compactScale : 1),
       x: isCompact
         ? 0
-        : sampleKeyframes(productProgress, [1.7, -1.42, 1.56, -1.72, 1.62, -1.5, 1.26, -1.18]),
-      yaw: sampleKeyframes(productProgress, [-0.34, -0.72, -1.05, -1.42, -1.82, -2.15, -2.42, -2.72]),
+        : sampleKeyframes(productProgress, [1.58, -1.3, 1.5, -1.48, 1.42, -1.22, 1.22, -1.12]),
+      yaw: sampleKeyframes(productProgress, [-0.34, -0.58, -1.02, 1.45, -1.58, -0.12, -2.38, -2.68]),
       z: 0,
     };
   }
 
   const progress = scrollProgress / STORY_PRODUCT_START;
   const travel = isCompact ? 0.58 : 1;
-  const compactScale = isCompact ? 0.72 : 1;
+  const compactScale = isCompact ? 0.84 : 1;
   const dataX = isCompact ? 0.28 : 1.62;
   const productX = isCompact ? 0 : 1.7;
 
-  if (progress < 0.18) {
-    const approach = smoothstep(0.015, 0.115, progress);
-    const insertion = smoothstep(0.115, 0.175, progress);
-    const loadingBayX = isCompact ? -0.45 * travel : 0.12;
-    const insideContainerX = isCompact ? 0.35 * travel : 0.72;
-    const startX = isCompact ? -1.5 * travel : 0.68;
+  if (progress < 0.2) {
+    const approach = smoothstep(0.02, 0.105, progress);
+    const insertion = smoothstep(0.105, 0.185, progress);
+    const loadingBayX = isCompact ? -0.2 * travel : -0.02;
+    const insideContainerX = isCompact ? 0.38 * travel : 0.68;
+    const startX = isCompact ? 0 : 0.82;
     const approachX = THREE.MathUtils.lerp(startX, loadingBayX, approach);
-    const approachScale = THREE.MathUtils.lerp(isCompact ? 0.96 : 0.7, 0.36, approach);
+    const approachScale = THREE.MathUtils.lerp(isCompact ? 1.08 : 0.78, 0.34, approach);
     return {
-      pitch: THREE.MathUtils.lerp(0.02, Math.PI * 0.24, approach),
-      scale: THREE.MathUtils.lerp(approachScale, 0.28, insertion) * compactScale,
+      pitch: THREE.MathUtils.lerp(0.03, 0.1, approach),
+      scale: THREE.MathUtils.lerp(approachScale, 0.24, insertion) * compactScale,
       x: THREE.MathUtils.lerp(approachX, insideContainerX, insertion),
-      yaw: THREE.MathUtils.lerp(-0.18, 0.16, approach),
-      z: THREE.MathUtils.lerp(0.72, -0.12, insertion),
+      yaw: THREE.MathUtils.lerp(-0.22, Math.PI * 0.46, approach),
+      z: THREE.MathUtils.lerp(0.42, -0.08, insertion),
     };
   }
 
-  if (progress < 0.48) {
-    const collectionHold = smoothstep(0.18, 0.46, progress);
-    const insideContainerX = isCompact ? 0.35 * travel : 0.72;
+  if (progress < 0.46) {
+    const collectionHold = smoothstep(0.2, 0.34, progress);
+    const insideContainerX = isCompact ? 0.38 * travel : 0.68;
     return {
-      pitch: THREE.MathUtils.lerp(Math.PI * 0.24, 0.08, collectionHold),
-      scale: THREE.MathUtils.lerp(0.28, 0.44, collectionHold) * compactScale,
-      x: THREE.MathUtils.lerp(insideContainerX, -2.7 * travel, collectionHold),
-      yaw: THREE.MathUtils.lerp(0.16, -0.9, collectionHold),
-      z: -0.12,
+      pitch: THREE.MathUtils.lerp(0.1, 0.04, collectionHold),
+      scale: THREE.MathUtils.lerp(0.24, 0.38, collectionHold) * compactScale,
+      x: THREE.MathUtils.lerp(insideContainerX, 5.4 * travel, collectionHold),
+      yaw: THREE.MathUtils.lerp(Math.PI * 0.46, Math.PI * 0.52, collectionHold),
+      z: -0.08,
     };
   }
 
-  if (progress < 0.68) {
-    const dataTransition = smoothstep(0.48, 0.6, progress);
+  if (progress < 0.66) {
+    const dataTransition = smoothstep(0.46, 0.56, progress);
     return {
-      pitch: THREE.MathUtils.lerp(0.08, -0.08, dataTransition),
-      scale: THREE.MathUtils.lerp(0.44, 1.34, dataTransition) * compactScale,
-      x: THREE.MathUtils.lerp(-2.7 * travel, dataX, dataTransition),
-      yaw: THREE.MathUtils.lerp(-0.9, -0.55, dataTransition),
-      z: THREE.MathUtils.lerp(-0.12, 0, dataTransition),
+      pitch: THREE.MathUtils.lerp(0.04, -0.08, dataTransition),
+      scale: THREE.MathUtils.lerp(0.38, 1.34, dataTransition) * compactScale,
+      x: THREE.MathUtils.lerp(-3.4 * travel, dataX, dataTransition),
+      yaw: THREE.MathUtils.lerp(-0.86, -0.55, dataTransition),
+      z: THREE.MathUtils.lerp(-0.08, 0, dataTransition),
     };
   }
 
@@ -353,7 +354,7 @@ function getPartSeparation(phase: number, delay: number) {
 function getModelLayout(viewportWidth: number, viewportHeight: number, shortLandscape = false): ModelLayout {
   const aspect = viewportWidth / Math.max(viewportHeight, 0.001);
   const isCompact = aspect < 1.08 || viewportWidth < 4.2;
-  const widthScale = THREE.MathUtils.clamp(viewportWidth / (isCompact ? 4.1 : 6.8), 0.72, 1.25);
+  const widthScale = THREE.MathUtils.clamp(viewportWidth / (isCompact ? 3.8 : 6.8), 0.78, 1.25);
   const heightScale = THREE.MathUtils.clamp(viewportHeight / 5, 0.8, 1.2);
   const aspectBoost = THREE.MathUtils.clamp(aspect / 1.55, 1, 1.14);
   const scale = Math.min(widthScale, heightScale) * aspectBoost * (shortLandscape ? 0.72 : 1);
@@ -363,7 +364,7 @@ function getModelLayout(viewportWidth: number, viewportHeight: number, shortLand
     isCompact,
     scale,
     x: 0,
-    y: shortLandscape ? 0.16 : isCompact ? 1.25 : 0.36,
+    y: shortLandscape ? 0.16 : isCompact ? 0.78 : 0.36,
   };
 }
 
@@ -787,7 +788,7 @@ function createOptimizedModel(source: THREE.Group, logoTexture?: THREE.Texture) 
       logo.renderOrder = 4;
       logo.visible = false;
       logo.userData.pcbLogoOrigin = logo.position.clone();
-      logo.userData.pcbHeroLogoOffset = new THREE.Vector3(0, maxDimension * 0.0015, -boardSize.z * 0.2);
+      logo.userData.pcbHeroLogoOffset = new THREE.Vector3();
       model.add(logo);
     }
   }
@@ -1033,16 +1034,16 @@ function normalizeProblemAsset(
 }
 
 const BEAKER_PROFILE = [
-  new THREE.Vector2(0.435, 0.49),
+  new THREE.Vector2(0.478, 0.5),
+  new THREE.Vector2(0.472, 0.43),
+  new THREE.Vector2(0.44, -0.4),
+  new THREE.Vector2(0.418, -0.468),
+  new THREE.Vector2(0.374, -0.505),
+  new THREE.Vector2(0.338, -0.474),
+  new THREE.Vector2(0.354, -0.41),
   new THREE.Vector2(0.424, 0.43),
-  new THREE.Vector2(0.365, -0.4),
-  new THREE.Vector2(0.32, -0.45),
-  new THREE.Vector2(0.33, -0.485),
-  new THREE.Vector2(0.38, -0.51),
-  new THREE.Vector2(0.42, -0.45),
-  new THREE.Vector2(0.474, 0.46),
-  new THREE.Vector2(0.482, 0.5),
-  new THREE.Vector2(0.435, 0.49),
+  new THREE.Vector2(0.43, 0.492),
+  new THREE.Vector2(0.478, 0.5),
 ];
 
 const GLASS_VERTEX_SHADER = `
@@ -1291,6 +1292,8 @@ function LabBeakerStage({
     const timeline = getTimelineState(processTime, getStoryProcessPhase(scrollProgress));
     const layout = getModelLayout(viewport.width, viewport.height, size.height <= 520 && size.width > size.height);
     const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact);
+    const productProgress = getStoryProductProgress(scrollProgress);
+    const dissolutionShot = getProductStepWeight(productProgress, 5);
     const pointer = pointerRef.current;
 
     if (groupRef.current) {
@@ -1303,7 +1306,7 @@ function LabBeakerStage({
       groupRef.current.rotation.y = THREE.MathUtils.damp(groupRef.current.rotation.y, pointer.x * 0.045, 6, delta);
       const beakerScale = THREE.MathUtils.damp(
         groupRef.current.scale.x,
-        layout.beakerScale * storyTransform.scale,
+        layout.beakerScale * THREE.MathUtils.lerp(storyTransform.scale, 0.62, dissolutionShot),
         8,
         delta,
       );
@@ -1331,7 +1334,7 @@ function LabBeakerStage({
           ior={1.33}
           opacity={0}
           roughness={0.1}
-          side={THREE.FrontSide}
+          side={THREE.DoubleSide}
           thickness={0}
           transmission={0}
           transparent
@@ -1340,13 +1343,14 @@ function LabBeakerStage({
       <FluidSurface cycleOriginRef={cycleOriginRef} scrollProgress={scrollProgress} />
       <FluidRipple cycleOriginRef={cycleOriginRef} delay={0} scrollProgress={scrollProgress} />
       <FluidRipple cycleOriginRef={cycleOriginRef} delay={1} scrollProgress={scrollProgress} />
-      <FluidRipple cycleOriginRef={cycleOriginRef} delay={2} scrollProgress={scrollProgress} />
     </group>
   );
 }
 
 function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
   const containerRef = useRef<THREE.Group>(null);
+  const leftDoorRef = useRef<THREE.Group>(null);
+  const rightDoorRef = useRef<THREE.Group>(null);
   const pileRef = useRef<THREE.Group>(null);
   const pileBoardsRef = useRef<THREE.InstancedMesh>(null);
   const pileChipsRef = useRef<THREE.InstancedMesh>(null);
@@ -1366,6 +1370,20 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
   );
   const transform = useMemo(() => new THREE.Object3D(), []);
   const partOffset = useMemo(() => new THREE.Vector3(), []);
+  const containerDoorMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#517b6c",
+        emissive: "#173b2d",
+        emissiveIntensity: 0.16,
+        metalness: 0.46,
+        opacity: 0,
+        roughness: 0.5,
+        side: THREE.DoubleSide,
+        transparent: true,
+      }),
+    [],
+  );
 
   useEffect(() => {
     pileBoardsRef.current?.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -1374,8 +1392,9 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
 
     return () => {
       containerAsset.material.dispose();
+      containerDoorMaterial.dispose();
     };
-  }, [containerAsset]);
+  }, [containerAsset, containerDoorMaterial]);
 
   useFrame(({ clock, size }, delta) => {
     const problemProgress = getStoryProblemProgress(scrollProgress);
@@ -1385,12 +1404,15 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
     const horizontalTravel = layout.isCompact ? 0.58 : 1;
 
     if (containerRef.current) {
-      const enter = smoothstep(0.015, 0.075, progress);
-      const shipping = smoothstep(0.135, 0.25, progress);
-      const amount = active ? enter * (1 - smoothstep(0.225, 0.3, progress)) : 0;
-      const baseX = 1.16 * horizontalTravel;
+      const enter = smoothstep(-0.025, 0.04, progress);
+      const shipping = smoothstep(0.17, 0.235, progress);
+      const amount = active ? enter * (1 - smoothstep(0.205, 0.252, progress)) : 0;
+      const doorOpen = active
+        ? smoothstep(0.008, 0.05, progress) * (1 - smoothstep(0.155, 0.205, progress))
+        : 0;
+      const baseX = 1.08 * horizontalTravel;
       const targetX =
-        baseX + THREE.MathUtils.lerp(3.8 * horizontalTravel, 0, enter) + shipping * 3.5 * horizontalTravel;
+        baseX + THREE.MathUtils.lerp(2.9 * horizontalTravel, 0, enter) + shipping * 7.2 * horizontalTravel;
       containerRef.current.visible = amount > 0.005;
       containerRef.current.position.x = THREE.MathUtils.damp(containerRef.current.position.x, targetX, 9, delta);
       containerRef.current.position.y = THREE.MathUtils.damp(
@@ -1406,14 +1428,32 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
         8,
         delta,
       );
-      const scale = THREE.MathUtils.damp(containerRef.current.scale.x, layout.scale * 0.68, 8, delta);
+      const scale = THREE.MathUtils.damp(containerRef.current.scale.x, layout.scale * 0.58, 8, delta);
       containerRef.current.scale.setScalar(scale);
       containerAsset.material.opacity = amount;
       containerAsset.material.depthWrite = amount > 0.96;
+      containerDoorMaterial.opacity = amount;
+      containerDoorMaterial.depthWrite = amount > 0.96;
+      if (leftDoorRef.current) {
+        leftDoorRef.current.rotation.y = THREE.MathUtils.damp(
+          leftDoorRef.current.rotation.y,
+          Math.PI * 0.44 * doorOpen,
+          10,
+          delta,
+        );
+      }
+      if (rightDoorRef.current) {
+        rightDoorRef.current.rotation.y = THREE.MathUtils.damp(
+          rightDoorRef.current.rotation.y,
+          -Math.PI * 0.44 * doorOpen,
+          10,
+          delta,
+        );
+      }
     }
 
     const pileAmount = active
-      ? smoothstep(0.17, 0.22, progress) * (1 - smoothstep(0.54, 0.67, progress))
+      ? smoothstep(0.17, 0.22, progress) * (1 - smoothstep(0.39, 0.485, progress))
       : 0;
     if (pileRef.current) {
       pileRef.current.visible = pileAmount > 0.005;
@@ -1428,7 +1468,8 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
         const fall = smoothstep(start, impactAt, progress);
         const collision = clamp01((progress - impactAt) / 0.075);
         const appearance = smoothstep(start - 0.025, start + 0.015, progress);
-        const exit = 1 - smoothstep(0.54 + (PROBLEM_PCB_COUNT - index) * 0.002, 0.66, progress);
+        const exitTravel = smoothstep(0.385 + index * 0.0012, 0.475 + index * 0.0012, progress);
+        const exit = 1 - smoothstep(0.41 + (PROBLEM_PCB_COUNT - index) * 0.0015, 0.49, progress);
         const amount = active ? appearance * exit : 0;
         const randomA = hash01(index * 2.17 + 0.4);
         const randomB = hash01(index * 3.11 + 2.6);
@@ -1443,9 +1484,11 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
         const startY = viewport.height * 0.58 + index * 0.115;
         const startZ = (randomB - 0.5) * 1.45;
         const bounce = Math.abs(Math.sin(collision * Math.PI * 3)) * Math.exp(-4.2 * collision) * 0.13;
-        const x = THREE.MathUtils.lerp(startX, targetX, fall);
-        const y = THREE.MathUtils.lerp(startY, targetY, fall) + bounce;
-        const z = THREE.MathUtils.lerp(startZ, targetZ, fall);
+        const x =
+          THREE.MathUtils.lerp(startX, targetX, fall) -
+          exitTravel * (2.6 + randomA * 1.4 + tower * 0.32);
+        const y = THREE.MathUtils.lerp(startY, targetY, fall) + bounce + exitTravel * (0.3 + randomB * 0.65);
+        const z = THREE.MathUtils.lerp(startZ, targetZ, fall) + exitTravel * (randomB - 0.5) * 1.4;
         const boardScale = 0.46 * amount;
         const rotationX = THREE.MathUtils.lerp((randomB - 0.5) * 1.25, (randomA - 0.5) * 0.18, fall);
         const rotationY = THREE.MathUtils.lerp(randomA * Math.PI * 1.8, (randomB - 0.5) * 0.65, fall);
@@ -1479,6 +1522,20 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
     <>
       <group ref={containerRef} visible={false}>
         <primitive object={containerAsset.group} rotation={[0, Math.PI / 2, 0]} />
+        <mesh position={[-1.565, 0.02, 0]}>
+          <boxGeometry args={[0.055, 0.72, 0.69]} />
+          <meshStandardMaterial color="#06100b" emissive="#020705" emissiveIntensity={0.12} roughness={0.9} />
+        </mesh>
+        <group ref={leftDoorRef} position={[-1.54, 0.02, -0.35]}>
+          <mesh position={[0, 0, 0.35]} material={containerDoorMaterial}>
+            <boxGeometry args={[0.045, 0.76, 0.68]} />
+          </mesh>
+        </group>
+        <group ref={rightDoorRef} position={[-1.54, 0.02, 0.35]}>
+          <mesh position={[0, 0, -0.35]} material={containerDoorMaterial}>
+            <boxGeometry args={[0.045, 0.76, 0.68]} />
+          </mesh>
+        </group>
       </group>
       <group ref={pileRef} visible={false}>
         <instancedMesh ref={pileBoardsRef} args={[undefined, undefined, PROBLEM_PCB_COUNT]} frustumCulled={false}>
@@ -1501,11 +1558,13 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
 function PCBModel({
   cycleOriginRef,
   modelPath,
+  onReady,
   pointerRef,
   scrollProgress,
 }: {
   cycleOriginRef: React.RefObject<number | null>;
   modelPath: string;
+  onReady?: () => void;
   pointerRef: React.RefObject<PointerState>;
   scrollProgress?: number;
 }) {
@@ -1529,6 +1588,10 @@ function PCBModel({
     () => collectBaseBoard(model, "pcbBlankBoardOrigin", "pcbBlankBoardStartOffset"),
     [model],
   );
+
+  useEffect(() => {
+    onReady?.();
+  }, [model, onReady]);
 
   useEffect(
     () => () => {
@@ -1573,18 +1636,18 @@ function PCBModel({
       (materialShot * 0.045 + layerShot * 0.018 + traceShot * 0.034 + assemblyShot * 0.052 + electronicsShot * 0.026);
     const flexStrength = getProductBoardFlex(productProgress);
     const flexPulse = 0.78 + Math.sin(clock.elapsedTime * 1.05) * 0.22;
-    const boardFlexAmount = boardFlexState ? boardFlexState.halfExtent * 0.11 * flexStrength * flexPulse : 0;
+    const boardFlexAmount = boardFlexState ? boardFlexState.halfExtent * 0.18 * flexStrength * flexPulse : 0;
     applyBoardFlex(boardFlexState, boardFlexAmount);
     applyBoardFlex(detailFlexState, boardFlexAmount);
     const problemProgress = getStoryProblemProgress(scrollProgress);
     const cleanProductTransition =
       scrollProgress === undefined
         ? 0
-        : smoothstep(STORY_PRODUCT_START - 0.065, STORY_PRODUCT_START - 0.027, scrollProgress);
+        : smoothstep(STORY_PRODUCT_START - 0.014, STORY_PRODUCT_START + 0.004, scrollProgress);
     const collectionIsolation =
       problemProgress === undefined
         ? 0
-        : smoothstep(0.145, 0.22, problemProgress) * (1 - smoothstep(0.48, 0.58, problemProgress));
+        : smoothstep(0.145, 0.22, problemProgress) * (1 - smoothstep(0.41, 0.49, problemProgress));
     const problemBoardVisibility = 1 - collectionIsolation;
     const dataGlitch =
       problemProgress === undefined
@@ -1610,9 +1673,10 @@ function PCBModel({
       -0.12 + storyTransform.yaw + shotYawMotion + (pointerX * 0.25 + idleYaw) * interactionWeight;
     const targetRotationZ =
       productRoll - pointerX * 0.025 * interactionWeight + glitchOffset * 0.45 + Math.sin(clock.elapsedTime * 0.36) * 0.012 * layerShot;
+    const boardDipDistance = productProgress === undefined ? 0.72 : 1.16;
     const targetY =
       layout.y -
-      timeline.boardDipAmount * 0.72 +
+      timeline.boardDipAmount * boardDipDistance +
       Math.sin(clock.elapsedTime * 0.52) * 0.035 * interactionWeight +
       Math.sin(clock.elapsedTime * 29) * 0.035 * dataGlitch;
     const introZoom = scrollProgress === undefined ? 1 + (1 - smoothstep(0, 1, processTime / 2.8)) * 0.32 : 1;
@@ -1654,46 +1718,25 @@ function PCBModel({
     }
 
     if (blankBoard) {
-      const coatingOpacity =
-        productProgress === undefined
-          ? 0
-          : smoothstep(0.06, 0.12, productProgress) *
-            (1 - smoothstep(0.22, 0.38, productProgress)) *
-            0.34;
-
-      if (coatingOpacity > timeline.blankBoardOpacity) {
-        blankBoard.mesh.position.set(
-          blankBoard.origin.x,
-          blankBoard.origin.y + Math.abs(blankBoard.startOffset.y) * (0.004 + layerShot * 0.043),
-          blankBoard.origin.z,
-        );
-        blankBoard.mesh.rotation.set(
-          blankBoard.rotation.x + layerShot * 0.018,
-          blankBoard.rotation.y,
-          blankBoard.rotation.z + Math.sin(clock.elapsedTime * 0.38) * layerShot * 0.012,
-        );
-        setBoardOpacity(blankBoard, coatingOpacity);
-      } else {
-        const flight = timeline.blankBoardAmount;
-        const inverseFlight = 1 - flight;
-        const drift = Math.sin(clock.elapsedTime * 0.7) * blankBoard.startOffset.x * 0.18 * inverseFlight;
-        blankBoard.mesh.position.set(
-          blankBoard.origin.x + blankBoard.startOffset.x * inverseFlight + drift,
-          blankBoard.origin.y + blankBoard.startOffset.y * inverseFlight,
-          blankBoard.origin.z + blankBoard.startOffset.z * inverseFlight,
-        );
-        blankBoard.mesh.rotation.set(
-          blankBoard.rotation.x - Math.PI * 0.42 * inverseFlight,
-          blankBoard.rotation.y + Math.PI * 0.18 * inverseFlight,
-          blankBoard.rotation.z + Math.sin(clock.elapsedTime * 0.6) * 0.05 * inverseFlight,
-        );
-        setBoardOpacity(blankBoard, timeline.blankBoardOpacity);
-      }
+      const flight = timeline.blankBoardAmount;
+      const inverseFlight = 1 - flight;
+      const drift = Math.sin(clock.elapsedTime * 0.7) * blankBoard.startOffset.x * 0.18 * inverseFlight;
+      blankBoard.mesh.position.set(
+        blankBoard.origin.x + blankBoard.startOffset.x * inverseFlight + drift,
+        blankBoard.origin.y + blankBoard.startOffset.y * inverseFlight,
+        blankBoard.origin.z + blankBoard.startOffset.z * inverseFlight,
+      );
+      blankBoard.mesh.rotation.set(
+        blankBoard.rotation.x - Math.PI * 0.42 * inverseFlight,
+        blankBoard.rotation.y + Math.PI * 0.18 * inverseFlight,
+        blankBoard.rotation.z + Math.sin(clock.elapsedTime * 0.6) * 0.05 * inverseFlight,
+      );
+      setBoardOpacity(blankBoard, timeline.blankBoardOpacity);
     }
 
     if (boardDetail) {
       const targetBoard =
-        blankBoard && timeline.blankBoardOpacity > timeline.originalBoardOpacity ? blankBoard : originalBoard;
+        blankBoard && timeline.blankBoardOpacity > 0.01 ? blankBoard : originalBoard;
       const copperReveal = productProgress === undefined ? 1 : smoothstep(0.2, 0.31, productProgress);
       const structurePreview = productProgress === undefined ? 0 : layerShot * 0.36;
       const constructionOpacity =
@@ -1724,7 +1767,7 @@ function PCBModel({
 
     if (boardLogo) {
       const targetBoard =
-        blankBoard && timeline.blankBoardOpacity > timeline.originalBoardOpacity ? blankBoard : originalBoard;
+        blankBoard && timeline.blankBoardOpacity > 0.01 ? blankBoard : originalBoard;
       const logoVisibility =
         scrollProgress === undefined ? 1 : productProgress === undefined ? cleanProductTransition : 1;
       const targetLogoOpacity =
@@ -1735,9 +1778,6 @@ function PCBModel({
 
       if (targetBoard) {
         syncBoardLogo(boardLogo, targetBoard);
-        if (scrollProgress === undefined) {
-          boardLogo.mesh.position.add(boardLogo.heroOffset);
-        }
       }
 
       boardLogo.material.opacity = logoOpacityRef.current;
@@ -1807,14 +1847,11 @@ function PCBModel({
   );
 }
 
-function PilotPCBModel({ modelPath, accentColor }: { modelPath: string; accentColor: string }) {
+function PilotPCBModel({ modelPath }: { modelPath: string }) {
   const groupRef = useRef<THREE.Group>(null);
-  const hotspotsRef = useRef<THREE.Group>(null);
   const gltf = useGLTF(modelPath);
   const viewport = useThree((state) => state.viewport);
   const model = useMemo(() => createOptimizedModel((gltf as { scene: THREE.Group }).scene), [gltf]);
-  const materialStates = useMemo(() => collectModelMaterialStates(model), [model]);
-  const accent = useMemo(() => new THREE.Color(accentColor), [accentColor]);
 
   useEffect(
     () => () => {
@@ -1855,49 +1892,25 @@ function PilotPCBModel({ modelPath, accentColor }: { modelPath: string; accentCo
     const scale = THREE.MathUtils.damp(groupRef.current.scale.x, scaleTarget, 6, delta);
     groupRef.current.scale.setScalar(scale);
 
-    const energy = 0.035 + (Math.sin(clock.elapsedTime * 2.2) + 1) * 0.02;
-    for (const state of materialStates) {
-      state.material.emissive.copy(state.emissive).lerp(accent, energy);
-      state.material.emissiveIntensity = state.emissiveIntensity + energy * 0.18;
-    }
-
-    if (hotspotsRef.current) {
-      hotspotsRef.current.children.forEach((hotspot, index) => {
-        const pulse = 0.86 + (Math.sin(clock.elapsedTime * 2.7 + index * 1.9) + 1) * 0.14;
-        hotspot.scale.setScalar(pulse);
-      });
-    }
   });
 
   return (
     <group ref={groupRef} position={[0, 0.22, 0]} rotation={[0.08, 0, 0]}>
       <primitive object={model} />
-      <group ref={hotspotsRef}>
-        {[
-          [-0.72, 0.24, -0.42],
-          [0.68, 0.25, 0.12],
-          [0.14, 0.26, 0.86],
-        ].map((position, index) => (
-          <mesh key={index} position={position as [number, number, number]} rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[0.085, 0.125, 36]} />
-            <meshBasicMaterial color={accentColor} depthWrite={false} transparent opacity={0.82} />
-          </mesh>
-        ))}
-      </group>
     </group>
   );
 }
 
-function PilotSceneContents({ modelPath, accentColor }: { modelPath: string; accentColor: string }) {
+function PilotSceneContents({ modelPath }: { modelPath: string }) {
   return (
     <>
       <CameraLookAt />
-      <hemisphereLight args={["#f8fbf9", "#17241d", 0.48]} />
-      <directionalLight position={[4, 6, 5]} intensity={1.18} color="#fffdf6" />
-      <directionalLight position={[-4, 2.5, -2]} intensity={0.34} color={accentColor} />
-      <pointLight position={[0, 2.4, 3.4]} intensity={0.32} color={accentColor} distance={8} />
+      <hemisphereLight args={["#ffffff", "#17211c", 0.62]} />
+      <directionalLight position={[4, 6, 5]} intensity={1.12} color="#fffefb" />
+      <directionalLight position={[-4, 2.5, -2]} intensity={0.48} color="#dfe8e2" />
+      <pointLight position={[0, 2.4, 3.4]} intensity={0.24} color="#ffffff" distance={8} />
       <Suspense fallback={null}>
-        <PilotPCBModel modelPath={modelPath} accentColor={accentColor} />
+        <PilotPCBModel modelPath={modelPath} />
       </Suspense>
       <LocalStudioEnvironment intensity={0.22} />
     </>
@@ -1957,10 +1970,12 @@ class SceneErrorBoundary extends Component<{ children: ReactNode; fallback: Reac
 
 function SceneContents({
   modelPath,
+  onReady,
   pointerRef,
   scrollProgress,
 }: {
   modelPath: string;
+  onReady?: () => void;
   pointerRef: React.RefObject<PointerState>;
   scrollProgress?: number;
 }) {
@@ -1969,11 +1984,11 @@ function SceneContents({
   return (
     <>
       <CameraLookAt />
-      <hemisphereLight args={["#f7faf8", "#28362f", 0.78]} />
-      <directionalLight position={[4.5, 6.5, 5]} intensity={1.75} color="#fffaf0" />
-      <directionalLight position={[-4, 3, -3]} intensity={0.62} color="#bce8d0" />
-      <directionalLight position={[0, -2, 4]} intensity={0.45} color="#ffffff" />
-      <pointLight position={[2, 2.5, 4]} intensity={0.65} color="#d8ffb5" distance={9} />
+      <hemisphereLight args={["#ffffff", "#26332d", 0.96]} />
+      <directionalLight position={[4.5, 6.5, 5]} intensity={1.38} color="#fffdf8" />
+      <directionalLight position={[-4, 3, -3]} intensity={0.78} color="#dceae2" />
+      <directionalLight position={[0, -1, 5]} intensity={0.58} color="#ffffff" />
+      <pointLight position={[2, 2.5, 4]} intensity={0.34} color="#effff4" distance={9} />
       {scrollProgress !== undefined ? (
         <Suspense fallback={null}>
           <ProblemSequenceStage scrollProgress={scrollProgress} />
@@ -1989,6 +2004,7 @@ function SceneContents({
           <PCBModel
             cycleOriginRef={cycleOriginRef}
             modelPath={modelPath}
+            onReady={onReady}
             pointerRef={pointerRef}
             scrollProgress={scrollProgress}
           />
@@ -2001,6 +2017,7 @@ function SceneContents({
 
 export function InteractivePCBModelScene({
   modelPath = DEFAULT_MODEL_PATH,
+  onReady,
   scrollProgress,
 }: InteractivePCBModelSceneProps) {
   const pointerRef = useWindowPointer();
@@ -2021,14 +2038,13 @@ export function InteractivePCBModelScene({
       shadows={false}
     >
       <AdaptiveFrameLoop maxFps={settings.maxFps} />
-      <SceneContents modelPath={modelPath} pointerRef={pointerRef} scrollProgress={scrollProgress} />
+      <SceneContents modelPath={modelPath} onReady={onReady} pointerRef={pointerRef} scrollProgress={scrollProgress} />
     </Canvas>
   );
 }
 
 export function PilotPCBScene({
   modelPath = DEFAULT_MODEL_PATH,
-  accentColor = "#b6ff55",
 }: {
   modelPath?: string;
   accentColor?: string;
@@ -2051,7 +2067,7 @@ export function PilotPCBScene({
       style={{ height: "100%", width: "100%" }}
     >
       <AdaptiveFrameLoop maxFps={settings.maxFps} />
-      <PilotSceneContents modelPath={modelPath} accentColor={accentColor} />
+      <PilotSceneContents modelPath={modelPath} />
     </Canvas>
   );
 }

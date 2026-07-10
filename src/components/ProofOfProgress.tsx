@@ -1,5 +1,5 @@
 import { FlaskConical, Microscope, ScanSearch } from "lucide-react";
-import { useRef, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
+import { useRef, type CSSProperties } from "react";
 import { useElementVisibility } from "@/components/useScrollProgress";
 import type { Language } from "@/lib/i18n";
 
@@ -319,31 +319,6 @@ const proofCopy: Record<Language, ProofCopy> = {
 
 const proofIcons = [Microscope, FlaskConical, ScanSearch];
 
-function handleProofPointerMove(event: ReactPointerEvent<HTMLElement>) {
-  if (event.pointerType === "touch") return;
-
-  const media = event.currentTarget.querySelector<HTMLElement>(".proof-media");
-  const rect = media?.getBoundingClientRect() ?? event.currentTarget.getBoundingClientRect();
-  const x = Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width - 0.5) * 2));
-  const y = Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height - 0.5) * 2));
-
-  event.currentTarget.style.setProperty("--proof-shift-x", `${x * -8}px`);
-  event.currentTarget.style.setProperty("--proof-shift-y", `${y * -7}px`);
-  event.currentTarget.style.setProperty("--proof-rotate-x", `${y * -1.1}deg`);
-  event.currentTarget.style.setProperty("--proof-rotate-y", `${x * 1.1}deg`);
-  event.currentTarget.style.setProperty("--proof-light-x", `${50 + x * 24}%`);
-  event.currentTarget.style.setProperty("--proof-light-y", `${42 + y * 20}%`);
-}
-
-function resetProofPointer(event: ReactPointerEvent<HTMLElement>) {
-  event.currentTarget.style.setProperty("--proof-shift-x", "0px");
-  event.currentTarget.style.setProperty("--proof-shift-y", "0px");
-  event.currentTarget.style.setProperty("--proof-rotate-x", "0deg");
-  event.currentTarget.style.setProperty("--proof-rotate-y", "0deg");
-  event.currentTarget.style.setProperty("--proof-light-x", "50%");
-  event.currentTarget.style.setProperty("--proof-light-y", "42%");
-}
-
 export function ProofOfProgress({ language }: { language: Language }) {
   const sectionRef = useRef<HTMLElement>(null);
   const visible = useElementVisibility(sectionRef);
@@ -391,9 +366,6 @@ export function ProofOfProgress({ language }: { language: Language }) {
                   key={item.src}
                   tabIndex={0}
                   aria-label={`${item.title}. ${item.text}`}
-                  onPointerMove={handleProofPointerMove}
-                  onPointerLeave={resetProofPointer}
-                  onPointerCancel={resetProofPointer}
                   style={{ transitionDelay: `${120 + index * 110}ms` }}
                   className={`proof-card group flex h-full flex-col overflow-hidden rounded-lg border border-white/12 bg-white/5 outline-none transition-all duration-700 focus-visible:border-emerald-300/60 focus-visible:ring-2 focus-visible:ring-emerald-300/35 ${
                     visible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
@@ -409,7 +381,6 @@ export function ProofOfProgress({ language }: { language: Language }) {
                         className="proof-image h-full w-full object-cover"
                       />
                     </div>
-                    <div aria-hidden className="proof-pointer-light absolute inset-0" />
                     <div className="absolute inset-x-0 top-0 flex items-center justify-between bg-gradient-to-b from-black/65 to-transparent px-4 pb-10 pt-4">
                       <span className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/76">
                         {Icon ? <Icon className="h-4 w-4 text-emerald-300" /> : null}
@@ -428,17 +399,25 @@ export function ProofOfProgress({ language }: { language: Language }) {
                               className="proof-hotspot-trace"
                               style={{ transitionDelay: `${markerIndex * 90}ms` }}
                             />
-                            <circle
-                              cx={marker.anchorX}
-                              cy={marker.anchorY}
-                              r="2.2"
-                              className="proof-hotspot-ring"
-                              style={{ transitionDelay: `${markerIndex * 90}ms` }}
-                            />
-                            <circle cx={marker.anchorX} cy={marker.anchorY} r="0.85" className="proof-hotspot-dot" />
                           </g>
                         ))}
                       </svg>
+                      {item.markers.map((marker, markerIndex) => (
+                        <span
+                          key={`${marker.label}-anchor`}
+                          className="proof-hotspot-anchor"
+                          style={
+                            {
+                              left: `${marker.anchorX}%`,
+                              top: `${marker.anchorY}%`,
+                              transitionDelay: `${markerIndex * 90}ms`,
+                            } as CSSProperties
+                          }
+                        >
+                          <span className="proof-hotspot-ring" />
+                          <span className="proof-hotspot-dot" />
+                        </span>
+                      ))}
                       {item.markers.map((marker, markerIndex) => (
                         <div
                           key={marker.label}

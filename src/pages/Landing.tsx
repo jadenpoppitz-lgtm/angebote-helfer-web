@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { CSSProperties, FormEvent, ReactNode } from "react";
+import type { CSSProperties, FormEvent, MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowDown,
@@ -1131,6 +1131,37 @@ const heroScrollLabels: Record<Language, string> = {
   zh: "向下探索",
 };
 
+const heroLoadingLabels: Record<Language, string> = {
+  de: "3D-Leiterplatte wird geladen",
+  en: "Loading 3D circuit board",
+  zh: "正在加载 3D 电路板",
+};
+
+function scrollToLandingSection(id: string, duration = 560) {
+  const target = document.getElementById(id);
+  if (!target) return;
+
+  const startY = window.scrollY;
+  const targetY = startY + target.getBoundingClientRect().top;
+  const distance = targetY - startY;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  window.history.replaceState(null, "", `#${id}`);
+  if (reducedMotion || Math.abs(distance) < 2) {
+    window.scrollTo({ top: targetY });
+    return;
+  }
+
+  const startedAt = performance.now();
+  const animate = (now: number) => {
+    const progress = Math.min(1, (now - startedAt) / duration);
+    const eased = 1 - Math.pow(1 - progress, 4);
+    window.scrollTo({ top: startY + distance * eased });
+    if (progress < 1) window.requestAnimationFrame(animate);
+  };
+  window.requestAnimationFrame(animate);
+}
+
 const Landing = ({ page = "home" }: { page?: LandingPage }) => {
   const [activeRole, setActiveRole] = useState<RoleId>("oem");
   const [activePoint, setActivePoint] = useState<GraphPoint>("oem");
@@ -1147,6 +1178,23 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
   const showTraction = page === "traction";
   const showCycle = page === "cycle";
   const showContact = page === "home";
+
+  useEffect(() => {
+    if (!showHero || !window.location.hash) return;
+    const id = window.location.hash.slice(1);
+    const timer = window.setTimeout(() => scrollToLandingSection(id, 420), 80);
+    return () => window.clearTimeout(timer);
+  }, [showHero]);
+
+  const handleSectionLink = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+    id: "problem-story" | "product-story" | "forms",
+    duration = 560,
+  ) => {
+    event.preventDefault();
+    setMobileNavOpen(false);
+    scrollToLandingSection(id, duration);
+  };
 
   const chooseRole = (role: RoleId) => {
     setActiveRole(role);
@@ -1228,7 +1276,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       </div>
 
       {showHero ? (
-        <WaterfallToPCBHero>
+        <WaterfallToPCBHero loadingLabel={heroLoadingLabels[language]}>
           <header className="landing-hero-header relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
             <Link to="/" className="flex items-center gap-3">
               <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-background shadow-elegant">
@@ -1237,10 +1285,10 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
             </Link>
             <nav className="hidden items-center gap-1 rounded-lg border border-foreground/10 bg-white/68 p-1 text-sm font-semibold text-foreground/68 shadow-elegant backdrop-blur-xl lg:flex">
-              <a href="#problem-story" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+              <a href="#problem-story" onClick={(event) => handleSectionLink(event, "problem-story", 520)} className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
                 {content.nav.problem}
               </a>
-              <a href="#product-story" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+              <a href="#product-story" onClick={(event) => handleSectionLink(event, "product-story", 620)} className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
                 {content.nav.product}
               </a>
               <Link to="/traction" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
@@ -1249,7 +1297,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               <Link to="/zyklus" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
                 {content.nav.cycle}
               </Link>
-              <a href="/#forms" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+              <a href="#forms" onClick={(event) => handleSectionLink(event, "forms", 700)} className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
                 {content.nav.contact}
               </a>
             </nav>
@@ -1268,10 +1316,10 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                 id="landing-mobile-navigation"
                 className="mt-3 grid w-full gap-1 rounded-lg border border-white/70 bg-white/95 p-2 text-sm font-semibold text-foreground shadow-elegant backdrop-blur-xl lg:hidden"
               >
-                <a href="#problem-story" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
+                <a href="#problem-story" onClick={(event) => handleSectionLink(event, "problem-story", 520)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
                   {content.nav.problem}
                 </a>
-                <a href="#product-story" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
+                <a href="#product-story" onClick={(event) => handleSectionLink(event, "product-story", 620)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
                   {content.nav.product}
                 </a>
                 <Link to="/traction" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
@@ -1280,7 +1328,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                 <Link to="/zyklus" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
                   {content.nav.cycle}
                 </Link>
-                <a href="/#forms" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
+                <a href="#forms" onClick={(event) => handleSectionLink(event, "forms", 700)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
                   {content.nav.contact}
                 </a>
                 {mobileLanguageControl}
@@ -1289,8 +1337,8 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
           </header>
 
           <div className="landing-hero-content relative z-10 mx-auto flex min-h-[calc(96svh-92px)] w-full max-w-7xl px-5 sm:px-8">
-            <div className="landing-hero-layout flex w-full flex-col pb-5 pt-[29svh] sm:pb-8 sm:pt-[34svh] lg:pb-10 lg:pt-[clamp(4.5rem,10vh,7rem)]">
-              <div className="landing-hero-statement max-w-[40rem]">
+            <div className="landing-hero-layout flex w-full flex-col justify-end pb-5 pt-[36svh] sm:pb-8 sm:pt-[40svh] lg:pb-10 lg:pt-[42svh]">
+              <div className="landing-hero-statement max-w-[36rem]">
                 {content.hero.eyebrow ? (
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-800/72">
                     {content.hero.eyebrow}
@@ -1305,13 +1353,14 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                     </>
                   ) : null}
                 </h1>
-                <div className="landing-hero-value mt-5 max-w-[37rem]">
+                <div className="landing-hero-value mt-3 max-w-[34rem]">
                   <p className="landing-hero-copy text-sm leading-6 text-emerald-950/72 [text-shadow:0_1px_16px_rgba(255,255,255,.88)] md:text-base md:leading-7">
                     {content.hero.text}
                   </p>
                   <div className="landing-hero-actions mt-4 flex flex-row flex-wrap items-center gap-2 sm:gap-3">
                     <a
                       href="#problem-story"
+                      onClick={(event) => handleSectionLink(event, "problem-story", 520)}
                       className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-emerald-900 px-4 text-sm font-semibold text-white shadow-card transition-transform hover:-translate-y-0.5"
                     >
                       {content.nav.problem}
@@ -1319,6 +1368,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                     </a>
                     <a
                       href="#product-story"
+                      onClick={(event) => handleSectionLink(event, "product-story", 620)}
                       className="inline-flex h-10 items-center justify-center gap-2 px-2 text-sm font-semibold text-emerald-950/72 transition-colors hover:text-emerald-950"
                     >
                       {content.nav.product}
@@ -1328,9 +1378,10 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                 </div>
               </div>
 
-              <div className="landing-hero-footer mt-auto flex justify-end">
+              <div className="landing-hero-footer mt-4 flex justify-end">
                 <a
                   href="#problem-story"
+                  onClick={(event) => handleSectionLink(event, "problem-story", 520)}
                   aria-label={heroScrollLabels[language]}
                   className="landing-hero-scroll group inline-flex shrink-0 items-center gap-3 self-end text-emerald-950/64 transition-colors hover:text-emerald-950 sm:pb-0.5"
                 >

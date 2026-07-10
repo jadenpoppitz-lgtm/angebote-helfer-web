@@ -1,4 +1,4 @@
-import { Suspense, lazy, useRef } from "react";
+import { Suspense, lazy, useCallback, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { useElementVisibility } from "@/components/useScrollProgress";
 
@@ -8,11 +8,30 @@ const InteractivePCBModelScene = lazy(() =>
 
 interface WaterfallToPCBHeroProps {
   children: ReactNode;
+  loadingLabel: string;
 }
 
-export function WaterfallToPCBHero({ children }: WaterfallToPCBHeroProps) {
+function HeroSceneFallback({ label }: { label: string }) {
+  return (
+    <div className="hero-scene-fallback grid h-full w-full place-items-center" role="status" aria-label={label}>
+      <div className="hero-fallback-board" aria-hidden="true">
+        <span className="hero-fallback-trace hero-fallback-trace-a" />
+        <span className="hero-fallback-trace hero-fallback-trace-b" />
+        <span className="hero-fallback-chip hero-fallback-chip-a" />
+        <span className="hero-fallback-chip hero-fallback-chip-b" />
+        <span className="hero-fallback-chip hero-fallback-chip-c" />
+        <img src="/logo1-web.webp" alt="" className="hero-fallback-logo" />
+      </div>
+      <span className="hero-fallback-label">{label}</span>
+    </div>
+  );
+}
+
+export function WaterfallToPCBHero({ children, loadingLabel }: WaterfallToPCBHeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const sceneVisible = useElementVisibility(sectionRef, true);
+  const [sceneReady, setSceneReady] = useState(false);
+  const handleSceneReady = useCallback(() => setSceneReady(true), []);
 
   return (
     <section ref={sectionRef} className="landing-hero-shell relative isolate min-h-[96svh] overflow-hidden bg-[#f8fbf6] text-foreground">
@@ -34,8 +53,9 @@ export function WaterfallToPCBHero({ children }: WaterfallToPCBHeroProps) {
           className="pointer-events-none absolute inset-0 z-[1] opacity-[0.18] [background-image:linear-gradient(90deg,hsl(146_42%_28%/.36)_1px,transparent_1px),linear-gradient(0deg,hsl(146_42%_28%/.28)_1px,transparent_1px)] [background-size:68px_68px]"
         />
         <div className="pointer-events-none absolute inset-0 z-[2]">
-          <Suspense fallback={<div className="h-full w-full bg-transparent" />}>
-            {sceneVisible ? <InteractivePCBModelScene /> : null}
+          {!sceneReady ? <HeroSceneFallback label={loadingLabel} /> : null}
+          <Suspense fallback={null}>
+            {sceneVisible ? <InteractivePCBModelScene onReady={handleSceneReady} /> : null}
           </Suspense>
         </div>
         <div

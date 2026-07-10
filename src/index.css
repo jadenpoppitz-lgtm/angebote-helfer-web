@@ -255,12 +255,6 @@ All colors MUST be HSL.
   }
 
   .proof-card {
-    --proof-shift-x: 0px;
-    --proof-shift-y: 0px;
-    --proof-rotate-x: 0deg;
-    --proof-rotate-y: 0deg;
-    --proof-light-x: 50%;
-    --proof-light-y: 42%;
     isolation: isolate;
   }
 
@@ -269,27 +263,11 @@ All colors MUST be HSL.
   }
 
   .proof-media-frame {
-    transform: perspective(900px) rotateX(var(--proof-rotate-x)) rotateY(var(--proof-rotate-y));
-    transform-origin: center;
-    transition: transform 280ms cubic-bezier(0.2, 0.75, 0.3, 1);
-    will-change: transform;
+    transform: none;
   }
 
   .proof-image {
-    transform: scale(1.055) translate3d(var(--proof-shift-x), var(--proof-shift-y), 0);
-    transition: filter 500ms ease, transform 280ms cubic-bezier(0.2, 0.75, 0.3, 1);
-    will-change: transform;
-  }
-
-  .proof-pointer-light {
-    background: radial-gradient(
-      circle at var(--proof-light-x) var(--proof-light-y),
-      rgb(167 243 208 / 0.28),
-      transparent 29%
-    );
-    mix-blend-mode: screen;
-    opacity: 0;
-    transition: opacity 320ms ease;
+    transform: none;
   }
 
   .proof-hotspot-trace {
@@ -305,18 +283,35 @@ All colors MUST be HSL.
     vector-effect: non-scaling-stroke;
   }
 
-  .proof-hotspot-dot {
-    fill: rgb(167 243 208);
-    filter: drop-shadow(0 0 5px rgb(52 211 153 / 0.95));
+  .proof-hotspot-anchor {
+    position: absolute;
+    z-index: 8;
+    display: grid;
+    height: 1.15rem;
+    width: 1.15rem;
+    place-items: center;
+    opacity: 0.54;
+    transform: translate(-50%, -50%);
+    transition: opacity 260ms ease;
   }
 
   .proof-hotspot-ring {
-    fill: rgb(52 211 153 / 0.14);
-    opacity: 0.42;
-    stroke: rgb(167 243 208 / 0.76);
-    stroke-width: 0.55;
-    transition: opacity 260ms ease;
-    vector-effect: non-scaling-stroke;
+    position: absolute;
+    inset: 0;
+    display: block;
+    border: 1px solid rgb(167 243 208 / 0.8);
+    border-radius: 999px;
+    background: rgb(52 211 153 / 0.14);
+    box-shadow: 0 0 10px rgb(52 211 153 / 0.18);
+  }
+
+  .proof-hotspot-dot {
+    display: block;
+    height: 0.34rem;
+    width: 0.34rem;
+    border-radius: 999px;
+    background: rgb(167 243 208);
+    box-shadow: 0 0 7px rgb(52 211 153 / 0.95);
   }
 
   .proof-hotspot-panel {
@@ -357,12 +352,6 @@ All colors MUST be HSL.
     line-height: 1.4;
   }
 
-  .proof-card:hover .proof-pointer-light,
-  .proof-card:focus-visible .proof-pointer-light,
-  .proof-card:focus-within .proof-pointer-light {
-    opacity: 1;
-  }
-
   .proof-card:hover .proof-hotspot-trace,
   .proof-card:focus-visible .proof-hotspot-trace,
   .proof-card:focus-within .proof-hotspot-trace {
@@ -370,10 +359,10 @@ All colors MUST be HSL.
     stroke-dashoffset: 0;
   }
 
-  .proof-card:hover .proof-hotspot-ring,
-  .proof-card:focus-visible .proof-hotspot-ring,
-  .proof-card:focus-within .proof-hotspot-ring {
-    opacity: 0.95;
+  .proof-card:hover .proof-hotspot-anchor,
+  .proof-card:focus-visible .proof-hotspot-anchor,
+  .proof-card:focus-within .proof-hotspot-anchor {
+    opacity: 1;
   }
 
   .proof-card:hover .proof-hotspot-panel,
@@ -398,10 +387,12 @@ All colors MUST be HSL.
     position: relative;
     overflow: hidden;
     background:
-      radial-gradient(circle at 12% 9%, hsl(152 55% 28% / 0.08), transparent 28%),
-      radial-gradient(circle at 82% 18%, hsl(38 70% 62% / 0.08), transparent 26%),
-      linear-gradient(180deg, hsl(0 0% 100%), hsl(150 30% 97%) 62%, hsl(0 0% 100%));
-    color: hsl(var(--foreground));
+      linear-gradient(90deg, rgb(112 170 130 / 0.075) 1px, transparent 1px),
+      linear-gradient(0deg, rgb(112 170 130 / 0.065) 1px, transparent 1px),
+      radial-gradient(circle at 12% 9%, hsl(152 70% 40% / 0.13), transparent 30%),
+      linear-gradient(180deg, #08110d, #0b1711 62%, #07100c);
+    background-size: 72px 72px, 72px 72px, 100% 100%, 100% 100%;
+    color: white;
     padding: 5rem 0 6rem;
   }
 
@@ -411,9 +402,18 @@ All colors MUST be HSL.
     z-index: 4;
     max-width: 48rem;
     border-radius: 0.5rem;
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.88), hsl(0 0% 100% / 0.62));
+    border: 1px solid rgb(255 255 255 / 0.08);
+    background: linear-gradient(180deg, rgb(8 17 13 / 0.94), rgb(8 17 13 / 0.76));
     padding: 1rem 0 1.35rem;
     backdrop-filter: blur(16px);
+  }
+
+  .traction-timeline-intro h2 {
+    color: white;
+  }
+
+  .traction-timeline-intro .text-muted-foreground {
+    color: rgb(255 255 255 / 0.62);
   }
 
   .traction-timeline {
@@ -430,7 +430,7 @@ All colors MUST be HSL.
     width: 2px;
     overflow: hidden;
     border-radius: 999px;
-    background: hsl(152 28% 78% / 0.62);
+    background: rgb(181 234 199 / 0.18);
   }
 
   .traction-timeline-line span {
@@ -483,9 +483,9 @@ All colors MUST be HSL.
     height: 1.42rem;
     width: 1.42rem;
     border-radius: 999px;
-    border: 5px solid hsl(0 0% 100%);
-    background: hsl(152 28% 74%);
-    box-shadow: 0 0 0 1px hsl(152 36% 68% / 0.45), 0 16px 28px -18px hsl(155 30% 12% / 0.52);
+    border: 5px solid #0a1510;
+    background: rgb(157 203 171 / 0.55);
+    box-shadow: 0 0 0 1px rgb(167 243 208 / 0.22), 0 16px 28px -18px rgb(0 0 0 / 0.82);
     transition:
       background 340ms ease,
       box-shadow 340ms ease,
@@ -500,10 +500,11 @@ All colors MUST be HSL.
 
   .traction-timeline-card {
     overflow: hidden;
-    border: 1px solid hsl(150 18% 84% / 0.86);
+    border: 1px solid rgb(255 255 255 / 0.1);
     border-radius: 0.5rem;
-    background: hsl(0 0% 100% / 0.92);
-    box-shadow: 0 18px 46px -34px hsl(155 30% 12% / 0.5);
+    background: rgb(255 255 255 / 0.055);
+    box-shadow: 0 18px 46px -34px rgb(0 0 0 / 0.78);
+    backdrop-filter: blur(14px);
     transition:
       border-color 360ms ease,
       box-shadow 360ms ease,
@@ -512,9 +513,9 @@ All colors MUST be HSL.
   }
 
   .traction-timeline-item.is-active .traction-timeline-card {
-    border-color: hsl(var(--primary) / 0.28);
-    background: hsl(0 0% 100%);
-    box-shadow: 0 28px 70px -42px hsl(var(--primary) / 0.48);
+    border-color: rgb(134 239 172 / 0.3);
+    background: rgb(255 255 255 / 0.085);
+    box-shadow: 0 28px 70px -42px rgb(74 222 128 / 0.45);
     transform: translateY(-2px);
   }
 
@@ -538,6 +539,7 @@ All colors MUST be HSL.
   }
 
   .traction-timeline-card-body h3 {
+    color: white;
     font-family: theme("fontFamily.display");
     font-size: clamp(1.45rem, 3vw, 2rem);
     font-weight: 600;
@@ -546,7 +548,7 @@ All colors MUST be HSL.
 
   .traction-timeline-card-body > p:not(.traction-timeline-mobile-date) {
     margin-top: 0.85rem;
-    color: hsl(var(--muted-foreground));
+    color: rgb(255 255 255 / 0.62);
     font-size: 0.95rem;
     line-height: 1.75;
   }
@@ -556,14 +558,14 @@ All colors MUST be HSL.
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: hsl(var(--primary));
+    color: rgb(134 239 172);
     font-size: 0.9rem;
     font-weight: 800;
     text-decoration: none;
   }
 
   .traction-timeline-card-body a:hover {
-    color: hsl(var(--primary) / 0.76);
+    color: rgb(187 247 208);
   }
 
   .traction-timeline-mobile-date {
@@ -638,7 +640,7 @@ All colors MUST be HSL.
       justify-self: end;
       max-width: 18rem;
       padding-top: 1.85rem;
-      color: hsl(var(--primary) / 0.76);
+      color: rgb(167 243 208 / 0.72);
       font-size: 0.78rem;
       font-weight: 900;
       letter-spacing: 0.26em;
@@ -651,15 +653,15 @@ All colors MUST be HSL.
     .traction-timeline-date span {
       display: inline-flex;
       border-radius: 999px;
-      border: 1px solid hsl(var(--primary) / 0.14);
-      background: hsl(0 0% 100% / 0.76);
+      border: 1px solid rgb(167 243 208 / 0.16);
+      background: rgb(255 255 255 / 0.055);
       padding: 0.5rem 0.7rem;
       box-shadow: 0 14px 30px -24px hsl(155 30% 12% / 0.45);
       backdrop-filter: blur(10px);
     }
 
     .traction-timeline-item.is-active .traction-timeline-date {
-      color: hsl(var(--primary));
+      color: rgb(134 239 172);
       opacity: 1;
       transform: translateY(-0.2rem);
     }
@@ -1319,21 +1321,18 @@ All colors MUST be HSL.
 .landing-hero-statement {
   isolation: isolate;
   position: relative;
+  margin-left: -1.25rem;
+  border: 1px solid rgb(7 71 43 / 0.13);
+  border-left: 0;
+  border-radius: 0 1.25rem 1.25rem 0;
+  background: rgb(249 252 248 / 0.72);
+  box-shadow: 0 24px 72px -48px rgb(4 55 32 / 0.46), inset 0 1px 0 rgb(255 255 255 / 0.78);
+  padding: 1rem 1.25rem 1.05rem;
+  backdrop-filter: blur(18px) saturate(1.08);
 }
 
 .landing-hero-statement::before {
-  content: "";
-  position: absolute;
-  inset: -1rem -2.25rem;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse at 36% 50%,
-    rgb(255 255 255 / 0.76) 0%,
-    rgb(255 255 255 / 0.5) 58%,
-    transparent 100%
-  );
-  mask-image: radial-gradient(ellipse at 38% 50%, black 0 62%, transparent 100%);
+  content: none;
 }
 
 .landing-hero-statement > * {
@@ -1345,13 +1344,179 @@ All colors MUST be HSL.
   animation: landing-scroll-prompt 2.4s cubic-bezier(0.45, 0, 0.25, 1) infinite;
 }
 
+.hero-scene-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  perspective: 900px;
+}
+
+.hero-fallback-board {
+  position: relative;
+  width: min(48vw, 31rem);
+  aspect-ratio: 1.5;
+  border: 1px solid rgb(7 86 49 / 0.34);
+  border-radius: 0.45rem;
+  background:
+    linear-gradient(90deg, transparent 0 18%, rgb(213 177 84 / 0.68) 18.3% 18.8%, transparent 19.1% 100%),
+    linear-gradient(0deg, transparent 0 67%, rgb(213 177 84 / 0.6) 67.3% 67.8%, transparent 68.1% 100%),
+    #0b6039;
+  box-shadow: 0 34px 78px -38px rgb(7 68 40 / 0.68);
+  opacity: 0.72;
+  transform: rotateX(58deg) rotateZ(-11deg);
+  animation: hero-fallback-float 2.4s ease-in-out infinite;
+}
+
+.hero-fallback-chip {
+  position: absolute;
+  display: block;
+  border-radius: 0.18rem;
+  background: #17211c;
+  box-shadow: 0 5px 8px rgb(0 0 0 / 0.2);
+}
+
+.hero-fallback-chip-a {
+  left: 13%;
+  top: 17%;
+  height: 18%;
+  width: 19%;
+}
+
+.hero-fallback-chip-b {
+  right: 12%;
+  top: 23%;
+  height: 25%;
+  width: 13%;
+}
+
+.hero-fallback-chip-c {
+  bottom: 14%;
+  left: 32%;
+  height: 15%;
+  width: 30%;
+}
+
+.hero-fallback-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 13%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+}
+
+.hero-fallback-label {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + min(23vw, 15rem));
+  color: rgb(5 69 40 / 0.58);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
+@keyframes hero-fallback-float {
+  0%,
+  100% {
+    transform: translateY(-4px) rotateX(58deg) rotateZ(-11deg);
+  }
+
+  50% {
+    transform: translateY(5px) rotateX(58deg) rotateZ(-9deg);
+  }
+}
+
+.story-scene-backdrop {
+  position: absolute;
+  z-index: 0;
+  top: 10%;
+  bottom: 8%;
+  width: 62%;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: background-color 300ms ease, border-color 300ms ease, left 520ms cubic-bezier(0.2, 0.75, 0.25, 1), right 520ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.story-scene-backdrop-left {
+  right: 0;
+  border-radius: 2rem 0 0 2rem;
+}
+
+.story-scene-backdrop-right {
+  left: 0;
+  border-radius: 0 2rem 2rem 0;
+}
+
+.story-scene-backdrop-problem {
+  border-color: rgb(255 255 255 / 0.055);
+  background: rgb(255 255 255 / 0.035);
+}
+
+.story-scene-backdrop-product {
+  border-color: rgb(8 100 57 / 0.075);
+  background: rgb(71 156 104 / 0.055);
+}
+
+.story-step-content {
+  isolation: isolate;
+  position: relative;
+}
+
+.story-step-content::before {
+  content: "";
+  position: absolute;
+  inset: -1rem -1.1rem;
+  z-index: 0;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  pointer-events: none;
+  backdrop-filter: blur(18px) saturate(1.06);
+}
+
+.story-step-content-problem::before {
+  border-color: rgb(255 255 255 / 0.11);
+  background: rgb(4 15 10 / 0.78);
+  box-shadow: 0 24px 64px -42px rgb(0 0 0 / 0.78);
+}
+
+.story-step-content-product::before {
+  border-color: rgb(9 83 48 / 0.1);
+  background: rgb(248 251 247 / 0.82);
+  box-shadow: 0 24px 64px -44px rgb(10 82 48 / 0.3);
+}
+
+.story-step-content > * {
+  position: relative;
+  z-index: 1;
+}
+
+.story-step-content-enter {
+  animation: story-panel-enter 440ms cubic-bezier(0.2, 0.78, 0.24, 1) both;
+}
+
+@keyframes story-panel-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.9rem, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @media (hover: none) {
   .proof-hotspot-trace {
     opacity: 0.72;
     stroke-dashoffset: 0;
   }
 
-  .proof-hotspot-ring {
+  .proof-hotspot-anchor {
     opacity: 0.8;
   }
 
@@ -1385,41 +1550,23 @@ All colors MUST be HSL.
 
 @media (min-width: 1024px),
   (orientation: landscape) and (min-width: 640px) and (max-width: 1023px) and (max-height: 520px) {
-  .story-step-content-problem {
-    --story-scrim-core: 0.66;
-    --story-scrim-edge: 0.34;
-    --story-scrim-rgb: 5 18 12;
-  }
-
-  .story-step-content-product {
-    --story-scrim-core: 0.72;
-    --story-scrim-edge: 0.4;
-    --story-scrim-rgb: 247 251 246;
-  }
-
-  .story-step-content-active {
-    isolation: isolate;
-    position: relative;
-  }
-
   .story-step-content-active::before {
-    content: "";
-    position: absolute;
-    inset: -1.4rem -1.7rem;
-    z-index: 0;
-    pointer-events: none;
-    background: radial-gradient(
-      ellipse at center,
-      rgb(var(--story-scrim-rgb) / var(--story-scrim-core)) 0%,
-      rgb(var(--story-scrim-rgb) / var(--story-scrim-edge)) 64%,
-      transparent 100%
-    );
-    mask-image: radial-gradient(ellipse at center, black 0 64%, transparent 100%);
+    inset-block: -1.4rem;
+    border-radius: 0;
   }
 
-  .story-step-content-active > * {
-    position: relative;
-    z-index: 1;
+  .story-step-content-left::before {
+    left: calc(-7vw - 1px);
+    right: -1.7rem;
+    border-left: 0;
+    border-radius: 0 1.5rem 1.5rem 0;
+  }
+
+  .story-step-content-right::before {
+    left: -1.7rem;
+    right: calc(-7vw - 1px);
+    border-right: 0;
+    border-radius: 1.5rem 0 0 1.5rem;
   }
 }
 
@@ -1567,7 +1714,7 @@ All colors MUST be HSL.
     width: 2rem !important;
   }
 
-  .story-step {
+  .story-active-stage {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
     padding: 3.25rem 3vw 1rem !important;

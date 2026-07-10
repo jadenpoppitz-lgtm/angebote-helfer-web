@@ -46,7 +46,11 @@ export function useScrollProgress<T extends HTMLElement>(targetRef: RefObject<T>
   return progress;
 }
 
-export function useElementVisibility<T extends Element>(targetRef: RefObject<T>, initialVisible = false) {
+export function useElementVisibility<T extends Element>(
+  targetRef: RefObject<T>,
+  initialVisible = false,
+  rootMargin = "0px",
+) {
   const [visible, setVisible] = useState(initialVisible);
 
   useEffect(() => {
@@ -56,10 +60,13 @@ export function useElementVisibility<T extends Element>(targetRef: RefObject<T>,
       return;
     }
 
-    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.01 });
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), {
+      rootMargin,
+      threshold: 0.01,
+    });
     observer.observe(target);
     return () => observer.disconnect();
-  }, [targetRef]);
+  }, [rootMargin, targetRef]);
 
   return visible;
 }
