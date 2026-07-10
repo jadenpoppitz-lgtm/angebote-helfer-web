@@ -1,25 +1,54 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Recycling Angebote – Faire Preise für Wertstoffe</title>
-    <meta name="description" content="Finden Sie geprüfte Recycling-Angebote für Elektroschrott, Metall, Papier, Kunststoff, Glas, Holz und Batterien in Ihrer Region." />
-    <meta name="author" content="Recycling Angebote" />
+    <title>Leaftronics – Elektronik im Kreislauf</title>
+    <meta name="description" content="Leaftronics entwickelt kreislauffähige Leiterplatten, deren Substrat sich am Lebensende kontrolliert trennen lässt." />
+    <meta name="author" content="Leaftronics" />
+    <meta name="theme-color" content="#07100c" />
 
-    <meta property="og:title" content="Recycling Angebote – Faire Preise für Wertstoffe" />
-    <meta property="og:description" content="Geprüfte Recycling-Angebote in Ihrer Region – Abholung oder Anlieferung." />
+    <meta property="og:title" content="Leaftronics – Elektronik im Kreislauf" />
+    <meta property="og:description" content="Eine neue Materiallogik für kreislauffähige Elektronik und rückgewinnbare Komponenten." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/logo1.png" />
+    <meta property="og:image" content="/leaftronics-hero-pcb.jpg" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="/logo1.png" />
-    <link rel="icon" type="image/png" href="/logo1.png" />
+    <meta name="twitter:title" content="Leaftronics – Elektronik im Kreislauf" />
+    <meta name="twitter:description" content="Eine neue Materiallogik für kreislauffähige Elektronik und rückgewinnbare Komponenten." />
+    <meta name="twitter:image" content="/leaftronics-hero-pcb.jpg" />
+    <link rel="icon" type="image/webp" href="/logo1-web.webp" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script>
+      (() => {
+        if (window.location.pathname !== "/") return;
+
+        const desktopModel = "/models/green-circuit-board-web.glb?v=5";
+        const mobileModel = "/models/green-circuit-board-mobile.glb?v=2";
+        const connection = navigator.connection;
+        const effectiveType = connection?.effectiveType ?? "";
+        const constrainedConnection = connection?.saveData || /(^|-)2g|3g/.test(effectiveType);
+        const constrainedHardware =
+          (navigator.deviceMemory !== undefined && navigator.deviceMemory <= 4) ||
+          (navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency <= 4);
+        const compactViewport = window.matchMedia("(max-width: 1024px)").matches;
+        const modelPath =
+          compactViewport || constrainedConnection || constrainedHardware ? mobileModel : desktopModel;
+
+        window.__LEAFTRONICS_PCB_MODEL__ = modelPath;
+
+        if (constrainedConnection) return;
+
+        const preload = document.createElement("link");
+        preload.rel = "preload";
+        preload.as = "fetch";
+        preload.type = "model/gltf-binary";
+        preload.crossOrigin = "anonymous";
+        preload.fetchPriority = "high";
+        preload.href = modelPath;
+        document.head.appendChild(preload);
+      })();
+    </script>
   </head>
 
   <body>

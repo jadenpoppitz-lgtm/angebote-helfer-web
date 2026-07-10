@@ -179,13 +179,23 @@ function deviceLabel(result: SerialLookup, language: Language) {
   return normalized;
 }
 
+function hoursLabel(hours: string, language: Language) {
+  if (language === "en") {
+    return hours.replace("Mo–Fr", "Mon-Fri").replace("Mo–Sa", "Mon-Sat").replace("Di–Sa", "Tue-Sat");
+  }
+  if (language === "zh") {
+    return hours.replace("Mo–Fr", "周一至周五").replace("Mo–Sa", "周一至周六").replace("Di–Sa", "周二至周六");
+  }
+  return hours;
+}
+
 const Index = () => {
   const [params, setParams] = useSearchParams();
   const initial = params.get("serial") ?? "";
   const [input, setInput] = useState(initial);
   const [result, setResult] = useState<SerialLookup | null>(null);
   const [notFound, setNotFound] = useState(false);
-  const { language, setLanguage, cityLabel } = useLanguage();
+  const { language, setLanguage, cityLabel, t } = useLanguage();
   const copy = pageText[language];
 
   const lookup = (raw: string) => {
@@ -229,7 +239,7 @@ const Index = () => {
             </span>
           </Link>
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            <div className="flex rounded-md border border-border bg-muted/40 p-1" aria-label="Language">
+            <div className="flex rounded-md border border-border bg-muted/40 p-1" aria-label={t.language}>
               {languages.map((item) => (
                 <button
                   key={item.code}
@@ -360,7 +370,7 @@ const Index = () => {
                       <p className="mt-1 text-sm text-muted-foreground">{partner.street}</p>
                       <p className="mt-0.5 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
-                        {partner.hours}
+                        {hoursLabel(partner.hours, language)}
                       </p>
                     </div>
                     <div className="text-sm text-muted-foreground sm:text-right">

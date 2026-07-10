@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
+  ArrowDown,
   ArrowRight,
   BarChart3,
   CheckCircle2,
@@ -9,20 +10,28 @@ import {
   Flame,
   Globe2,
   Handshake,
+  Menu,
   PackageCheck,
   QrCode,
   Recycle,
   SearchCheck,
   UserRound,
   Wrench,
+  X,
 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
+import { CyclePrototypeMap } from "@/components/CyclePrototypeMap";
 import { DeviceImpact } from "@/components/DeviceImpact";
+import { Footer } from "@/components/Footer";
+import { PilotProjectSection } from "@/components/PilotProjectSection";
+import { ProofOfProgress } from "@/components/ProofOfProgress";
+import { ScrollPCBStory } from "@/components/ScrollPCBStory";
+import { WaterfallToPCBHero } from "@/components/WaterfallToPCBHero";
 import { languages, type Language, useLanguage } from "@/lib/i18n";
 import { DEMO_SERIAL, SERIAL_DB, type SerialLookup } from "@/data/partners";
 
 export type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
-type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" | "materials";
+export type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" | "materials";
 type LandingPage = "home" | "problem" | "product" | "traction" | "cycle";
 
 export type LandingCopy = {
@@ -39,7 +48,7 @@ export type LandingCopy = {
     demos: string;
     forms: string;
   };
-  hero: { eyebrow: string; title: string; text: string; cta: string };
+  hero: { eyebrow: string; title: string; titleAccent?: string; text: string; cta: string };
   problem: {
     eyebrow: string;
     title: string;
@@ -165,17 +174,17 @@ export const copy: Record<Language, LandingCopy> = {
         {
           title: "Export statt Rückführung",
           text: "Produkte verlassen den regionalen Kreislauf, bevor Herkunft und Materialwert gesichert sind.",
-          image: "https://images.unsplash.com/photo-1494412685616-a5d310fbb07d?auto=format&fit=crop&w=900&q=80",
+          image: "/leaftronics-hero-pcb.jpg",
         },
         {
           title: "Unscharfe Sammlung",
           text: "B2B-Produkte werden mit Mischströmen vermengt und verlieren Qualität, Serienbezug und Verantwortung.",
-          image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
+          image: "/leaftronics-separated-components.jpg",
         },
         {
           title: "Keine Materialhoheit",
           text: "Ohne Datenfluss verlieren OEMs Rückführungsdaten, ESG-Nachweise und europäische Produktionsoptionen.",
-          image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80",
+          image: "/leaftronics-pcb-prototype.jpg",
         },
       ],
     },
@@ -223,9 +232,9 @@ export const copy: Record<Language, LandingCopy> = {
     },
     solution: {
       eyebrow: "Interaktiver Wertstrom",
-      title: "Produkt, PCB und Material laufen getrennt durch den Loop.",
+      title: "Vom Produkt zurück zum Material.",
       text:
-        "Die Animation folgt dem Prozess aus der Skizze: OEM liefert Produkt, der Kunde gibt zurück, Leaftronics routet PCB und Produkt, der Smelter gewinnt Material und Exportpfade werden sichtbar.",
+        "Sechs Stationen bilden einen kontrollierten Kreislauf: Produkte, Leiterplatten, Daten und Wertstoffe bleiben sichtbar und fließen gezielt zum OEM zurück.",
       hoverLabel: "Aktiver Prozesspunkt",
       nextStep: "Nächster Schritt",
       nodes: {
@@ -433,19 +442,19 @@ export const copy: Record<Language, LandingCopy> = {
       ],
     },
     form: {
-      eyebrow: "Conversion",
-      title: "Starte mit deiner Rolle.",
-      text: "Kurzes Demo-Formular mit Lade-, Erfolgs- und Referenzzustand. Die Anfrage wird lokal als Prototyp gespeichert.",
+      eyebrow: "Pilotprojekt",
+      title: "Bringen wir Ihre Leiterplatte in den Kreislauf.",
+      text: "Wählen Sie Ihre Rolle und skizzieren Sie Ihr Produkt. Gemeinsam definieren wir Materialanalyse, Pilotumfang und den nächsten technischen Schritt.",
       roleLabel: "Rolle",
       company: "Unternehmen",
       contact: "Ansprechpartner",
       email: "E-Mail",
       product: "Produkt / Seriennummer / Material",
       notes: "Was soll als Nächstes passieren?",
-      submit: "Anfrage speichern",
-      successTitle: "Anfrage gespeichert",
-      successText: (id, role) => `Referenz ${id}: ${role} wurde im Demo-System angelegt. Als Nächstes folgt ein passender Prozessvorschlag.`,
-      demoId: "Demo-Referenz",
+      submit: "Pilotprojekt anfragen",
+      successTitle: "Pilotprojekt vorgemerkt",
+      successText: (id, role) => `Referenz ${id}: Ihre Anfrage für ${role} ist vorgemerkt. Als Nächstes folgt ein passender Prozessvorschlag.`,
+      demoId: "Pilot-Referenz",
     },
   },
   en: {
@@ -484,17 +493,17 @@ export const copy: Record<Language, LandingCopy> = {
         {
           title: "Export instead of return",
           text: "Products leave the regional loop before origin and material value are secured.",
-          image: "https://images.unsplash.com/photo-1494412685616-a5d310fbb07d?auto=format&fit=crop&w=900&q=80",
+          image: "/leaftronics-hero-pcb.jpg",
         },
         {
           title: "Mixed collection",
           text: "B2B products are blended into mixed streams and lose quality, serial context and responsibility.",
-          image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
+          image: "/leaftronics-separated-components.jpg",
         },
         {
           title: "No material sovereignty",
           text: "Without data flow, OEMs lose return data, ESG proof and European production options.",
-          image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80",
+          image: "/leaftronics-pcb-prototype.jpg",
         },
       ],
     },
@@ -542,8 +551,9 @@ export const copy: Record<Language, LandingCopy> = {
     },
     solution: {
       eyebrow: "Interactive value flow",
-      title: "Product, PCB and material move through separate loop paths.",
-      text: "The animation follows the sketched process: OEM ships product, the customer returns it, Leaftronics routes product and PCB, the smelter recovers material and export leakage becomes visible.",
+      title: "From product back to material.",
+      text:
+        "Six stations form one controlled loop: products, circuit boards, data and valuable materials stay visible and flow deliberately back to the OEM.",
       hoverLabel: "Active process point",
       nextStep: "Next step",
       nodes: {
@@ -751,19 +761,19 @@ export const copy: Record<Language, LandingCopy> = {
       ],
     },
     form: {
-      eyebrow: "Conversion",
-      title: "Start with your role.",
-      text: "Short demo form with loading, success and reference state. The request is stored locally as a prototype.",
+      eyebrow: "Pilot project",
+      title: "Let us bring your circuit board into the loop.",
+      text: "Choose your role and outline your product. Together, we define the material analysis, pilot scope and next technical step.",
       roleLabel: "Role",
       company: "Company",
       contact: "Contact",
       email: "Email",
       product: "Product / serial / material",
       notes: "What should happen next?",
-      submit: "Save request",
-      successTitle: "Request saved",
-      successText: (id, role) => `Reference ${id}: ${role} was created in the demo system. Next, a matching process suggestion follows.`,
-      demoId: "Demo reference",
+      submit: "Request pilot project",
+      successTitle: "Pilot project registered",
+      successText: (id, role) => `Reference ${id}: Your request for ${role} has been registered. A suitable process proposal follows next.`,
+      demoId: "Pilot reference",
     },
   },
   zh: {
@@ -801,17 +811,17 @@ export const copy: Record<Language, LandingCopy> = {
         {
           title: "出口而非回流",
           text: "产品在来源和材料价值被确认前就离开区域循环。",
-          image: "https://images.unsplash.com/photo-1494412685616-a5d310fbb07d?auto=format&fit=crop&w=900&q=80",
+          image: "/leaftronics-hero-pcb.jpg",
         },
         {
           title: "混合收集",
           text: "B2B 产品进入混合材料流，失去质量、序列号和责任关系。",
-          image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
+          image: "/leaftronics-separated-components.jpg",
         },
         {
           title: "没有材料主权",
           text: "没有数据流，OEM 失去回流数据、ESG 证明和欧洲生产选择。",
-          image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80",
+          image: "/leaftronics-pcb-prototype.jpg",
         },
       ],
     },
@@ -859,8 +869,9 @@ export const copy: Record<Language, LandingCopy> = {
     },
     solution: {
       eyebrow: "交互式价值流",
-      title: "产品、PCB 和材料沿着不同路径进入循环。",
-      text: "动画按照草图展示流程：OEM 交付产品，客户退回，Leaftronics 路由产品和 PCB，冶炼方回收材料，同时显示出口流失路径。",
+      title: "从产品回到材料。",
+      text:
+        "六个环节组成一个可控闭环：产品、电路板、数据和高价值材料始终可见，并有目的地回流至 OEM。",
       hoverLabel: "当前流程点",
       nextStep: "下一步",
       nodes: {
@@ -1068,19 +1079,19 @@ export const copy: Record<Language, LandingCopy> = {
       ],
     },
     form: {
-      eyebrow: "转化",
-      title: "从你的角色开始。",
-      text: "简短演示表单，包含加载、成功和参考号状态。请求会作为原型保存在本地。",
+      eyebrow: "试点项目",
+      title: "让我们将您的电路板带入循环。",
+      text: "请选择您的角色并简述产品。我们将共同确定材料分析、试点范围和下一步技术方案。",
       roleLabel: "角色",
       company: "公司",
       contact: "联系人",
       email: "邮箱",
       product: "产品 / 序列号 / 材料",
       notes: "下一步应该是什么？",
-      submit: "保存请求",
-      successTitle: "请求已保存",
-      successText: (id, role) => `参考号 ${id}: ${role} 已在演示系统中创建。下一步会生成匹配流程建议。`,
-      demoId: "演示参考号",
+      submit: "申请试点项目",
+      successTitle: "试点项目已登记",
+      successText: (id, role) => `参考号 ${id}: 您针对 ${role} 的申请已登记。下一步将提供匹配的流程建议。`,
+      demoId: "试点参考号",
     },
   },
 };
@@ -1113,12 +1124,19 @@ const roleToPoint: Record<RoleId, GraphPoint> = {
   partner: "consulting",
 };
 
+const heroScrollLabels: Record<Language, string> = {
+  de: "Weiter scrollen",
+  en: "Scroll to explore",
+  zh: "向下探索",
+};
+
 const Landing = ({ page = "home" }: { page?: LandingPage }) => {
   const [activeRole, setActiveRole] = useState<RoleId>("oem");
   const [activePoint, setActivePoint] = useState<GraphPoint>("oem");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [confirmation, setConfirmation] = useState<{ id: string; role: RoleId } | null>(null);
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const content = copy[language];
 
   const activeNode = content.solution.nodes[activePoint];
@@ -1169,9 +1187,30 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
     }, 450);
   };
 
+  const mobileLanguageControl = (
+    <div className="mt-1 grid grid-cols-3 gap-1 border-t border-current/10 pt-2">
+      {languages.map((item) => (
+        <button
+          key={item.code}
+          type="button"
+          onClick={() => {
+            setLanguage(item.code);
+            setMobileNavOpen(false);
+          }}
+          aria-label={item.label}
+          className={`h-10 rounded-md text-xs font-semibold transition-colors ${
+            language === item.code ? "bg-primary text-primary-foreground" : "opacity-60 hover:bg-current/10 hover:opacity-100"
+          }`}
+        >
+          {item.short}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-black text-background">
-      <div className="fixed bottom-4 right-4 z-50 flex rounded-md border border-background/20 bg-black/45 p-1 shadow-card backdrop-blur-md sm:bottom-auto sm:top-4">
+    <div id="top" className="min-h-screen bg-black text-background">
+      <div className="fixed right-4 top-4 z-50 hidden rounded-md border border-background/20 bg-black/45 p-1 shadow-card backdrop-blur-md lg:flex">
         {languages.map((item) => (
           <button
             key={item.code}
@@ -1188,87 +1227,193 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         ))}
       </div>
 
-      <section className={showHero ? "relative isolate min-h-screen overflow-hidden" : "relative z-10 bg-black text-background"}>
-        {showHero ? (
-          <>
-            <div className="absolute inset-0 grid md:grid-cols-2">
-              <div className="relative min-h-full">
-                <img src="/rainforest.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-black/18 to-black/8" />
-              </div>
-              <div className="relative hidden min-h-full md:block">
-                <img src="/leaftronics-hero-pcb.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-l from-black/18 via-black/8 to-black/35" />
-              </div>
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-b from-black/8 via-black/10 to-black/72" />
-            <div className="absolute inset-y-0 left-1/2 hidden w-px bg-background/18 md:block" />
-            <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-black" />
-          </>
-        ) : null}
-
-        <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
-          <Link to="/" className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-background shadow-elegant">
-              <img src="/logo1.png" alt="Leaftronics Logo" className="h-full w-full object-cover" />
-            </span>
-            <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
-          </Link>
-          <nav className="hidden items-center gap-1 rounded-lg border border-background/18 bg-black/54 p-1 text-sm font-semibold text-background/75 shadow-elegant backdrop-blur-md md:flex">
-            <Link to="/problem" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
-              {content.nav.problem}
+      {showHero ? (
+        <WaterfallToPCBHero>
+          <header className="landing-hero-header relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
+            <Link to="/" className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-background shadow-elegant">
+                <img src="/logo1-web.webp" alt="Leaftronics Logo" className="h-full w-full object-cover" />
+              </span>
+              <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
             </Link>
-            <Link to="/produkt" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
-              {content.nav.product}
-            </Link>
-            <Link to="/traction" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
-              {content.nav.traction}
-            </Link>
-            <Link to="/zyklus" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
-              {content.nav.cycle}
-            </Link>
-            <a href="/#forms" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
-              {content.nav.contact}
-            </a>
-          </nav>
-        </header>
-
-        {showHero ? (
-        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-92px)] w-full max-w-7xl items-end px-5 pb-16 sm:px-8 lg:pb-24">
-          <div className="w-full max-w-5xl rounded-lg border border-background/18 bg-black/54 p-4 shadow-elegant backdrop-blur-md sm:p-5 md:bg-black/48 lg:grid lg:grid-cols-[1.08fr_0.92fr] lg:items-end lg:gap-8">
-            <div>
-              {content.hero.eyebrow ? (
-                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-background/75">{content.hero.eyebrow}</p>
-              ) : null}
-              <h1 className="mt-3 font-display text-4xl font-semibold leading-[1.04] text-background [text-shadow:0_2px_28px_hsl(0_0%_0%/.45)] md:text-5xl">
-                {content.hero.title}
-              </h1>
-            </div>
-            <div className="mt-4 lg:mt-0">
-              <p className="max-w-xl text-base leading-7 text-background/82 [text-shadow:0_1px_18px_hsl(0_0%_0%/.35)]">
-                {content.hero.text}
-              </p>
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  to="/problem"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-background px-4 text-sm font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
-                >
+            <nav className="hidden items-center gap-1 rounded-lg border border-foreground/10 bg-white/68 p-1 text-sm font-semibold text-foreground/68 shadow-elegant backdrop-blur-xl lg:flex">
+              <a href="#problem-story" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+                {content.nav.problem}
+              </a>
+              <a href="#product-story" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+                {content.nav.product}
+              </a>
+              <Link to="/traction" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+                {content.nav.traction}
+              </Link>
+              <Link to="/zyklus" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+                {content.nav.cycle}
+              </Link>
+              <a href="/#forms" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+                {content.nav.contact}
+              </a>
+            </nav>
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen((open) => !open)}
+              aria-label={t.menu}
+              aria-controls="landing-mobile-navigation"
+              aria-expanded={mobileNavOpen}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/60 bg-white/85 text-foreground shadow-card backdrop-blur lg:hidden"
+            >
+              {mobileNavOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+            </button>
+            {mobileNavOpen ? (
+              <nav
+                id="landing-mobile-navigation"
+                className="mt-3 grid w-full gap-1 rounded-lg border border-white/70 bg-white/95 p-2 text-sm font-semibold text-foreground shadow-elegant backdrop-blur-xl lg:hidden"
+              >
+                <a href="#problem-story" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
                   {content.nav.problem}
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  to="/produkt"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-background/25 bg-background/10 px-4 text-sm font-semibold text-background backdrop-blur transition-transform hover:-translate-y-0.5"
-                >
+                </a>
+                <a href="#product-story" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
                   {content.nav.product}
-                  <ArrowRight className="h-4 w-4" />
+                </a>
+                <Link to="/traction" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
+                  {content.nav.traction}
                 </Link>
+                <Link to="/zyklus" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
+                  {content.nav.cycle}
+                </Link>
+                <a href="/#forms" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
+                  {content.nav.contact}
+                </a>
+                {mobileLanguageControl}
+              </nav>
+            ) : null}
+          </header>
+
+          <div className="landing-hero-content relative z-10 mx-auto flex min-h-[calc(96svh-92px)] w-full max-w-7xl px-5 sm:px-8">
+            <div className="landing-hero-layout flex w-full flex-col pb-5 pt-[29svh] sm:pb-8 sm:pt-[34svh] lg:pb-10 lg:pt-[clamp(4.5rem,10vh,7rem)]">
+              <div className="landing-hero-statement max-w-[40rem]">
+                {content.hero.eyebrow ? (
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-800/72">
+                    {content.hero.eyebrow}
+                  </p>
+                ) : null}
+                <h1 className="landing-hero-title max-w-[40rem] font-display text-[2.45rem] font-semibold leading-[1.02] text-emerald-950 [text-shadow:0_2px_24px_rgba(255,255,255,.92)] sm:text-5xl lg:text-[3rem]">
+                  {content.hero.title}
+                  {content.hero.titleAccent ? (
+                    <>
+                      {" "}
+                      <span className="text-emerald-700">{content.hero.titleAccent}</span>
+                    </>
+                  ) : null}
+                </h1>
+                <div className="landing-hero-value mt-5 max-w-[37rem]">
+                  <p className="landing-hero-copy text-sm leading-6 text-emerald-950/72 [text-shadow:0_1px_16px_rgba(255,255,255,.88)] md:text-base md:leading-7">
+                    {content.hero.text}
+                  </p>
+                  <div className="landing-hero-actions mt-4 flex flex-row flex-wrap items-center gap-2 sm:gap-3">
+                    <a
+                      href="#problem-story"
+                      className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-emerald-900 px-4 text-sm font-semibold text-white shadow-card transition-transform hover:-translate-y-0.5"
+                    >
+                      {content.nav.problem}
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                    <a
+                      href="#product-story"
+                      className="inline-flex h-10 items-center justify-center gap-2 px-2 text-sm font-semibold text-emerald-950/72 transition-colors hover:text-emerald-950"
+                    >
+                      {content.nav.product}
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="landing-hero-footer mt-auto flex justify-end">
+                <a
+                  href="#problem-story"
+                  aria-label={heroScrollLabels[language]}
+                  className="landing-hero-scroll group inline-flex shrink-0 items-center gap-3 self-end text-emerald-950/64 transition-colors hover:text-emerald-950 sm:pb-0.5"
+                >
+                  <span className="landing-hero-scroll-label text-[10px] font-semibold uppercase tracking-[0.2em]">
+                    {heroScrollLabels[language]}
+                  </span>
+                  <span className="grid h-11 w-11 place-items-center rounded-full border border-emerald-950/22 bg-white/44 shadow-card backdrop-blur-md transition-colors group-hover:bg-white/74">
+                    <ArrowDown className="landing-hero-scroll-arrow h-4 w-4" />
+                  </span>
+                </a>
               </div>
             </div>
           </div>
-        </div>
-        ) : null}
-      </section>
+        </WaterfallToPCBHero>
+      ) : (
+        <section className="relative z-10 bg-black text-background">
+          <header className="relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
+            <Link to="/" className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-background shadow-elegant">
+                <img src="/logo1-web.webp" alt="Leaftronics Logo" className="h-full w-full object-cover" />
+              </span>
+              <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
+            </Link>
+            <nav className="hidden items-center gap-1 rounded-lg border border-background/18 bg-black/54 p-1 text-sm font-semibold text-background/75 shadow-elegant backdrop-blur-md lg:flex">
+              <Link to="/problem" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
+                {content.nav.problem}
+              </Link>
+              <Link to="/produkt" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
+                {content.nav.product}
+              </Link>
+              <Link to="/traction" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
+                {content.nav.traction}
+              </Link>
+              <Link to="/zyklus" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
+                {content.nav.cycle}
+              </Link>
+              <a href="/#forms" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
+                {content.nav.contact}
+              </a>
+            </nav>
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen((open) => !open)}
+              aria-label={t.menu}
+              aria-controls="landing-mobile-navigation"
+              aria-expanded={mobileNavOpen}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-background/25 bg-background/10 text-background backdrop-blur lg:hidden"
+            >
+              {mobileNavOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+            </button>
+            {mobileNavOpen ? (
+              <nav
+                id="landing-mobile-navigation"
+                className="mt-3 grid w-full gap-1 rounded-lg border border-background/16 bg-black/95 p-2 text-sm font-semibold text-background shadow-elegant backdrop-blur-xl lg:hidden"
+              >
+                <Link to="/problem" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                  {content.nav.problem}
+                </Link>
+                <Link to="/produkt" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                  {content.nav.product}
+                </Link>
+                <Link to="/traction" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                  {content.nav.traction}
+                </Link>
+                <Link to="/zyklus" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                  {content.nav.cycle}
+                </Link>
+                <a href="/#forms" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                  {content.nav.contact}
+                </a>
+                {mobileLanguageControl}
+              </nav>
+            ) : null}
+          </header>
+        </section>
+      )}
+
+      {showHero ? (
+        <>
+          <ScrollPCBStory language={language} problem={content.problem} />
+          <ProofOfProgress language={language} />
+        </>
+      ) : null}
 
       {showProblem ? (
       <section id="problem" className="relative isolate overflow-hidden bg-black py-24 text-background md:py-32">
@@ -1333,19 +1478,57 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       ) : null}
 
       {showProduct || showCycle ? (
-      <section id="solution" className="bg-[hsl(42_31%_91%)] pb-16 text-foreground md:pb-24">
-        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-          <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
-            <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.solution.eyebrow}</p>
-              <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.solution.title}</h2>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.solution.text}</p>
+      <section
+        id="solution"
+        className={
+          showCycle
+            ? "cycle-prototype-section relative isolate scroll-mt-8 overflow-hidden pb-0 pt-8 text-foreground md:pb-0 md:pt-12"
+            : "scroll-mt-8 bg-[hsl(42_31%_91%)] pb-16 pt-20 text-foreground md:pb-24 md:pt-24"
+        }
+      >
+        {showCycle ? <div className="cycle-prototype-section-grid pointer-events-none absolute inset-0 -z-10" aria-hidden="true" /> : null}
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <div
+            className={
+              showCycle
+                ? "mb-1 grid gap-7 py-4 sm:py-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-end lg:gap-16"
+                : "mb-2 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-end lg:gap-16"
+            }
+          >
+            <div className="max-w-4xl">
+              <p
+                className={
+                  showCycle
+                    ? "text-xs font-semibold uppercase tracking-[0.3em] text-emerald-800/72"
+                    : "text-xs font-semibold uppercase tracking-[0.28em] text-primary"
+                }
+              >
+                {content.solution.eyebrow}
+              </p>
+              <h2
+                className={
+                  showCycle
+                    ? "mt-4 max-w-4xl font-display text-[2.45rem] font-semibold leading-[1.02] text-emerald-950 [text-shadow:0_2px_24px_rgba(255,255,255,.92)] sm:text-5xl lg:text-[3rem]"
+                    : "mt-4 max-w-4xl font-display text-4xl font-semibold leading-[1.08] md:text-5xl"
+                }
+              >
+                {content.solution.title}
+              </h2>
             </div>
+            {showCycle ? (
+              <div className="max-w-xl border-l border-emerald-800/38 pl-4 sm:pl-5">
+                <p className="text-sm leading-6 text-emerald-950/72 [text-shadow:0_1px_16px_rgba(255,255,255,.88)] md:text-base md:leading-7">
+                  {content.solution.text}
+                </p>
+              </div>
+            ) : (
+              <p className="max-w-xl text-base leading-7 text-muted-foreground md:text-lg md:leading-8">{content.solution.text}</p>
+            )}
             {showProduct ? <InfoPanel content={content} activeNode={activeNode} /> : null}
           </div>
 
           {showCycle ? (
-            <ProcessGraph
+            <CyclePrototypeMap
               content={content}
               activePoint={activePoint}
               setActivePoint={setActivePoint}
@@ -1369,7 +1552,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       ) : null}
 
       {showCycle ? (
-      <section id="demos" className="bg-[linear-gradient(90deg,hsl(45_52%_92%/.78)_1px,transparent_1px),linear-gradient(180deg,hsl(45_52%_92%/.78)_1px,transparent_1px),radial-gradient(circle_at_76%_20%,hsl(151_48%_82%/.72),transparent_32%),linear-gradient(120deg,hsl(43_53%_92%),hsl(47_48%_96%)_48%,hsl(155_38%_90%))] bg-[size:56px_56px,56px_56px,100%_100%,100%_100%] py-20 text-foreground md:py-28">
+      <section id="demos" className="cycle-demo-section pb-20 pt-8 text-foreground md:pb-28 md:pt-12">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.34fr_0.66fr]">
           {(() => {
             const Icon = roleIcons[activeRole];
@@ -1487,70 +1670,32 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       ) : null}
 
       {showContact ? (
-      <section id="forms" className="bg-[hsl(42_31%_91%)] py-16 text-foreground md:py-24">
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.42fr_0.58fr]">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.form.eyebrow}</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-5xl">{content.form.title}</h2>
-            <p className="mt-5 text-base leading-7 text-muted-foreground">{content.form.text}</p>
-            {confirmation ? (
-              <div className="mt-6 rounded-lg border border-primary/25 bg-background p-4 shadow-card">
-                <p className="inline-flex items-center gap-2 font-semibold text-primary">
-                  <CheckCircle2 className="h-5 w-5" />
-                  {content.form.successTitle}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {content.form.successText(confirmation.id, content.roles.cards[confirmation.role].title)}
-                </p>
-              </div>
-            ) : null}
-          </div>
-
-          <form onSubmit={submit} className="rounded-lg border border-border bg-background p-5 shadow-card md:p-6">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="grid gap-2 text-sm font-medium">
-                {content.form.roleLabel}
-                <select
-                  value={activeRole}
-                  onChange={(event) => chooseRole(event.target.value as RoleId)}
-                  className="h-11 rounded-md border border-input bg-background px-3 text-sm"
-                >
-                  {roleOrder.map((role) => (
-                    <option key={role} value={role}>
-                      {content.roles.cards[role].title}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <TextInput name="company" label={content.form.company} required />
-              <TextInput name="contact" label={content.form.contact} required />
-              <TextInput name="email" label={content.form.email} type="email" required />
-              <label className="grid gap-2 text-sm font-medium sm:col-span-2">
-                {content.form.product}
-                <input
-                  key={activeRole}
-                  name="product"
-                  defaultValue={activeRole === "customer" ? DEMO_SERIAL : ""}
-                  className="h-11 rounded-md border border-input bg-background px-3 text-sm"
-                />
-              </label>
-              <label className="grid gap-2 text-sm font-medium sm:col-span-2">
-                {content.form.notes}
-                <textarea name="notes" rows={4} className="rounded-md border border-input bg-background px-3 py-2 text-sm" />
-              </label>
-            </div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="mt-5 inline-flex h-12 items-center justify-center gap-2 rounded-md bg-foreground px-5 font-semibold text-background shadow-elegant transition-transform hover:-translate-y-0.5 disabled:opacity-60"
-            >
-              {isSubmitting ? "..." : content.form.submit}
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </form>
-        </div>
-      </section>
+        <PilotProjectSection
+          activeRole={activeRole}
+          chooseRole={chooseRole}
+          confirmation={
+            confirmation
+              ? {
+                  title: content.form.successTitle,
+                  text: content.form.successText(confirmation.id, content.roles.cards[confirmation.role].title),
+                }
+              : null
+          }
+          copy={content.form}
+          defaultProduct={activeRole === "customer" ? DEMO_SERIAL : ""}
+          isSubmitting={isSubmitting}
+          language={language}
+          onSubmit={submit}
+          roleTitles={{
+            oem: content.roles.cards.oem.title,
+            customer: content.roles.cards.customer.title,
+            recycler: content.roles.cards.recycler.title,
+            smelter: content.roles.cards.smelter.title,
+            partner: content.roles.cards.partner.title,
+          }}
+        />
       ) : null}
+      <Footer />
     </div>
   );
 };
@@ -2008,6 +2153,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
   const [location, setLocation] = useState(SERIAL_DB[DEMO_SERIAL].city);
   const [detecting, setDetecting] = useState(false);
   const copy = content.demos.customerLive;
+  const displayLocation = localizeCity(location, language);
 
   const checkSerial = (value = serial) => {
     const key = value.trim().toUpperCase();
@@ -2025,7 +2171,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
       const next = lookup?.city ?? "Dresden";
       setLocation(next);
       setDetecting(false);
-      toast.success(copy.detected, { description: next });
+      toast.success(copy.detected, { description: localizeCity(next, language) });
     }, 650);
   };
 
@@ -2078,7 +2224,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
 
           <div className="mt-4 rounded-md border border-primary/14 bg-primary/8 p-3">
             <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">{copy.detected}</p>
-            <p className="mt-1 font-display text-2xl font-semibold">{location}</p>
+            <p className="mt-1 font-display text-2xl font-semibold">{displayLocation}</p>
           </div>
         </form>
 
@@ -2161,21 +2307,24 @@ function localizeDevice(device: string, language: Language) {
   return normalized;
 }
 
-const TextInput = ({
-  label,
-  name,
-  required,
-  type = "text",
-}: {
-  label: string;
-  name: string;
-  required?: boolean;
-  type?: string;
-}) => (
-  <label className="grid gap-2 text-sm font-medium">
-    {label}
-    <input name={name} type={type} required={required} className="h-11 rounded-md border border-input bg-background px-3 text-sm" />
-  </label>
-);
+function localizeCity(city: string, language: Language) {
+  if (language === "en") {
+    return city === "München" ? "Munich" : city === "Köln" ? "Cologne" : city;
+  }
+  if (language === "zh") {
+    const labels: Record<string, string> = {
+      Berlin: "柏林",
+      Hamburg: "汉堡",
+      München: "慕尼黑",
+      Köln: "科隆",
+      "Frankfurt am Main": "法兰克福",
+      Stuttgart: "斯图加特",
+      Leipzig: "莱比锡",
+      Dresden: "德累斯顿",
+    };
+    return labels[city] ?? city;
+  }
+  return city;
+}
 
 export default Landing;
