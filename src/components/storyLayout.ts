@@ -6,6 +6,13 @@ export const STORY_PRODUCT_KEYFRAMES = {
   z: [0, 0, 0, 0, 0, -0.2, -1.8, -1.4],
 } as const;
 
+export const getStoryProductThemeProgress = (progress: number) => {
+  const transitionStart = 0.282;
+  const transitionEnd = 0.3;
+  const amount = Math.min(1, Math.max(0, (progress - transitionStart) / (transitionEnd - transitionStart)));
+  return amount * amount * (3 - 2 * amount);
+};
+
 export const getStoryActiveIndex = (progress: number, stepCount: number) => {
   if (stepCount <= 1) return 0;
 

@@ -11,7 +11,7 @@ import {
   Shuffle,
 } from "lucide-react";
 import type { Language } from "@/lib/i18n";
-import { getStoryActiveIndex } from "@/components/storyLayout";
+import { getStoryActiveIndex, getStoryProductThemeProgress } from "@/components/storyLayout";
 import { useElementVisibility, useScrollProgress } from "@/components/useScrollProgress";
 
 const InteractivePCBModelScene = lazy(() =>
@@ -261,18 +261,21 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
   const activeIsProblem = activeStep.type === "problem";
   const activeDisplayNumber = activeIsProblem ? activeIndex + 1 : activeIndex - 2;
   const activeContentSide = activeStep.side === "left" ? "lg:col-start-1" : "lg:col-start-2";
+  const productThemeProgress = getStoryProductThemeProgress(progress);
+  const transitionSaturation =
+    23 + productThemeProgress * 6 - 64 * productThemeProgress * (1 - productThemeProgress);
+  const storyBackgroundColor = `hsl(${150 - productThemeProgress * 45} ${transitionSaturation}% ${
+    6 + productThemeProgress * 91
+  }%)`;
 
   return (
-    <section id="problem-story" ref={sectionRef} className="relative isolate bg-[#0c1310]">
-      <div className="sticky top-0 h-[100svh] overflow-hidden">
-        <div
-          aria-hidden
-          className={`absolute inset-0 bg-[#0c1310] transition-opacity duration-300 ${problemActive ? "opacity-100" : "opacity-0"}`}
-        />
-        <div
-          aria-hidden
-          className={`absolute inset-0 bg-[#f7faf6] transition-opacity duration-300 ${problemActive ? "opacity-0" : "opacity-100"}`}
-        />
+    <section
+      id="problem-story"
+      ref={sectionRef}
+      className="relative isolate"
+      style={{ backgroundColor: storyBackgroundColor }}
+    >
+      <div className="sticky top-0 h-[100svh] overflow-hidden" style={{ backgroundColor: storyBackgroundColor }}>
         <div
           aria-hidden
           className={`absolute inset-0 transition-opacity duration-700 [background-image:linear-gradient(90deg,rgba(78,128,95,.12)_1px,transparent_1px),linear-gradient(0deg,rgba(78,128,95,.1)_1px,transparent_1px)] [background-size:72px_72px] ${

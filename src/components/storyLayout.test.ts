@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { getStoryActiveIndex, STORY_PRODUCT_KEYFRAMES } from "@/components/storyLayout";
+import {
+  getStoryActiveIndex,
+  getStoryProductThemeProgress,
+  STORY_PRODUCT_KEYFRAMES,
+} from "@/components/storyLayout";
 
 describe("story layout safety", () => {
   it("keeps alternating desktop shots inside their visual side", () => {
@@ -20,5 +24,11 @@ describe("story layout safety", () => {
     expect(getStoryActiveIndex(0.95, 11)).toBe(9);
     expect(getStoryActiveIndex(0.96, 11)).toBe(10);
     expect(getStoryActiveIndex(1, 11)).toBe(10);
+  });
+
+  it("finishes the light theme before the first product panel appears", () => {
+    expect(getStoryProductThemeProgress(0.282)).toBe(0);
+    expect(getStoryProductThemeProgress(0.291)).toBeCloseTo(0.5, 5);
+    expect(getStoryProductThemeProgress(0.3)).toBe(1);
   });
 });
