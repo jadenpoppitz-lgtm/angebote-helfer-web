@@ -296,31 +296,32 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
   const productX = isCompact ? 0 : 3.55;
 
   if (progress < 0.2) {
-    const approach = smoothstep(0.02, 0.105, progress);
+    const approach = smoothstep(0.045, 0.105, progress);
     const insertion = smoothstep(0.105, 0.185, progress);
-    const loadingBayX = isCompact ? -0.2 * travel : 0.62;
-    const insideContainerX = isCompact ? 0.38 * travel : 1.32;
-    const startX = isCompact ? 0 : 1.82;
+    const loadingBayX = isCompact ? -0.1 * travel : 0.58;
+    const insideContainerX = isCompact ? 0.5 * travel : 1.62;
+    const startX = isCompact ? 0 : 0.48;
     const approachX = THREE.MathUtils.lerp(startX, loadingBayX, approach);
-    const approachScale = THREE.MathUtils.lerp(isCompact ? 1.02 : 0.68, 0.31, approach);
+    const approachScale = THREE.MathUtils.lerp(isCompact ? 0.44 : 0.26, isCompact ? 0.2 : 0.15, approach);
+    const alignedZ = THREE.MathUtils.lerp(0.22, 0, approach);
     return {
-      pitch: THREE.MathUtils.lerp(0.03, 0.1, approach),
-      scale: THREE.MathUtils.lerp(approachScale, 0.22, insertion) * compactScale,
+      pitch: THREE.MathUtils.lerp(0.03, 0.07, approach),
+      scale: THREE.MathUtils.lerp(approachScale, isCompact ? 0.11 : 0.075, insertion) * compactScale,
       x: THREE.MathUtils.lerp(approachX, insideContainerX, insertion),
-      yaw: THREE.MathUtils.lerp(-0.22, Math.PI * 0.46, approach),
-      z: THREE.MathUtils.lerp(0.42, -0.08, insertion),
+      yaw: THREE.MathUtils.lerp(0.85, Math.PI * 0.5, approach),
+      z: THREE.MathUtils.lerp(alignedZ, 0, insertion),
     };
   }
 
   if (progress < 0.46) {
     const collectionHold = smoothstep(0.2, 0.34, progress);
-    const insideContainerX = isCompact ? 0.38 * travel : 1.32;
+    const insideContainerX = isCompact ? 0.5 * travel : 1.62;
     return {
-      pitch: THREE.MathUtils.lerp(0.1, 0.04, collectionHold),
-      scale: THREE.MathUtils.lerp(0.22, 0.33, collectionHold) * compactScale,
+      pitch: THREE.MathUtils.lerp(0.07, 0.04, collectionHold),
+      scale: THREE.MathUtils.lerp(isCompact ? 0.11 : 0.075, 0.24, collectionHold) * compactScale,
       x: THREE.MathUtils.lerp(insideContainerX, 5.4 * travel, collectionHold),
-      yaw: THREE.MathUtils.lerp(Math.PI * 0.46, Math.PI * 0.52, collectionHold),
-      z: -0.08,
+      yaw: THREE.MathUtils.lerp(Math.PI * 0.5, Math.PI * 0.52, collectionHold),
+      z: 0,
     };
   }
 
@@ -1299,19 +1300,21 @@ function LabBeakerStage({
 
     if (groupRef.current) {
       const targetY = getBeakerY(timeline.beakerAmount, viewport.height, layout.y);
+      const targetScale = layout.beakerScale * THREE.MathUtils.lerp(storyTransform.scale, 0.62, dissolutionShot);
       groupRef.current.visible = timeline.beakerAmount > 0.005;
-      groupRef.current.position.x = THREE.MathUtils.damp(groupRef.current.position.x, storyTransform.x, 7, delta);
-      groupRef.current.position.y = THREE.MathUtils.damp(groupRef.current.position.y, targetY, 8, delta);
-      groupRef.current.position.z = THREE.MathUtils.damp(groupRef.current.position.z, 0.08, 7, delta);
-      groupRef.current.rotation.x = THREE.MathUtils.damp(groupRef.current.rotation.x, -pointer.y * 0.025, 6, delta);
-      groupRef.current.rotation.y = THREE.MathUtils.damp(groupRef.current.rotation.y, pointer.x * 0.045, 6, delta);
-      const beakerScale = THREE.MathUtils.damp(
-        groupRef.current.scale.x,
-        layout.beakerScale * THREE.MathUtils.lerp(storyTransform.scale, 0.62, dissolutionShot),
-        8,
-        delta,
-      );
-      groupRef.current.scale.setScalar(beakerScale);
+      if (scrollProgress !== undefined) {
+        groupRef.current.position.set(storyTransform.x, targetY, 0.08);
+        groupRef.current.rotation.set(-pointer.y * 0.025, pointer.x * 0.045, 0);
+        groupRef.current.scale.setScalar(targetScale);
+      } else {
+        groupRef.current.position.x = THREE.MathUtils.damp(groupRef.current.position.x, storyTransform.x, 7, delta);
+        groupRef.current.position.y = THREE.MathUtils.damp(groupRef.current.position.y, targetY, 8, delta);
+        groupRef.current.position.z = THREE.MathUtils.damp(groupRef.current.position.z, 0.08, 7, delta);
+        groupRef.current.rotation.x = THREE.MathUtils.damp(groupRef.current.rotation.x, -pointer.y * 0.025, 6, delta);
+        groupRef.current.rotation.y = THREE.MathUtils.damp(groupRef.current.rotation.y, pointer.x * 0.045, 6, delta);
+        const beakerScale = THREE.MathUtils.damp(groupRef.current.scale.x, targetScale, 8, delta);
+        groupRef.current.scale.setScalar(beakerScale);
+      }
     }
 
     if (waterMaterialRef.current) {
@@ -1397,7 +1400,7 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
     };
   }, [containerAsset, containerDoorMaterial]);
 
-  useFrame(({ clock, size }, delta) => {
+  useFrame(({ clock, size }) => {
     const problemProgress = getStoryProblemProgress(scrollProgress);
     const layout = getModelLayout(viewport.width, viewport.height, size.height <= 520 && size.width > size.height);
     const active = problemProgress !== undefined;
@@ -1406,60 +1409,36 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
 
     if (containerRef.current) {
       const enter = smoothstep(-0.025, 0.04, progress);
-      const shipping = smoothstep(0.17, 0.235, progress);
-      const amount = active ? enter * (1 - smoothstep(0.205, 0.252, progress)) : 0;
+      const shipping = smoothstep(0.195, 0.255, progress);
+      const amount = active ? enter * (1 - smoothstep(0.215, 0.265, progress)) : 0;
       const doorOpen = active
         ? smoothstep(0.008, 0.05, progress) * (1 - smoothstep(0.155, 0.205, progress))
         : 0;
-      const baseX = layout.isCompact ? 0.72 : 1.72;
+      const baseX = layout.isCompact ? 0.52 : 1.72;
       const targetX =
         baseX + THREE.MathUtils.lerp(2.9 * horizontalTravel, 0, enter) + shipping * 7.2 * horizontalTravel;
       containerRef.current.visible = amount > 0.005;
-      containerRef.current.position.x = THREE.MathUtils.damp(containerRef.current.position.x, targetX, 9, delta);
-      containerRef.current.position.y = THREE.MathUtils.damp(
-        containerRef.current.position.y,
+      containerRef.current.position.set(
+        targetX,
         layout.y + 0.04 + Math.sin(clock.elapsedTime * 1.1) * 0.02,
-        8,
-        delta,
+        -0.18,
       );
-      containerRef.current.position.z = THREE.MathUtils.damp(containerRef.current.position.z, -0.18, 8, delta);
-      containerRef.current.rotation.z = THREE.MathUtils.damp(
-        containerRef.current.rotation.z,
-        (1 - enter) * -0.08 + shipping * 0.035,
-        8,
-        delta,
-      );
-      const scale = THREE.MathUtils.damp(
-        containerRef.current.scale.x,
-        layout.scale * (layout.isCompact ? 0.5 : 0.52),
-        8,
-        delta,
-      );
-      containerRef.current.scale.setScalar(scale);
+      containerRef.current.rotation.z = (1 - enter) * -0.08 + shipping * 0.035;
+      containerRef.current.scale.setScalar(layout.scale * (layout.isCompact ? 0.38 : 0.52));
       containerAsset.material.opacity = amount;
       containerAsset.material.depthWrite = amount > 0.96;
       containerDoorMaterial.opacity = amount;
       containerDoorMaterial.depthWrite = amount > 0.96;
       if (leftDoorRef.current) {
-        leftDoorRef.current.rotation.y = THREE.MathUtils.damp(
-          leftDoorRef.current.rotation.y,
-          Math.PI * 0.44 * doorOpen,
-          10,
-          delta,
-        );
+        leftDoorRef.current.rotation.y = Math.PI * 0.44 * doorOpen;
       }
       if (rightDoorRef.current) {
-        rightDoorRef.current.rotation.y = THREE.MathUtils.damp(
-          rightDoorRef.current.rotation.y,
-          -Math.PI * 0.44 * doorOpen,
-          10,
-          delta,
-        );
+        rightDoorRef.current.rotation.y = -Math.PI * 0.44 * doorOpen;
       }
     }
 
     const pileAmount = active
-      ? smoothstep(0.17, 0.22, progress) * (1 - smoothstep(0.39, 0.485, progress))
+      ? smoothstep(0.255, 0.3, progress) * (1 - smoothstep(0.39, 0.485, progress))
       : 0;
     if (pileRef.current) {
       pileRef.current.visible = pileAmount > 0.005;
@@ -1469,7 +1448,7 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
 
     if (pileBoardsRef.current && pileChipsRef.current && pileContactsRef.current) {
       for (let index = 0; index < PROBLEM_PCB_COUNT; index += 1) {
-        const start = 0.175 + index * 0.006;
+        const start = 0.255 + index * 0.006;
         const impactAt = start + 0.078;
         const fall = smoothstep(start, impactAt, progress);
         const collision = clamp01((progress - impactAt) / 0.075);
@@ -1585,6 +1564,17 @@ function PCBModel({
   );
   const animatedParts = useMemo(() => collectAnimatedParts(model), [model]);
   const modelMaterialStates = useMemo(() => collectModelMaterialStates(model), [model]);
+  const clippingMaterials = useMemo(() => {
+    const materials = new Set<THREE.Material>();
+    model.traverse((child) => {
+      if (!(child instanceof THREE.Mesh)) return;
+      const childMaterials = Array.isArray(child.material) ? child.material : [child.material];
+      childMaterials.forEach((material) => materials.add(material));
+    });
+    return [...materials];
+  }, [model]);
+  const containerClipPlane = useMemo(() => new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0), []);
+  const containerClipActiveRef = useRef(false);
   const originalBoard = useMemo(() => collectBaseBoard(model, "pcbBoardOrigin"), [model]);
   const boardFlexState = useMemo(() => createBoardFlexState(originalBoard?.mesh ?? null), [originalBoard]);
   const boardDetail = useMemo(() => collectBoardDetail(model), [model]);
@@ -1663,6 +1653,19 @@ function PCBModel({
     const glitchOffset = (glitchSeed - 0.5) * 0.17 * dataGlitch;
     const glitchPulse = dataGlitch * (0.08 + Math.sin(clock.elapsedTime * 17) * 0.05);
     const layout = getModelLayout(viewport.width, viewport.height, size.height <= 520 && size.width > size.height);
+    const containerClipActive =
+      problemProgress !== undefined && problemProgress >= 0.045 && problemProgress < 0.215;
+    const containerScale = layout.scale * (layout.isCompact ? 0.38 : 0.52);
+    const containerBaseX = layout.isCompact ? 0.52 : 1.72;
+    containerClipPlane.constant = containerBaseX - 1.54 * containerScale;
+    if (containerClipActiveRef.current !== containerClipActive) {
+      containerClipActiveRef.current = containerClipActive;
+      for (const material of clippingMaterials) {
+        material.clippingPlanes = containerClipActive ? [containerClipPlane] : null;
+        material.clipIntersection = false;
+        material.needsUpdate = true;
+      }
+    }
     const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact);
     const pointer = pointerRef.current;
     const interactionWeight = 1 - timeline.boardPitchAmount * 0.72;
@@ -1692,19 +1695,25 @@ function PCBModel({
       introZoom *
       (1 + glitchOffset * 0.16 + Math.sin(clock.elapsedTime * 0.48) * (traceShot + electronicsShot) * 0.012);
 
-    groupRef.current.rotation.x = THREE.MathUtils.damp(groupRef.current.rotation.x, targetRotationX, 7, delta);
-    groupRef.current.rotation.y = THREE.MathUtils.damp(groupRef.current.rotation.y, targetRotationY, 7, delta);
-    groupRef.current.rotation.z = THREE.MathUtils.damp(groupRef.current.rotation.z, targetRotationZ, 7, delta);
-    groupRef.current.position.x = THREE.MathUtils.damp(
-      groupRef.current.position.x,
-      layout.x + storyTransform.x + glitchOffset,
-      7,
-      delta,
-    );
-    groupRef.current.position.y = THREE.MathUtils.damp(groupRef.current.position.y, targetY, 7, delta);
-    groupRef.current.position.z = THREE.MathUtils.damp(groupRef.current.position.z, storyTransform.z, 7, delta);
-    const dampedScale = THREE.MathUtils.damp(groupRef.current.scale.x, targetScale, 7, delta);
-    groupRef.current.scale.setScalar(dampedScale);
+    if (scrollProgress !== undefined) {
+      groupRef.current.rotation.set(targetRotationX, targetRotationY, targetRotationZ);
+      groupRef.current.position.set(layout.x + storyTransform.x + glitchOffset, targetY, storyTransform.z);
+      groupRef.current.scale.setScalar(targetScale);
+    } else {
+      groupRef.current.rotation.x = THREE.MathUtils.damp(groupRef.current.rotation.x, targetRotationX, 7, delta);
+      groupRef.current.rotation.y = THREE.MathUtils.damp(groupRef.current.rotation.y, targetRotationY, 7, delta);
+      groupRef.current.rotation.z = THREE.MathUtils.damp(groupRef.current.rotation.z, targetRotationZ, 7, delta);
+      groupRef.current.position.x = THREE.MathUtils.damp(
+        groupRef.current.position.x,
+        layout.x + storyTransform.x + glitchOffset,
+        7,
+        delta,
+      );
+      groupRef.current.position.y = THREE.MathUtils.damp(groupRef.current.position.y, targetY, 7, delta);
+      groupRef.current.position.z = THREE.MathUtils.damp(groupRef.current.position.z, storyTransform.z, 7, delta);
+      const dampedScale = THREE.MathUtils.damp(groupRef.current.scale.x, targetScale, 7, delta);
+      groupRef.current.scale.setScalar(dampedScale);
+    }
 
     for (const state of modelMaterialStates) {
       state.material.emissive.copy(state.emissive).lerp(DATA_ERROR_RED, glitchPulse);
@@ -1927,41 +1936,6 @@ function PilotSceneContents({ modelPath }: { modelPath: string }) {
   );
 }
 
-function FallbackBoard({ pointerRef }: { pointerRef: React.RefObject<PointerState> }) {
-  const groupRef = useRef<THREE.Group>(null);
-  const viewport = useThree((state) => state.viewport);
-
-  useFrame(({ clock, size }, delta) => {
-    if (!groupRef.current) {
-      return;
-    }
-
-    const pointer = pointerRef.current;
-    const layout = getModelLayout(viewport.width, viewport.height, size.height <= 520 && size.width > size.height);
-    const autoTurn = Math.sin(clock.elapsedTime * 0.38) * 0.12;
-    groupRef.current.rotation.x = THREE.MathUtils.damp(groupRef.current.rotation.x, -pointer.y * 0.1, 7, delta);
-    groupRef.current.rotation.y = THREE.MathUtils.damp(groupRef.current.rotation.y, pointer.x * 0.24 + autoTurn, 7, delta);
-    groupRef.current.position.y = THREE.MathUtils.damp(groupRef.current.position.y, layout.y, 7, delta);
-    const scale = THREE.MathUtils.damp(groupRef.current.scale.x, layout.scale, 7, delta);
-    groupRef.current.scale.setScalar(scale);
-  });
-
-  return (
-    <group ref={groupRef} position={[0, 0.36, 0]} rotation={[0, -0.15, 0]}>
-      <mesh>
-        <boxGeometry args={[2.2, 0.08, 3.2]} />
-        <meshStandardMaterial color="#07542d" emissive="#118549" emissiveIntensity={0.14} roughness={0.72} />
-      </mesh>
-      {[-0.72, 0, 0.72].map((x, index) => (
-        <mesh key={x} position={[x, 0.15, index % 2 === 0 ? -0.55 : 0.45]}>
-          <boxGeometry args={[0.46, 0.22, 0.54]} />
-          <meshStandardMaterial color="#101713" metalness={0.2} roughness={0.62} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
 class SceneErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
 
@@ -2004,13 +1978,13 @@ function SceneContents({
           <ProblemSequenceStage scrollProgress={scrollProgress} />
         </Suspense>
       ) : null}
-      <Suspense fallback={<FallbackBoard pointerRef={pointerRef} />}>
+      <Suspense fallback={null}>
         <LabBeakerStage
           cycleOriginRef={cycleOriginRef}
           pointerRef={pointerRef}
           scrollProgress={scrollProgress}
         />
-        <SceneErrorBoundary fallback={<FallbackBoard pointerRef={pointerRef} />}>
+        <SceneErrorBoundary fallback={null}>
           <PCBModel
             cycleOriginRef={cycleOriginRef}
             modelPath={modelPath}
@@ -2043,6 +2017,7 @@ export function InteractivePCBModelScene({
       gl={{ alpha: true, antialias: settings.antialias, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
         gl.setClearColor("#000000", 0);
+        gl.localClippingEnabled = true;
         gl.outputColorSpace = THREE.SRGBColorSpace;
         gl.toneMapping = THREE.ACESFilmicToneMapping;
         gl.toneMappingExposure = 0.92;

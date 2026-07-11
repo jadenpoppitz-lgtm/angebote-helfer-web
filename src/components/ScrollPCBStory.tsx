@@ -1,4 +1,5 @@
 import { lazy, Suspense, useMemo, useRef } from "react";
+import type { CSSProperties } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   CircuitBoard,
@@ -11,7 +12,7 @@ import {
   Shuffle,
 } from "lucide-react";
 import type { Language } from "@/lib/i18n";
-import { getStoryActiveIndex, getStoryProductThemeProgress } from "@/components/storyLayout";
+import { getStoryPanelPresentation, getStoryProductThemeProgress } from "@/components/storyLayout";
 import { useElementVisibility, useScrollProgress } from "@/components/useScrollProgress";
 
 const InteractivePCBModelScene = lazy(() =>
@@ -36,6 +37,91 @@ type StoryStep = {
 };
 
 type ProductStepCopy = Omit<StoryStep, "icon" | "side" | "type">;
+
+function StoryStepPanel({
+  dominant,
+  index,
+  offsetRem,
+  opacity,
+  step,
+}: {
+  dominant: boolean;
+  index: number;
+  offsetRem: number;
+  opacity: number;
+  step: StoryStep;
+}) {
+  const Icon = step.icon;
+  const isProblem = step.type === "problem";
+  const displayNumber = isProblem ? index + 1 : index - 2;
+  const contentSide = step.side === "left" ? "lg:col-start-1" : "lg:col-start-2";
+  const style: CSSProperties = {
+    gridRow: 1,
+    opacity,
+    transform: `translate3d(0, ${offsetRem}rem, 0)`,
+    visibility: opacity <= 0.001 ? "hidden" : "visible",
+    zIndex: dominant ? 2 : 1,
+  };
+
+  return (
+    <div
+      aria-hidden="true"
+      className={`story-step-content story-step-content-${step.side} story-step-content-${
+        isProblem ? "problem" : "product"
+      } story-step-content-active story-step-content-scroll ${contentSide} max-w-xl ${
+        isProblem ? "text-white" : "text-emerald-950"
+      }`}
+      data-story-index={index}
+      style={style}
+    >
+      <div className="flex items-center gap-4">
+        <span
+          className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border ${
+            isProblem
+              ? "border-white/22 bg-white/8 text-emerald-200"
+              : "border-emerald-900/14 bg-emerald-900/6 text-emerald-700"
+          }`}
+        >
+          <Icon className="h-5 w-5" />
+        </span>
+        <span className="font-mono text-xs font-semibold tracking-[0.22em] opacity-55">
+          {String(displayNumber).padStart(2, "0")}
+        </span>
+      </div>
+      <p
+        className={`story-step-eyebrow mt-4 text-[10px] font-semibold uppercase tracking-[0.22em] sm:mt-6 sm:text-xs sm:tracking-[0.28em] ${
+          isProblem ? "text-emerald-300" : "text-emerald-700"
+        }`}
+      >
+        {step.eyebrow}
+      </p>
+      <h2 className="story-step-title mt-3 font-display text-[1.7rem] font-semibold leading-[1.08] sm:mt-4 sm:text-4xl lg:text-5xl">
+        {step.title}
+      </h2>
+      <p
+        className={`story-step-description mt-3 max-w-lg text-sm leading-6 sm:mt-5 sm:text-base sm:leading-8 ${
+          isProblem ? "text-white/72" : "text-emerald-950/68"
+        }`}
+      >
+        {step.text}
+      </p>
+      <div className="story-step-mobile-callouts mt-4 flex flex-wrap gap-2 sm:mt-5">
+        {step.callouts.map((callout) => (
+          <span
+            key={callout}
+            className={`rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] backdrop-blur-xl ${
+              isProblem
+                ? "border-white/15 bg-white/8 text-white/72"
+                : "border-emerald-950/12 bg-white/55 text-emerald-950/66"
+            }`}
+          >
+            {callout}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const productIcons: LucideIcon[] = [Layers, Layers, Route, CircuitBoard, CircuitBoard, FlaskConical, PackageOpen, RefreshCcw];
 
@@ -199,7 +285,6 @@ const storyLabels: Record<Language, { problem: string; product: string }> = {
 };
 
 const problemIcons: LucideIcon[] = [Route, Shuffle, Database];
-const STORY_PRODUCT_START = 0.3;
 
 const problemCalloutCopy: Record<Language, string[][]> = {
   de: [
@@ -254,14 +339,34 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
 
     return [...problemSteps, ...productSteps];
   }, [language, problem]);
-  const activeIndex = getStoryActiveIndex(progress, steps.length);
-  const activeStep = steps[activeIndex];
-  const ActiveIcon = activeStep.icon;
-  const problemActive = activeIndex < 3;
-  const activeIsProblem = activeStep.type === "problem";
-  const activeDisplayNumber = activeIsProblem ? activeIndex + 1 : activeIndex - 2;
-  const activeContentSide = activeStep.side === "left" ? "lg:col-start-1" : "lg:col-start-2";
+  const panelPresentation = getStoryPanelPresentation(progress, steps.length);
   const productThemeProgress = getStoryProductThemeProgress(progress);
+  const problemActive = productThemeProgress < 0.5;
+  const outgoingProgress = Math.min(1, panelPresentation.blend * 2);
+  const incomingProgress = Math.max(0, (panelPresentation.blend - 0.5) * 2);
+  const outgoingContentOpacity = 1 - outgoingProgress * outgoingProgress * (3 - 2 * outgoingProgress);
+  const incomingContentOpacity = incomingProgress * incomingProgress * (3 - 2 * incomingProgress);
+  const panelEntries =
+    panelPresentation.currentIndex === panelPresentation.nextIndex
+      ? [{ contentOpacity: 1, dominant: true, index: panelPresentation.currentIndex, offsetRem: 0, opacity: 1 }]
+      : [
+          {
+            contentOpacity: outgoingContentOpacity,
+            dominant: panelPresentation.blend < 0.5,
+            index: panelPresentation.currentIndex,
+            offsetRem: panelPresentation.blend * -0.8,
+            opacity: 1 - panelPresentation.blend,
+          },
+          {
+            contentOpacity: incomingContentOpacity,
+            dominant: panelPresentation.blend >= 0.5,
+            index: panelPresentation.nextIndex,
+            offsetRem: (1 - panelPresentation.blend) * 0.8,
+            opacity: panelPresentation.blend,
+          },
+        ];
+  const panelWeight = (index: number) => panelEntries.find((entry) => entry.index === index)?.opacity ?? 0;
+  const dataFieldOpacity = panelWeight(2) * (1 - productThemeProgress);
   const transitionSaturation =
     23 + productThemeProgress * 6 - 64 * productThemeProgress * (1 - productThemeProgress);
   const storyBackgroundColor = `hsl(${150 - productThemeProgress * 45} ${transitionSaturation}% ${
@@ -278,15 +383,13 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
       <div className="sticky top-0 h-[100svh] overflow-hidden" style={{ backgroundColor: storyBackgroundColor }}>
         <div
           aria-hidden
-          className={`absolute inset-0 transition-opacity duration-700 [background-image:linear-gradient(90deg,rgba(78,128,95,.12)_1px,transparent_1px),linear-gradient(0deg,rgba(78,128,95,.1)_1px,transparent_1px)] [background-size:72px_72px] ${
-            problemActive ? "opacity-35" : "opacity-55"
-          }`}
+          className="absolute inset-0 [background-image:linear-gradient(90deg,rgba(78,128,95,.12)_1px,transparent_1px),linear-gradient(0deg,rgba(78,128,95,.1)_1px,transparent_1px)] [background-size:72px_72px]"
+          style={{ opacity: 0.35 + productThemeProgress * 0.2 }}
         />
         <div
           aria-hidden
-          className={`absolute -right-[18vw] top-[8vh] h-[58vh] w-[66vw] rounded-full bg-emerald-400/15 blur-3xl transition-opacity duration-700 ${
-            problemActive ? "opacity-30" : "opacity-80"
-          }`}
+          className="absolute -right-[18vw] top-[8vh] h-[58vh] w-[66vw] rounded-full bg-emerald-400/15 blur-3xl"
+          style={{ opacity: 0.3 + productThemeProgress * 0.5 }}
         />
         <div
           aria-hidden
@@ -298,12 +401,17 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
           }}
         />
 
-        <div
-          aria-hidden
-          className={`story-scene-backdrop story-scene-backdrop-${activeStep.side} story-scene-backdrop-${
-            activeIsProblem ? "problem" : "product"
-          }`}
-        />
+        {panelEntries.map((entry) => {
+          const step = steps[entry.index];
+          return (
+            <div
+              key={`backdrop-${entry.index}`}
+              aria-hidden
+              className={`story-scene-backdrop story-scene-backdrop-${step.side} story-scene-backdrop-${step.type}`}
+              style={{ opacity: entry.opacity, visibility: entry.opacity <= 0.001 ? "hidden" : "visible" }}
+            />
+          );
+        })}
 
         <div className="pointer-events-none absolute inset-0 z-[1]">
           <Suspense fallback={<div className="h-full w-full" />}>
@@ -313,9 +421,8 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
 
         <div
           aria-hidden
-          className={`material-data-field pointer-events-none absolute left-0 right-0 top-[5%] z-[3] h-[38%] overflow-hidden transition-opacity duration-100 sm:left-[35%] sm:right-[3%] sm:top-[7%] sm:h-[44%] lg:h-[70%] ${
-            problemActive && activeIndex === 2 && progress < STORY_PRODUCT_START - 0.008 ? "opacity-100" : "opacity-0"
-          }`}
+          className="material-data-field pointer-events-none absolute left-0 right-0 top-[5%] z-[3] h-[38%] overflow-hidden sm:left-[35%] sm:right-[3%] sm:top-[7%] sm:h-[44%] lg:h-[70%]"
+          style={{ opacity: dataFieldOpacity }}
         >
           {glitchCodeColumns.map((column, index) => (
             <span
@@ -333,80 +440,62 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
         </div>
 
         <div className="story-stage-label pointer-events-none absolute left-5 top-5 z-20 flex items-center gap-3 sm:left-8 md:top-8">
-          <span className={`h-px w-10 ${problemActive ? "bg-emerald-300/60" : "bg-emerald-800/40"}`} />
           <span
-            className={`font-display text-xl font-semibold leading-none transition-colors duration-300 sm:text-2xl ${
-              problemActive ? "text-white" : "text-emerald-950"
-            }`}
-          >
-            {problemActive ? labels.problem : labels.product}
+            className="h-px w-10"
+            style={{
+              backgroundColor: `hsl(155 55% ${72 - productThemeProgress * 44}% / ${
+                0.6 - productThemeProgress * 0.2
+              })`,
+            }}
+          />
+          <span className="grid font-display text-xl font-semibold leading-none sm:text-2xl">
+            <span
+              className="col-start-1 row-start-1 text-white"
+              style={{ opacity: 1 - productThemeProgress }}
+            >
+              {labels.problem}
+            </span>
+            <span
+              className="col-start-1 row-start-1 text-emerald-950"
+              style={{ opacity: productThemeProgress }}
+            >
+              {labels.product}
+            </span>
           </span>
         </div>
 
         <div className="pointer-events-none absolute right-5 top-1/2 z-20 hidden -translate-y-1/2 gap-2 md:grid">
-          {steps.map((step, index) => (
-            <span
-              key={`${step.type}-${step.title}`}
-              className={`block h-1.5 w-1.5 rounded-full transition-all duration-300 ${
-                index === activeIndex
-                  ? problemActive
-                    ? "scale-150 bg-white"
-                    : "scale-150 bg-emerald-700"
-                  : problemActive
-                    ? "bg-white/25"
-                    : "bg-emerald-950/18"
-              }`}
-            />
-          ))}
+          {steps.map((step, index) => {
+            const weight = panelWeight(index);
+            return (
+              <span
+                key={`${step.type}-${step.title}`}
+                className={`block h-1.5 w-1.5 rounded-full ${
+                  weight >= 0.5
+                    ? problemActive
+                      ? "bg-white"
+                      : "bg-emerald-700"
+                    : problemActive
+                      ? "bg-white/25"
+                      : "bg-emerald-950/18"
+                }`}
+                style={{ transform: `scale(${1 + weight * 0.5})` }}
+              />
+            );
+          })}
         </div>
 
         <div className="story-active-stage pointer-events-none absolute inset-0 z-10 grid w-full grid-cols-1 items-end px-5 pb-10 pt-[42svh] sm:px-8 sm:pb-16 sm:pt-[50svh] lg:grid-cols-2 lg:items-center lg:px-[7vw] lg:py-24">
-          <div
-            key={`${activeStep.type}-${activeIndex}`}
-            className={`story-step-content story-step-content-${activeStep.side} story-step-content-${
-              activeIsProblem ? "problem" : "product"
-            } story-step-content-active story-step-content-enter ${activeContentSide} max-w-xl ${
-              activeIsProblem ? "text-white" : "text-emerald-950"
-            }`}
-          >
-            <div className="flex items-center gap-4">
-              <span
-                className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border ${
-                  activeIsProblem
-                    ? "border-white/22 bg-white/8 text-emerald-200"
-                    : "border-emerald-900/14 bg-emerald-900/6 text-emerald-700"
-                }`}
-              >
-                <ActiveIcon className="h-5 w-5" />
-              </span>
-              <span className="font-mono text-xs font-semibold tracking-[0.22em] opacity-55">
-                {String(activeDisplayNumber).padStart(2, "0")}
-              </span>
-            </div>
-            <p className={`story-step-eyebrow mt-4 text-[10px] font-semibold uppercase tracking-[0.22em] sm:mt-6 sm:text-xs sm:tracking-[0.28em] ${activeIsProblem ? "text-emerald-300" : "text-emerald-700"}`}>
-              {activeStep.eyebrow}
-            </p>
-            <h2 className="story-step-title mt-3 font-display text-[1.7rem] font-semibold leading-[1.08] sm:mt-4 sm:text-4xl lg:text-5xl">
-              {activeStep.title}
-            </h2>
-            <p className={`story-step-description mt-3 max-w-lg text-sm leading-6 sm:mt-5 sm:text-base sm:leading-8 ${activeIsProblem ? "text-white/72" : "text-emerald-950/68"}`}>
-              {activeStep.text}
-            </p>
-            <div className="story-step-mobile-callouts mt-4 flex flex-wrap gap-2 sm:mt-5">
-              {activeStep.callouts.map((callout) => (
-                <span
-                  key={callout}
-                  className={`rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] backdrop-blur-xl ${
-                    activeIsProblem
-                      ? "border-white/15 bg-white/8 text-white/72"
-                      : "border-emerald-950/12 bg-white/55 text-emerald-950/66"
-                  }`}
-                >
-                  {callout}
-                </span>
-              ))}
-            </div>
-          </div>
+          {panelEntries.map((entry) => (
+            <StoryStepPanel
+              key={`${steps[entry.index].type}-${entry.index}`}
+              dominant={entry.dominant}
+              index={entry.index}
+              offsetRem={entry.offsetRem}
+              opacity={entry.contentOpacity}
+              step={steps[entry.index]}
+            />
+          ))}
         </div>
       </div>
 

@@ -7,10 +7,33 @@ export const STORY_PRODUCT_KEYFRAMES = {
 } as const;
 
 export const getStoryProductThemeProgress = (progress: number) => {
-  const transitionStart = 0.282;
+  const transitionStart = 0.272;
   const transitionEnd = 0.3;
   const amount = Math.min(1, Math.max(0, (progress - transitionStart) / (transitionEnd - transitionStart)));
   return amount * amount * (3 - 2 * amount);
+};
+
+export const getStoryPanelPresentation = (progress: number, stepCount: number) => {
+  if (stepCount <= 1) return { blend: 0, currentIndex: 0, nextIndex: 0 };
+
+  const value = Math.min(1, Math.max(0, progress));
+  const lastIndex = stepCount - 1;
+  const finalStepStart = 1 - 0.4 / lastIndex;
+  let previousBoundary = 0;
+
+  for (let index = 0; index < lastIndex; index += 1) {
+    const boundary = index === lastIndex - 1 ? finalStepStart : (index + 1) / lastIndex;
+    if (value < boundary) {
+      const interval = boundary - previousBoundary;
+      const transitionWidth = Math.min(0.028, interval * 0.28);
+      const amount = Math.min(1, Math.max(0, (value - (boundary - transitionWidth)) / transitionWidth));
+      const blend = amount * amount * (3 - 2 * amount);
+      return { blend, currentIndex: index, nextIndex: index + 1 };
+    }
+    previousBoundary = boundary;
+  }
+
+  return { blend: 0, currentIndex: lastIndex, nextIndex: lastIndex };
 };
 
 export const getStoryActiveIndex = (progress: number, stepCount: number) => {

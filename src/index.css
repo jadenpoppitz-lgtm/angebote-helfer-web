@@ -1596,86 +1596,133 @@ All colors MUST be HSL.
 .hero-scene-fallback {
   position: absolute;
   inset: 0;
-  z-index: 2;
-  perspective: 900px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  background: rgb(248 251 246 / 0.18);
+  opacity: 0;
+  transition: opacity 360ms ease, visibility 360ms step-end;
+  visibility: hidden;
 }
 
-.hero-fallback-board {
-  position: relative;
-  width: min(48vw, 31rem);
-  aspect-ratio: 1.5;
-  border: 1px solid rgb(7 86 49 / 0.34);
-  border-radius: 0.45rem;
-  background:
-    linear-gradient(90deg, transparent 0 18%, rgb(213 177 84 / 0.68) 18.3% 18.8%, transparent 19.1% 100%),
-    linear-gradient(0deg, transparent 0 67%, rgb(213 177 84 / 0.6) 67.3% 67.8%, transparent 68.1% 100%),
-    #0b6039;
-  box-shadow: 0 34px 78px -38px rgb(7 68 40 / 0.68);
-  opacity: 0.72;
-  transform: rotateX(58deg) rotateZ(-11deg);
-  animation: hero-fallback-float 2.4s ease-in-out infinite;
+.hero-scene-fallback.is-visible {
+  opacity: 1;
+  transition: opacity 180ms ease;
+  visibility: visible;
 }
 
-.hero-fallback-chip {
+.hero-scene-canvas {
   position: absolute;
-  display: block;
-  border-radius: 0.18rem;
-  background: #17211c;
-  box-shadow: 0 5px 8px rgb(0 0 0 / 0.2);
+  inset: 0;
+  opacity: 0;
+  transition: opacity 420ms ease;
 }
 
-.hero-fallback-chip-a {
-  left: 13%;
-  top: 17%;
-  height: 18%;
-  width: 19%;
+.hero-scene-canvas.is-ready {
+  opacity: 1;
 }
 
-.hero-fallback-chip-b {
-  right: 12%;
-  top: 23%;
-  height: 25%;
-  width: 13%;
-}
-
-.hero-fallback-chip-c {
-  bottom: 14%;
-  left: 32%;
-  height: 15%;
-  width: 30%;
-}
-
-.hero-fallback-logo {
+.hero-loader-stack {
   position: absolute;
   left: 50%;
-  top: 50%;
-  width: 13%;
-  aspect-ratio: 1;
-  border-radius: 999px;
-  object-fit: cover;
+  top: 40%;
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
   transform: translate(-50%, -50%);
 }
 
-.hero-fallback-label {
+@media (min-width: 768px) {
+  .hero-loader-stack {
+    left: 64%;
+    top: 48%;
+  }
+}
+
+.hero-loader-mark {
+  position: relative;
+  display: grid;
+  width: 5.5rem;
+  aspect-ratio: 1;
+  place-items: center;
+}
+
+.hero-loader-ring {
   position: absolute;
-  left: 50%;
-  top: calc(50% + min(23vw, 15rem));
-  color: rgb(5 69 40 / 0.58);
+  inset: 0;
+  border: 1px solid rgb(8 92 53 / 0.17);
+  border-radius: 50%;
+}
+
+.hero-loader-ring-outer {
+  border-top-color: rgb(8 114 65 / 0.72);
+  animation: hero-loader-spin 1.4s linear infinite;
+}
+
+.hero-loader-ring-inner {
+  inset: 0.45rem;
+  border-bottom-color: rgb(189 156 69 / 0.72);
+  animation: hero-loader-spin-reverse 1.9s linear infinite;
+}
+
+.hero-loader-logo {
+  width: 3.75rem;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  box-shadow: 0 16px 36px -22px rgb(6 77 44 / 0.56);
+  object-fit: cover;
+}
+
+.hero-loader-label {
+  color: rgb(5 69 40 / 0.66);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.14em;
+  text-align: center;
   text-transform: uppercase;
-  transform: translateX(-50%);
 }
 
-@keyframes hero-fallback-float {
-  0%,
-  100% {
-    transform: translateY(-4px) rotateX(58deg) rotateZ(-11deg);
+.hero-loader-track {
+  position: relative;
+  display: block;
+  width: min(12rem, 54vw);
+  height: 1px;
+  overflow: hidden;
+  background: rgb(8 92 53 / 0.14);
+}
+
+.hero-loader-track > span {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 38%;
+  background: rgb(8 114 65 / 0.74);
+  animation: hero-loader-progress 1.25s ease-in-out infinite;
+}
+
+@keyframes hero-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hero-loader-spin-reverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes hero-loader-progress {
+  0% {
+    transform: translateX(-110%);
   }
 
-  50% {
-    transform: translateY(5px) rotateX(58deg) rotateZ(-9deg);
+  55% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(265%);
   }
 }
 
@@ -1743,20 +1790,10 @@ All colors MUST be HSL.
   z-index: 1;
 }
 
-.story-step-content-enter {
-  animation: story-panel-enter 440ms cubic-bezier(0.2, 0.78, 0.24, 1) both;
-}
-
-@keyframes story-panel-enter {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 0.9rem, 0);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
+.story-step-content-scroll {
+  grid-column: 1;
+  grid-row: 1;
+  will-change: opacity, transform;
 }
 
 @media (hover: none) {
@@ -1801,6 +1838,14 @@ All colors MUST be HSL.
   (orientation: landscape) and (min-width: 640px) and (max-width: 1023px) and (max-height: 520px) {
   .story-step-content {
     max-width: min(33.5rem, 42vw) !important;
+  }
+
+  .story-step-content-left {
+    grid-column: 1;
+  }
+
+  .story-step-content-right {
+    grid-column: 2;
   }
 
   .story-step-content-active::before {
@@ -2128,6 +2173,11 @@ All colors MUST be HSL.
 
 @media (prefers-reduced-motion: reduce) {
   .landing-hero-scroll-arrow {
+    animation: none;
+  }
+
+  .hero-loader-ring,
+  .hero-loader-track > span {
     animation: none;
   }
 

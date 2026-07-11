@@ -11,18 +11,25 @@ interface WaterfallToPCBHeroProps {
   loadingLabel: string;
 }
 
-function HeroSceneFallback({ label }: { label: string }) {
+function HeroSceneFallback({ label, visible }: { label: string; visible: boolean }) {
   return (
-    <div className="hero-scene-fallback grid h-full w-full place-items-center" role="status" aria-label={label}>
-      <div className="hero-fallback-board" aria-hidden="true">
-        <span className="hero-fallback-trace hero-fallback-trace-a" />
-        <span className="hero-fallback-trace hero-fallback-trace-b" />
-        <span className="hero-fallback-chip hero-fallback-chip-a" />
-        <span className="hero-fallback-chip hero-fallback-chip-b" />
-        <span className="hero-fallback-chip hero-fallback-chip-c" />
-        <img src="/logo1-web.webp" alt="" className="hero-fallback-logo" />
+    <div
+      aria-hidden={!visible}
+      aria-label={label}
+      className={`hero-scene-fallback ${visible ? "is-visible" : "is-ready"}`}
+      role="status"
+    >
+      <div className="hero-loader-stack">
+        <div className="hero-loader-mark" aria-hidden="true">
+          <span className="hero-loader-ring hero-loader-ring-outer" />
+          <span className="hero-loader-ring hero-loader-ring-inner" />
+          <img src="/logo1-web.webp" alt="" className="hero-loader-logo" />
+        </div>
+        <span className="hero-loader-label">{label}</span>
+        <span className="hero-loader-track" aria-hidden="true">
+          <span />
+        </span>
       </div>
-      <span className="hero-fallback-label">{label}</span>
     </div>
   );
 }
@@ -53,10 +60,12 @@ export function WaterfallToPCBHero({ children, loadingLabel }: WaterfallToPCBHer
           className="pointer-events-none absolute inset-0 z-[1] opacity-[0.18] [background-image:linear-gradient(90deg,hsl(146_42%_28%/.36)_1px,transparent_1px),linear-gradient(0deg,hsl(146_42%_28%/.28)_1px,transparent_1px)] [background-size:68px_68px]"
         />
         <div className="pointer-events-none absolute inset-0 z-[2]">
-          {!sceneReady ? <HeroSceneFallback label={loadingLabel} /> : null}
-          <Suspense fallback={null}>
-            {sceneVisible ? <InteractivePCBModelScene onReady={handleSceneReady} /> : null}
-          </Suspense>
+          <HeroSceneFallback label={loadingLabel} visible={!sceneReady} />
+          <div className={`hero-scene-canvas ${sceneReady ? "is-ready" : ""}`}>
+            <Suspense fallback={null}>
+              {sceneVisible ? <InteractivePCBModelScene onReady={handleSceneReady} /> : null}
+            </Suspense>
+          </div>
         </div>
         <div
           aria-hidden

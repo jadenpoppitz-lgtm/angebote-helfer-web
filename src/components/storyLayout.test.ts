@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getStoryActiveIndex,
+  getStoryPanelPresentation,
   getStoryProductThemeProgress,
   STORY_PRODUCT_KEYFRAMES,
 } from "@/components/storyLayout";
@@ -27,8 +28,17 @@ describe("story layout safety", () => {
   });
 
   it("finishes the light theme before the first product panel appears", () => {
-    expect(getStoryProductThemeProgress(0.282)).toBe(0);
-    expect(getStoryProductThemeProgress(0.291)).toBeCloseTo(0.5, 5);
+    expect(getStoryProductThemeProgress(0.272)).toBe(0);
+    expect(getStoryProductThemeProgress(0.286)).toBeCloseTo(0.5, 5);
     expect(getStoryProductThemeProgress(0.3)).toBe(1);
+  });
+
+  it("crossfades adjacent panels directly from scroll progress", () => {
+    expect(getStoryPanelPresentation(0.05, 11)).toMatchObject({ blend: 0, currentIndex: 0, nextIndex: 1 });
+    expect(getStoryPanelPresentation(0.086, 11)).toMatchObject({ currentIndex: 0, nextIndex: 1 });
+    expect(getStoryPanelPresentation(0.086, 11).blend).toBeCloseTo(0.5, 5);
+    expect(getStoryPanelPresentation(0.1, 11)).toMatchObject({ blend: 0, currentIndex: 1, nextIndex: 2 });
+    expect(getStoryPanelPresentation(0.286, 11).blend).toBeCloseTo(0.5, 5);
+    expect(getStoryPanelPresentation(0.96, 11)).toMatchObject({ blend: 0, currentIndex: 10, nextIndex: 10 });
   });
 });
