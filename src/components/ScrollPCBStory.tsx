@@ -342,8 +342,8 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
   const panelPresentation = getStoryPanelPresentation(progress, steps.length);
   const productThemeProgress = getStoryProductThemeProgress(progress);
   const problemActive = productThemeProgress < 0.5;
-  const outgoingProgress = Math.min(1, panelPresentation.blend * 2);
-  const incomingProgress = Math.max(0, (panelPresentation.blend - 0.5) * 2);
+  const outgoingProgress = Math.min(1, panelPresentation.blend / 0.42);
+  const incomingProgress = Math.min(1, Math.max(0, (panelPresentation.blend - 0.32) / 0.55));
   const outgoingContentOpacity = 1 - outgoingProgress * outgoingProgress * (3 - 2 * outgoingProgress);
   const incomingContentOpacity = incomingProgress * incomingProgress * (3 - 2 * incomingProgress);
   const panelEntries =
@@ -369,6 +369,8 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
   const dataFieldOpacity = panelWeight(2) * (1 - productThemeProgress);
   const transitionSaturation =
     23 + productThemeProgress * 6 - 64 * productThemeProgress * (1 - productThemeProgress);
+  const problemLabelOpacity = 1 - Math.min(1, productThemeProgress / 0.42);
+  const productLabelOpacity = Math.min(1, Math.max(0, (productThemeProgress - 0.32) / 0.55));
   const storyBackgroundColor = `hsl(${150 - productThemeProgress * 45} ${transitionSaturation}% ${
     6 + productThemeProgress * 91
   }%)`;
@@ -451,13 +453,13 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
           <span className="grid font-display text-xl font-semibold leading-none sm:text-2xl">
             <span
               className="col-start-1 row-start-1 text-white"
-              style={{ opacity: 1 - productThemeProgress }}
+              style={{ opacity: problemLabelOpacity, transform: `translateY(${-productThemeProgress * 0.25}rem)` }}
             >
               {labels.problem}
             </span>
             <span
               className="col-start-1 row-start-1 text-emerald-950"
-              style={{ opacity: productThemeProgress }}
+              style={{ opacity: productLabelOpacity, transform: `translateY(${(1 - productThemeProgress) * 0.25}rem)` }}
             >
               {labels.product}
             </span>

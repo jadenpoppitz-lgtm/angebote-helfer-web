@@ -6,7 +6,12 @@ import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { createPCBTraceGeometry } from "@/components/pcb/createPCBTraceGeometry";
-import { STORY_PRODUCT_KEYFRAMES } from "@/components/storyLayout";
+import {
+  sampleStoryProductKeyframes,
+  STORY_PANEL_TRANSITION_WIDTH,
+  STORY_PRODUCT_KEYFRAMES,
+  STORY_PRODUCT_START,
+} from "@/components/storyLayout";
 
 const DESKTOP_MODEL_PATH = "/models/green-circuit-board-web.glb?v=5";
 const MOBILE_MODEL_PATH = "/models/green-circuit-board-mobile.glb?v=2";
@@ -14,7 +19,6 @@ const CONTAINER_MODEL_PATH = "/models/problem/shipping-container-20ft.glb";
 const BOARD_LOGO_PATH = "/logo1-web.webp";
 const PROCESS_CYCLE_SECONDS = 20;
 const MODEL_WORLD_SIZE = 3.2;
-const STORY_PRODUCT_START = 0.3;
 const PROBLEM_PCB_COUNT = 18;
 const PROBLEM_PILE_TOWER_COUNT = 3;
 const EXCLUDED_MESH_NAMES = new Set(["Box100", "Box129", "Line388"]);
@@ -224,12 +228,12 @@ function getStoryProcessPhase(scrollProgress?: number) {
 
   const productProgress = getStoryProductProgress(scrollProgress);
   if (productProgress === undefined) return 0.055;
-  if (productProgress <= 0.58) return 0.055;
-  if (productProgress < 0.73) {
-    return THREE.MathUtils.lerp(0.13, 0.47, smoothstep(0.58, 0.73, productProgress));
+  if (productProgress <= 0.65) return 0.055;
+  if (productProgress < 0.75) {
+    return THREE.MathUtils.lerp(0.13, 0.47, smoothstep(0.65, 0.75, productProgress));
   }
   if (productProgress < 0.88) {
-    return THREE.MathUtils.lerp(0.47, 0.7, smoothstep(0.73, 0.88, productProgress));
+    return THREE.MathUtils.lerp(0.47, 0.7, smoothstep(0.75, 0.88, productProgress));
   }
 
   return THREE.MathUtils.lerp(0.7, 0.995, smoothstep(0.88, 1, productProgress));
@@ -262,13 +266,6 @@ function getProductStepWeight(productProgress: number | undefined, index: number
   return 1 - smoothstep(0.2, 0.58, distance);
 }
 
-function sampleKeyframes(progress: number, values: readonly number[]) {
-  const scaled = clamp01(progress) * (values.length - 1);
-  const index = Math.min(values.length - 2, Math.floor(scaled));
-  const amount = smoothstep(0, 1, scaled - index);
-  return THREE.MathUtils.lerp(values[index], values[index + 1], amount);
-}
-
 function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: boolean) {
   if (scrollProgress === undefined) {
     return { pitch: 0, scale: 1, x: 0, yaw: 0, z: 0 };
@@ -276,16 +273,15 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
 
   if (scrollProgress >= STORY_PRODUCT_START) {
     const productProgress = (scrollProgress - STORY_PRODUCT_START) / (1 - STORY_PRODUCT_START);
-    const productScale = sampleKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.scale);
-    const compactScale = productScale > 1.1 ? 0.82 : 0.88;
+    const productScale = sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.scale);
     return {
-      pitch: sampleKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.pitch),
-      scale: productScale * (isCompact ? compactScale : 1),
+      pitch: sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.pitch),
+      scale: productScale * (isCompact ? 0.88 : 1),
       x: isCompact
         ? 0
-        : sampleKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.x),
-      yaw: sampleKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.yaw),
-      z: sampleKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.z),
+        : sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.x),
+      yaw: sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.yaw),
+      z: sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.z),
     };
   }
 
@@ -293,7 +289,8 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
   const travel = isCompact ? 0.58 : 1;
   const compactScale = isCompact ? 0.78 : 1;
   const dataX = isCompact ? 0.18 : 3.35;
-  const productX = isCompact ? 0 : 3.55;
+  const productX = isCompact ? 0 : STORY_PRODUCT_KEYFRAMES.x[0];
+  const productScale = STORY_PRODUCT_KEYFRAMES.scale[0] * (isCompact ? 0.88 : 1);
 
   if (progress < 0.2) {
     const approach = smoothstep(0.045, 0.105, progress);
@@ -339,11 +336,11 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
   const productTransition = smoothstep(0.8, 1, progress);
 
   return {
-    pitch: THREE.MathUtils.lerp(-0.08, 0.04, productTransition),
-    scale: THREE.MathUtils.lerp(1.02, 0.98, productTransition) * compactScale,
+    pitch: THREE.MathUtils.lerp(-0.08, STORY_PRODUCT_KEYFRAMES.pitch[0], productTransition),
+    scale: THREE.MathUtils.lerp(1.02 * compactScale, productScale, productTransition),
     x: THREE.MathUtils.lerp(dataX, productX, productTransition),
-    yaw: THREE.MathUtils.lerp(-0.55, -0.34, productTransition),
-    z: 0,
+    yaw: THREE.MathUtils.lerp(-0.55, STORY_PRODUCT_KEYFRAMES.yaw[0], productTransition),
+    z: THREE.MathUtils.lerp(0, STORY_PRODUCT_KEYFRAMES.z[0], productTransition),
   };
 }
 
@@ -1300,7 +1297,7 @@ function LabBeakerStage({
 
     if (groupRef.current) {
       const targetY = getBeakerY(timeline.beakerAmount, viewport.height, layout.y);
-      const targetScale = layout.beakerScale * THREE.MathUtils.lerp(storyTransform.scale, 0.62, dissolutionShot);
+      const targetScale = layout.beakerScale * THREE.MathUtils.lerp(storyTransform.scale, 0.66, dissolutionShot);
       groupRef.current.visible = timeline.beakerAmount > 0.005;
       if (scrollProgress !== undefined) {
         groupRef.current.position.set(storyTransform.x, targetY, 0.08);
@@ -1620,26 +1617,31 @@ function PCBModel({
     const traceShot = getProductStepWeight(productProgress, 2);
     const assemblyShot = getProductStepWeight(productProgress, 3);
     const electronicsShot = getProductStepWeight(productProgress, 4);
+    const dissolutionShot = getProductStepWeight(productProgress, 5);
     const productRoll =
       productProgress === undefined
         ? 0
-        : sampleKeyframes(productProgress, [0.015, 0.09, -0.045, 0.055, -0.015, 0, 0, 0]);
+        : sampleStoryProductKeyframes(productProgress, [0.015, 0.055, -0.035, 0, -0.015, 0, 0, 0]);
     const shotPitchMotion =
       Math.sin(clock.elapsedTime * 0.42) *
       (materialShot * 0.018 + layerShot * 0.028 + traceShot * 0.012 + assemblyShot * 0.022 + electronicsShot * 0.018);
     const shotYawMotion =
       Math.cos(clock.elapsedTime * 0.31) *
       (materialShot * 0.045 + layerShot * 0.018 + traceShot * 0.034 + assemblyShot * 0.052 + electronicsShot * 0.026);
-    const flexStrength = getProductBoardFlex(productProgress);
-    const flexPulse = 0.78 + Math.sin(clock.elapsedTime * 1.05) * 0.22;
-    const boardFlexAmount = boardFlexState ? boardFlexState.halfExtent * 0.18 * flexStrength * flexPulse : 0;
+    const flexStrength = Math.max(getProductBoardFlex(productProgress), assemblyShot * 2.15);
+    const flexPulse = 0.9 + Math.sin(clock.elapsedTime * 0.92) * 0.1;
+    const boardFlexAmount = boardFlexState ? boardFlexState.halfExtent * 0.2 * flexStrength * flexPulse : 0;
     applyBoardFlex(boardFlexState, boardFlexAmount);
     applyBoardFlex(detailFlexState, boardFlexAmount);
     const problemProgress = getStoryProblemProgress(scrollProgress);
     const cleanProductTransition =
       scrollProgress === undefined
         ? 0
-        : smoothstep(STORY_PRODUCT_START - 0.014, STORY_PRODUCT_START + 0.004, scrollProgress);
+        : smoothstep(
+            STORY_PRODUCT_START - STORY_PANEL_TRANSITION_WIDTH,
+            STORY_PRODUCT_START,
+            scrollProgress,
+          );
     const collectionIsolation =
       problemProgress === undefined
         ? 0
@@ -1668,20 +1670,32 @@ function PCBModel({
     }
     const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact);
     const pointer = pointerRef.current;
-    const interactionWeight = 1 - timeline.boardPitchAmount * 0.72;
+    const scrollMotionWeight = scrollProgress === undefined ? 1 : productProgress === undefined ? 0.5 : 0.28;
+    const dissolutionLock = timeline.boardPitchAmount * dissolutionShot;
+    const interactionWeight =
+      (1 - timeline.boardPitchAmount * 0.72) * scrollMotionWeight * (1 - dissolutionLock);
     const idleYaw = Math.sin(clock.elapsedTime * 0.29) * 0.12;
     const idlePitch = Math.sin(clock.elapsedTime * 0.23) * 0.028;
     const pointerX = pointer.hasInput ? pointer.x : 0;
     const pointerY = pointer.hasInput ? pointer.y : 0;
-    const targetRotationX =
+    const baseRotationX =
       Math.PI * 0.5 * timeline.boardPitchAmount +
       storyTransform.pitch +
-      shotPitchMotion +
+      shotPitchMotion * scrollMotionWeight +
       (-pointerY * 0.1 + idlePitch) * interactionWeight;
-    const targetRotationY =
-      -0.12 + storyTransform.yaw + shotYawMotion + (pointerX * 0.25 + idleYaw) * interactionWeight;
-    const targetRotationZ =
-      productRoll - pointerX * 0.025 * interactionWeight + glitchOffset * 0.45 + Math.sin(clock.elapsedTime * 0.36) * 0.012 * layerShot;
+    const baseRotationY =
+      -0.12 +
+      storyTransform.yaw +
+      shotYawMotion * scrollMotionWeight +
+      (pointerX * 0.25 + idleYaw) * interactionWeight;
+    const baseRotationZ =
+      productRoll * scrollMotionWeight -
+      pointerX * 0.025 * interactionWeight +
+      glitchOffset * 0.45 +
+      Math.sin(clock.elapsedTime * 0.36) * 0.012 * layerShot * scrollMotionWeight;
+    const targetRotationX = THREE.MathUtils.lerp(baseRotationX, Math.PI * 0.5, dissolutionLock);
+    const targetRotationY = THREE.MathUtils.lerp(baseRotationY, 0, dissolutionLock);
+    const targetRotationZ = THREE.MathUtils.lerp(baseRotationZ, 0, dissolutionLock);
     const boardDipDistance = productProgress === undefined ? 0.72 : 1.16;
     const targetY =
       layout.y -
@@ -1689,15 +1703,21 @@ function PCBModel({
       Math.sin(clock.elapsedTime * 0.52) * 0.035 * interactionWeight +
       Math.sin(clock.elapsedTime * 29) * 0.035 * dataGlitch;
     const introZoom = scrollProgress === undefined ? 1 + (1 - smoothstep(0, 1, processTime / 2.8)) * 0.32 : 1;
+    const targetStoryScale = THREE.MathUtils.lerp(
+      storyTransform.scale,
+      Math.min(storyTransform.scale, 0.52),
+      dissolutionLock,
+    );
+    const targetZ = THREE.MathUtils.lerp(storyTransform.z, 0.08, dissolutionLock);
     const targetScale =
       layout.scale *
-      storyTransform.scale *
+      targetStoryScale *
       introZoom *
       (1 + glitchOffset * 0.16 + Math.sin(clock.elapsedTime * 0.48) * (traceShot + electronicsShot) * 0.012);
 
     if (scrollProgress !== undefined) {
       groupRef.current.rotation.set(targetRotationX, targetRotationY, targetRotationZ);
-      groupRef.current.position.set(layout.x + storyTransform.x + glitchOffset, targetY, storyTransform.z);
+      groupRef.current.position.set(layout.x + storyTransform.x + glitchOffset, targetY, targetZ);
       groupRef.current.scale.setScalar(targetScale);
     } else {
       groupRef.current.rotation.x = THREE.MathUtils.damp(groupRef.current.rotation.x, targetRotationX, 7, delta);
@@ -1710,7 +1730,7 @@ function PCBModel({
         delta,
       );
       groupRef.current.position.y = THREE.MathUtils.damp(groupRef.current.position.y, targetY, 7, delta);
-      groupRef.current.position.z = THREE.MathUtils.damp(groupRef.current.position.z, storyTransform.z, 7, delta);
+      groupRef.current.position.z = THREE.MathUtils.damp(groupRef.current.position.z, targetZ, 7, delta);
       const dampedScale = THREE.MathUtils.damp(groupRef.current.scale.x, targetScale, 7, delta);
       groupRef.current.scale.setScalar(dampedScale);
     }
@@ -1869,8 +1889,18 @@ function PCBModel({
 function PilotPCBModel({ modelPath }: { modelPath: string }) {
   const groupRef = useRef<THREE.Group>(null);
   const gltf = useGLTF(modelPath);
+  const logoTexture = useTexture(BOARD_LOGO_PATH);
   const viewport = useThree((state) => state.viewport);
-  const model = useMemo(() => createOptimizedModel((gltf as { scene: THREE.Group }).scene), [gltf]);
+  const model = useMemo(() => {
+    const optimizedModel = createOptimizedModel((gltf as { scene: THREE.Group }).scene, logoTexture);
+    const logo = optimizedModel.getObjectByName("PCBBoardLogo");
+    if (logo instanceof THREE.Mesh && logo.material instanceof THREE.MeshBasicMaterial) {
+      logo.material.opacity = 1;
+      logo.material.needsUpdate = true;
+      logo.visible = true;
+    }
+    return optimizedModel;
+  }, [gltf, logoTexture]);
 
   useEffect(
     () => () => {
