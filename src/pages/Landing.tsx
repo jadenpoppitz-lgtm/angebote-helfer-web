@@ -6,6 +6,7 @@ import {
   ArrowRight,
   BarChart3,
   CheckCircle2,
+  CirclePlay,
   Factory,
   Flame,
   Globe2,
@@ -143,8 +144,8 @@ export const copy: Record<Language, LandingCopy> = {
       problem: "Problem",
       process: "Prozess",
       product: "Unser Produkt",
-      traction: "Traction",
-      cycle: "Praktischer Zyklus",
+      traction: "Erfolge",
+      cycle: "Kreislauf-Demo",
       contact: "Kontakt",
       impact: "Device Impact",
       roles: "Rollen",
@@ -330,11 +331,11 @@ export const copy: Record<Language, LandingCopy> = {
           title: "OEM-Dashboard",
           subtitle: "Rückläufer, Materialwerte und ESG-Status",
           metrics: [
-            { label: "CO2-Einsparung", value: "-50%" },
-            { label: "Rückläufer", value: "128" },
-            { label: "ESG Status", value: "bereit" },
+            { label: "Rücklaufquote", value: "78%" },
+            { label: "Materialwert", value: "42,8 k EUR" },
+            { label: "Datenabdeckung", value: "96%" },
           ],
-          steps: ["PCB-Design freigegeben", "Rückläufer zugeordnet", "Materialbericht erstellt"],
+          steps: ["Eingang qualifiziert", "PCB-Chargen zugeordnet", "Materialabruf freigeben"],
         },
         customer: {
           title: "Customer-Rückgabe",
@@ -350,11 +351,11 @@ export const copy: Record<Language, LandingCopy> = {
           title: "Recycler-Ansicht",
           subtitle: "Fraktionen, Chemie und Demontagestatus",
           metrics: [
-            { label: "PCB", value: "420 kg" },
-            { label: "Trennung", value: "94%" },
-            { label: "Charge", value: "R-18" },
+            { label: "Eingang", value: "420 kg" },
+            { label: "Sortenreinheit", value: "94%" },
+            { label: "Nächster Slot", value: "14:30" },
           ],
-          steps: ["Demontage gestartet", "Chemische Lösung gewählt", "Fraktionen bereit"],
+          steps: ["Produktchargen verifiziert", "Demontage abgeschlossen", "Fraktionen freigeben"],
         },
         smelter: {
           title: "Smelter-Ansicht",
@@ -370,18 +371,18 @@ export const copy: Record<Language, LandingCopy> = {
           title: "Partner-Board",
           subtitle: "Fälle, Reporting und Prozesskoordination",
           metrics: [
-            { label: "Offene Fälle", value: "7" },
-            { label: "Reports", value: "12" },
-            { label: "Risiko", value: "niedrig" },
+            { label: "Routingfälle", value: "7" },
+            { label: "SLA heute", value: "5 / 7" },
+            { label: "Datenlücken", value: "2" },
           ],
-          steps: ["Partner zugeordnet", "ESG-Daten synchronisiert", "Nächste Aktion geplant"],
+          steps: ["Materialdaten validiert", "Partnerkapazität bestätigt", "Routingentscheidung senden"],
         },
       },
     },
     traction: {
-      eyebrow: "Traction",
-      title: "Der Leaftronics-Lebenslauf.",
-      text: "Die neuesten Meilensteine zuerst: Förderung, Accelerator, Auszeichnungen und Nominierungen als dynamischer Unternehmens- und Technologie-Lebenslauf.",
+      eyebrow: "Erfolge",
+      title: "Was wir bereits erreicht haben.",
+      text: "Förderungen, Accelerator-Programme, Auszeichnungen und Nominierungen zeigen, wie sich Leaftronics technologisch und unternehmerisch entwickelt.",
       events: [
         {
           date: "2024 / 2025",
@@ -462,8 +463,8 @@ export const copy: Record<Language, LandingCopy> = {
       problem: "Problem",
       process: "Process",
       product: "Our product",
-      traction: "Traction",
-      cycle: "Practical cycle",
+      traction: "Milestones",
+      cycle: "Loop demo",
       contact: "Contact",
       impact: "Device impact",
       roles: "Roles",
@@ -649,11 +650,11 @@ export const copy: Record<Language, LandingCopy> = {
           title: "OEM dashboard",
           subtitle: "Returns, material values and ESG status",
           metrics: [
-            { label: "CO2 saving", value: "-50%" },
-            { label: "Returns", value: "128" },
-            { label: "ESG status", value: "ready" },
+            { label: "Return rate", value: "78%" },
+            { label: "Material value", value: "EUR 42.8k" },
+            { label: "Data coverage", value: "96%" },
           ],
-          steps: ["PCB design approved", "Returns matched", "Material report created"],
+          steps: ["Inbound qualified", "PCB batches assigned", "Release material call-off"],
         },
         customer: {
           title: "Customer return",
@@ -669,11 +670,11 @@ export const copy: Record<Language, LandingCopy> = {
           title: "Recycler view",
           subtitle: "Fractions, chemistry and disassembly status",
           metrics: [
-            { label: "PCB", value: "420 kg" },
-            { label: "Separation", value: "94%" },
-            { label: "Batch", value: "R-18" },
+            { label: "Inbound", value: "420 kg" },
+            { label: "Purity", value: "94%" },
+            { label: "Next slot", value: "14:30" },
           ],
-          steps: ["Disassembly started", "Chemical solution selected", "Fractions ready"],
+          steps: ["Product batches verified", "Disassembly completed", "Release fractions"],
         },
         smelter: {
           title: "Smelter view",
@@ -689,18 +690,18 @@ export const copy: Record<Language, LandingCopy> = {
           title: "Partner board",
           subtitle: "Cases, reporting and coordination",
           metrics: [
-            { label: "Open cases", value: "7" },
-            { label: "Reports", value: "12" },
-            { label: "Risk", value: "low" },
+            { label: "Routing cases", value: "7" },
+            { label: "SLA today", value: "5 / 7" },
+            { label: "Data gaps", value: "2" },
           ],
-          steps: ["Partner matched", "ESG data synced", "Next action planned"],
+          steps: ["Material data validated", "Partner capacity confirmed", "Send routing decision"],
         },
       },
     },
     traction: {
-      eyebrow: "Traction",
-      title: "The Leaftronics track record.",
-      text: "Latest milestones first: funding, accelerators, awards and nominations as a dynamic company and technology track record.",
+      eyebrow: "Milestones",
+      title: "What we have achieved so far.",
+      text: "Funding, accelerator programs, awards and nominations show how Leaftronics is progressing as a technology and as a company.",
       events: [
         {
           date: "2024 / 2025",
@@ -781,8 +782,8 @@ export const copy: Record<Language, LandingCopy> = {
       problem: "问题",
       process: "过程",
       product: "我们的产品",
-      traction: "进展",
-      cycle: "实用循环",
+      traction: "成果",
+      cycle: "循环演示",
       contact: "联系",
       impact: "设备影响",
       roles: "角色",
@@ -967,11 +968,11 @@ export const copy: Record<Language, LandingCopy> = {
           title: "OEM 仪表板",
           subtitle: "退回、材料价值和 ESG 状态",
           metrics: [
-            { label: "CO2 节省", value: "-50%" },
-            { label: "退回", value: "128" },
-            { label: "ESG 状态", value: "就绪" },
+            { label: "退回率", value: "78%" },
+            { label: "材料价值", value: "4.28万欧元" },
+            { label: "数据覆盖率", value: "96%" },
           ],
-          steps: ["PCB 设计已批准", "退回已匹配", "材料报告已创建"],
+          steps: ["来料已确认", "PCB 批次已分配", "批准材料调用"],
         },
         customer: {
           title: "客户退回",
@@ -987,11 +988,11 @@ export const copy: Record<Language, LandingCopy> = {
           title: "回收商视图",
           subtitle: "组分、化学和拆解状态",
           metrics: [
-            { label: "PCB", value: "420 kg" },
-            { label: "分离", value: "94%" },
-            { label: "批次", value: "R-18" },
+            { label: "来料", value: "420 kg" },
+            { label: "纯度", value: "94%" },
+            { label: "下一时段", value: "14:30" },
           ],
-          steps: ["拆解已开始", "化学方案已选择", "组分已准备"],
+          steps: ["产品批次已验证", "拆解已完成", "批准组分"],
         },
         smelter: {
           title: "冶炼方视图",
@@ -1007,18 +1008,18 @@ export const copy: Record<Language, LandingCopy> = {
           title: "伙伴看板",
           subtitle: "案件、报告和协调",
           metrics: [
-            { label: "未结案件", value: "7" },
-            { label: "报告", value: "12" },
-            { label: "风险", value: "低" },
+            { label: "路由任务", value: "7" },
+            { label: "今日 SLA", value: "5 / 7" },
+            { label: "数据缺口", value: "2" },
           ],
-          steps: ["伙伴已匹配", "ESG 数据已同步", "下一步已计划"],
+          steps: ["材料数据已验证", "伙伴产能已确认", "发送路由决定"],
         },
       },
     },
     traction: {
-      eyebrow: "进展",
-      title: "Leaftronics 发展路径。",
-      text: "最新里程碑优先展示：资助、加速器、奖项和提名构成 Leaftronics 的企业与技术发展路径。",
+      eyebrow: "成果",
+      title: "我们已经取得的进展。",
+      text: "资助、加速器项目、奖项和提名展示了 Leaftronics 在技术与企业发展方面的持续进步。",
       events: [
         {
           date: "2024 / 2025",
@@ -1097,7 +1098,7 @@ export const copy: Record<Language, LandingCopy> = {
 };
 
 export const roleOrder: RoleId[] = ["oem", "customer", "recycler", "smelter", "partner"];
-const demoRoleOrder: RoleId[] = ["oem", "customer", "smelter"];
+const demoRoleOrder: RoleId[] = ["oem", "customer", "partner", "recycler", "smelter"];
 const graphOrder: GraphPoint[] = ["oem", "customer", "consulting", "disassembly", "smelter", "materials"];
 
 export const roleIcons: Record<RoleId, typeof Factory> = {
@@ -1135,6 +1136,47 @@ const heroLoadingLabels: Record<Language, string> = {
   de: "3D-Leiterplatte wird geladen",
   en: "Loading 3D circuit board",
   zh: "正在加载 3D 电路板",
+};
+
+const cyclePageCopy: Record<
+  Language,
+  {
+    eyebrow: string;
+    title: string;
+    text: string;
+    productLink: string;
+    flowLink: string;
+    demosLink: string;
+    navigationLabel: string;
+  }
+> = {
+  de: {
+    eyebrow: "Unser Produkt in Bewegung",
+    title: "Kreislauf-Demo",
+    text: "Verfolgen Sie den vollständigen Wertstrom und öffnen Sie anschließend die Arbeitsoberflächen der beteiligten Rollen.",
+    productLink: "Produktdetails",
+    flowLink: "Wertstrom",
+    demosLink: "Rollen-Demos",
+    navigationLabel: "Bereiche der Kreislauf-Demo",
+  },
+  en: {
+    eyebrow: "Our product in motion",
+    title: "Loop demo",
+    text: "Follow the complete value stream, then explore the working interfaces used by each participating role.",
+    productLink: "Product details",
+    flowLink: "Value stream",
+    demosLink: "Role demos",
+    navigationLabel: "Loop demo sections",
+  },
+  zh: {
+    eyebrow: "动态产品体验",
+    title: "循环演示",
+    text: "查看完整的价值流，然后探索各参与角色使用的工作界面。",
+    productLink: "产品详情",
+    flowLink: "价值流",
+    demosLink: "角色演示",
+    navigationLabel: "循环演示区域",
+  },
 };
 
 function scrollToLandingSection(id: string, duration = 560) {
@@ -1256,18 +1298,18 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
     </div>
   );
 
+  const primaryNavigationLabel = language === "de" ? "Hauptnavigation" : language === "zh" ? "主导航" : "Primary navigation";
+
   return (
-    <div id="top" className="min-h-screen bg-black text-background">
-      <div className="fixed right-4 top-4 z-50 hidden rounded-md border border-background/20 bg-black/45 p-1 shadow-card backdrop-blur-md lg:flex">
+    <div id="top" className={`min-h-screen ${showCycle ? "bg-[#f8f5eb] text-foreground" : "bg-black text-background"}`}>
+      <div className={`site-language-switch fixed right-4 top-4 z-50 hidden p-1 shadow-card backdrop-blur-md lg:flex ${showCycle ? "is-light" : "is-dark"}`}>
         {languages.map((item) => (
           <button
             key={item.code}
             type="button"
             onClick={() => setLanguage(item.code)}
             aria-label={item.label}
-            className={`h-8 rounded px-2 text-xs font-medium transition-colors ${
-              language === item.code ? "bg-background text-foreground" : "text-background/75 hover:text-background"
-            }`}
+            className={`site-language-button h-8 px-2 text-xs font-medium transition-colors ${language === item.code ? "is-active" : ""}`}
             title={item.label}
           >
             {item.short}
@@ -1284,20 +1326,21 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               </span>
               <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
             </Link>
-            <nav className="hidden items-center gap-1 rounded-lg border border-foreground/10 bg-white/68 p-1 text-sm font-semibold text-foreground/68 shadow-elegant backdrop-blur-xl lg:flex">
-              <a href="#problem-story" onClick={(event) => handleSectionLink(event, "problem-story", 520)} className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+            <nav className="site-header-nav is-light hidden items-center gap-1 p-1 text-sm font-semibold shadow-elegant backdrop-blur-xl lg:flex" aria-label={primaryNavigationLabel}>
+              <a href="#problem-story" onClick={(event) => handleSectionLink(event, "problem-story", 520)} className="site-header-link">
                 {content.nav.problem}
               </a>
-              <a href="#product-story" onClick={(event) => handleSectionLink(event, "product-story", 620)} className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+              <a href="#product-story" onClick={(event) => handleSectionLink(event, "product-story", 620)} className="site-header-link">
                 {content.nav.product}
               </a>
-              <Link to="/traction" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
-                {content.nav.traction}
-              </Link>
-              <Link to="/zyklus" className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+              <Link to="/kreislauf-demo" className="site-header-demo-link">
+                <CirclePlay className="h-4 w-4" aria-hidden="true" />
                 {content.nav.cycle}
               </Link>
-              <a href="#forms" onClick={(event) => handleSectionLink(event, "forms", 700)} className="rounded-md px-3 py-2 transition-colors hover:bg-emerald-950/10 hover:text-foreground">
+              <Link to="/erfolge" className="site-header-link">
+                {content.nav.traction}
+              </Link>
+              <a href="#forms" onClick={(event) => handleSectionLink(event, "forms", 700)} className="site-header-link">
                 {content.nav.contact}
               </a>
             </nav>
@@ -1314,21 +1357,23 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             {mobileNavOpen ? (
               <nav
                 id="landing-mobile-navigation"
-                className="mt-3 grid w-full gap-1 rounded-lg border border-white/70 bg-white/95 p-2 text-sm font-semibold text-foreground shadow-elegant backdrop-blur-xl lg:hidden"
+                className="site-mobile-navigation is-light mt-3 w-full p-2 text-sm font-semibold shadow-elegant backdrop-blur-xl lg:hidden"
+                aria-label={primaryNavigationLabel}
               >
-                <a href="#problem-story" onClick={(event) => handleSectionLink(event, "problem-story", 520)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
+                <a href="#problem-story" onClick={(event) => handleSectionLink(event, "problem-story", 520)} className="site-mobile-link">
                   {content.nav.problem}
                 </a>
-                <a href="#product-story" onClick={(event) => handleSectionLink(event, "product-story", 620)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
+                <a href="#product-story" onClick={(event) => handleSectionLink(event, "product-story", 620)} className="site-mobile-link">
                   {content.nav.product}
                 </a>
-                <Link to="/traction" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
-                  {content.nav.traction}
-                </Link>
-                <Link to="/zyklus" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
+                <Link to="/kreislauf-demo" onClick={() => setMobileNavOpen(false)} className="site-mobile-demo-link">
+                  <CirclePlay className="h-4 w-4" aria-hidden="true" />
                   {content.nav.cycle}
                 </Link>
-                <a href="#forms" onClick={(event) => handleSectionLink(event, "forms", 700)} className="rounded-md px-3 py-3 hover:bg-emerald-950/10">
+                <Link to="/erfolge" onClick={() => setMobileNavOpen(false)} className="site-mobile-link">
+                  {content.nav.traction}
+                </Link>
+                <a href="#forms" onClick={(event) => handleSectionLink(event, "forms", 700)} className="site-mobile-link">
                   {content.nav.contact}
                 </a>
                 {mobileLanguageControl}
@@ -1397,28 +1442,29 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
           </div>
         </WaterfallToPCBHero>
       ) : (
-        <section className="relative z-10 bg-black text-background">
-          <header className="relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
+        <section className={`site-subpage-header-shell relative z-30 ${showCycle ? "is-light" : "is-dark"}`}>
+          <header className="site-subpage-header relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
             <Link to="/" className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-background shadow-elegant">
+              <span className="site-header-logo flex h-11 w-11 items-center justify-center overflow-hidden rounded-full shadow-elegant">
                 <img src="/logo1-web.webp" alt="Leaftronics Logo" className="h-full w-full object-cover" />
               </span>
               <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
             </Link>
-            <nav className="hidden items-center gap-1 rounded-lg border border-background/18 bg-black/54 p-1 text-sm font-semibold text-background/75 shadow-elegant backdrop-blur-md lg:flex">
-              <Link to="/problem" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
+            <nav className={`site-header-nav hidden items-center gap-1 p-1 text-sm font-semibold shadow-elegant backdrop-blur-md lg:flex ${showCycle ? "is-light" : "is-dark"}`} aria-label={primaryNavigationLabel}>
+              <Link to="/problem" aria-current={showProblem ? "page" : undefined} className={`site-header-link ${showProblem ? "is-active" : ""}`}>
                 {content.nav.problem}
               </Link>
-              <Link to="/produkt" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
+              <Link to="/produkt" aria-current={showProduct ? "page" : undefined} className={`site-header-link ${showProduct ? "is-active" : ""}`}>
                 {content.nav.product}
               </Link>
-              <Link to="/traction" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
-                {content.nav.traction}
-              </Link>
-              <Link to="/zyklus" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
+              <Link to="/kreislauf-demo" aria-current={showCycle ? "page" : undefined} className={`site-header-demo-link ${showCycle ? "is-active" : ""}`}>
+                <CirclePlay className="h-4 w-4" aria-hidden="true" />
                 {content.nav.cycle}
               </Link>
-              <a href="/#forms" className="rounded-md px-3 py-2 transition-colors hover:bg-background/10 hover:text-background">
+              <Link to="/erfolge" aria-current={showTraction ? "page" : undefined} className={`site-header-link ${showTraction ? "is-active" : ""}`}>
+                {content.nav.traction}
+              </Link>
+              <a href="/#forms" className="site-header-link">
                 {content.nav.contact}
               </a>
             </nav>
@@ -1428,28 +1474,30 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               aria-label={t.menu}
               aria-controls="landing-mobile-navigation"
               aria-expanded={mobileNavOpen}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-background/25 bg-background/10 text-background backdrop-blur lg:hidden"
+              className="site-header-menu-button inline-flex h-10 w-10 items-center justify-center backdrop-blur lg:hidden"
             >
               {mobileNavOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
             </button>
             {mobileNavOpen ? (
               <nav
                 id="landing-mobile-navigation"
-                className="mt-3 grid w-full gap-1 rounded-lg border border-background/16 bg-black/95 p-2 text-sm font-semibold text-background shadow-elegant backdrop-blur-xl lg:hidden"
+                className={`site-mobile-navigation mt-3 w-full p-2 text-sm font-semibold shadow-elegant backdrop-blur-xl lg:hidden ${showCycle ? "is-light" : "is-dark"}`}
+                aria-label={primaryNavigationLabel}
               >
-                <Link to="/problem" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                <Link to="/problem" aria-current={showProblem ? "page" : undefined} onClick={() => setMobileNavOpen(false)} className={`site-mobile-link ${showProblem ? "is-active" : ""}`}>
                   {content.nav.problem}
                 </Link>
-                <Link to="/produkt" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                <Link to="/produkt" aria-current={showProduct ? "page" : undefined} onClick={() => setMobileNavOpen(false)} className={`site-mobile-link ${showProduct ? "is-active" : ""}`}>
                   {content.nav.product}
                 </Link>
-                <Link to="/traction" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
-                  {content.nav.traction}
-                </Link>
-                <Link to="/zyklus" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                <Link to="/kreislauf-demo" aria-current={showCycle ? "page" : undefined} onClick={() => setMobileNavOpen(false)} className={`site-mobile-demo-link ${showCycle ? "is-active" : ""}`}>
+                  <CirclePlay className="h-4 w-4" aria-hidden="true" />
                   {content.nav.cycle}
                 </Link>
-                <a href="/#forms" onClick={() => setMobileNavOpen(false)} className="rounded-md px-3 py-3 hover:bg-background/10">
+                <Link to="/erfolge" aria-current={showTraction ? "page" : undefined} onClick={() => setMobileNavOpen(false)} className={`site-mobile-link ${showTraction ? "is-active" : ""}`}>
+                  {content.nav.traction}
+                </Link>
+                <a href="/#forms" onClick={() => setMobileNavOpen(false)} className="site-mobile-link">
                   {content.nav.contact}
                 </a>
                 {mobileLanguageControl}
@@ -1458,6 +1506,39 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
           </header>
         </section>
       )}
+
+      {showCycle ? (
+        <section className="cycle-page-intro" aria-labelledby="cycle-page-title">
+          <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 py-12 sm:px-8 md:py-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:items-end lg:gap-16">
+            <div className="max-w-3xl">
+              <p className="cycle-page-eyebrow">
+                <CirclePlay className="h-4 w-4" aria-hidden="true" />
+                {cyclePageCopy[language].eyebrow}
+              </p>
+              <h1 id="cycle-page-title" className="mt-4 font-display text-5xl font-semibold leading-none text-emerald-950 sm:text-6xl">
+                {cyclePageCopy[language].title}
+              </h1>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-emerald-950/68 md:text-lg md:leading-8">
+                {cyclePageCopy[language].text}
+              </p>
+            </div>
+            <nav className="cycle-page-navigation" aria-label={cyclePageCopy[language].navigationLabel}>
+              <Link to="/produkt" className="cycle-page-navigation-link">
+                <span>01</span>
+                {cyclePageCopy[language].productLink}
+              </Link>
+              <a href="#solution" className="cycle-page-navigation-link is-current">
+                <span>02</span>
+                {cyclePageCopy[language].flowLink}
+              </a>
+              <a href="#demos" className="cycle-page-navigation-link">
+                <span>03</span>
+                {cyclePageCopy[language].demosLink}
+              </a>
+            </nav>
+          </div>
+        </section>
+      ) : null}
 
       {showHero ? (
         <>
@@ -1582,7 +1663,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
 
       {showCycle ? (
       <section id="demos" className="cycle-demo-section pb-20 pt-8 text-foreground md:pb-28 md:pt-12">
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.34fr_0.66fr]">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(15rem,0.3fr)_minmax(0,0.7fr)] lg:items-start lg:gap-14">
           {(() => {
             const demoRole = demoRoleOrder.includes(activeRole) ? activeRole : "customer";
             const Icon = roleIcons[demoRole];
@@ -1590,31 +1671,26 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             const surface = content.demos.surfaces[demoRole];
             return (
               <>
-                <aside>
+                <aside className="cycle-demo-overview lg:sticky lg:top-8">
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.demos.eyebrow}</p>
                   <div className="mt-5 flex min-w-0 items-center gap-4">
-                    <span className="grid h-14 w-14 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary">
-                      <Icon className="h-7 w-7" />
+                    <span className="grid h-12 w-12 shrink-0 place-items-center border border-primary/20 bg-primary/8 text-primary">
+                      <Icon className="h-6 w-6" />
                     </span>
                     <div className="min-w-0">
-                      <h2 className="break-words font-display text-4xl font-semibold leading-tight md:text-5xl lg:text-[2.65rem]">{card.title}</h2>
+                      <h2 className="break-words font-display text-3xl font-semibold leading-tight md:text-[2.25rem]">{card.title}</h2>
                       <p className="mt-1 text-sm text-muted-foreground">{surface.subtitle}</p>
                     </div>
                   </div>
-                  <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground">{content.demos.text}</p>
 
-                  <div className="mt-6 rounded-lg border border-primary/20 bg-background/80 p-4 shadow-card backdrop-blur">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                      {content.demos.problemLabel}
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-foreground/75">{card.problem}</p>
-                    <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
-                      {content.demos.valueLabel}
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-foreground/75">{card.value}</p>
+                  <div className="mt-7 border-y border-primary/16 py-5">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">{content.demos.problemLabel}</p>
+                    <p className="mt-2 text-sm leading-6 text-foreground/72">{card.problem}</p>
+                    <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">{content.demos.valueLabel}</p>
+                    <p className="mt-2 text-sm leading-6 text-foreground/78">{card.value}</p>
                   </div>
 
-                  <div className="mt-6 flex flex-wrap gap-2">
+                  <div className="cycle-demo-role-tabs mt-6" role="tablist" aria-label={content.demos.eyebrow}>
                     {demoRoleOrder.map((role) => {
                       const RoleIcon = roleIcons[role];
                       return (
@@ -1622,10 +1698,12 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                           key={role}
                           type="button"
                           onClick={() => chooseRole(role)}
-                          className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-semibold transition-colors ${
+                          role="tab"
+                          aria-selected={role === demoRole}
+                          className={`cycle-demo-role-tab ${
                             role === demoRole
-                              ? "border-primary bg-primary text-primary-foreground"
-                              : "border-primary/20 bg-background/70 text-foreground/65 hover:text-foreground"
+                              ? "is-active"
+                              : ""
                           }`}
                         >
                           <RoleIcon className="h-4 w-4" />
@@ -1640,9 +1718,9 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   {demoRole === "customer" ? (
                     <CustomerReturnDemo content={content} language={language} reference={reference} />
                   ) : demoRole === "smelter" ? (
-                    <SmelterDashboard content={content} surface={surface} reference={reference} />
+                    <SmelterDashboard content={content} surface={surface} reference={reference} language={language} />
                   ) : (
-                    <DemoSurface content={content} surface={surface} reference={reference} />
+                    <DemoSurface content={content} surface={surface} reference={reference} role={demoRole} language={language} />
                   )}
                 </section>
               </>
@@ -1761,7 +1839,7 @@ const TractionTimeline = ({ content }: { content: LandingCopy["traction"] }) => 
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <div className="traction-timeline-intro">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.eyebrow}</p>
-          <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.title}</h2>
+          <h1 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.title}</h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.text}</p>
         </div>
 
@@ -2655,6 +2733,63 @@ const InfoPanel = ({ content, activeNode }: { content: LandingCopy; activeNode: 
   </div>
 );
 
+const demoInterfaceLabels: Record<
+  Language,
+  {
+    active: string;
+    activeCase: string;
+    completed: string;
+    current: string;
+    nextAction: string;
+    owner: string;
+    process: string;
+    updated: string;
+    updatedValue: string;
+  }
+> = {
+  de: {
+    active: "Aktiv",
+    activeCase: "Aktiver Vorgang",
+    completed: "Erledigt",
+    current: "In Bearbeitung",
+    nextAction: "Nächste Aktion",
+    owner: "Verantwortlich",
+    process: "Prozessstatus",
+    updated: "Aktualisiert",
+    updatedValue: "vor 4 Min.",
+  },
+  en: {
+    active: "Active",
+    activeCase: "Active case",
+    completed: "Completed",
+    current: "In progress",
+    nextAction: "Next action",
+    owner: "Owner",
+    process: "Process status",
+    updated: "Updated",
+    updatedValue: "4 min ago",
+  },
+  zh: {
+    active: "进行中",
+    activeCase: "当前流程",
+    completed: "已完成",
+    current: "处理中",
+    nextAction: "下一步",
+    owner: "负责人",
+    process: "流程状态",
+    updated: "更新时间",
+    updatedValue: "4 分钟前",
+  },
+};
+
+const roleCaseMeta: Record<RoleId, { id: string; owner: string }> = {
+  oem: { id: "RET-2048", owner: "OEM Circular Ops" },
+  customer: { id: "KB-DD-0001", owner: "Return Service" },
+  recycler: { id: "DIS-0718", owner: "Separation Cell 02" },
+  smelter: { id: "LT-0726-18", owner: "Material Intake" },
+  partner: { id: "RTG-0314", owner: "Leaftronics Ops" },
+};
+
 const DemoWindow = ({
   content,
   reference,
@@ -2670,60 +2805,102 @@ const DemoWindow = ({
   subtitle: string;
   children: ReactNode;
 }) => (
-  <div className="relative overflow-hidden rounded-lg border border-primary/25 bg-[linear-gradient(145deg,hsl(42_55%_98%),hsl(152_42%_92%)_48%,hsl(43_45%_96%))] p-1 shadow-[0_26px_70px_hsl(151_31%_34%/.22)]">
-    <div className="absolute inset-x-8 top-0 h-px bg-primary/65" aria-hidden="true" />
-    <div className="rounded-md border border-primary/14 bg-background/92 backdrop-blur-xl">
-      <div className="flex flex-col gap-4 border-b border-primary/12 bg-[linear-gradient(90deg,hsl(45_55%_96%),hsl(153_42%_93%))] px-4 py-3 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-3">
-          <span className="flex gap-1.5" aria-hidden="true">
-            <span className="h-2.5 w-2.5 rounded-full bg-red-400/90" />
-            <span className="h-2.5 w-2.5 rounded-full bg-amber-300/90" />
-            <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-          </span>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-            {content.form.demoId} {reference}
-          </p>
-        </div>
-        <span className="inline-flex h-9 items-center gap-2 rounded-md border border-primary/25 bg-primary/10 px-3 text-sm font-semibold text-primary shadow-[0_10px_28px_hsl(151_40%_40%/.16)]">
+  <div className="cycle-demo-window">
+      <div className="cycle-demo-window-bar">
+        <p className="min-w-0 break-words font-mono text-[11px] font-semibold uppercase text-muted-foreground">
+          {content.form.demoId} <span className="text-foreground/70">{reference}</span>
+        </p>
+        <span className="inline-flex h-8 shrink-0 items-center gap-2 border border-primary/20 bg-primary/8 px-3 text-xs font-semibold text-primary">
+          <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
           {icon}
           {content.demos.liveLabel}
         </span>
       </div>
 
-      <div className="border-b border-primary/10 bg-[radial-gradient(circle_at_18%_0%,hsl(156_52%_82%/.72),transparent_38%)] px-5 py-5">
-        <h3 className="font-display text-3xl font-semibold">{title}</h3>
+      <div className="cycle-demo-window-heading">
+        <h3 className="font-display text-[1.75rem] font-semibold leading-tight md:text-3xl">{title}</h3>
         <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{subtitle}</p>
       </div>
 
-      <div className="bg-[linear-gradient(180deg,hsl(43_54%_97%/.96),hsl(154_32%_94%/.72))] p-5">
+      <div className="cycle-demo-window-content">
         {children}
       </div>
-    </div>
   </div>
 );
 
-export const DemoSurface = ({ content, surface, reference }: { content: LandingCopy; surface: LandingCopy["demos"]["surfaces"][RoleId]; reference: string }) => (
-  <DemoWindow content={content} reference={reference} icon={<BarChart3 className="h-4 w-4" />} title={surface.title} subtitle={surface.subtitle}>
-    <div className="grid gap-3 md:grid-cols-3">
-      {surface.metrics.map((metric) => (
-        <div key={metric.label} className="rounded-md border border-primary/18 bg-background/82 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
-          <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">{metric.label}</p>
-          <p className="mt-2 font-display text-3xl font-semibold">{metric.value}</p>
-        </div>
-      ))}
-    </div>
-    <div className="mt-5 grid gap-3">
-      {surface.steps.map((step, index) => (
-        <div key={step} className="flex items-center gap-3 rounded-md border border-primary/14 bg-background/76 px-4 py-3 shadow-[inset_0_1px_0_hsl(0_0%_100%/.65)]">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-            {index + 1}
-          </span>
-          <span className="text-sm font-medium text-foreground/78">{step}</span>
-        </div>
-      ))}
-    </div>
-  </DemoWindow>
-);
+export const DemoSurface = ({
+  content,
+  surface,
+  reference,
+  role,
+  language,
+}: {
+  content: LandingCopy;
+  surface: LandingCopy["demos"]["surfaces"][RoleId];
+  reference: string;
+  role: RoleId;
+  language: Language;
+}) => {
+  const labels = demoInterfaceLabels[language];
+  const caseMeta = roleCaseMeta[role];
+
+  return (
+    <DemoWindow content={content} reference={reference} icon={<BarChart3 className="h-4 w-4" />} title={surface.title} subtitle={surface.subtitle}>
+      <div className="cycle-demo-metric-strip">
+        {surface.metrics.map((metric) => (
+          <div key={metric.label} className="cycle-demo-metric">
+            <p>{metric.label}</p>
+            <strong>{metric.value}</strong>
+          </div>
+        ))}
+      </div>
+
+      <div className="cycle-demo-workspace">
+        <section className="cycle-demo-process" aria-label={labels.process}>
+          <div className="cycle-demo-subheading">
+            <span>{labels.process}</span>
+            <span className="cycle-demo-status-dot">{labels.active}</span>
+          </div>
+          <div className="mt-1">
+            {surface.steps.map((step, index) => {
+              const isCurrent = index === surface.steps.length - 1;
+              return (
+                <div key={step} className={`cycle-demo-process-row ${isCurrent ? "is-current" : "is-complete"}`}>
+                  <span className="cycle-demo-process-index">{isCurrent ? index + 1 : <CheckCircle2 className="h-4 w-4" />}</span>
+                  <span className="min-w-0 flex-1 text-sm font-semibold text-foreground/78">{step}</span>
+                  <span className="text-[10px] font-semibold uppercase text-muted-foreground">
+                    {isCurrent ? labels.current : labels.completed}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <aside className="cycle-demo-case-summary">
+          <div className="cycle-demo-subheading">
+            <span>{labels.activeCase}</span>
+            <span className="font-mono text-primary">{caseMeta.id}</span>
+          </div>
+          <dl className="mt-3 grid gap-3 text-sm">
+            <div>
+              <dt>{labels.owner}</dt>
+              <dd>{caseMeta.owner}</dd>
+            </div>
+            <div>
+              <dt>{labels.updated}</dt>
+              <dd>{labels.updatedValue}</dd>
+            </div>
+            <div className="border-t border-primary/12 pt-3">
+              <dt>{labels.nextAction}</dt>
+              <dd className="text-primary">{surface.steps[surface.steps.length - 1]}</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </DemoWindow>
+  );
+};
 
 const smelterDeliveries = [
   {
@@ -2767,74 +2944,120 @@ const smelterDeliveries = [
   },
 ];
 
+const smelterInterfaceLabels: Record<
+  Language,
+  {
+    batchPlan: string;
+    materialMix: string;
+    nextBatch: string;
+    planned: string;
+    registered: string;
+    statuses: Record<string, string>;
+    materials: Record<string, string>;
+  }
+> = {
+  de: {
+    batchPlan: "Lieferplan",
+    materialMix: "Erwarteter Materialmix",
+    nextBatch: "Nächste Charge",
+    planned: "Lieferungen geplant",
+    registered: "Angemeldete Menge",
+    statuses: { freigegeben: "Freigegeben", angemeldet: "Angemeldet", "in Prüfung": "In Prüfung" },
+    materials: { Kupfer: "Kupfer", Substrat: "Substrat", Edelmetalle: "Edelmetalle", Lötmetalle: "Lötmetalle" },
+  },
+  en: {
+    batchPlan: "Delivery plan",
+    materialMix: "Expected material mix",
+    nextBatch: "Next batch",
+    planned: "Planned deliveries",
+    registered: "Registered volume",
+    statuses: { freigegeben: "Approved", angemeldet: "Registered", "in Prüfung": "In review" },
+    materials: { Kupfer: "Copper", Substrat: "Substrate", Edelmetalle: "Precious metals", Lötmetalle: "Solder metals" },
+  },
+  zh: {
+    batchPlan: "交付计划",
+    materialMix: "预计材料构成",
+    nextBatch: "下一批次",
+    planned: "计划交付",
+    registered: "已登记数量",
+    statuses: { freigegeben: "已批准", angemeldet: "已登记", "in Prüfung": "审核中" },
+    materials: { Kupfer: "铜", Substrat: "基板", Edelmetalle: "贵金属", Lötmetalle: "焊料金属" },
+  },
+};
+
 export const SmelterDashboard = ({
   content,
   surface,
   reference,
+  language,
 }: {
   content: LandingCopy;
   surface: LandingCopy["demos"]["surfaces"][RoleId];
   reference: string;
-}) => (
-  <DemoWindow
-    content={content}
-    reference={reference}
-    icon={<Flame className="h-4 w-4" />}
-    title={surface.title}
-    subtitle="Nächste Lieferungen, Materialanteile und Mengen im Überblick."
-  >
-    <div className="grid gap-3 sm:grid-cols-3">
-      <div className="min-w-0 rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
-        <p className="text-xs uppercase leading-5 tracking-[0.18em] text-muted-foreground">nächste charge</p>
-        <p className="mt-2 font-display text-3xl font-semibold leading-none">{smelterDeliveries[0].tonnes} t</p>
-      </div>
-      <div className="min-w-0 rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
-        <p className="text-xs uppercase leading-5 tracking-[0.18em] text-muted-foreground">angemeldet</p>
-        <p className="mt-2 font-display text-3xl font-semibold leading-none">93 t</p>
-      </div>
-      <div className="min-w-0 rounded-md border border-primary/18 bg-background/86 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]">
-        <p className="text-xs uppercase leading-5 tracking-[0.18em] text-muted-foreground">planung</p>
-        <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-0">
-          <p className="font-display text-3xl font-semibold leading-none">3</p>
-          <p className="text-sm font-semibold leading-5 text-foreground/72">Lieferungen</p>
-        </div>
-      </div>
-    </div>
+  language: Language;
+}) => {
+  const labels = smelterInterfaceLabels[language];
 
-    <div className="mt-5 grid gap-3">
-      {smelterDeliveries.map((delivery) => (
-        <div key={delivery.id} className="min-w-0 rounded-lg border border-primary/14 bg-background/88 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.65)]">
-          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
-            <div className="min-w-0">
-              <p className="break-words text-xs font-semibold uppercase leading-5 tracking-[0.18em] text-primary">{delivery.id} · {delivery.date}</p>
-              <h4 className="mt-2 break-words font-display text-2xl font-semibold leading-tight">{delivery.source}</h4>
-            </div>
-            <div className="shrink-0 text-left sm:text-right">
-              <p className="font-display text-4xl font-semibold text-primary">{delivery.tonnes} t</p>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{delivery.status}</p>
-            </div>
-          </div>
-          <div className="mt-4 grid gap-2 md:grid-cols-4">
-            {delivery.materials.map((material) => (
-              <div key={material.label} className="flex min-w-0 flex-col rounded-md border border-primary/10 bg-primary/6 p-3">
-                <p className="min-h-8 break-words text-[10px] font-semibold uppercase leading-4 tracking-[0.12em] text-muted-foreground">
-                  {material.label}
-                </p>
-                <div className="mt-2 flex min-w-0 items-baseline justify-between gap-2">
-                  <p className="shrink-0 whitespace-nowrap font-display text-2xl font-semibold leading-none">{material.tonnes.toFixed(1)} t</p>
-                  <p className="shrink-0 text-xs font-semibold text-primary">{material.share}%</p>
-                </div>
-                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-primary/10">
-                  <span className="block h-full rounded-full bg-primary" style={{ width: `${material.share}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
+  return (
+    <DemoWindow
+      content={content}
+      reference={reference}
+      icon={<Flame className="h-4 w-4" />}
+      title={surface.title}
+      subtitle={surface.subtitle}
+    >
+      <div className="cycle-demo-metric-strip">
+        <div className="cycle-demo-metric">
+          <p>{labels.nextBatch}</p>
+          <strong>{smelterDeliveries[0].tonnes} t</strong>
         </div>
-      ))}
-    </div>
-  </DemoWindow>
-);
+        <div className="cycle-demo-metric">
+          <p>{labels.registered}</p>
+          <strong>93 t</strong>
+        </div>
+        <div className="cycle-demo-metric">
+          <p>{labels.planned}</p>
+          <strong>3</strong>
+        </div>
+      </div>
+
+      <section className="cycle-smelter-plan" aria-label={labels.batchPlan}>
+        <div className="cycle-demo-subheading">
+          <span>{labels.batchPlan}</span>
+          <span>{labels.materialMix}</span>
+        </div>
+        <div className="cycle-smelter-list">
+          {smelterDeliveries.map((delivery) => (
+            <article key={delivery.id} className="cycle-smelter-delivery">
+              <header>
+                <div className="min-w-0">
+                  <p className="font-mono text-[10px] font-semibold uppercase text-primary">{delivery.id} · {delivery.date}</p>
+                  <h4 className="mt-1 break-words font-display text-xl font-semibold leading-tight">{delivery.source}</h4>
+                </div>
+                <div className="shrink-0 text-right">
+                  <p className="font-display text-3xl font-semibold leading-none text-primary">{delivery.tonnes} t</p>
+                  <p className="mt-1 text-[10px] font-semibold uppercase text-muted-foreground">{labels.statuses[delivery.status]}</p>
+                </div>
+              </header>
+              <div className="cycle-material-mix">
+                {delivery.materials.map((material) => (
+                  <div key={material.label} className="cycle-material-row">
+                    <span className="cycle-material-name">{labels.materials[material.label]}</span>
+                    <span className="cycle-material-bar" aria-hidden="true">
+                      <span style={{ width: `${material.share}%` }} />
+                    </span>
+                    <span className="cycle-material-share">{material.share}%</span>
+                    <strong>{material.tonnes.toFixed(1)} t</strong>
+                  </div>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </DemoWindow>
+  );
+};
 
 export const CustomerReturnDemo = ({ content, language, reference }: { content: LandingCopy; language: Language; reference: string }) => {
   const [serial, setSerial] = useState(DEMO_SERIAL);
@@ -2871,13 +3094,13 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
 
   return (
     <DemoWindow content={content} reference={reference} icon={<QrCode className="h-4 w-4" />} title={copy.title} subtitle={copy.text}>
-      <div className="grid gap-4 lg:grid-cols-[0.45fr_0.55fr]">
+      <div className="cycle-customer-workspace">
         <form
           onSubmit={(event) => {
             event.preventDefault();
             checkSerial();
           }}
-          className="rounded-lg border border-primary/18 bg-background/82 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.72)]"
+          className="cycle-demo-panel"
         >
           <label className="grid gap-2 text-sm font-semibold">
             {copy.serialLabel}
@@ -2917,14 +3140,14 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
             {detecting ? copy.locationPending : copy.detect}
           </button>
 
-          <div className="mt-4 rounded-md border border-primary/14 bg-primary/8 p-3">
+          <div className="cycle-inline-data mt-4">
             <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">{copy.detected}</p>
             <p className="mt-1 font-display text-2xl font-semibold">{displayLocation}</p>
           </div>
         </form>
 
-        <div className="grid gap-4">
-          <div className="rounded-lg border border-primary/14 bg-background/78 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.65)]">
+        <div className="grid min-w-0 gap-4">
+          <div className="cycle-demo-panel">
             {lookup ? (
               <>
                 <div className="flex items-start justify-between gap-3">
@@ -2937,7 +3160,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                 <p className="mt-4 text-sm font-semibold text-foreground/78">{copy.returnPoints}</p>
                 <div className="mt-3 grid gap-2">
                   {lookup.partners.slice(0, 3).map((partner) => (
-                    <div key={partner.id} className="flex items-center justify-between gap-3 rounded-md border border-primary/12 bg-primary/8 px-3 py-2">
+                    <div key={partner.id} className="cycle-demo-list-row">
                       <span>
                         <span className="block text-sm font-semibold">{partner.name}</span>
                         <span className="block text-xs text-muted-foreground">{partner.street}</span>
@@ -2966,14 +3189,14 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
           </div>
 
           {returnConfirmed && lookup ? (
-            <div className="rounded-lg border border-primary/18 bg-primary/10 p-4 shadow-[inset_0_1px_0_hsl(0_0%_100%/.45)]">
+            <div className="cycle-demo-confirmation">
               <p className="text-sm font-semibold text-primary">{copy.discounts}</p>
               <div className="mt-3 grid gap-2">
                 {copy.oemOffers.map((offer) => {
                   const percent = offer.offer.match(/\d+\s?%/)?.[0];
                   const remainder = percent ? offer.offer.replace(percent, "").trim() : offer.offer;
                   return (
-                    <div key={offer.oem} className="rounded-md border border-primary/14 bg-background/90 p-3 shadow-sm">
+                    <div key={offer.oem} className="border-t border-primary/12 py-3 first:border-t-0 first:pt-0 last:pb-0">
                       <div className="flex items-start justify-between gap-3">
                         <p className="font-display text-lg font-semibold">{offer.oem}</p>
                         <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">

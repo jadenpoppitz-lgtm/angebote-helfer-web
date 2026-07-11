@@ -14,16 +14,16 @@ describe("selectCycleRenderProfile", () => {
     ).toEqual({ antialias: false, efficient: true, pixelRatioCap: 1.15, shadows: false, targetFps: 30 });
   });
 
-  it("uses the efficient profile on dense mobile screens", () => {
+  it("uses a stable efficient profile on compact screens", () => {
     expect(
       selectCycleRenderProfile({
         compactScreen: true,
         deviceMemory: 8,
-        devicePixelRatio: 3,
+        devicePixelRatio: 1,
         hardwareConcurrency: 8,
         reducedMotion: false,
-      }).efficient,
-    ).toBe(true);
+      }),
+    ).toEqual({ antialias: false, efficient: true, pixelRatioCap: 1.2, shadows: false, targetFps: 45 });
   });
 
   it("limits reduced motion to a static-friendly refresh rate", () => {

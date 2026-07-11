@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,8 +27,10 @@ const App = () => (
               <Route path="/" element={<Landing />} />
               <Route path="/problem" element={<Landing page="problem" />} />
               <Route path="/produkt" element={<Landing page="product" />} />
-              <Route path="/traction" element={<Landing page="traction" />} />
-              <Route path="/zyklus" element={<Landing page="cycle" />} />
+              <Route path="/erfolge" element={<Landing page="traction" />} />
+              <Route path="/kreislauf-demo" element={<Landing page="cycle" />} />
+              <Route path="/traction" element={<Navigate to="/erfolge" replace />} />
+              <Route path="/zyklus" element={<Navigate to="/kreislauf-demo" replace />} />
               <Route path="/impressum" element={<LegalPage kind="imprint" />} />
               <Route path="/datenschutz" element={<LegalPage kind="privacy" />} />
               <Route path="/barrierefreiheit" element={<LegalPage kind="accessibility" />} />

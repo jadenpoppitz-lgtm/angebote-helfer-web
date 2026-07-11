@@ -21,14 +21,14 @@ export const selectCycleRenderProfile = ({
   hardwareConcurrency,
   reducedMotion,
 }: CycleRenderProfileInput): CycleRenderProfile => {
-  const efficient =
-    reducedMotion || deviceMemory <= 4 || hardwareConcurrency <= 4 || (compactScreen && devicePixelRatio > 2);
+  const constrainedHardware = deviceMemory <= 4 || hardwareConcurrency <= 4;
+  const efficient = reducedMotion || constrainedHardware || compactScreen;
 
   return {
     antialias: !efficient,
     efficient,
-    pixelRatioCap: efficient ? 1.15 : 1.65,
+    pixelRatioCap: efficient ? (compactScreen && devicePixelRatio <= 2 ? 1.2 : 1.15) : 1.65,
     shadows: !efficient,
-    targetFps: reducedMotion ? 12 : efficient ? 30 : 60,
+    targetFps: reducedMotion ? 12 : constrainedHardware ? 30 : compactScreen ? 45 : 60,
   };
 };

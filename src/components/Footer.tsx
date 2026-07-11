@@ -39,8 +39,8 @@ const footerCopy: Record<Language, FooterCopy> = {
     request: "Pilotprojekt",
     rights: "Alle Rechte vorbehalten.",
     statement: "Elektronik so gestalten, dass Material, Wissen und Wert im Kreislauf bleiben.",
-    traction: "Traction",
-    cycle: "Praktischer Zyklus",
+    traction: "Erfolge",
+    cycle: "Kreislauf-Demo",
   },
   en: {
     accessibility: "Accessibility",
@@ -56,8 +56,8 @@ const footerCopy: Record<Language, FooterCopy> = {
     request: "Pilot project",
     rights: "All rights reserved.",
     statement: "Designing electronics so material, knowledge and value remain in the loop.",
-    traction: "Traction",
-    cycle: "Practical cycle",
+    traction: "Milestones",
+    cycle: "Loop demo",
   },
   zh: {
     accessibility: "无障碍说明",
@@ -73,8 +73,8 @@ const footerCopy: Record<Language, FooterCopy> = {
     request: "试点项目",
     rights: "保留所有权利。",
     statement: "让材料、知识与价值在电子产品的循环中持续保留。",
-    traction: "发展历程",
-    cycle: "实际循环",
+    traction: "成果",
+    cycle: "循环演示",
   },
 };
 
@@ -117,8 +117,8 @@ export function Footer({ compact = false }: FooterProps) {
                 <a href={rootHash("#problem-story")} className="transition-colors hover:text-white">{copy.problem}</a>
                 <a href={rootHash("#product-story")} className="transition-colors hover:text-white">{copy.product}</a>
                 <a href={rootHash("#proof")} className="transition-colors hover:text-white">{copy.proof}</a>
-                <Link to="/traction" className="transition-colors hover:text-white">{copy.traction}</Link>
-                <Link to="/zyklus" className="transition-colors hover:text-white">{copy.cycle}</Link>
+                <Link to="/erfolge" className="transition-colors hover:text-white">{copy.traction}</Link>
+                <Link to="/kreislauf-demo" className="transition-colors hover:text-white">{copy.cycle}</Link>
               </div>
             </nav>
 

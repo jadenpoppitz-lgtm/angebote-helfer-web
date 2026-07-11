@@ -114,6 +114,255 @@ All colors MUST be HSL.
   }
 }
 
+@layer components {
+  .site-language-switch {
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+  }
+
+  .site-language-switch.is-light {
+    border-color: hsl(151 34% 24% / 0.14);
+    background: hsl(48 46% 98% / 0.84);
+  }
+
+  .site-language-switch.is-dark {
+    border-color: hsl(0 0% 100% / 0.16);
+    background: hsl(153 38% 4% / 0.72);
+  }
+
+  .site-language-button {
+    border-radius: 0.3rem;
+  }
+
+  .site-language-switch.is-light .site-language-button {
+    color: hsl(153 28% 15% / 0.6);
+  }
+
+  .site-language-switch.is-light .site-language-button:hover,
+  .site-language-switch.is-light .site-language-button.is-active {
+    background: hsl(151 46% 28%);
+    color: hsl(48 46% 98%);
+  }
+
+  .site-language-switch.is-dark .site-language-button {
+    color: hsl(48 46% 98% / 0.7);
+  }
+
+  .site-language-switch.is-dark .site-language-button:hover,
+  .site-language-switch.is-dark .site-language-button.is-active {
+    background: hsl(48 46% 98%);
+    color: hsl(153 34% 10%);
+  }
+
+  .site-subpage-header-shell {
+    border-bottom: 1px solid transparent;
+  }
+
+  .site-subpage-header-shell.is-light {
+    border-color: hsl(151 34% 24% / 0.12);
+    background: hsl(43 44% 95%);
+    color: hsl(153 34% 10%);
+  }
+
+  .site-subpage-header-shell.is-dark {
+    border-color: hsl(0 0% 100% / 0.08);
+    background: hsl(153 38% 4%);
+    color: hsl(48 46% 98%);
+  }
+
+  .site-header-logo {
+    background: hsl(48 46% 98%);
+  }
+
+  .site-header-nav {
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+  }
+
+  .site-header-nav.is-light {
+    border-color: hsl(151 34% 24% / 0.12);
+    background: hsl(48 46% 98% / 0.76);
+    color: hsl(153 28% 15% / 0.68);
+  }
+
+  .site-header-nav.is-dark {
+    border-color: hsl(0 0% 100% / 0.14);
+    background: hsl(153 38% 4% / 0.68);
+    color: hsl(48 46% 98% / 0.72);
+  }
+
+  .site-header-link,
+  .site-header-demo-link {
+    display: inline-flex;
+    min-height: 2.35rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border-radius: 0.3rem;
+    padding: 0.45rem 0.72rem;
+    line-height: 1.1;
+    transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  }
+
+  .site-header-nav.is-light .site-header-link:hover,
+  .site-header-nav.is-light .site-header-link.is-active {
+    background: hsl(151 36% 25% / 0.1);
+    color: hsl(153 34% 10%);
+  }
+
+  .site-header-nav.is-dark .site-header-link:hover,
+  .site-header-nav.is-dark .site-header-link.is-active {
+    background: hsl(0 0% 100% / 0.1);
+    color: hsl(48 46% 98%);
+  }
+
+  .site-header-link.is-active {
+    box-shadow: inset 0 -2px hsl(151 58% 42%);
+  }
+
+  .site-header-nav.is-light .site-header-demo-link {
+    background: hsl(151 50% 25%);
+    color: hsl(48 46% 98%);
+    box-shadow: 0 10px 24px hsl(151 42% 20% / 0.14);
+  }
+
+  .site-header-nav.is-light .site-header-demo-link:hover,
+  .site-header-nav.is-light .site-header-demo-link.is-active {
+    background: hsl(151 55% 20%);
+    transform: translateY(-1px);
+  }
+
+  .site-header-nav.is-dark .site-header-demo-link {
+    background: hsl(83 100% 67%);
+    color: hsl(153 38% 7%);
+    box-shadow: 0 10px 28px hsl(83 100% 58% / 0.1);
+  }
+
+  .site-header-nav.is-dark .site-header-demo-link:hover,
+  .site-header-nav.is-dark .site-header-demo-link.is-active {
+    background: hsl(83 100% 73%);
+    transform: translateY(-1px);
+  }
+
+  .site-header-demo-link.is-active {
+    box-shadow: 0 0 0 2px hsl(151 54% 42% / 0.22), 0 10px 24px hsl(151 42% 20% / 0.14);
+  }
+
+  .site-header-menu-button {
+    border: 1px solid currentColor;
+    border-radius: 0.35rem;
+  }
+
+  .site-subpage-header-shell.is-light .site-header-menu-button {
+    background: hsl(48 46% 98% / 0.78);
+    color: hsl(153 34% 10%);
+  }
+
+  .site-subpage-header-shell.is-dark .site-header-menu-button {
+    background: hsl(0 0% 100% / 0.08);
+    color: hsl(48 46% 98%);
+  }
+
+  .site-mobile-navigation {
+    display: grid;
+    gap: 0.2rem;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+  }
+
+  .site-mobile-navigation.is-light {
+    border-color: hsl(151 34% 24% / 0.14);
+    background: hsl(48 46% 98% / 0.96);
+    color: hsl(153 34% 10%);
+  }
+
+  .site-mobile-navigation.is-dark {
+    border-color: hsl(0 0% 100% / 0.14);
+    background: hsl(153 38% 4% / 0.97);
+    color: hsl(48 46% 98%);
+  }
+
+  .site-mobile-link,
+  .site-mobile-demo-link {
+    display: flex;
+    min-height: 2.8rem;
+    align-items: center;
+    gap: 0.55rem;
+    border-radius: 0.3rem;
+    padding: 0.7rem 0.8rem;
+  }
+
+  .site-mobile-navigation.is-light .site-mobile-link:hover,
+  .site-mobile-navigation.is-light .site-mobile-link.is-active {
+    background: hsl(151 36% 25% / 0.1);
+  }
+
+  .site-mobile-navigation.is-dark .site-mobile-link:hover,
+  .site-mobile-navigation.is-dark .site-mobile-link.is-active {
+    background: hsl(0 0% 100% / 0.09);
+  }
+
+  .site-mobile-demo-link {
+    background: hsl(151 50% 25%);
+    color: hsl(48 46% 98%);
+  }
+
+  .site-mobile-navigation.is-dark .site-mobile-demo-link {
+    background: hsl(83 100% 67%);
+    color: hsl(153 38% 7%);
+  }
+
+  .cycle-page-intro {
+    border-bottom: 1px solid hsl(151 34% 24% / 0.12);
+    background-color: hsl(43 44% 95%);
+    background-image:
+      linear-gradient(90deg, hsl(146 42% 28% / 0.045) 1px, transparent 1px),
+      linear-gradient(0deg, hsl(146 42% 28% / 0.04) 1px, transparent 1px);
+    background-size: 68px 68px;
+  }
+
+  .cycle-page-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: hsl(151 50% 27%);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .cycle-page-navigation {
+    display: grid;
+    border-top: 1px solid hsl(151 34% 24% / 0.16);
+  }
+
+  .cycle-page-navigation-link {
+    display: grid;
+    min-height: 3.15rem;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    align-items: center;
+    border-bottom: 1px solid hsl(151 34% 24% / 0.16);
+    color: hsl(153 28% 15% / 0.66);
+    font-size: 0.88rem;
+    font-weight: 650;
+    transition: background-color 160ms ease, color 160ms ease, padding-left 160ms ease;
+  }
+
+  .cycle-page-navigation-link span {
+    color: hsl(151 50% 27% / 0.62);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.65rem;
+  }
+
+  .cycle-page-navigation-link:hover,
+  .cycle-page-navigation-link.is-current {
+    background: linear-gradient(90deg, hsl(151 46% 30% / 0.1), transparent 78%);
+    color: hsl(153 34% 10%);
+    padding-left: 0.65rem;
+  }
+}
+
 @layer utilities {
   .impact-grid {
     background-image:
@@ -408,7 +657,7 @@ All colors MUST be HSL.
     backdrop-filter: blur(16px);
   }
 
-  .traction-timeline-intro h2 {
+  .traction-timeline-intro h1 {
     color: white;
   }
 
@@ -1906,6 +2155,346 @@ All colors MUST be HSL.
     linear-gradient(0deg, hsl(146 42% 28% / 0.04) 1px, transparent 1px),
     linear-gradient(180deg, transparent 0%, hsl(142 36% 92% / 0.52) 42%, hsl(43 44% 95% / 0.16) 100%);
   background-size: 68px 68px, 68px 68px, 100% 100%;
+}
+
+.cycle-demo-overview {
+  min-width: 0;
+}
+
+.cycle-demo-role-tabs {
+  display: grid;
+  border-top: 1px solid hsl(151 38% 35% / 0.16);
+}
+
+.cycle-demo-role-tab {
+  display: flex;
+  min-height: 2.75rem;
+  width: 100%;
+  align-items: center;
+  gap: 0.65rem;
+  border: 0;
+  border-bottom: 1px solid hsl(151 38% 35% / 0.16);
+  background: transparent;
+  padding: 0.62rem 0.15rem;
+  color: hsl(153 26% 14% / 0.62);
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-align: left;
+  transition: color 160ms ease, padding-left 160ms ease, background-color 160ms ease;
+}
+
+.cycle-demo-role-tab:hover,
+.cycle-demo-role-tab:focus-visible {
+  color: hsl(151 52% 23%);
+  outline: none;
+}
+
+.cycle-demo-role-tab:focus-visible {
+  box-shadow: inset 3px 0 hsl(151 58% 35%);
+}
+
+.cycle-demo-role-tab.is-active {
+  background: linear-gradient(90deg, hsl(151 48% 35% / 0.1), transparent 76%);
+  color: hsl(151 52% 23%);
+  padding-left: 0.7rem;
+}
+
+.cycle-demo-window {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid hsl(151 38% 35% / 0.2);
+  border-radius: 6px;
+  background: hsl(45 48% 98% / 0.9);
+  box-shadow: 0 24px 60px hsl(151 28% 20% / 0.13);
+  backdrop-filter: blur(14px);
+}
+
+.cycle-demo-window-bar,
+.cycle-demo-window-heading,
+.cycle-demo-window-content {
+  min-width: 0;
+  padding-inline: clamp(1rem, 2.6vw, 1.6rem);
+}
+
+.cycle-demo-window-bar {
+  display: flex;
+  min-height: 3.2rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid hsl(151 38% 35% / 0.14);
+  background: hsl(151 26% 93% / 0.74);
+}
+
+.cycle-demo-window-heading {
+  border-bottom: 1px solid hsl(151 38% 35% / 0.12);
+  padding-block: 1.35rem;
+}
+
+.cycle-demo-window-content {
+  padding-block: 1.25rem 1.5rem;
+}
+
+.cycle-demo-metric-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-block: 1px solid hsl(151 38% 35% / 0.14);
+}
+
+.cycle-demo-metric {
+  min-width: 0;
+  padding: 1rem;
+}
+
+.cycle-demo-metric + .cycle-demo-metric {
+  border-left: 1px solid hsl(151 38% 35% / 0.14);
+}
+
+.cycle-demo-metric p,
+.cycle-demo-subheading,
+.cycle-demo-case-summary dt {
+  color: hsl(153 20% 26% / 0.66);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.cycle-demo-metric strong {
+  display: block;
+  margin-top: 0.48rem;
+  overflow-wrap: anywhere;
+  color: hsl(153 33% 11%);
+  font-family: "Lora", serif;
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  font-weight: 650;
+  line-height: 1;
+}
+
+.cycle-demo-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(12rem, 0.65fr);
+  margin-top: 1.4rem;
+  border: 1px solid hsl(151 38% 35% / 0.14);
+}
+
+.cycle-demo-process,
+.cycle-demo-case-summary {
+  min-width: 0;
+  padding: 1rem;
+}
+
+.cycle-demo-case-summary {
+  border-left: 1px solid hsl(151 38% 35% / 0.14);
+  background: hsl(151 32% 93% / 0.5);
+}
+
+.cycle-demo-subheading {
+  display: flex;
+  min-height: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.cycle-demo-status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  color: hsl(151 54% 30%);
+}
+
+.cycle-demo-status-dot::before {
+  height: 0.38rem;
+  width: 0.38rem;
+  border-radius: 50%;
+  background: hsl(151 58% 38%);
+  content: "";
+}
+
+.cycle-demo-process-row {
+  display: flex;
+  min-height: 3.1rem;
+  align-items: center;
+  gap: 0.75rem;
+  border-top: 1px solid hsl(151 38% 35% / 0.12);
+}
+
+.cycle-demo-process-index {
+  display: grid;
+  height: 1.65rem;
+  width: 1.65rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid hsl(151 42% 34% / 0.22);
+  color: hsl(151 52% 28%);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.cycle-demo-process-row.is-current .cycle-demo-process-index {
+  border-color: hsl(151 54% 32%);
+  background: hsl(151 48% 35%);
+  color: white;
+}
+
+.cycle-demo-case-summary dd {
+  margin-top: 0.2rem;
+  overflow-wrap: anywhere;
+  color: hsl(153 29% 13%);
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.cycle-customer-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 0.44fr) minmax(0, 0.56fr);
+  border: 1px solid hsl(151 38% 35% / 0.14);
+}
+
+.cycle-demo-panel {
+  min-width: 0;
+  padding: 1rem;
+}
+
+.cycle-customer-workspace > .cycle-demo-panel:first-child {
+  border-right: 1px solid hsl(151 38% 35% / 0.14);
+  background: hsl(151 28% 94% / 0.42);
+}
+
+.cycle-inline-data,
+.cycle-demo-confirmation {
+  border-top: 1px solid hsl(151 38% 35% / 0.16);
+  padding-top: 0.85rem;
+}
+
+.cycle-demo-list-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-top: 1px solid hsl(151 38% 35% / 0.12);
+  padding-block: 0.62rem;
+}
+
+.cycle-smelter-plan {
+  margin-top: 1.4rem;
+  border: 1px solid hsl(151 38% 35% / 0.14);
+}
+
+.cycle-smelter-plan > .cycle-demo-subheading {
+  padding: 0.8rem 1rem;
+}
+
+.cycle-smelter-delivery {
+  border-top: 1px solid hsl(151 38% 35% / 0.14);
+  padding: 1rem;
+}
+
+.cycle-smelter-delivery > header {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cycle-material-mix {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1rem;
+  margin-top: 0.85rem;
+}
+
+.cycle-material-row {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(4.8rem, 0.8fr) minmax(2.5rem, 1fr) 2.1rem 3.3rem;
+  align-items: center;
+  gap: 0.45rem;
+  color: hsl(153 21% 20% / 0.72);
+  font-size: 0.68rem;
+}
+
+.cycle-material-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cycle-material-bar {
+  display: block;
+  height: 0.3rem;
+  overflow: hidden;
+  background: hsl(151 38% 35% / 0.12);
+}
+
+.cycle-material-bar > span {
+  display: block;
+  height: 100%;
+  background: hsl(151 51% 31%);
+}
+
+.cycle-material-share {
+  color: hsl(151 51% 29%);
+  font-weight: 700;
+  text-align: right;
+}
+
+.cycle-material-row strong {
+  color: hsl(153 31% 13%);
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .cycle-demo-role-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-left: 1px solid hsl(151 38% 35% / 0.16);
+  }
+
+  .cycle-demo-role-tab {
+    border-right: 1px solid hsl(151 38% 35% / 0.16);
+    padding-inline: 0.7rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .cycle-demo-window-bar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-block: 0.8rem;
+  }
+
+  .cycle-demo-metric-strip,
+  .cycle-demo-workspace,
+  .cycle-customer-workspace,
+  .cycle-material-mix {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cycle-demo-metric + .cycle-demo-metric,
+  .cycle-demo-case-summary,
+  .cycle-customer-workspace > .cycle-demo-panel:first-child {
+    border-left: 0;
+    border-top: 1px solid hsl(151 38% 35% / 0.14);
+  }
+
+  .cycle-customer-workspace > .cycle-demo-panel:first-child {
+    border-right: 0;
+  }
+
+  .cycle-demo-role-tabs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cycle-material-row {
+    grid-template-columns: minmax(4.5rem, 0.85fr) minmax(2.5rem, 1fr) 2rem 3.2rem;
+  }
 }
 
 .cycle-prototype-world {
