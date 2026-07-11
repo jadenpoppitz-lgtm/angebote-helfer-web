@@ -342,8 +342,8 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
   const panelPresentation = getStoryPanelPresentation(progress, steps.length);
   const productThemeProgress = getStoryProductThemeProgress(progress);
   const problemActive = productThemeProgress < 0.5;
-  const outgoingProgress = Math.min(1, panelPresentation.blend / 0.42);
-  const incomingProgress = Math.min(1, Math.max(0, (panelPresentation.blend - 0.32) / 0.55));
+  const outgoingProgress = Math.min(1, panelPresentation.blend / 0.4);
+  const incomingProgress = Math.min(1, Math.max(0, (panelPresentation.blend - 0.25) / 0.5));
   const outgoingContentOpacity = 1 - outgoingProgress * outgoingProgress * (3 - 2 * outgoingProgress);
   const incomingContentOpacity = incomingProgress * incomingProgress * (3 - 2 * incomingProgress);
   const panelEntries =

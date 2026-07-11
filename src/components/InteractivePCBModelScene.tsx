@@ -7,8 +7,12 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { createPCBTraceGeometry } from "@/components/pcb/createPCBTraceGeometry";
 import {
+  getStoryProductCompletion,
+  getStoryProductPresentation,
+  getStoryProductStepWeight,
   sampleStoryProductKeyframes,
   STORY_PANEL_TRANSITION_WIDTH,
+  STORY_PROBLEM_TRANSITIONS,
   STORY_PRODUCT_KEYFRAMES,
   STORY_PRODUCT_START,
 } from "@/components/storyLayout";
@@ -228,15 +232,15 @@ function getStoryProcessPhase(scrollProgress?: number) {
 
   const productProgress = getStoryProductProgress(scrollProgress);
   if (productProgress === undefined) return 0.055;
-  if (productProgress <= 0.65) return 0.055;
-  if (productProgress < 0.75) {
-    return THREE.MathUtils.lerp(0.13, 0.47, smoothstep(0.65, 0.75, productProgress));
+  if (productProgress <= 0.68) return 0.055;
+  if (productProgress < 0.79) {
+    return THREE.MathUtils.lerp(0.13, 0.47, smoothstep(0.68, 0.79, productProgress));
   }
-  if (productProgress < 0.88) {
-    return THREE.MathUtils.lerp(0.47, 0.7, smoothstep(0.75, 0.88, productProgress));
+  if (productProgress < 0.86) {
+    return THREE.MathUtils.lerp(0.47, 0.7, smoothstep(0.79, 0.86, productProgress));
   }
 
-  return THREE.MathUtils.lerp(0.7, 0.995, smoothstep(0.88, 1, productProgress));
+  return THREE.MathUtils.lerp(0.7, 0.995, smoothstep(0.86, 1, productProgress));
 }
 
 function getStoryProductProgress(scrollProgress?: number) {
@@ -250,38 +254,32 @@ function getStoryProblemProgress(scrollProgress?: number) {
 }
 
 function getProductBoardFlex(productProgress?: number) {
-  if (productProgress === undefined) return 0;
-
-  const substrateTest =
-    smoothstep(0.075, 0.125, productProgress) * (1 - smoothstep(0.205, 0.27, productProgress));
-  const assembledTest =
-    smoothstep(0.355, 0.405, productProgress) * (1 - smoothstep(0.515, 0.585, productProgress));
-
-  return Math.max(substrateTest * 0.9, assembledTest * 1.28);
+  return Math.max(
+    getStoryProductStepWeight(productProgress, 1) * 0.72,
+    getStoryProductStepWeight(productProgress, 3) * 2.15,
+  );
 }
 
-function getProductStepWeight(productProgress: number | undefined, index: number) {
-  if (productProgress === undefined) return 0;
-  const distance = Math.abs(productProgress * 7 - index);
-  return 1 - smoothstep(0.2, 0.58, distance);
-}
-
-function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: boolean) {
+function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: boolean, shortLandscape = false) {
   if (scrollProgress === undefined) {
     return { pitch: 0, scale: 1, x: 0, yaw: 0, z: 0 };
   }
 
   if (scrollProgress >= STORY_PRODUCT_START) {
     const productProgress = (scrollProgress - STORY_PRODUCT_START) / (1 - STORY_PRODUCT_START);
+    const productPresentation = getStoryProductPresentation(productProgress);
+    const handoffArc = Math.sin(productPresentation.blend * Math.PI);
     const productScale = sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.scale);
+    const handoffScale = THREE.MathUtils.lerp(1, isCompact ? 0.82 : shortLandscape ? 0.58 : 0.38, handoffArc);
+    const handoffDepth = (isCompact ? 0.35 : shortLandscape ? 0.85 : 1.8) * handoffArc;
     return {
       pitch: sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.pitch),
-      scale: productScale * (isCompact ? 0.88 : 1),
+      scale: productScale * (isCompact ? 0.88 : 1) * handoffScale,
       x: isCompact
         ? 0
         : sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.x),
       yaw: sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.yaw),
-      z: sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.z),
+      z: sampleStoryProductKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.z) - handoffDepth,
     };
   }
 
@@ -291,10 +289,13 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
   const dataX = isCompact ? 0.18 : 3.35;
   const productX = isCompact ? 0 : STORY_PRODUCT_KEYFRAMES.x[0];
   const productScale = STORY_PRODUCT_KEYFRAMES.scale[0] * (isCompact ? 0.88 : 1);
+  const [collectionStart, collectionEnd] = STORY_PROBLEM_TRANSITIONS.collection;
+  const [dataStart, dataEnd] = STORY_PROBLEM_TRANSITIONS.data;
+  const [productStart, productEnd] = STORY_PROBLEM_TRANSITIONS.product;
 
-  if (progress < 0.2) {
-    const approach = smoothstep(0.045, 0.105, progress);
-    const insertion = smoothstep(0.105, 0.185, progress);
+  if (progress < collectionStart) {
+    const approach = smoothstep(0.025, 0.09, progress);
+    const insertion = smoothstep(0.09, 0.235, progress);
     const loadingBayX = isCompact ? -0.1 * travel : 0.58;
     const insideContainerX = isCompact ? 0.5 * travel : 1.62;
     const startX = isCompact ? 0 : 0.48;
@@ -310,20 +311,30 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
     };
   }
 
-  if (progress < 0.46) {
-    const collectionHold = smoothstep(0.2, 0.34, progress);
+  if (progress < collectionEnd) {
+    const shipping = smoothstep(collectionStart, collectionEnd, progress);
     const insideContainerX = isCompact ? 0.5 * travel : 1.62;
     return {
-      pitch: THREE.MathUtils.lerp(0.07, 0.04, collectionHold),
-      scale: THREE.MathUtils.lerp(isCompact ? 0.11 : 0.075, 0.24, collectionHold) * compactScale,
-      x: THREE.MathUtils.lerp(insideContainerX, 5.4 * travel, collectionHold),
-      yaw: THREE.MathUtils.lerp(Math.PI * 0.5, Math.PI * 0.52, collectionHold),
+      pitch: THREE.MathUtils.lerp(0.07, 0.04, shipping),
+      scale: (isCompact ? 0.11 : 0.075) * compactScale,
+      x: THREE.MathUtils.lerp(insideContainerX, 5.4 * travel, shipping),
+      yaw: THREE.MathUtils.lerp(Math.PI * 0.5, Math.PI * 0.52, shipping),
       z: 0,
     };
   }
 
-  if (progress < 0.66) {
-    const dataTransition = smoothstep(0.46, 0.56, progress);
+  if (progress < dataStart) {
+    return {
+      pitch: 0.04,
+      scale: (isCompact ? 0.11 : 0.075) * compactScale,
+      x: 5.4 * travel,
+      yaw: Math.PI * 0.52,
+      z: 0,
+    };
+  }
+
+  if (progress < dataEnd) {
+    const dataTransition = smoothstep(dataStart, dataEnd, progress);
     return {
       pitch: THREE.MathUtils.lerp(0.04, -0.08, dataTransition),
       scale: THREE.MathUtils.lerp(0.33, 1.02, dataTransition) * compactScale,
@@ -333,7 +344,17 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
     };
   }
 
-  const productTransition = smoothstep(0.8, 1, progress);
+  if (progress < productStart) {
+    return {
+      pitch: -0.08,
+      scale: 1.02 * compactScale,
+      x: dataX,
+      yaw: -0.55,
+      z: 0,
+    };
+  }
+
+  const productTransition = smoothstep(productStart, productEnd, progress);
 
   return {
     pitch: THREE.MathUtils.lerp(-0.08, STORY_PRODUCT_KEYFRAMES.pitch[0], productTransition),
@@ -1289,10 +1310,11 @@ function LabBeakerStage({
   useFrame(({ clock, size }, delta) => {
     const processTime = clock.elapsedTime - (cycleOriginRef.current ?? clock.elapsedTime);
     const timeline = getTimelineState(processTime, getStoryProcessPhase(scrollProgress));
-    const layout = getModelLayout(viewport.width, viewport.height, size.height <= 520 && size.width > size.height);
-    const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact);
+    const shortLandscape = size.height <= 520 && size.width > size.height;
+    const layout = getModelLayout(viewport.width, viewport.height, shortLandscape);
+    const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact, shortLandscape);
     const productProgress = getStoryProductProgress(scrollProgress);
-    const dissolutionShot = getProductStepWeight(productProgress, 5);
+    const dissolutionShot = getStoryProductStepWeight(productProgress, 5);
     const pointer = pointerRef.current;
 
     if (groupRef.current) {
@@ -1399,17 +1421,20 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
 
   useFrame(({ clock, size }) => {
     const problemProgress = getStoryProblemProgress(scrollProgress);
-    const layout = getModelLayout(viewport.width, viewport.height, size.height <= 520 && size.width > size.height);
+    const shortLandscape = size.height <= 520 && size.width > size.height;
+    const layout = getModelLayout(viewport.width, viewport.height, shortLandscape);
     const active = problemProgress !== undefined;
     const progress = problemProgress ?? 0;
     const horizontalTravel = layout.isCompact ? 0.58 : 1;
+    const [collectionStart, collectionEnd] = STORY_PROBLEM_TRANSITIONS.collection;
+    const [dataStart, dataEnd] = STORY_PROBLEM_TRANSITIONS.data;
 
     if (containerRef.current) {
       const enter = smoothstep(-0.025, 0.04, progress);
-      const shipping = smoothstep(0.195, 0.255, progress);
-      const amount = active ? enter * (1 - smoothstep(0.215, 0.265, progress)) : 0;
+      const shipping = smoothstep(collectionStart, collectionEnd, progress);
+      const amount = active ? enter * (1 - shipping) : 0;
       const doorOpen = active
-        ? smoothstep(0.008, 0.05, progress) * (1 - smoothstep(0.155, 0.205, progress))
+        ? smoothstep(0.008, 0.05, progress) * (1 - smoothstep(0.22, collectionStart, progress))
         : 0;
       const baseX = layout.isCompact ? 0.52 : 1.72;
       const targetX =
@@ -1435,7 +1460,7 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
     }
 
     const pileAmount = active
-      ? smoothstep(0.255, 0.3, progress) * (1 - smoothstep(0.39, 0.485, progress))
+      ? smoothstep(collectionStart, collectionEnd, progress) * (1 - smoothstep(dataStart, dataEnd, progress))
       : 0;
     if (pileRef.current) {
       pileRef.current.visible = pileAmount > 0.005;
@@ -1445,13 +1470,15 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
 
     if (pileBoardsRef.current && pileChipsRef.current && pileContactsRef.current) {
       for (let index = 0; index < PROBLEM_PCB_COUNT; index += 1) {
-        const start = 0.255 + index * 0.006;
-        const impactAt = start + 0.078;
+        const start = collectionStart + 0.015 + index * 0.0065;
+        const impactAt = start + 0.075;
         const fall = smoothstep(start, impactAt, progress);
         const collision = clamp01((progress - impactAt) / 0.075);
-        const appearance = smoothstep(start - 0.025, start + 0.015, progress);
-        const exitTravel = smoothstep(0.385 + index * 0.0012, 0.475 + index * 0.0012, progress);
-        const exit = 1 - smoothstep(0.41 + (PROBLEM_PCB_COUNT - index) * 0.0015, 0.49, progress);
+        const appearance = smoothstep(start - 0.018, start + 0.012, progress);
+        const exitStart = dataStart + index * 0.0012;
+        const exitEnd = Math.min(dataEnd, exitStart + 0.052);
+        const exitTravel = smoothstep(exitStart, exitEnd, progress);
+        const exit = 1 - exitTravel;
         const amount = active ? appearance * exit : 0;
         const randomA = hash01(index * 2.17 + 0.4);
         const randomB = hash01(index * 3.11 + 2.6);
@@ -1612,12 +1639,16 @@ function PCBModel({
     const processTime = clock.elapsedTime - cycleOriginRef.current;
     const timeline = getTimelineState(processTime, getStoryProcessPhase(scrollProgress));
     const productProgress = getStoryProductProgress(scrollProgress);
-    const materialShot = getProductStepWeight(productProgress, 0);
-    const layerShot = getProductStepWeight(productProgress, 1);
-    const traceShot = getProductStepWeight(productProgress, 2);
-    const assemblyShot = getProductStepWeight(productProgress, 3);
-    const electronicsShot = getProductStepWeight(productProgress, 4);
-    const dissolutionShot = getProductStepWeight(productProgress, 5);
+    const substrateCompletion = getStoryProductCompletion(productProgress, 1);
+    const traceCompletion = getStoryProductCompletion(productProgress, 2);
+    const assemblyCompletion = getStoryProductCompletion(productProgress, 3);
+    const recoveryCompletion = getStoryProductCompletion(productProgress, 6);
+    const materialShot = getStoryProductStepWeight(productProgress, 0);
+    const layerShot = getStoryProductStepWeight(productProgress, 1);
+    const traceShot = getStoryProductStepWeight(productProgress, 2);
+    const assemblyShot = getStoryProductStepWeight(productProgress, 3);
+    const electronicsShot = getStoryProductStepWeight(productProgress, 4);
+    const dissolutionShot = getStoryProductStepWeight(productProgress, 5);
     const productRoll =
       productProgress === undefined
         ? 0
@@ -1628,12 +1659,15 @@ function PCBModel({
     const shotYawMotion =
       Math.cos(clock.elapsedTime * 0.31) *
       (materialShot * 0.045 + layerShot * 0.018 + traceShot * 0.034 + assemblyShot * 0.052 + electronicsShot * 0.026);
-    const flexStrength = Math.max(getProductBoardFlex(productProgress), assemblyShot * 2.15);
+    const flexStrength = getProductBoardFlex(productProgress);
     const flexPulse = 0.9 + Math.sin(clock.elapsedTime * 0.92) * 0.1;
     const boardFlexAmount = boardFlexState ? boardFlexState.halfExtent * 0.2 * flexStrength * flexPulse : 0;
     applyBoardFlex(boardFlexState, boardFlexAmount);
     applyBoardFlex(detailFlexState, boardFlexAmount);
     const problemProgress = getStoryProblemProgress(scrollProgress);
+    const [collectionStart, collectionEnd] = STORY_PROBLEM_TRANSITIONS.collection;
+    const [dataStart, dataEnd] = STORY_PROBLEM_TRANSITIONS.data;
+    const [productStart] = STORY_PROBLEM_TRANSITIONS.product;
     const cleanProductTransition =
       scrollProgress === undefined
         ? 0
@@ -1645,18 +1679,21 @@ function PCBModel({
     const collectionIsolation =
       problemProgress === undefined
         ? 0
-        : smoothstep(0.145, 0.22, problemProgress) * (1 - smoothstep(0.41, 0.49, problemProgress));
+        : smoothstep(collectionStart, collectionEnd, problemProgress) *
+          (1 - smoothstep(dataStart, dataEnd, problemProgress));
     const problemBoardVisibility = 1 - collectionIsolation;
     const dataGlitch =
       problemProgress === undefined
         ? 0
-        : smoothstep(0.52, 0.62, problemProgress) * (1 - smoothstep(0.76, 0.835, problemProgress));
+        : smoothstep(dataStart, dataEnd, problemProgress) *
+          (1 - smoothstep(productStart - 0.04, productStart, problemProgress));
     const glitchSeed = hash01(Math.floor(clock.elapsedTime * 22) + 18.4);
     const glitchOffset = (glitchSeed - 0.5) * 0.17 * dataGlitch;
     const glitchPulse = dataGlitch * (0.08 + Math.sin(clock.elapsedTime * 17) * 0.05);
-    const layout = getModelLayout(viewport.width, viewport.height, size.height <= 520 && size.width > size.height);
+    const shortLandscape = size.height <= 520 && size.width > size.height;
+    const layout = getModelLayout(viewport.width, viewport.height, shortLandscape);
     const containerClipActive =
-      problemProgress !== undefined && problemProgress >= 0.045 && problemProgress < 0.215;
+      problemProgress !== undefined && problemProgress >= 0.025 && problemProgress < collectionEnd;
     const containerScale = layout.scale * (layout.isCompact ? 0.38 : 0.52);
     const containerBaseX = layout.isCompact ? 0.52 : 1.72;
     containerClipPlane.constant = containerBaseX - 1.54 * containerScale;
@@ -1668,7 +1705,12 @@ function PCBModel({
         material.needsUpdate = true;
       }
     }
-    const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact);
+    const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact, shortLandscape);
+    const productHandoffArc =
+      productProgress === undefined
+        ? 0
+        : Math.sin(getStoryProductPresentation(productProgress).blend * Math.PI);
+    const handoffLift = productHandoffArc * (layout.isCompact ? 0.25 : shortLandscape ? 1.1 : 1.12);
     const pointer = pointerRef.current;
     const scrollMotionWeight = scrollProgress === undefined ? 1 : productProgress === undefined ? 0.5 : 0.28;
     const dissolutionLock = timeline.boardPitchAmount * dissolutionShot;
@@ -1698,7 +1740,8 @@ function PCBModel({
     const targetRotationZ = THREE.MathUtils.lerp(baseRotationZ, 0, dissolutionLock);
     const boardDipDistance = productProgress === undefined ? 0.72 : 1.16;
     const targetY =
-      layout.y -
+      layout.y +
+      handoffLift -
       timeline.boardDipAmount * boardDipDistance +
       Math.sin(clock.elapsedTime * 0.52) * 0.035 * interactionWeight +
       Math.sin(clock.elapsedTime * 29) * 0.035 * dataGlitch;
@@ -1747,7 +1790,7 @@ function PCBModel({
         originalBoard,
         ORGANIC_BOARD,
         TECHNICAL_BOARD,
-        productProgress === undefined ? 1 - cleanProductTransition : smoothstep(0.07, 0.24, productProgress),
+        productProgress === undefined ? 1 - cleanProductTransition : substrateCompletion,
       );
       setBoardOpacity(originalBoard, timeline.originalBoardOpacity * problemBoardVisibility);
     }
@@ -1772,7 +1815,7 @@ function PCBModel({
     if (boardDetail) {
       const targetBoard =
         blankBoard && timeline.blankBoardOpacity > 0.01 ? blankBoard : originalBoard;
-      const copperReveal = productProgress === undefined ? 1 : smoothstep(0.2, 0.31, productProgress);
+      const copperReveal = productProgress === undefined ? 1 : traceCompletion;
       const structurePreview = productProgress === undefined ? 0 : layerShot * 0.36;
       const constructionOpacity =
         productProgress === undefined ? 1 - cleanProductTransition : Math.max(structurePreview, copperReveal);
@@ -1820,7 +1863,7 @@ function PCBModel({
     }
 
     const recoveryTravel =
-      productProgress === undefined ? 1 : THREE.MathUtils.lerp(1, 0.68, smoothstep(0.76, 0.88, productProgress));
+      productProgress === undefined ? 1 : THREE.MathUtils.lerp(1, 0.68, recoveryCompletion);
     const compactTravel = (layout.isCompact ? 0.62 : 1) * recoveryTravel;
     for (const part of animatedParts) {
       const amount = getPartSeparation(timeline.phase, part.delay);
@@ -1828,9 +1871,11 @@ function PCBModel({
       const constructionReveal =
         productProgress === undefined
           ? 1 - cleanProductTransition
-          : productProgress >= 0.56
-            ? 1
-          : smoothstep(0.17 + part.revealOrder * 0.11, 0.31 + part.revealOrder * 0.11, productProgress);
+          : smoothstep(
+              part.revealOrder * 0.32,
+              0.52 + part.revealOrder * 0.28,
+              assemblyCompletion,
+            );
       const mainBoardVisibility = productProgress === undefined ? problemBoardVisibility : 1;
       const floatX = Math.sin(clock.elapsedTime * 0.68 + part.floatPhase) * part.floatStrength * amount;
       const floatY = Math.cos(clock.elapsedTime * 0.83 + part.floatPhase * 1.31) * part.floatStrength * amount;
@@ -1846,7 +1891,7 @@ function PCBModel({
         part.originRotation.y + part.spin.y * amount + floatX * 0.012,
         part.originRotation.z + part.spin.z * amount + floatZ * 0.012,
       );
-      if (productProgress !== undefined && productProgress < 0.56) {
+      if (productProgress !== undefined && assemblyCompletion < 0.999) {
         const seatingLift =
           Math.sin(constructionReveal * Math.PI) * Math.abs(part.offset.y) * 0.16 * (traceShot + assemblyShot);
         part.mesh.position.y += seatingLift;
@@ -1871,7 +1916,7 @@ function PCBModel({
           part.mesh.rotation.x -= Math.atan(slope);
         }
       }
-      const recoveryFocus = productProgress === undefined ? 0 : smoothstep(0.76, 0.88, productProgress);
+      const recoveryFocus = productProgress === undefined ? 0 : recoveryCompletion;
       const separatedScale = 1 - amount * recoveryFocus * 0.35;
       const visibleScale = constructionReveal * mainBoardVisibility * separatedScale;
       part.mesh.scale.setScalar(visibleScale);

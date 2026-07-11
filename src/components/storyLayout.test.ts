@@ -2,8 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   getStoryActiveIndex,
   getStoryPanelPresentation,
+  getStoryProductCompletion,
+  getStoryProductPresentation,
+  getStoryProductStepWeight,
   getStoryProductThemeProgress,
   sampleStoryProductKeyframes,
+  STORY_PROBLEM_TRANSITIONS,
   STORY_PRODUCT_KEYFRAMES,
 } from "@/components/storyLayout";
 
@@ -53,5 +57,24 @@ describe("story layout safety", () => {
     expect(sampleStoryProductKeyframes(33 / 35, STORY_PRODUCT_KEYFRAMES.x)).toBe(
       STORY_PRODUCT_KEYFRAMES.x[7],
     );
+  });
+
+  it("uses one blend for product shots and their effects", () => {
+    const midpoint = 0.13;
+    expect(getStoryProductPresentation(midpoint)).toMatchObject({ currentIndex: 0, nextIndex: 1 });
+    expect(getStoryProductPresentation(midpoint).blend).toBeCloseTo(0.5, 5);
+    expect(getStoryProductStepWeight(midpoint, 0)).toBeCloseTo(0.5, 5);
+    expect(getStoryProductStepWeight(midpoint, 1)).toBeCloseTo(0.5, 5);
+    expect(getStoryProductCompletion(midpoint, 1)).toBeCloseTo(0.5, 5);
+    expect(getStoryProductCompletion(0.2, 1)).toBe(1);
+    expect(getStoryProductCompletion(0.2, 2)).toBe(0);
+  });
+
+  it("aligns problem choreography with the three panel handoffs", () => {
+    expect(STORY_PROBLEM_TRANSITIONS.collection[0] * 0.3).toBeCloseTo(0.082, 5);
+    expect(STORY_PROBLEM_TRANSITIONS.collection[1] * 0.3).toBeCloseTo(0.1, 5);
+    expect(STORY_PROBLEM_TRANSITIONS.data[0] * 0.3).toBeCloseTo(0.182, 5);
+    expect(STORY_PROBLEM_TRANSITIONS.data[1] * 0.3).toBeCloseTo(0.2, 5);
+    expect(STORY_PROBLEM_TRANSITIONS.product[0] * 0.3).toBeCloseTo(0.282, 5);
   });
 });

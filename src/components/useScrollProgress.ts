@@ -13,7 +13,6 @@ export function useScrollProgress<T extends HTMLElement>(targetRef: RefObject<T>
     const update = () => {
       frame = 0;
       const target = targetRef.current;
-
       if (!target) return;
 
       const rect = target.getBoundingClientRect();
@@ -21,7 +20,7 @@ export function useScrollProgress<T extends HTMLElement>(targetRef: RefObject<T>
       const scrollableDistance = Math.max(rect.height - viewportHeight, 1);
       const nextProgress = clamp01(-rect.top / scrollableDistance);
 
-      if (Math.abs(nextProgress - lastProgress) > 0.001) {
+      if (Math.abs(nextProgress - lastProgress) > 0.0002) {
         lastProgress = nextProgress;
         setProgress(nextProgress);
       }

@@ -1,5 +1,12 @@
 export const STORY_PRODUCT_START = 0.3;
 export const STORY_PANEL_TRANSITION_WIDTH = 0.018;
+const STORY_PROBLEM_TRANSITION_WIDTH = STORY_PANEL_TRANSITION_WIDTH / STORY_PRODUCT_START;
+
+export const STORY_PROBLEM_TRANSITIONS = {
+  collection: [1 / 3 - STORY_PROBLEM_TRANSITION_WIDTH, 1 / 3],
+  data: [2 / 3 - STORY_PROBLEM_TRANSITION_WIDTH, 2 / 3],
+  product: [1 - STORY_PROBLEM_TRANSITION_WIDTH, 1],
+} as const;
 
 export const STORY_PRODUCT_KEYFRAMES = {
   pitch: [0.04, 0.44, 0.12, -0.72, 0.14, 0, 0, 0.02],
@@ -11,10 +18,9 @@ export const STORY_PRODUCT_KEYFRAMES = {
 
 const STORY_PRODUCT_STEP_PROGRESS = [0, 1 / 7, 2 / 7, 3 / 7, 4 / 7, 5 / 7, 6 / 7, 33 / 35] as const;
 
-export function sampleStoryProductKeyframes(progress: number, values: readonly number[]) {
+export function getStoryProductPresentation(progress: number) {
   const value = Math.min(1, Math.max(0, progress));
-  const lastIndex = Math.min(values.length, STORY_PRODUCT_STEP_PROGRESS.length) - 1;
-  if (lastIndex <= 0) return values[0] ?? 0;
+  const lastIndex = STORY_PRODUCT_STEP_PROGRESS.length - 1;
 
   const transitionWidth = STORY_PANEL_TRANSITION_WIDTH / (1 - STORY_PRODUCT_START);
   for (let index = 0; index < lastIndex; index += 1) {
@@ -22,12 +28,36 @@ export function sampleStoryProductKeyframes(progress: number, values: readonly n
     if (value < boundary) {
       const transitionStart = Math.max(STORY_PRODUCT_STEP_PROGRESS[index], boundary - transitionWidth);
       const amount = Math.min(1, Math.max(0, (value - transitionStart) / (boundary - transitionStart)));
-      const eased = amount * amount * (3 - 2 * amount);
-      return values[index] + (values[index + 1] - values[index]) * eased;
+      const blend = amount * amount * (3 - 2 * amount);
+      return { blend, currentIndex: index, nextIndex: index + 1 };
     }
   }
 
-  return values[lastIndex];
+  return { blend: 0, currentIndex: lastIndex, nextIndex: lastIndex };
+}
+
+export function getStoryProductStepWeight(progress: number | undefined, index: number) {
+  if (progress === undefined) return 0;
+  const presentation = getStoryProductPresentation(progress);
+  if (index === presentation.currentIndex) return 1 - presentation.blend;
+  if (index === presentation.nextIndex) return presentation.blend;
+  return 0;
+}
+
+export function getStoryProductCompletion(progress: number | undefined, index: number) {
+  if (progress === undefined) return 0;
+  const presentation = getStoryProductPresentation(progress);
+  if (presentation.currentIndex >= index) return 1;
+  if (presentation.nextIndex === index) return presentation.blend;
+  return 0;
+}
+
+export function sampleStoryProductKeyframes(progress: number, values: readonly number[]) {
+  if (values.length === 0) return 0;
+  const presentation = getStoryProductPresentation(progress);
+  const currentIndex = Math.min(values.length - 1, presentation.currentIndex);
+  const nextIndex = Math.min(values.length - 1, presentation.nextIndex);
+  return values[currentIndex] + (values[nextIndex] - values[currentIndex]) * presentation.blend;
 }
 
 export const getStoryProductThemeProgress = (progress: number) => {
