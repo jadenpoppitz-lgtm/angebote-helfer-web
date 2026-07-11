@@ -1,5 +1,6 @@
 export const STORY_PRODUCT_START = 0.3;
-export const STORY_PANEL_TRANSITION_WIDTH = 0.018;
+export const STORY_PANEL_TRANSITION_WIDTH = 0.045;
+const STORY_TRANSITION_INTERVAL_RATIO = 0.45;
 const STORY_PROBLEM_TRANSITION_WIDTH = STORY_PANEL_TRANSITION_WIDTH / STORY_PRODUCT_START;
 
 export const STORY_PROBLEM_TRANSITIONS = {
@@ -22,11 +23,13 @@ export function getStoryProductPresentation(progress: number) {
   const value = Math.min(1, Math.max(0, progress));
   const lastIndex = STORY_PRODUCT_STEP_PROGRESS.length - 1;
 
-  const transitionWidth = STORY_PANEL_TRANSITION_WIDTH / (1 - STORY_PRODUCT_START);
+  const maximumTransitionWidth = STORY_PANEL_TRANSITION_WIDTH / (1 - STORY_PRODUCT_START);
   for (let index = 0; index < lastIndex; index += 1) {
     const boundary = STORY_PRODUCT_STEP_PROGRESS[index + 1];
     if (value < boundary) {
-      const transitionStart = Math.max(STORY_PRODUCT_STEP_PROGRESS[index], boundary - transitionWidth);
+      const interval = boundary - STORY_PRODUCT_STEP_PROGRESS[index];
+      const transitionWidth = Math.min(maximumTransitionWidth, interval * STORY_TRANSITION_INTERVAL_RATIO);
+      const transitionStart = boundary - transitionWidth;
       const amount = Math.min(1, Math.max(0, (value - transitionStart) / (boundary - transitionStart)));
       const blend = amount * amount * (3 - 2 * amount);
       return { blend, currentIndex: index, nextIndex: index + 1 };
@@ -79,7 +82,10 @@ export const getStoryPanelPresentation = (progress: number, stepCount: number) =
     const boundary = index === lastIndex - 1 ? finalStepStart : (index + 1) / lastIndex;
     if (value < boundary) {
       const interval = boundary - previousBoundary;
-      const transitionWidth = Math.min(STORY_PANEL_TRANSITION_WIDTH, interval * 0.18);
+      const transitionWidth = Math.min(
+        STORY_PANEL_TRANSITION_WIDTH,
+        interval * STORY_TRANSITION_INTERVAL_RATIO,
+      );
       const amount = Math.min(1, Math.max(0, (value - (boundary - transitionWidth)) / transitionWidth));
       const blend = amount * amount * (3 - 2 * amount);
       return { blend, currentIndex: index, nextIndex: index + 1 };

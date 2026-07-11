@@ -231,10 +231,16 @@ function getStoryProcessPhase(scrollProgress?: number) {
   if (scrollProgress === undefined) return undefined;
 
   const productProgress = getStoryProductProgress(scrollProgress);
+  const dissolutionTransitionStart =
+    5 / 7 - STORY_PANEL_TRANSITION_WIDTH / (1 - STORY_PRODUCT_START);
   if (productProgress === undefined) return 0.055;
-  if (productProgress <= 0.68) return 0.055;
+  if (productProgress <= dissolutionTransitionStart) return 0.055;
   if (productProgress < 0.79) {
-    return THREE.MathUtils.lerp(0.13, 0.47, smoothstep(0.68, 0.79, productProgress));
+    return THREE.MathUtils.lerp(
+      0.13,
+      0.47,
+      smoothstep(dissolutionTransitionStart, 0.79, productProgress),
+    );
   }
   if (productProgress < 0.86) {
     return THREE.MathUtils.lerp(0.47, 0.7, smoothstep(0.79, 0.86, productProgress));
