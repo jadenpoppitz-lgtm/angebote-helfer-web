@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { createPCBTraceGeometry } from "@/components/pcb/createPCBTraceGeometry";
+import { STORY_PRODUCT_KEYFRAMES } from "@/components/storyLayout";
 
 const DESKTOP_MODEL_PATH = "/models/green-circuit-board-web.glb?v=5";
 const MOBILE_MODEL_PATH = "/models/green-circuit-board-mobile.glb?v=2";
@@ -261,7 +262,7 @@ function getProductStepWeight(productProgress: number | undefined, index: number
   return 1 - smoothstep(0.2, 0.58, distance);
 }
 
-function sampleKeyframes(progress: number, values: number[]) {
+function sampleKeyframes(progress: number, values: readonly number[]) {
   const scaled = clamp01(progress) * (values.length - 1);
   const index = Math.min(values.length - 2, Math.floor(scaled));
   const amount = smoothstep(0, 1, scaled - index);
@@ -275,36 +276,36 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
 
   if (scrollProgress >= STORY_PRODUCT_START) {
     const productProgress = (scrollProgress - STORY_PRODUCT_START) / (1 - STORY_PRODUCT_START);
-    const productScale = sampleKeyframes(productProgress, [1.38, 1.95, 1.78, 1.2, 2.02, 0.78, 0.84, 0.94]);
-    const compactScale = productScale > 1.75 ? 0.64 : productScale > 1.3 ? 0.72 : 0.86;
+    const productScale = sampleKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.scale);
+    const compactScale = productScale > 1.1 ? 0.82 : 0.88;
     return {
-      pitch: sampleKeyframes(productProgress, [0.04, 0.66, 0.16, -1.42, 0.26, 0.04, 0, 0]),
+      pitch: sampleKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.pitch),
       scale: productScale * (isCompact ? compactScale : 1),
       x: isCompact
         ? 0
-        : sampleKeyframes(productProgress, [1.58, -1.3, 1.5, -1.48, 1.42, -1.22, 1.22, -1.12]),
-      yaw: sampleKeyframes(productProgress, [-0.34, -0.58, -1.02, 1.45, -1.58, -0.12, -2.38, -2.68]),
-      z: 0,
+        : sampleKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.x),
+      yaw: sampleKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.yaw),
+      z: sampleKeyframes(productProgress, STORY_PRODUCT_KEYFRAMES.z),
     };
   }
 
   const progress = scrollProgress / STORY_PRODUCT_START;
   const travel = isCompact ? 0.58 : 1;
-  const compactScale = isCompact ? 0.84 : 1;
-  const dataX = isCompact ? 0.28 : 1.62;
-  const productX = isCompact ? 0 : 1.7;
+  const compactScale = isCompact ? 0.78 : 1;
+  const dataX = isCompact ? 0.18 : 3.35;
+  const productX = isCompact ? 0 : 3.55;
 
   if (progress < 0.2) {
     const approach = smoothstep(0.02, 0.105, progress);
     const insertion = smoothstep(0.105, 0.185, progress);
-    const loadingBayX = isCompact ? -0.2 * travel : -0.02;
-    const insideContainerX = isCompact ? 0.38 * travel : 0.68;
-    const startX = isCompact ? 0 : 0.82;
+    const loadingBayX = isCompact ? -0.2 * travel : 0.62;
+    const insideContainerX = isCompact ? 0.38 * travel : 1.32;
+    const startX = isCompact ? 0 : 1.82;
     const approachX = THREE.MathUtils.lerp(startX, loadingBayX, approach);
-    const approachScale = THREE.MathUtils.lerp(isCompact ? 1.08 : 0.78, 0.34, approach);
+    const approachScale = THREE.MathUtils.lerp(isCompact ? 1.02 : 0.68, 0.31, approach);
     return {
       pitch: THREE.MathUtils.lerp(0.03, 0.1, approach),
-      scale: THREE.MathUtils.lerp(approachScale, 0.24, insertion) * compactScale,
+      scale: THREE.MathUtils.lerp(approachScale, 0.22, insertion) * compactScale,
       x: THREE.MathUtils.lerp(approachX, insideContainerX, insertion),
       yaw: THREE.MathUtils.lerp(-0.22, Math.PI * 0.46, approach),
       z: THREE.MathUtils.lerp(0.42, -0.08, insertion),
@@ -313,10 +314,10 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
 
   if (progress < 0.46) {
     const collectionHold = smoothstep(0.2, 0.34, progress);
-    const insideContainerX = isCompact ? 0.38 * travel : 0.68;
+    const insideContainerX = isCompact ? 0.38 * travel : 1.32;
     return {
       pitch: THREE.MathUtils.lerp(0.1, 0.04, collectionHold),
-      scale: THREE.MathUtils.lerp(0.24, 0.38, collectionHold) * compactScale,
+      scale: THREE.MathUtils.lerp(0.22, 0.33, collectionHold) * compactScale,
       x: THREE.MathUtils.lerp(insideContainerX, 5.4 * travel, collectionHold),
       yaw: THREE.MathUtils.lerp(Math.PI * 0.46, Math.PI * 0.52, collectionHold),
       z: -0.08,
@@ -327,7 +328,7 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
     const dataTransition = smoothstep(0.46, 0.56, progress);
     return {
       pitch: THREE.MathUtils.lerp(0.04, -0.08, dataTransition),
-      scale: THREE.MathUtils.lerp(0.38, 1.34, dataTransition) * compactScale,
+      scale: THREE.MathUtils.lerp(0.33, 1.02, dataTransition) * compactScale,
       x: THREE.MathUtils.lerp(-3.4 * travel, dataX, dataTransition),
       yaw: THREE.MathUtils.lerp(-0.86, -0.55, dataTransition),
       z: THREE.MathUtils.lerp(-0.08, 0, dataTransition),
@@ -338,7 +339,7 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
 
   return {
     pitch: THREE.MathUtils.lerp(-0.08, 0.04, productTransition),
-    scale: THREE.MathUtils.lerp(1.34, 1.38, productTransition) * compactScale,
+    scale: THREE.MathUtils.lerp(1.02, 0.98, productTransition) * compactScale,
     x: THREE.MathUtils.lerp(dataX, productX, productTransition),
     yaw: THREE.MathUtils.lerp(-0.55, -0.34, productTransition),
     z: 0,
@@ -364,7 +365,7 @@ function getModelLayout(viewportWidth: number, viewportHeight: number, shortLand
     isCompact,
     scale,
     x: 0,
-    y: shortLandscape ? 0.16 : isCompact ? 0.78 : 0.36,
+    y: shortLandscape ? 0.16 : isCompact ? 1.06 : 0.36,
   };
 }
 
@@ -1410,7 +1411,7 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
       const doorOpen = active
         ? smoothstep(0.008, 0.05, progress) * (1 - smoothstep(0.155, 0.205, progress))
         : 0;
-      const baseX = 1.08 * horizontalTravel;
+      const baseX = layout.isCompact ? 0.72 : 1.72;
       const targetX =
         baseX + THREE.MathUtils.lerp(2.9 * horizontalTravel, 0, enter) + shipping * 7.2 * horizontalTravel;
       containerRef.current.visible = amount > 0.005;
@@ -1428,7 +1429,12 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
         8,
         delta,
       );
-      const scale = THREE.MathUtils.damp(containerRef.current.scale.x, layout.scale * 0.58, 8, delta);
+      const scale = THREE.MathUtils.damp(
+        containerRef.current.scale.x,
+        layout.scale * (layout.isCompact ? 0.5 : 0.52),
+        8,
+        delta,
+      );
       containerRef.current.scale.setScalar(scale);
       containerAsset.material.opacity = amount;
       containerAsset.material.depthWrite = amount > 0.96;
@@ -1784,7 +1790,9 @@ function PCBModel({
       boardLogo.mesh.visible = logoOpacityRef.current > 0.01;
     }
 
-    const compactTravel = layout.isCompact ? 0.62 : 1;
+    const recoveryTravel =
+      productProgress === undefined ? 1 : THREE.MathUtils.lerp(1, 0.68, smoothstep(0.76, 0.88, productProgress));
+    const compactTravel = (layout.isCompact ? 0.62 : 1) * recoveryTravel;
     for (const part of animatedParts) {
       const amount = getPartSeparation(timeline.phase, part.delay);
       const travel = amount * compactTravel;
@@ -1834,7 +1842,9 @@ function PCBModel({
           part.mesh.rotation.x -= Math.atan(slope);
         }
       }
-      const visibleScale = constructionReveal * mainBoardVisibility;
+      const recoveryFocus = productProgress === undefined ? 0 : smoothstep(0.76, 0.88, productProgress);
+      const separatedScale = 1 - amount * recoveryFocus * 0.35;
+      const visibleScale = constructionReveal * mainBoardVisibility * separatedScale;
       part.mesh.scale.setScalar(visibleScale);
       part.mesh.visible = visibleScale > 0.01;
     }
@@ -2025,6 +2035,8 @@ export function InteractivePCBModelScene({
 
   return (
     <Canvas
+      data-max-fps={settings.maxFps}
+      data-render-profile={settings.maxFps < 60 ? "efficient" : "quality"}
       camera={{ position: [0, 5.8, 6.4], fov: 38, near: 0.1, far: 90 }}
       dpr={settings.dpr}
       frameloop={settings.maxFps < 60 ? "demand" : "always"}
@@ -2053,6 +2065,8 @@ export function PilotPCBScene({
 
   return (
     <Canvas
+      data-max-fps={settings.maxFps}
+      data-render-profile={settings.maxFps < 60 ? "efficient" : "quality"}
       camera={{ position: [0, 5.35, 6.1], fov: 36, near: 0.1, far: 70 }}
       dpr={settings.dpr}
       frameloop={settings.maxFps < 60 ? "demand" : "always"}

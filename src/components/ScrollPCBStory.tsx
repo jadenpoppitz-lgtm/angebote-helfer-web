@@ -11,6 +11,7 @@ import {
   Shuffle,
 } from "lucide-react";
 import type { Language } from "@/lib/i18n";
+import { getStoryActiveIndex } from "@/components/storyLayout";
 import { useElementVisibility, useScrollProgress } from "@/components/useScrollProgress";
 
 const InteractivePCBModelScene = lazy(() =>
@@ -253,10 +254,7 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
 
     return [...problemSteps, ...productSteps];
   }, [language, problem]);
-  const activeIndex = Math.min(
-    steps.length - 1,
-    Math.floor(progress * (steps.length - 1) + 0.0005),
-  );
+  const activeIndex = getStoryActiveIndex(progress, steps.length);
   const activeStep = steps[activeIndex];
   const ActiveIcon = activeStep.icon;
   const problemActive = activeIndex < 3;

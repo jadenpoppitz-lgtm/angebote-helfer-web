@@ -878,7 +878,6 @@ export const createCyclePrototypeWorld = (
   });
 
   let highlighted: GraphPoint = "consulting";
-  let highlightedChangedAt = 0;
   let pointerX = 0;
   let pointerY = 0;
   let width = 1;
@@ -993,7 +992,7 @@ export const createCyclePrototypeWorld = (
       if (!options.reducedMotion) {
         const activity = station.userData.activity as number;
 
-        const sequenceElapsed = active ? Math.max(0, elapsed - highlightedChangedAt) : elapsed + index * 1.17;
+        const sequenceElapsed = elapsed + index * 1.17;
 
         if (point === "oem") {
           const carrier = station.userData.oemCarrier as THREE.Group;
@@ -1058,7 +1057,7 @@ export const createCyclePrototypeWorld = (
           });
           result.scale.x = 0.45 + resultWindow * 0.55;
           result.material.opacity = resultWindow;
-          lens.rotation.z = phase * Math.PI * 0.7;
+          lens.rotation.z = elapsed * 0.22;
           lens.scale.setScalar(1 + resultWindow * 0.08);
         }
 
@@ -1069,6 +1068,7 @@ export const createCyclePrototypeWorld = (
           const phase = getCycleRoutePhase(sequenceElapsed, 7.6, 0);
           const pickProgress = getCycleSegmentProgress(phase, 0.14, 0.42);
           const placeProgress = getCycleSegmentProgress(phase, 0.48, 0.76);
+          const returnProgress = getCycleSegmentProgress(phase, 0.82, 0.96);
           const partEnvelope = getCycleWindowEnvelope(phase, 0.06, 0.14, 0.78, 0.9);
           const arrival = getCycleWindowEnvelope(phase, 0.7, 0.77, 0.86, 0.96);
           if (phase < 0.48) {
@@ -1082,7 +1082,7 @@ export const createCyclePrototypeWorld = (
           }
           part.scale.setScalar(Math.max(0.001, partEnvelope * (1 + activity * 0.08)));
           part.rotation.y = (pickProgress + placeProgress) * Math.PI * 0.28;
-          rig.rotation.y = 0.18 + pickProgress * 0.2 - placeProgress * 0.34;
+          rig.rotation.y = 0.18 + (pickProgress * 0.2 - placeProgress * 0.34) * (1 - returnProgress);
           rig.position.y = 0.28 + Math.sin((pickProgress + placeProgress) * Math.PI) * 0.018;
           status.scale.setScalar(0.72 + arrival * (0.7 + activity * 0.18));
           status.material.opacity = 0.16 + arrival * 0.82;
@@ -1218,7 +1218,6 @@ export const createCyclePrototypeWorld = (
       renderer.dispose();
     },
     setHighlighted: (point) => {
-      if (highlighted !== point) highlightedChangedAt = timer.getElapsed();
       highlighted = point;
     },
     setPointer: (x, y) => {
