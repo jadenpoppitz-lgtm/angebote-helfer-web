@@ -277,7 +277,7 @@ function getProblemContainerPlacement(
 ) {
   const horizontalTravel = isCompact ? 0.58 : 1;
   const scale = sceneScale * (isCompact ? 0.52 : 0.76) * (shortLandscape ? 1.32 : 1);
-  const baseX = isCompact ? 0.52 : 1.9;
+  const baseX = isCompact ? 0.52 : shortLandscape ? 2.12 : 1.9;
   const shippingTravel = PROBLEM_CONTAINER_SHIPPING_TRAVEL * horizontalTravel;
   const centerX = baseX + shipping * shippingTravel;
 
@@ -330,21 +330,21 @@ function getStoryBoardTransform(
   const [productStart, productEnd] = STORY_PROBLEM_TRANSITIONS.product;
 
   if (progress < collectionStart) {
-    const approach = smoothstep(collectionStart * 0.27, collectionStart * 0.43, progress);
-    const insertion = smoothstep(collectionStart * 0.43, collectionStart * 0.76, progress);
+    const approach = smoothstep(collectionStart * 0.3, collectionStart * 0.46, progress);
+    const insertion = smoothstep(collectionStart * 0.46, collectionStart * 0.76, progress);
     const container = getProblemContainerPlacement(isCompact, sceneScale, 0, shortLandscape);
-    const loadingBayX = container.openingX - sceneScale * (isCompact ? 0.12 : 0.16);
+    const loadingBayX = container.openingX - container.scale * (isCompact ? 0.68 : 0.78);
     const insideContainerX = container.centerX;
-    const startX = isCompact ? 0 : 0.12;
+    const startX = loadingBayX - sceneScale * (isCompact ? 0.3 : 0.48);
     const approachX = THREE.MathUtils.lerp(startX, loadingBayX, approach);
     const approachScale = THREE.MathUtils.lerp(isCompact ? 0.4 : 0.28, isCompact ? 0.18 : 0.17, approach);
-    const stagingZ = isCompact ? 0.2 : 0.32;
+    const stagingZ = THREE.MathUtils.lerp(isCompact ? 0.36 : 0.54, 0, approach);
     return {
       pitch: THREE.MathUtils.lerp(0.03, 0.07, approach),
       scale: THREE.MathUtils.lerp(approachScale, isCompact ? 0.13 : 0.11, insertion) * containerBoardScale,
       x: THREE.MathUtils.lerp(approachX, insideContainerX, insertion),
       yaw: THREE.MathUtils.lerp(0.85, PROBLEM_CONTAINER_BOARD_YAW, approach),
-      z: THREE.MathUtils.lerp(stagingZ, 0, insertion),
+      z: stagingZ,
     };
   }
 
@@ -1484,9 +1484,14 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
       const shipping = smoothstep(collectionStart, collectionEnd, progress);
       const amount = active ? enter * (1 - shipping) : 0;
       const doorOpen = active
-        ? smoothstep(collectionStart * 0.04, collectionStart * 0.27, progress) *
-          (1 - smoothstep(collectionStart * 0.78, collectionStart, progress))
+        ? smoothstep(collectionStart * 0.04, collectionStart * 0.24, progress) *
+          (1 - smoothstep(collectionStart * 0.82, collectionStart, progress))
         : 0;
+      const doorsParked = active
+        ? smoothstep(collectionStart * 0.24, collectionStart * 0.3, progress) *
+          (1 - smoothstep(collectionStart * 0.74, collectionStart * 0.82, progress))
+        : 0;
+      const doorOpacity = amount * (1 - doorsParked);
       const container = getProblemContainerPlacement(layout.isCompact, layout.scale, shipping, shortLandscape);
       const targetX =
         container.centerX + THREE.MathUtils.lerp(2.9 * container.horizontalTravel, 0, enter);
@@ -1500,8 +1505,8 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
       containerRef.current.scale.setScalar(container.scale);
       containerAsset.material.opacity = amount;
       containerAsset.material.depthWrite = amount > 0.96;
-      containerDoorMaterial.opacity = amount;
-      containerDoorMaterial.depthWrite = amount > 0.96;
+      containerDoorMaterial.opacity = doorOpacity;
+      containerDoorMaterial.depthWrite = doorOpacity > 0.96;
       containerInteriorMaterial.opacity = amount;
       containerInteriorMaterial.depthWrite = amount > 0.96;
       if (leftDoorRef.current) {
@@ -1743,7 +1748,7 @@ function PCBModel({
     const containerPackingVisibility =
       problemProgress === undefined || problemProgress >= dataStart
         ? 1
-        : 1 - smoothstep(collectionStart * 0.43, collectionStart * 0.76, problemProgress);
+        : 1 - smoothstep(collectionStart * 0.58, collectionStart * 0.74, problemProgress);
     const problemBoardVisibility = (1 - collectionIsolation) * containerPackingVisibility;
     const dataGlitch =
       problemProgress === undefined
