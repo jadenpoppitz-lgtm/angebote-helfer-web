@@ -366,6 +366,18 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
           },
         ];
   const panelWeight = (index: number) => panelEntries.find((entry) => entry.index === index)?.opacity ?? 0;
+  const storyRailProgress =
+    steps.length <= 1
+      ? 0
+      : Math.min(
+          1,
+          Math.max(
+            0,
+            (panelPresentation.currentIndex +
+              (panelPresentation.nextIndex - panelPresentation.currentIndex) * panelPresentation.blend) /
+              (steps.length - 1),
+          ),
+        );
   const dataFieldOpacity = panelWeight(2) * (1 - productThemeProgress);
   const transitionSaturation =
     23 + productThemeProgress * 6 - 64 * productThemeProgress * (1 - productThemeProgress);
@@ -466,23 +478,44 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
           </span>
         </div>
 
-        <div className="pointer-events-none absolute right-5 top-1/2 z-20 hidden -translate-y-1/2 gap-2 md:grid">
+        <div
+          aria-hidden
+          className={`pointer-events-none absolute right-4 top-1/2 z-20 hidden -translate-y-1/2 gap-1.5 rounded-full border px-2 py-2.5 shadow-sm backdrop-blur-md md:grid lg:right-6 ${
+            problemActive
+              ? "border-white/18 bg-emerald-950/48 shadow-black/20"
+              : "border-emerald-950/14 bg-white/78 shadow-emerald-950/10"
+          }`}
+        >
+          <span
+            className={`absolute bottom-3 left-1/2 top-3 w-px -translate-x-1/2 overflow-hidden rounded-full ${
+              problemActive ? "bg-white/22" : "bg-emerald-950/18"
+            }`}
+          >
+            <span
+              className={`block w-full rounded-full ${problemActive ? "bg-white/72" : "bg-emerald-700/70"}`}
+              style={{ height: `${storyRailProgress * 100}%` }}
+            />
+          </span>
           {steps.map((step, index) => {
             const weight = panelWeight(index);
             return (
               <span
                 key={`${step.type}-${step.title}`}
-                className={`block h-1.5 w-1.5 rounded-full ${
-                  weight >= 0.5
-                    ? problemActive
-                      ? "bg-white"
-                      : "bg-emerald-700"
-                    : problemActive
-                      ? "bg-white/25"
-                      : "bg-emerald-950/18"
-                }`}
-                style={{ transform: `scale(${1 + weight * 0.5})` }}
-              />
+                className="relative z-10 grid h-3.5 w-3.5 place-items-center"
+              >
+                <span
+                  className={`block h-1.5 w-1.5 rounded-full ${
+                    weight >= 0.5
+                      ? problemActive
+                        ? "bg-white ring-2 ring-emerald-950/45 shadow-[0_0_10px_rgba(255,255,255,0.45)]"
+                        : "bg-emerald-700 ring-2 ring-white shadow-[0_0_10px_rgba(4,120,87,0.28)]"
+                      : problemActive
+                        ? "bg-white/48 ring-1 ring-white/12"
+                        : "bg-emerald-950/46 ring-1 ring-emerald-950/12"
+                  }`}
+                  style={{ transform: `scale(${1 + weight * 0.55})` }}
+                />
+              </span>
             );
           })}
         </div>
