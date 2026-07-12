@@ -482,17 +482,17 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
           aria-hidden
           className={`pointer-events-none absolute right-4 top-1/2 z-20 hidden -translate-y-1/2 gap-1.5 rounded-full border px-2 py-2.5 shadow-sm backdrop-blur-md md:grid lg:right-6 ${
             problemActive
-              ? "border-white/18 bg-emerald-950/48 shadow-black/20"
-              : "border-emerald-950/14 bg-white/78 shadow-emerald-950/10"
+              ? "border-white/20 bg-emerald-950/50 shadow-black/20"
+              : "border-emerald-950/20 bg-white/80 shadow-emerald-950/10"
           }`}
         >
           <span
             className={`absolute bottom-3 left-1/2 top-3 w-px -translate-x-1/2 overflow-hidden rounded-full ${
-              problemActive ? "bg-white/22" : "bg-emerald-950/18"
+              problemActive ? "bg-white/25" : "bg-emerald-950/20"
             }`}
           >
             <span
-              className={`block w-full rounded-full ${problemActive ? "bg-white/72" : "bg-emerald-700/70"}`}
+              className={`block w-full rounded-full ${problemActive ? "bg-white/75" : "bg-emerald-700/70"}`}
               style={{ height: `${storyRailProgress * 100}%` }}
             />
           </span>
@@ -507,11 +507,11 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
                   className={`block h-1.5 w-1.5 rounded-full ${
                     weight >= 0.5
                       ? problemActive
-                        ? "bg-white ring-2 ring-emerald-950/45 shadow-[0_0_10px_rgba(255,255,255,0.45)]"
+                        ? "bg-white ring-2 ring-emerald-950/50 shadow-[0_0_10px_rgba(255,255,255,0.45)]"
                         : "bg-emerald-700 ring-2 ring-white shadow-[0_0_10px_rgba(4,120,87,0.28)]"
                       : problemActive
-                        ? "bg-white/48 ring-1 ring-white/12"
-                        : "bg-emerald-950/46 ring-1 ring-emerald-950/12"
+                        ? "bg-white/50 ring-1 ring-white/20"
+                        : "bg-emerald-950/50 ring-1 ring-emerald-950/20"
                   }`}
                   style={{ transform: `scale(${1 + weight * 0.55})` }}
                 />
