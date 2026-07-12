@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   getCycleRouteEnvelope,
   getCycleRoutePhase,
+  getCycleRouteTravelProgress,
   getCycleSegmentProgress,
   getCycleWindowEnvelope,
 } from "@/components/cycleAnimation";
@@ -16,6 +17,12 @@ describe("cycle route animation", () => {
   it("keeps both sides of the loop boundary visually hidden", () => {
     expect(getCycleRouteEnvelope(0.01)).toBeLessThan(0.02);
     expect(getCycleRouteEnvelope(0.99)).toBeLessThan(0.02);
+  });
+
+  it("finishes packet travel before fading at the route handoff", () => {
+    expect(getCycleRouteTravelProgress(0.04)).toBe(0);
+    expect(getCycleRouteTravelProgress(0.47)).toBeCloseTo(0.5);
+    expect(getCycleRouteTravelProgress(0.9)).toBe(1);
   });
 
   it("normalizes delayed and negative phases", () => {
