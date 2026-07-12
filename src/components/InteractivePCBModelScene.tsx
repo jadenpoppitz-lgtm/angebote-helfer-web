@@ -23,6 +23,9 @@ const CONTAINER_MODEL_PATH = "/models/problem/shipping-container-20ft.glb";
 const BOARD_LOGO_PATH = "/logo1-web.webp";
 const PROCESS_CYCLE_SECONDS = 20;
 const MODEL_WORLD_SIZE = 3.2;
+const PROBLEM_CONTAINER_BOARD_YAW = Math.PI * 0.28;
+const PROBLEM_CONTAINER_OPENING_X = -1.59;
+const PROBLEM_CONTAINER_SHIPPING_TRAVEL = 7.2;
 const PROBLEM_PCB_COUNT = 18;
 const PROBLEM_PILE_TOWER_COUNT = 3;
 const EXCLUDED_MESH_NAMES = new Set(["Box100", "Box129", "Line388"]);
@@ -266,7 +269,33 @@ function getProductBoardFlex(productProgress?: number) {
   );
 }
 
-function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: boolean, shortLandscape = false) {
+function getProblemContainerPlacement(
+  isCompact: boolean,
+  sceneScale: number,
+  shipping = 0,
+  shortLandscape = false,
+) {
+  const horizontalTravel = isCompact ? 0.58 : 1;
+  const scale = sceneScale * (isCompact ? 0.52 : 0.76) * (shortLandscape ? 1.32 : 1);
+  const baseX = isCompact ? 0.52 : 1.9;
+  const shippingTravel = PROBLEM_CONTAINER_SHIPPING_TRAVEL * horizontalTravel;
+  const centerX = baseX + shipping * shippingTravel;
+
+  return {
+    centerX,
+    horizontalTravel,
+    openingX: centerX + PROBLEM_CONTAINER_OPENING_X * scale,
+    scale,
+    shippingTravel,
+  };
+}
+
+function getStoryBoardTransform(
+  scrollProgress: number | undefined,
+  isCompact: boolean,
+  shortLandscape = false,
+  sceneScale = 1,
+) {
   if (scrollProgress === undefined) {
     return { pitch: 0, scale: 1, x: 0, yaw: 0, z: 0 };
   }
@@ -292,6 +321,7 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
   const progress = scrollProgress / STORY_PRODUCT_START;
   const travel = isCompact ? 0.58 : 1;
   const compactScale = isCompact ? 0.78 : 1;
+  const containerBoardScale = compactScale * (shortLandscape ? 1.32 : 1);
   const dataX = isCompact ? 0.18 : 3.35;
   const productX = isCompact ? 0 : STORY_PRODUCT_KEYFRAMES.x[0];
   const productScale = STORY_PRODUCT_KEYFRAMES.scale[0] * (isCompact ? 0.88 : 1);
@@ -300,41 +330,43 @@ function getStoryBoardTransform(scrollProgress: number | undefined, isCompact: b
   const [productStart, productEnd] = STORY_PROBLEM_TRANSITIONS.product;
 
   if (progress < collectionStart) {
-    const approach = smoothstep(0.025, 0.09, progress);
-    const insertion = smoothstep(0.09, 0.235, progress);
-    const loadingBayX = isCompact ? -0.1 * travel : 0.58;
-    const insideContainerX = isCompact ? 0.5 * travel : 1.62;
-    const startX = isCompact ? 0 : 0.48;
+    const approach = smoothstep(collectionStart * 0.27, collectionStart * 0.43, progress);
+    const insertion = smoothstep(collectionStart * 0.43, collectionStart * 0.76, progress);
+    const container = getProblemContainerPlacement(isCompact, sceneScale, 0, shortLandscape);
+    const loadingBayX = container.openingX - sceneScale * (isCompact ? 0.12 : 0.16);
+    const insideContainerX = container.centerX;
+    const startX = isCompact ? 0 : 0.12;
     const approachX = THREE.MathUtils.lerp(startX, loadingBayX, approach);
-    const approachScale = THREE.MathUtils.lerp(isCompact ? 0.44 : 0.26, isCompact ? 0.2 : 0.15, approach);
-    const alignedZ = THREE.MathUtils.lerp(0.22, 0, approach);
+    const approachScale = THREE.MathUtils.lerp(isCompact ? 0.4 : 0.28, isCompact ? 0.18 : 0.17, approach);
+    const stagingZ = isCompact ? 0.2 : 0.32;
     return {
       pitch: THREE.MathUtils.lerp(0.03, 0.07, approach),
-      scale: THREE.MathUtils.lerp(approachScale, isCompact ? 0.11 : 0.075, insertion) * compactScale,
+      scale: THREE.MathUtils.lerp(approachScale, isCompact ? 0.13 : 0.11, insertion) * containerBoardScale,
       x: THREE.MathUtils.lerp(approachX, insideContainerX, insertion),
-      yaw: THREE.MathUtils.lerp(0.85, Math.PI * 0.5, approach),
-      z: THREE.MathUtils.lerp(alignedZ, 0, insertion),
+      yaw: THREE.MathUtils.lerp(0.85, PROBLEM_CONTAINER_BOARD_YAW, approach),
+      z: THREE.MathUtils.lerp(stagingZ, 0, insertion),
     };
   }
 
   if (progress < collectionEnd) {
     const shipping = smoothstep(collectionStart, collectionEnd, progress);
-    const insideContainerX = isCompact ? 0.5 * travel : 1.62;
+    const container = getProblemContainerPlacement(isCompact, sceneScale, shipping, shortLandscape);
     return {
       pitch: THREE.MathUtils.lerp(0.07, 0.04, shipping),
-      scale: (isCompact ? 0.11 : 0.075) * compactScale,
-      x: THREE.MathUtils.lerp(insideContainerX, 5.4 * travel, shipping),
-      yaw: THREE.MathUtils.lerp(Math.PI * 0.5, Math.PI * 0.52, shipping),
+      scale: (isCompact ? 0.13 : 0.11) * containerBoardScale,
+      x: container.centerX,
+      yaw: THREE.MathUtils.lerp(PROBLEM_CONTAINER_BOARD_YAW, PROBLEM_CONTAINER_BOARD_YAW + Math.PI * 0.04, shipping),
       z: 0,
     };
   }
 
   if (progress < dataStart) {
+    const container = getProblemContainerPlacement(isCompact, sceneScale, 1, shortLandscape);
     return {
       pitch: 0.04,
-      scale: (isCompact ? 0.11 : 0.075) * compactScale,
-      x: 5.4 * travel,
-      yaw: Math.PI * 0.52,
+      scale: (isCompact ? 0.13 : 0.11) * containerBoardScale,
+      x: container.centerX,
+      yaw: PROBLEM_CONTAINER_BOARD_YAW + Math.PI * 0.04,
       z: 0,
     };
   }
@@ -1318,7 +1350,7 @@ function LabBeakerStage({
     const timeline = getTimelineState(processTime, getStoryProcessPhase(scrollProgress));
     const shortLandscape = size.height <= 520 && size.width > size.height;
     const layout = getModelLayout(viewport.width, viewport.height, shortLandscape);
-    const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact, shortLandscape);
+    const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact, shortLandscape, layout.scale);
     const productProgress = getStoryProductProgress(scrollProgress);
     const dissolutionShot = getStoryProductStepWeight(productProgress, 5);
     const pointer = pointerRef.current;
@@ -1402,13 +1434,25 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
   const containerDoorMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#517b6c",
-        emissive: "#173b2d",
-        emissiveIntensity: 0.16,
-        metalness: 0.46,
+        color: "#294f43",
+        emissive: "#0e281f",
+        emissiveIntensity: 0.08,
+        metalness: 0.54,
         opacity: 0,
-        roughness: 0.5,
+        roughness: 0.58,
         side: THREE.DoubleSide,
+        transparent: true,
+      }),
+    [],
+  );
+  const containerInteriorMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#06100b",
+        emissive: "#020705",
+        emissiveIntensity: 0.12,
+        opacity: 0,
+        roughness: 0.9,
         transparent: true,
       }),
     [],
@@ -1422,8 +1466,9 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
     return () => {
       containerAsset.material.dispose();
       containerDoorMaterial.dispose();
+      containerInteriorMaterial.dispose();
     };
-  }, [containerAsset, containerDoorMaterial]);
+  }, [containerAsset, containerDoorMaterial, containerInteriorMaterial]);
 
   useFrame(({ clock, size }) => {
     const problemProgress = getStoryProblemProgress(scrollProgress);
@@ -1431,20 +1476,20 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
     const layout = getModelLayout(viewport.width, viewport.height, shortLandscape);
     const active = problemProgress !== undefined;
     const progress = problemProgress ?? 0;
-    const horizontalTravel = layout.isCompact ? 0.58 : 1;
     const [collectionStart, collectionEnd] = STORY_PROBLEM_TRANSITIONS.collection;
     const [dataStart, dataEnd] = STORY_PROBLEM_TRANSITIONS.data;
 
     if (containerRef.current) {
-      const enter = smoothstep(-0.025, 0.04, progress);
+      const enter = smoothstep(-0.025, collectionStart * 0.22, progress);
       const shipping = smoothstep(collectionStart, collectionEnd, progress);
       const amount = active ? enter * (1 - shipping) : 0;
       const doorOpen = active
-        ? smoothstep(0.008, 0.05, progress) * (1 - smoothstep(0.22, collectionStart, progress))
+        ? smoothstep(collectionStart * 0.04, collectionStart * 0.27, progress) *
+          (1 - smoothstep(collectionStart * 0.78, collectionStart, progress))
         : 0;
-      const baseX = layout.isCompact ? 0.52 : 1.72;
+      const container = getProblemContainerPlacement(layout.isCompact, layout.scale, shipping, shortLandscape);
       const targetX =
-        baseX + THREE.MathUtils.lerp(2.9 * horizontalTravel, 0, enter) + shipping * 7.2 * horizontalTravel;
+        container.centerX + THREE.MathUtils.lerp(2.9 * container.horizontalTravel, 0, enter);
       containerRef.current.visible = amount > 0.005;
       containerRef.current.position.set(
         targetX,
@@ -1452,16 +1497,18 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
         -0.18,
       );
       containerRef.current.rotation.z = (1 - enter) * -0.08 + shipping * 0.035;
-      containerRef.current.scale.setScalar(layout.scale * (layout.isCompact ? 0.38 : 0.52));
+      containerRef.current.scale.setScalar(container.scale);
       containerAsset.material.opacity = amount;
       containerAsset.material.depthWrite = amount > 0.96;
       containerDoorMaterial.opacity = amount;
       containerDoorMaterial.depthWrite = amount > 0.96;
+      containerInteriorMaterial.opacity = amount;
+      containerInteriorMaterial.depthWrite = amount > 0.96;
       if (leftDoorRef.current) {
-        leftDoorRef.current.rotation.y = Math.PI * 0.44 * doorOpen;
+        leftDoorRef.current.rotation.y = -Math.PI * 0.56 * doorOpen;
       }
       if (rightDoorRef.current) {
-        rightDoorRef.current.rotation.y = -Math.PI * 0.44 * doorOpen;
+        rightDoorRef.current.rotation.y = Math.PI * 0.56 * doorOpen;
       }
     }
 
@@ -1537,18 +1584,35 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
     <>
       <group ref={containerRef} visible={false}>
         <primitive object={containerAsset.group} rotation={[0, Math.PI / 2, 0]} />
-        <mesh position={[-1.565, 0.02, 0]}>
-          <boxGeometry args={[0.055, 0.72, 0.69]} />
-          <meshStandardMaterial color="#06100b" emissive="#020705" emissiveIntensity={0.12} roughness={0.9} />
+        <mesh position={[-1.595, 0, 0]} material={containerInteriorMaterial}>
+          <boxGeometry args={[0.05, 1.24, 1.18]} />
         </mesh>
-        <group ref={leftDoorRef} position={[-1.54, 0.02, -0.35]}>
-          <mesh position={[0, 0, 0.35]} material={containerDoorMaterial}>
-            <boxGeometry args={[0.045, 0.76, 0.68]} />
+        <group ref={leftDoorRef} position={[-1.625, 0, -0.6]}>
+          <mesh position={[0, 0, 0.3]} material={containerDoorMaterial}>
+            <boxGeometry args={[0.055, 1.2, 0.6]} />
+          </mesh>
+          <mesh position={[-0.036, 0.5, 0.3]} material={containerDoorMaterial}>
+            <boxGeometry args={[0.035, 0.045, 0.55]} />
+          </mesh>
+          <mesh position={[-0.036, -0.5, 0.3]} material={containerDoorMaterial}>
+            <boxGeometry args={[0.035, 0.045, 0.55]} />
+          </mesh>
+          <mesh position={[-0.038, 0, 0.12]} material={containerDoorMaterial}>
+            <boxGeometry args={[0.04, 1.06, 0.035]} />
           </mesh>
         </group>
-        <group ref={rightDoorRef} position={[-1.54, 0.02, 0.35]}>
-          <mesh position={[0, 0, -0.35]} material={containerDoorMaterial}>
-            <boxGeometry args={[0.045, 0.76, 0.68]} />
+        <group ref={rightDoorRef} position={[-1.625, 0, 0.6]}>
+          <mesh position={[0, 0, -0.3]} material={containerDoorMaterial}>
+            <boxGeometry args={[0.055, 1.2, 0.6]} />
+          </mesh>
+          <mesh position={[-0.036, 0.5, -0.3]} material={containerDoorMaterial}>
+            <boxGeometry args={[0.035, 0.045, 0.55]} />
+          </mesh>
+          <mesh position={[-0.036, -0.5, -0.3]} material={containerDoorMaterial}>
+            <boxGeometry args={[0.035, 0.045, 0.55]} />
+          </mesh>
+          <mesh position={[-0.038, 0, -0.12]} material={containerDoorMaterial}>
+            <boxGeometry args={[0.04, 1.06, 0.035]} />
           </mesh>
         </group>
       </group>
@@ -1594,17 +1658,6 @@ function PCBModel({
   );
   const animatedParts = useMemo(() => collectAnimatedParts(model), [model]);
   const modelMaterialStates = useMemo(() => collectModelMaterialStates(model), [model]);
-  const clippingMaterials = useMemo(() => {
-    const materials = new Set<THREE.Material>();
-    model.traverse((child) => {
-      if (!(child instanceof THREE.Mesh)) return;
-      const childMaterials = Array.isArray(child.material) ? child.material : [child.material];
-      childMaterials.forEach((material) => materials.add(material));
-    });
-    return [...materials];
-  }, [model]);
-  const containerClipPlane = useMemo(() => new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0), []);
-  const containerClipActiveRef = useRef(false);
   const originalBoard = useMemo(() => collectBaseBoard(model, "pcbBoardOrigin"), [model]);
   const boardFlexState = useMemo(() => createBoardFlexState(originalBoard?.mesh ?? null), [originalBoard]);
   const boardDetail = useMemo(() => collectBoardDetail(model), [model]);
@@ -1687,7 +1740,11 @@ function PCBModel({
         ? 0
         : smoothstep(collectionStart, collectionEnd, problemProgress) *
           (1 - smoothstep(dataStart, dataEnd, problemProgress));
-    const problemBoardVisibility = 1 - collectionIsolation;
+    const containerPackingVisibility =
+      problemProgress === undefined || problemProgress >= dataStart
+        ? 1
+        : 1 - smoothstep(collectionStart * 0.43, collectionStart * 0.76, problemProgress);
+    const problemBoardVisibility = (1 - collectionIsolation) * containerPackingVisibility;
     const dataGlitch =
       problemProgress === undefined
         ? 0
@@ -1698,20 +1755,7 @@ function PCBModel({
     const glitchPulse = dataGlitch * (0.08 + Math.sin(clock.elapsedTime * 17) * 0.05);
     const shortLandscape = size.height <= 520 && size.width > size.height;
     const layout = getModelLayout(viewport.width, viewport.height, shortLandscape);
-    const containerClipActive =
-      problemProgress !== undefined && problemProgress >= 0.025 && problemProgress < collectionEnd;
-    const containerScale = layout.scale * (layout.isCompact ? 0.38 : 0.52);
-    const containerBaseX = layout.isCompact ? 0.52 : 1.72;
-    containerClipPlane.constant = containerBaseX - 1.54 * containerScale;
-    if (containerClipActiveRef.current !== containerClipActive) {
-      containerClipActiveRef.current = containerClipActive;
-      for (const material of clippingMaterials) {
-        material.clippingPlanes = containerClipActive ? [containerClipPlane] : null;
-        material.clipIntersection = false;
-        material.needsUpdate = true;
-      }
-    }
-    const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact, shortLandscape);
+    const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact, shortLandscape, layout.scale);
     const productHandoffArc =
       productProgress === undefined
         ? 0
@@ -2098,7 +2142,6 @@ export function InteractivePCBModelScene({
       gl={{ alpha: true, antialias: settings.antialias, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
         gl.setClearColor("#000000", 0);
-        gl.localClippingEnabled = true;
         gl.outputColorSpace = THREE.SRGBColorSpace;
         gl.toneMapping = THREE.ACESFilmicToneMapping;
         gl.toneMappingExposure = 0.92;
