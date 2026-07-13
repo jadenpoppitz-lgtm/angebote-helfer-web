@@ -23,7 +23,7 @@ const CONTAINER_MODEL_PATH = "/models/problem/shipping-container-20ft.glb";
 const BOARD_LOGO_PATH = "/logo1-web.webp";
 const PROCESS_CYCLE_SECONDS = 20;
 const MODEL_WORLD_SIZE = 3.2;
-const PROBLEM_CONTAINER_BOARD_YAW = Math.PI * 0.28;
+const PROBLEM_CONTAINER_BOARD_YAW = 0.04;
 const PROBLEM_CONTAINER_OPENING_X = -1.59;
 const PROBLEM_CONTAINER_SHIPPING_TRAVEL = 7.2;
 const PROBLEM_PCB_COUNT = 18;
@@ -336,18 +336,19 @@ function getStoryBoardTransform(
     const approach = smoothstep(collectionStart * 0.3, collectionStart * 0.46, progress);
     const insertion = smoothstep(collectionStart * 0.46, collectionStart * 0.76, progress);
     const container = getProblemContainerPlacement(isCompact, sceneScale, 0, shortLandscape);
-    const loadingBayX = container.openingX - container.scale * (isCompact ? 0.18 : 0.14);
-    const insideContainerX = container.openingX + container.scale * (isCompact ? 0.78 : 0.86);
-    const startX = loadingBayX - sceneScale * (isCompact ? 0.1 : 0.12);
+    const loadingBayX = container.openingX - container.scale * (isCompact ? 0.58 : 0.5);
+    const insideContainerX = container.openingX + container.scale * 0.3;
+    const startX = loadingBayX - sceneScale * (isCompact ? 0.06 : 0.08);
     const approachX = THREE.MathUtils.lerp(startX, loadingBayX, approach);
-    const approachScale = THREE.MathUtils.lerp(isCompact ? 0.3 : 0.21, isCompact ? 0.17 : 0.15, approach);
-    const stagingZ = THREE.MathUtils.lerp(isCompact ? 0.12 : 0.18, -0.08, approach);
+    const approachScale = THREE.MathUtils.lerp(isCompact ? 0.24 : 0.18, isCompact ? 0.12 : 0.1, approach);
+    const packedScale = isCompact ? 0.075 : 0.065;
+    const stagingZ = THREE.MathUtils.lerp(-0.18, -0.3, approach);
     return {
       pitch: THREE.MathUtils.lerp(0.03, 0.07, approach),
-      scale: THREE.MathUtils.lerp(approachScale, isCompact ? 0.13 : 0.11, insertion) * containerBoardScale,
+      scale: THREE.MathUtils.lerp(approachScale, packedScale, insertion) * containerBoardScale,
       x: THREE.MathUtils.lerp(approachX, insideContainerX, insertion),
-      yaw: THREE.MathUtils.lerp(0.85, PROBLEM_CONTAINER_BOARD_YAW, approach),
-      z: THREE.MathUtils.lerp(stagingZ, -0.34, insertion),
+      yaw: THREE.MathUtils.lerp(0.5, PROBLEM_CONTAINER_BOARD_YAW, approach),
+      z: THREE.MathUtils.lerp(stagingZ, -0.48, insertion),
     };
   }
 
@@ -356,10 +357,10 @@ function getStoryBoardTransform(
     const container = getProblemContainerPlacement(isCompact, sceneScale, shipping, shortLandscape);
     return {
       pitch: THREE.MathUtils.lerp(0.07, 0.04, shipping),
-      scale: (isCompact ? 0.13 : 0.11) * containerBoardScale,
+      scale: (isCompact ? 0.075 : 0.065) * containerBoardScale,
       x: container.centerX,
       yaw: THREE.MathUtils.lerp(PROBLEM_CONTAINER_BOARD_YAW, PROBLEM_CONTAINER_BOARD_YAW + Math.PI * 0.04, shipping),
-      z: -0.34,
+      z: -0.48,
     };
   }
 
@@ -367,10 +368,10 @@ function getStoryBoardTransform(
     const container = getProblemContainerPlacement(isCompact, sceneScale, 1, shortLandscape);
     return {
       pitch: 0.04,
-      scale: (isCompact ? 0.13 : 0.11) * containerBoardScale,
+      scale: (isCompact ? 0.075 : 0.065) * containerBoardScale,
       x: container.centerX,
       yaw: PROBLEM_CONTAINER_BOARD_YAW + Math.PI * 0.04,
-      z: -0.34,
+      z: -0.48,
     };
   }
 
@@ -1747,7 +1748,7 @@ function PCBModel({
     const containerPackingVisibility =
       problemProgress === undefined || problemProgress >= dataStart
         ? 1
-        : 1 - smoothstep(collectionStart * 0.52, collectionStart * 0.68, problemProgress);
+        : 1 - smoothstep(collectionStart * 0.44, collectionStart * 0.54, problemProgress);
     const problemBoardVisibility = (1 - collectionIsolation) * containerPackingVisibility;
     const dataGlitch =
       problemProgress === undefined
