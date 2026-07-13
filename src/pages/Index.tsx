@@ -246,6 +246,7 @@ const Index = () => {
                   type="button"
                   onClick={() => setLanguage(item.code)}
                   aria-label={item.label}
+                  aria-pressed={language === item.code}
                   className={`h-8 rounded px-2 text-xs font-medium ${
                     language === item.code ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
                   }`}

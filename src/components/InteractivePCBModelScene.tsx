@@ -333,11 +333,13 @@ function getStoryBoardTransform(
     const approach = smoothstep(collectionStart * 0.3, collectionStart * 0.46, progress);
     const insertion = smoothstep(collectionStart * 0.46, collectionStart * 0.76, progress);
     const container = getProblemContainerPlacement(isCompact, sceneScale, 0, shortLandscape);
-    const loadingBayX = container.openingX - container.scale * (isCompact ? 0.68 : 0.78);
+    const loadingBayX = isCompact
+      ? container.openingX - container.scale * 0.68
+      : container.openingX + container.scale * 0.72;
     const insideContainerX = container.centerX;
-    const startX = loadingBayX - sceneScale * (isCompact ? 0.3 : 0.48);
+    const startX = loadingBayX - sceneScale * (isCompact ? 0.3 : 0.18);
     const approachX = THREE.MathUtils.lerp(startX, loadingBayX, approach);
-    const approachScale = THREE.MathUtils.lerp(isCompact ? 0.4 : 0.28, isCompact ? 0.18 : 0.17, approach);
+    const approachScale = THREE.MathUtils.lerp(isCompact ? 0.4 : 0.19, isCompact ? 0.18 : 0.17, approach);
     const stagingZ = THREE.MathUtils.lerp(isCompact ? 0.36 : 0.54, 0, approach);
     return {
       pitch: THREE.MathUtils.lerp(0.03, 0.07, approach),
@@ -1141,7 +1143,7 @@ function BeakerGlass({
   cycleOriginRef,
   scrollProgress,
 }: {
-  cycleOriginRef: React.RefObject<number | null>;
+  cycleOriginRef: React.MutableRefObject<number | null>;
   scrollProgress?: number;
 }) {
   const rimMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
@@ -1487,11 +1489,7 @@ function ProblemSequenceStage({ scrollProgress }: { scrollProgress?: number }) {
         ? smoothstep(collectionStart * 0.04, collectionStart * 0.24, progress) *
           (1 - smoothstep(collectionStart * 0.82, collectionStart, progress))
         : 0;
-      const doorsParked = active
-        ? smoothstep(collectionStart * 0.24, collectionStart * 0.3, progress) *
-          (1 - smoothstep(collectionStart * 0.74, collectionStart * 0.82, progress))
-        : 0;
-      const doorOpacity = amount * (1 - doorsParked);
+      const doorOpacity = amount;
       const container = getProblemContainerPlacement(layout.isCompact, layout.scale, shipping, shortLandscape);
       const targetX =
         container.centerX + THREE.MathUtils.lerp(2.9 * container.horizontalTravel, 0, enter);
@@ -1646,7 +1644,7 @@ function PCBModel({
   pointerRef,
   scrollProgress,
 }: {
-  cycleOriginRef: React.RefObject<number | null>;
+  cycleOriginRef: React.MutableRefObject<number | null>;
   modelPath: string;
   onReady?: () => void;
   pointerRef: React.RefObject<PointerState>;
@@ -2209,7 +2207,7 @@ if (typeof window !== "undefined") {
     if ("requestIdleCallback" in window) {
       window.requestIdleCallback(preloadProblemAssets, { timeout: 7000 });
     } else {
-      window.setTimeout(preloadProblemAssets, 4500);
+      globalThis.setTimeout(preloadProblemAssets, 4500);
     }
   }
 }

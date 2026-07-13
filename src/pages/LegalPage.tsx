@@ -398,6 +398,7 @@ export default function LegalPage({ kind }: { kind: LegalPageKind }) {
                   type="button"
                   onClick={() => setLanguage(item.code)}
                   aria-label={item.label}
+                  aria-pressed={language === item.code}
                   className={`h-8 rounded px-2 text-[10px] font-semibold ${language === item.code ? "bg-emerald-900 text-white" : "text-emerald-950/48 hover:text-emerald-950"}`}
                 >
                   {item.short}

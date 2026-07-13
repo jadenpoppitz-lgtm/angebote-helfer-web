@@ -811,7 +811,7 @@ const translations = {
   },
 } as const;
 
-type Translation = typeof translations.de;
+type Translation = (typeof translations)[Language];
 
 interface LanguageContextValue {
   language: Language;

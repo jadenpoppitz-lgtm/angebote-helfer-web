@@ -1966,10 +1966,6 @@ All colors MUST be HSL.
     margin-top: 0.65rem !important;
   }
 
-  .story-step-mobile-callouts {
-    display: none !important;
-  }
-
   .pilot-project-section {
     padding-top: 3rem !important;
   }
@@ -2097,16 +2093,6 @@ All colors MUST be HSL.
     font-size: 0.75rem !important;
     line-height: 1.45 !important;
     margin-top: 0.55rem !important;
-  }
-
-  .story-step-mobile-callouts {
-    gap: 0.35rem !important;
-    margin-top: 0.65rem !important;
-  }
-
-  .story-step-mobile-callouts > span {
-    font-size: 0.53rem !important;
-    padding: 0.3rem 0.55rem !important;
   }
 
   .pilot-project-section {

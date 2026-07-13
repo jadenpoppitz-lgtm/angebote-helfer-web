@@ -27,7 +27,6 @@ type ProblemCopy = {
 };
 
 type StoryStep = {
-  callouts: string[];
   eyebrow: string;
   icon: LucideIcon;
   side: "left" | "right";
@@ -105,20 +104,6 @@ function StoryStepPanel({
       >
         {step.text}
       </p>
-      <div className="story-step-mobile-callouts mt-4 flex flex-wrap gap-2 sm:mt-5">
-        {step.callouts.map((callout) => (
-          <span
-            key={callout}
-            className={`rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] backdrop-blur-xl ${
-              isProblem
-                ? "border-white/15 bg-white/8 text-white/72"
-                : "border-emerald-950/12 bg-white/55 text-emerald-950/66"
-            }`}
-          >
-            {callout}
-          </span>
-        ))}
-      </div>
     </div>
   );
 }
@@ -131,49 +116,41 @@ const productStoryCopy: Record<Language, ProductStepCopy[]> = {
       eyebrow: "Vom natürlichen Gerüst zum technischen Substrat",
       title: "Das Trägermaterial neu gedacht.",
       text: "Eine faserige, organische Struktur bildet die Basis. Sie bleibt sichtbar, leicht und materialbewusst statt als anonyme schwarze Trägerplatte zu verschwinden.",
-      callouts: ["Faserstruktur", "Organisches Gerüst"],
     },
     {
       eyebrow: "Vom natürlichen Gerüst zum technischen Substrat",
       title: "Ein stabiles Substrat für elektronische Anwendungen.",
       text: "Eine lösbare Polymermatrix stabilisiert das Gerüst mechanisch. Die Schicht macht aus dem Material eine belastbare Plattform für Elektronik.",
-      callouts: ["Polymermatrix", "Mechanische Stabilität"],
     },
     {
       eyebrow: "Stabil genug für Elektronik",
       title: "Leiterbahnen, Lötstellen und elektrische Funktion bleiben erhalten.",
       text: "Kupferne Leiterbahnen werden präzise aufgebracht. Die elektrische Funktion bleibt klassischer PCB-Logik nahe, während das Substrat neu gedacht ist.",
-      callouts: ["Kupferleiterbahn", "Lötstelle"],
     },
     {
       eyebrow: "Stabil genug für Elektronik",
       title: "Stabil während Herstellung und Nutzung.",
       text: "Chips, Widerstände, Kondensatoren und Kontakte sitzen auf der Platte. Das Modul wirkt wie echte, funktionsfähige Elektronik.",
-      callouts: ["Chips & Widerstände", "Kontakte"],
     },
     {
       eyebrow: "Designed for Disassembly",
       title: "Für moderne Elektronik entwickelt.",
       text: "Im Produkt bleibt die Leiterplatte belastbar. Energie- und Datenlinien zeigen: Die neue Materiallogik ersetzt nicht Funktion, sondern ermöglicht ihren Kreislauf.",
-      callouts: ["Energie & Daten", "Belastbares Modul"],
     },
     {
       eyebrow: "Designed for Disassembly",
       title: "Am Lebensende gezielt lösbar.",
       text: "In einer kontrollierten Lösung gibt das Substrat nach. Bauteile und Metalle bleiben erhalten, statt im Verbund untrennbar verloren zu gehen.",
-      callouts: ["Kontrollierte Lösung", "Lösbares Substrat"],
     },
     {
       eyebrow: "Wertstoffe zurück in den Kreislauf",
       title: "Wertstoffe werden sortenreiner zurückgewonnen.",
       text: "Bauteile, Kupfer, Edelmetalle und Substrat trennen sich in erkennbare Materialströme. Genau hier entsteht der Unterschied zur klassischen Leiterplatte.",
-      callouts: ["Bauteile", "Kupfer", "Substrat"],
     },
     {
       eyebrow: "Eine neue Materiallogik für Elektronik",
       title: "Elektronik für die Kreislaufwirtschaft.",
       text: "Metalle gehen zurück in die Produktion, Bauteile können geprüft werden, das Substrat wird abgebaut. Der Kreislauf wird zur Designentscheidung.",
-      callouts: ["Rückführung", "Neue Produktion"],
     },
   ],
   en: [
@@ -181,49 +158,41 @@ const productStoryCopy: Record<Language, ProductStepCopy[]> = {
       eyebrow: "From natural structure to technical substrate",
       title: "Rethinking the carrier material.",
       text: "A fibrous organic structure forms the basis. It remains visible, lightweight and material-conscious instead of disappearing into an anonymous black board.",
-      callouts: ["Fibrous structure", "Organic framework"],
     },
     {
       eyebrow: "From natural structure to technical substrate",
       title: "A stable substrate for electronic applications.",
       text: "A separable polymer matrix mechanically stabilizes the structure and turns the material into a robust platform for electronics.",
-      callouts: ["Polymer matrix", "Mechanical stability"],
     },
     {
       eyebrow: "Stable enough for electronics",
       title: "Traces, solder joints and electrical function remain intact.",
       text: "Copper traces are applied precisely. Electrical function stays close to conventional PCB logic while the substrate is redesigned.",
-      callouts: ["Copper trace", "Solder joint"],
     },
     {
       eyebrow: "Stable enough for electronics",
       title: "Stable through manufacturing and use.",
       text: "Chips, resistors, capacitors and contacts sit on the board. The module behaves like real, functional electronics.",
-      callouts: ["Chips & resistors", "Contacts"],
     },
     {
       eyebrow: "Designed for disassembly",
       title: "Built for modern electronics.",
       text: "The circuit board remains robust inside the product. Power and data lines show that the new material logic preserves function while enabling circularity.",
-      callouts: ["Power & data", "Robust module"],
     },
     {
       eyebrow: "Designed for disassembly",
       title: "Deliberately separable at end of life.",
       text: "In a controlled solution, the substrate releases. Components and metals remain intact instead of becoming inseparably trapped in the composite.",
-      callouts: ["Controlled solution", "Separable substrate"],
     },
     {
       eyebrow: "Returning valuable materials to the loop",
       title: "Valuable materials are recovered in cleaner fractions.",
       text: "Components, copper, precious metals and substrate separate into recognizable material streams. This is where the design differs from a conventional circuit board.",
-      callouts: ["Components", "Copper", "Substrate"],
     },
     {
       eyebrow: "A new material logic for electronics",
       title: "Electronics for the circular economy.",
       text: "Metals return to production, components can be tested and the substrate is broken down. Circularity becomes a design decision.",
-      callouts: ["Return flow", "New production"],
     },
   ],
   zh: [
@@ -231,49 +200,41 @@ const productStoryCopy: Record<Language, ProductStepCopy[]> = {
       eyebrow: "从天然结构到技术基材",
       title: "重新思考载体材料。",
       text: "纤维状有机结构构成基础。它保持可见、轻量且体现材料属性，而不是消失在匿名的黑色基板中。",
-      callouts: ["纤维结构", "有机骨架"],
     },
     {
       eyebrow: "从天然结构到技术基材",
       title: "适用于电子应用的稳定基材。",
       text: "可分离的聚合物基体在机械上稳定这一结构，使材料成为可靠的电子平台。",
-      callouts: ["聚合物基体", "机械稳定性"],
     },
     {
       eyebrow: "足够稳定，可用于电子产品",
       title: "线路、焊点和电气功能保持完整。",
       text: "铜线路被精确施加。电气功能接近传统 PCB 逻辑，同时基材得到重新设计。",
-      callouts: ["铜线路", "焊点"],
     },
     {
       eyebrow: "足够稳定，可用于电子产品",
       title: "在制造和使用期间保持稳定。",
       text: "芯片、电阻、电容和触点安装在板上，模块具备真实、可运行的电子功能。",
-      callouts: ["芯片与电阻", "触点"],
     },
     {
       eyebrow: "为拆解而设计",
       title: "为现代电子产品而开发。",
       text: "电路板在产品内部保持可靠。电源和数据线路表明，新材料逻辑保留功能并支持循环利用。",
-      callouts: ["电源与数据", "可靠模块"],
     },
     {
       eyebrow: "为拆解而设计",
       title: "在寿命终点可有针对性地分离。",
       text: "在受控溶液中，基材会释放。元器件和金属得以保留，不再不可分离地困在复合结构中。",
-      callouts: ["受控溶液", "可分离基材"],
     },
     {
       eyebrow: "让高价值材料回到循环",
       title: "以更纯净的材料组分进行回收。",
       text: "元器件、铜、贵金属和基材分离成清晰可辨的材料流，这正是它与传统电路板的区别。",
-      callouts: ["元器件", "铜", "基材"],
     },
     {
       eyebrow: "电子产品的新材料逻辑",
       title: "面向循环经济的电子产品。",
       text: "金属回到生产，元器件可以被检测，基材得到分解。循环利用成为设计决策。",
-      callouts: ["回流", "新生产"],
     },
   ],
 };
@@ -285,24 +246,6 @@ const storyLabels: Record<Language, { problem: string; product: string }> = {
 };
 
 const problemIcons: LucideIcon[] = [Route, Shuffle, Database];
-
-const problemCalloutCopy: Record<Language, string[][]> = {
-  de: [
-    ["PCB-Verpackung", "Übersee-Transport"],
-    ["Vermischte PCB-Stapel", "Verlorene Zuordnung"],
-    ["Datenstrom gestört", "Material-ID verloren"],
-  ],
-  en: [
-    ["PCB packaging", "Overseas transport"],
-    ["Mixed PCB stacks", "Lost allocation"],
-    ["Data stream disrupted", "Material ID lost"],
-  ],
-  zh: [
-    ["PCB 包装", "跨境运输"],
-    ["混合 PCB 堆", "归属丢失"],
-    ["数据流中断", "材料 ID 丢失"],
-  ],
-};
 
 const glitchCodeColumns = [
   "MAT_ID 0x4F2A\nTRACE CU_18\nBATCH EU-0726\nLINK ACTIVE\nCHECKSUM 91AC\nROUTE DE-HH-04\nOWNER OEM_17\nVALUE 038.4",
@@ -322,7 +265,6 @@ export function ScrollPCBStory({ language, problem }: { language: Language; prob
   const labels = storyLabels[language];
   const steps = useMemo<StoryStep[]>(() => {
     const problemSteps = problem.tiles.slice(0, 3).map((tile, index) => ({
-      callouts: problemCalloutCopy[language][index] ?? [tile.title],
       eyebrow: index === 0 ? problem.eyebrow : problem.title,
       icon: problemIcons[index] ?? Database,
       side: (index % 2 === 0 ? "left" : "right") as "left" | "right",

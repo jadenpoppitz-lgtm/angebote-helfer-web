@@ -1184,7 +1184,11 @@ function scrollToLandingSection(id: string, duration = 560) {
   if (!target) return;
 
   const startY = window.scrollY;
-  const targetY = startY + target.getBoundingClientRect().top;
+  const getTargetY = () => {
+    const scrollMarginTop = Number.parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
+    return window.scrollY + target.getBoundingClientRect().top - scrollMarginTop;
+  };
+  const targetY = getTargetY();
   const distance = targetY - startY;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -1198,8 +1202,14 @@ function scrollToLandingSection(id: string, duration = 560) {
   const animate = (now: number) => {
     const progress = Math.min(1, (now - startedAt) / duration);
     const eased = 1 - Math.pow(1 - progress, 4);
-    window.scrollTo({ top: startY + distance * eased });
-    if (progress < 1) window.requestAnimationFrame(animate);
+    const liveDistance = getTargetY() - startY;
+    window.scrollTo({ top: startY + liveDistance * eased });
+    if (progress < 1) {
+      window.requestAnimationFrame(animate);
+    } else {
+      // Lazy media can change the document height while the animated jump is running.
+      window.scrollTo({ top: getTargetY() });
+    }
   };
   window.requestAnimationFrame(animate);
 }
@@ -1212,6 +1222,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
   const [confirmation, setConfirmation] = useState<{ id: string; role: RoleId } | null>(null);
   const { language, setLanguage, t } = useLanguage();
   const content = copy[language];
+  const activeNode = content.solution.nodes[activePoint];
 
   const reference = useMemo(() => `KB-${new Date().getFullYear()}-${String(Math.floor(100 + Math.random() * 900))}`, []);
   const showHero = page === "home";
@@ -1222,11 +1233,11 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
   const showContact = page === "home";
 
   useEffect(() => {
-    if (!showHero || !window.location.hash) return;
+    if (!window.location.hash) return;
     const id = window.location.hash.slice(1);
     const timer = window.setTimeout(() => scrollToLandingSection(id, 420), 80);
     return () => window.clearTimeout(timer);
-  }, [showHero]);
+  }, [page]);
 
   const handleSectionLink = (
     event: ReactMouseEvent<HTMLAnchorElement>,
@@ -1288,6 +1299,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             setMobileNavOpen(false);
           }}
           aria-label={item.label}
+          aria-pressed={language === item.code}
           className={`h-10 rounded-md text-xs font-semibold transition-colors ${
             language === item.code ? "bg-primary text-primary-foreground" : "opacity-60 hover:bg-current/10 hover:opacity-100"
           }`}
@@ -1309,6 +1321,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             type="button"
             onClick={() => setLanguage(item.code)}
             aria-label={item.label}
+            aria-pressed={language === item.code}
             className={`site-language-button h-8 px-2 text-xs font-medium transition-colors ${language === item.code ? "is-active" : ""}`}
             title={item.label}
           >
@@ -1553,7 +1566,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[0.46fr_0.54fr]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.32em] text-primary">{content.problem.eyebrow}</p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.problem.title}</h2>
+            <h1 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.problem.title}</h1>
             <p className="mt-6 max-w-xl text-base leading-8 text-background/72">{content.problem.text}</p>
             <Link
               to="/produkt"

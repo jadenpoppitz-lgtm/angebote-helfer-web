@@ -676,7 +676,7 @@ const createMaterialsStation = (materials: MaterialSet) => {
     { x: 0, material: materials.steel },
     { x: 0.48, material: materials.emerald },
   ];
-  const binIndicators: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>[] = [];
+  const binIndicators: Array<ReturnType<typeof addBox>> = [];
   binSpecs.forEach(({ x, material }) => {
     addBox(bins, [0.36, 0.055, 0.34], [x, 0.05, 0], materials.graphiteSoft);
     addBox(bins, [0.36, 0.28, 0.045], [x, 0.19, -0.15], materials.graphiteSoft);

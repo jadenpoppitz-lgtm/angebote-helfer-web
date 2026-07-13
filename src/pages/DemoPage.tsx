@@ -45,7 +45,7 @@ const DemoPage = () => {
   const reference = useMemo(() => `KB-${new Date().getFullYear()}-${String(Math.floor(100 + Math.random() * 900))}`, []);
 
   if (!isRole(role)) {
-    return <Navigate to="/#demos" replace />;
+    return <Navigate to="/kreislauf-demo#demos" replace />;
   }
 
   const card = content.roles.cards[role];
@@ -61,6 +61,7 @@ const DemoPage = () => {
             type="button"
             onClick={() => setLanguage(item.code)}
             aria-label={item.label}
+            aria-pressed={language === item.code}
             className={`h-8 rounded px-2 text-xs font-medium transition-colors ${
               language === item.code ? "bg-background text-foreground" : "text-background/75 hover:text-background"
             }`}
@@ -135,7 +136,7 @@ const DemoPage = () => {
             {role === "customer" ? (
               <CustomerReturnDemo content={content} language={language} reference={reference} />
             ) : (
-              <DemoSurface content={content} surface={surface} reference={reference} />
+              <DemoSurface content={content} surface={surface} reference={reference} role={role} language={language} />
             )}
           </section>
         </section>
