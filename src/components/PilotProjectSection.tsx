@@ -51,7 +51,7 @@ type RoleVisual = {
   icon: LucideIcon;
 };
 
-const roleOrder: PilotRoleId[] = ["oem", "customer", "recycler", "smelter", "partner"];
+const roleOrder: PilotRoleId[] = ["oem", "customer", "smelter"];
 
 const roleVisuals: Record<PilotRoleId, RoleVisual> = {
   oem: { accent: "#b8ff59", icon: Factory },
@@ -189,7 +189,7 @@ export function PilotProjectSection({
   return (
     <section
       ref={sectionRef}
-      id="forms"
+      id="contact-section"
       className="pilot-project-section relative isolate scroll-mt-20 overflow-hidden border-t border-white/10 bg-[#07100c] pb-10 pt-16 text-white md:pb-14 md:pt-24 lg:pb-16 lg:pt-28"
     >
       <div
@@ -209,7 +209,7 @@ export function PilotProjectSection({
 
       <div className="pilot-project-layout relative mx-auto grid w-full max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-12">
         <div className="pilot-project-intro min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em]" style={{ color: activeVisual.accent }}>
+          <p id="pilot-project" className="scroll-mt-4 text-xs font-semibold uppercase tracking-[0.28em]" style={{ color: activeVisual.accent }}>
             {copy.eyebrow}
           </p>
           <h2 className="pilot-project-title mt-4 max-w-2xl font-display text-4xl font-semibold leading-[1.04] sm:text-5xl lg:text-6xl">

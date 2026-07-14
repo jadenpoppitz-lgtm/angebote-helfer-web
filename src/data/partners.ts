@@ -13,10 +13,11 @@ export type SerialLookup = {
   city: string;
   postalCode: string;
   partners: Partner[];
+  catalogEntry?: B2BDeviceRecord;
 };
 
 // Test data — Prototyp. Jede Seriennummer ist einer Stadt zugeordnet.
-export const SERIAL_DB: Record<string, SerialLookup> = {
+const BASE_SERIAL_DB: Record<string, SerialLookup> = {
   "KB-DD-0001": {
     serial: "KB-DD-0001",
     device: "Steuerungsmodul · Leiterplatte Rev. C",
@@ -107,4 +108,61 @@ export const SERIAL_DB: Record<string, SerialLookup> = {
   },
 };
 
-export const DEMO_SERIAL = "KB-DD-0001";
+const b2bLocations = [
+  { city: "Dresden", postalCode: "01067" },
+  { city: "Leipzig", postalCode: "04109" },
+  { city: "Berlin", postalCode: "10117" },
+  { city: "Hamburg", postalCode: "20095" },
+  { city: "München", postalCode: "80331" },
+];
+
+const b2bPartners = (city: string, postalCode: string): Partner[] => [
+  {
+    id: `b2b-hub-${city}`,
+    name: `Leaftronics B2B Hub ${city}`,
+    street: `B2B Rueckgabezentrum, ${postalCode} ${city}`,
+    hours: "Mo-Fr 08:00-17:00",
+    distanceKm: 1.1,
+    type: "Servicepartner",
+  },
+  {
+    id: `b2b-service-${city}`,
+    name: `Leaftronics Servicepartner ${city}`,
+    street: `Industriepark, ${postalCode} ${city}`,
+    hours: "Mo-Fr 09:00-18:00",
+    distanceKm: 3.2,
+    type: "Servicepartner",
+  },
+  {
+    id: `b2b-collection-${city}`,
+    name: `Leaftronics Sammelstelle ${city}`,
+    street: `Logistikzentrum, ${postalCode} ${city}`,
+    hours: "Mo-Sa 09:00-16:00",
+    distanceKm: 5.6,
+    type: "Sammelstelle",
+  },
+];
+
+export const SERIAL_DB: Record<string, SerialLookup> = {
+  ...BASE_SERIAL_DB,
+  ...Object.fromEntries(
+    B2B_DEVICE_CATALOG.map((catalogEntry, index) => {
+      const location = b2bLocations[index % b2bLocations.length];
+
+      return [
+        catalogEntry.serial,
+        {
+          serial: catalogEntry.serial,
+          device: catalogEntry.device,
+          city: location.city,
+          postalCode: location.postalCode,
+          partners: b2bPartners(location.city, location.postalCode),
+          catalogEntry,
+        },
+      ];
+    }),
+  ),
+};
+
+export const DEMO_SERIAL = "LT-B2B-26-0001";
+import { B2B_DEVICE_CATALOG, type B2BDeviceRecord } from "@/data/b2bDeviceCatalog";

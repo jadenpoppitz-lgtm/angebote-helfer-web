@@ -1672,6 +1672,10 @@ function PCBModel({
     () => collectBaseBoard(model, "pcbBlankBoardOrigin", "pcbBlankBoardStartOffset"),
     [model],
   );
+  const scrollShakeRef = useRef({
+    intensity: scrollProgress === undefined ? 1 : 0,
+    progress: scrollProgress ?? 0,
+  });
 
   useEffect(() => {
     onReady?.();
@@ -1725,10 +1729,23 @@ function PCBModel({
       (materialShot * 0.045 + layerShot * 0.018 + traceShot * 0.034 + assemblyShot * 0.052 + electronicsShot * 0.026);
     const flexStrength = getProductBoardFlex(productProgress);
     const flexPulse = 0.9 + Math.sin(clock.elapsedTime * 0.92) * 0.1;
-    const boardFlexAmount = boardFlexState ? boardFlexState.halfExtent * 0.2 * flexStrength * flexPulse : 0;
+    const boardFlexAmount = boardFlexState ? boardFlexState.halfExtent * 0.1 * flexStrength * flexPulse : 0;
     applyBoardFlex(boardFlexState, boardFlexAmount);
     applyBoardFlex(detailFlexState, boardFlexAmount);
     const problemProgress = getStoryProblemProgress(scrollProgress);
+    const scrollShakeState = scrollShakeRef.current;
+    const previousScrollProgress = scrollShakeState.progress;
+    const currentScrollProgress = scrollProgress ?? previousScrollProgress;
+    const scrollProgressDelta = Math.abs(currentScrollProgress - previousScrollProgress);
+    scrollShakeState.progress = currentScrollProgress;
+    const scrollVelocity = scrollProgress === undefined ? 1 : scrollProgressDelta / Math.max(delta, 0.016);
+    const targetScrollShake = scrollProgress === undefined ? 1 : clamp01(scrollVelocity * 4.5);
+    scrollShakeState.intensity = THREE.MathUtils.damp(
+      scrollShakeState.intensity,
+      targetScrollShake,
+      targetScrollShake > scrollShakeState.intensity ? 24 : 12,
+      delta,
+    );
     const [collectionStart, collectionEnd] = STORY_PROBLEM_TRANSITIONS.collection;
     const [dataStart, dataEnd] = STORY_PROBLEM_TRANSITIONS.data;
     const [productStart] = STORY_PROBLEM_TRANSITIONS.product;
@@ -1755,9 +1772,10 @@ function PCBModel({
         ? 0
         : smoothstep(dataStart, dataEnd, problemProgress) *
           (1 - smoothstep(productStart - 0.04, productStart, problemProgress));
+    const dataShake = dataGlitch * scrollShakeState.intensity;
     const glitchSeed = hash01(Math.floor(clock.elapsedTime * 22) + 18.4);
-    const glitchOffset = (glitchSeed - 0.5) * 0.17 * dataGlitch;
-    const glitchPulse = dataGlitch * (0.08 + Math.sin(clock.elapsedTime * 17) * 0.05);
+    const glitchOffset = (glitchSeed - 0.5) * 0.17 * dataShake;
+    const glitchPulse = dataShake * (0.08 + Math.sin(clock.elapsedTime * 17) * 0.05);
     const shortLandscape = size.height <= 520 && size.width > size.height;
     const layout = getModelLayout(viewport.width, viewport.height, shortLandscape);
     const storyTransform = getStoryBoardTransform(scrollProgress, layout.isCompact, shortLandscape, layout.scale);
@@ -1799,7 +1817,7 @@ function PCBModel({
       handoffLift -
       timeline.boardDipAmount * boardDipDistance +
       Math.sin(clock.elapsedTime * 0.52) * 0.035 * interactionWeight +
-      Math.sin(clock.elapsedTime * 29) * 0.035 * dataGlitch;
+      Math.sin(clock.elapsedTime * 29) * 0.035 * dataShake;
     const introZoom = scrollProgress === undefined ? 1 + (1 - smoothstep(0, 1, processTime / 2.8)) * 0.32 : 1;
     const targetStoryScale = THREE.MathUtils.lerp(
       storyTransform.scale,
@@ -1835,7 +1853,7 @@ function PCBModel({
 
     for (const state of modelMaterialStates) {
       state.material.emissive.copy(state.emissive).lerp(DATA_ERROR_RED, glitchPulse);
-      state.material.emissiveIntensity = state.emissiveIntensity + dataGlitch * (0.12 + glitchSeed * 0.25);
+      state.material.emissiveIntensity = state.emissiveIntensity + dataShake * (0.12 + glitchSeed * 0.25);
     }
 
     if (originalBoard) {

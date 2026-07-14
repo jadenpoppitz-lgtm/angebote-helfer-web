@@ -642,7 +642,7 @@ All colors MUST be HSL.
       linear-gradient(180deg, #08110d, #0b1711 62%, #07100c);
     background-size: 72px 72px, 72px 72px, 100% 100%, 100% 100%;
     color: white;
-    padding: 5rem 0 6rem;
+    padding: 2.5rem 0 6rem;
   }
 
   .traction-timeline-intro {
