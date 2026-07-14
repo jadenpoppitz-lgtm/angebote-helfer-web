@@ -128,16 +128,16 @@ const productIcons: LucideIcon[] = [Layers, Layers, Route, CircuitBoard, Circuit
 const productStoryCopy: Record<Language, ProductStepCopy[]> = {
   de: [
     {
-      eyebrow: "Vom natürlichen Gerüst zum technischen Substrat",
+      eyebrow: "Von Glasfaser zum technischen Substrat",
       title: "Das Trägermaterial neu gedacht.",
-      text: "Eine faserige, organische Struktur bildet die Basis. Sie bleibt sichtbar, leicht und materialbewusst statt als anonyme schwarze Trägerplatte zu verschwinden.",
-      callouts: ["Faserstruktur", "Organisches Gerüst"],
+      text: "Eine Glasfaserstruktur mit einem besonderen Harz bildet die Basis. Sie bleibt leicht und stabil.",
+      callouts: ["Glasfaser", "Besonderes Harz"],
     },
     {
-      eyebrow: "Vom natürlichen Gerüst zum technischen Substrat",
+      eyebrow: "Von Glasfaser zum technischen Substrat",
       title: "Ein stabiles Substrat für elektronische Anwendungen.",
-      text: "Eine lösbare Polymermatrix stabilisiert das Gerüst mechanisch. Die Schicht macht aus dem Material eine belastbare Plattform für Elektronik.",
-      callouts: ["Polymermatrix", "Mechanische Stabilität"],
+      text: "Das besondere Harz stabilisiert die Glasfaserstruktur während der Nutzung.",
+      callouts: ["Lösbares Harz", "Kontrollierte Freigabe"],
     },
     {
       eyebrow: "Stabil genug für Elektronik",
@@ -180,14 +180,14 @@ const productStoryCopy: Record<Language, ProductStepCopy[]> = {
     {
       eyebrow: "From natural structure to technical substrate",
       title: "Rethinking the carrier material.",
-      text: "A fibrous organic structure forms the basis. It remains visible, lightweight and material-conscious instead of disappearing into an anonymous black board.",
-      callouts: ["Fibrous structure", "Organic framework"],
+      text: "A glass-fiber structure with a specially engineered resin forms the basis. It remains lightweight and stable.",
+      callouts: ["Glass fiber", "Special resin"],
     },
     {
       eyebrow: "From natural structure to technical substrate",
       title: "A stable substrate for electronic applications.",
-      text: "A separable polymer matrix mechanically stabilizes the structure and turns the material into a robust platform for electronics.",
-      callouts: ["Polymer matrix", "Mechanical stability"],
+      text: "The special resin mechanically stabilizes the glass-fiber structure during use.",
+      callouts: ["Dissolvable resin", "Controlled release"],
     },
     {
       eyebrow: "Stable enough for electronics",
@@ -228,16 +228,16 @@ const productStoryCopy: Record<Language, ProductStepCopy[]> = {
   ],
   zh: [
     {
-      eyebrow: "从天然结构到技术基材",
+      eyebrow: "从玻璃纤维到技术基材",
       title: "重新思考载体材料。",
-      text: "纤维状有机结构构成基础。它保持可见、轻量且体现材料属性，而不是消失在匿名的黑色基板中。",
-      callouts: ["纤维结构", "有机骨架"],
+      text: "由特殊树脂稳定的玻璃纤维结构构成基础。它轻盈而稳定。",
+      callouts: ["玻璃纤维", "特殊树脂"],
     },
     {
-      eyebrow: "从天然结构到技术基材",
+      eyebrow: "从玻璃纤维到技术基材",
       title: "适用于电子应用的稳定基材。",
-      text: "可分离的聚合物基体在机械上稳定这一结构，使材料成为可靠的电子平台。",
-      callouts: ["聚合物基体", "机械稳定性"],
+      text: "特殊树脂在使用期间稳定玻璃纤维结构。",
+      callouts: ["可溶树脂", "稳定结构"],
     },
     {
       eyebrow: "足够稳定，可用于电子产品",

@@ -455,19 +455,6 @@ export function ProofOfProgress({ language }: { language: Language }) {
         </div>
       </section>
 
-      <section className="bg-[#edf4ee] py-16 text-emerald-950 md:py-24">
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:gap-20">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">{copy.finalEyebrow}</p>
-            <h2 className="mt-4 max-w-3xl font-display text-4xl font-semibold leading-[1.08] sm:text-5xl">
-              {copy.finalTitle}
-            </h2>
-          </div>
-          <div>
-            <p className="text-base leading-8 text-emerald-950/66">{copy.finalText}</p>
-          </div>
-        </div>
-      </section>
     </>
   );
 }

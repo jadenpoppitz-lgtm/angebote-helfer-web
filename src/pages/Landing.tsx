@@ -310,7 +310,7 @@ export const copy: Record<Language, LandingCopy> = {
         title: "Live-Demo: Customer Rückgabe",
         text: "Gib eine Seriennummer ein. Leaftronics erkennt Produkt und Standort, zeigt Rückgabepartner und mögliche OEM-Rabatte.",
         serialLabel: "Seriennummer",
-        serialPlaceholder: "z. B. KB-DD-0001",
+        serialPlaceholder: "z. B. LT-B2B-26-0001",
         detect: "Standort automatisch erkennen",
         detected: "Standort erkannt",
         unknown: "Seriennummer noch nicht im Demo-System",
@@ -331,7 +331,7 @@ export const copy: Record<Language, LandingCopy> = {
           title: "OEM-Dashboard",
           subtitle: "Rückläufer, Materialwerte und ESG-Status",
           metrics: [
-            { label: "Rücklaufquote", value: "78%" },
+            { label: "CO2-Einsparung pro PCB", value: "1,8 kg" },
             { label: "Materialwert", value: "42,8 k EUR" },
             { label: "Datenabdeckung", value: "96%" },
           ],
@@ -629,7 +629,7 @@ export const copy: Record<Language, LandingCopy> = {
         title: "Live demo: customer return",
         text: "Enter a serial number. Leaftronics detects product and location, then shows return partners and possible OEM discounts.",
         serialLabel: "Serial number",
-        serialPlaceholder: "e.g. KB-DD-0001",
+        serialPlaceholder: "e.g. LT-B2B-26-0001",
         detect: "Detect location automatically",
         detected: "Location detected",
         unknown: "Serial number is not in the demo system yet",
@@ -650,7 +650,7 @@ export const copy: Record<Language, LandingCopy> = {
           title: "OEM dashboard",
           subtitle: "Returns, material values and ESG status",
           metrics: [
-            { label: "Return rate", value: "78%" },
+            { label: "CO2 saved per PCB", value: "1.8 kg" },
             { label: "Material value", value: "EUR 42.8k" },
             { label: "Data coverage", value: "96%" },
           ],
@@ -947,7 +947,7 @@ export const copy: Record<Language, LandingCopy> = {
         title: "实时演示：客户退回",
         text: "输入序列号。Leaftronics 会识别产品和位置，并显示退回伙伴与可能的 OEM 折扣。",
         serialLabel: "序列号",
-        serialPlaceholder: "例如 KB-DD-0001",
+        serialPlaceholder: "例如 LT-B2B-26-0001",
         detect: "自动识别位置",
         detected: "位置已识别",
         unknown: "该序列号暂未在演示系统中",
@@ -1097,8 +1097,8 @@ export const copy: Record<Language, LandingCopy> = {
   },
 };
 
-export const roleOrder: RoleId[] = ["oem", "customer", "recycler", "smelter", "partner"];
-const demoRoleOrder: RoleId[] = ["oem", "customer", "partner", "recycler", "smelter"];
+export const roleOrder: RoleId[] = ["oem", "customer", "smelter"];
+const demoRoleOrder: RoleId[] = ["oem", "customer", "smelter"];
 const graphOrder: GraphPoint[] = ["oem", "customer", "consulting", "disassembly", "smelter", "materials"];
 
 export const roleIcons: Record<RoleId, typeof Factory> = {
@@ -1152,7 +1152,7 @@ const cyclePageCopy: Record<
 > = {
   de: {
     eyebrow: "Unser Produkt in Bewegung",
-    title: "Kreislauf-Demo",
+    title: "Interaktiver Wertstrom",
     text: "Verfolgen Sie den vollständigen Wertstrom und öffnen Sie anschließend die Arbeitsoberflächen der beteiligten Rollen.",
     productLink: "Produktdetails",
     flowLink: "Wertstrom",
@@ -1161,7 +1161,7 @@ const cyclePageCopy: Record<
   },
   en: {
     eyebrow: "Our product in motion",
-    title: "Loop demo",
+    title: "Interactive value flow",
     text: "Follow the complete value stream, then explore the working interfaces used by each participating role.",
     productLink: "Product details",
     flowLink: "Value stream",
@@ -1230,7 +1230,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
 
   const handleSectionLink = (
     event: ReactMouseEvent<HTMLAnchorElement>,
-    id: "problem-story" | "product-story" | "forms",
+    id: "problem-story" | "product-story" | "pilot-project",
     duration = 560,
   ) => {
     event.preventDefault();
@@ -1333,6 +1333,9 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               <a href="#product-story" onClick={(event) => handleSectionLink(event, "product-story", 620)} className="site-header-link">
                 {content.nav.product}
               </a>
+              <a href="#pilot-project" onClick={(event) => handleSectionLink(event, "pilot-project", 700)} className="site-header-link">
+                {content.nav.contact}
+              </a>
               <Link to="/kreislauf-demo" className="site-header-demo-link">
                 <CirclePlay className="h-4 w-4" aria-hidden="true" />
                 {content.nav.cycle}
@@ -1340,9 +1343,6 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               <Link to="/erfolge" className="site-header-link">
                 {content.nav.traction}
               </Link>
-              <a href="#forms" onClick={(event) => handleSectionLink(event, "forms", 700)} className="site-header-link">
-                {content.nav.contact}
-              </a>
             </nav>
             <button
               type="button"
@@ -1366,6 +1366,9 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                 <a href="#product-story" onClick={(event) => handleSectionLink(event, "product-story", 620)} className="site-mobile-link">
                   {content.nav.product}
                 </a>
+                <a href="#pilot-project" onClick={(event) => handleSectionLink(event, "pilot-project", 700)} className="site-mobile-link">
+                  {content.nav.contact}
+                </a>
                 <Link to="/kreislauf-demo" onClick={() => setMobileNavOpen(false)} className="site-mobile-demo-link">
                   <CirclePlay className="h-4 w-4" aria-hidden="true" />
                   {content.nav.cycle}
@@ -1373,9 +1376,6 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                 <Link to="/erfolge" onClick={() => setMobileNavOpen(false)} className="site-mobile-link">
                   {content.nav.traction}
                 </Link>
-                <a href="#forms" onClick={(event) => handleSectionLink(event, "forms", 700)} className="site-mobile-link">
-                  {content.nav.contact}
-                </a>
                 {mobileLanguageControl}
               </nav>
             ) : null}
@@ -1457,6 +1457,9 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               <Link to="/produkt" aria-current={showProduct ? "page" : undefined} className={`site-header-link ${showProduct ? "is-active" : ""}`}>
                 {content.nav.product}
               </Link>
+              <a href="/#pilot-project" className="site-header-link">
+                {content.nav.contact}
+              </a>
               <Link to="/kreislauf-demo" aria-current={showCycle ? "page" : undefined} className={`site-header-demo-link ${showCycle ? "is-active" : ""}`}>
                 <CirclePlay className="h-4 w-4" aria-hidden="true" />
                 {content.nav.cycle}
@@ -1464,9 +1467,6 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               <Link to="/erfolge" aria-current={showTraction ? "page" : undefined} className={`site-header-link ${showTraction ? "is-active" : ""}`}>
                 {content.nav.traction}
               </Link>
-              <a href="/#forms" className="site-header-link">
-                {content.nav.contact}
-              </a>
             </nav>
             <button
               type="button"
@@ -1490,6 +1490,9 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                 <Link to="/produkt" aria-current={showProduct ? "page" : undefined} onClick={() => setMobileNavOpen(false)} className={`site-mobile-link ${showProduct ? "is-active" : ""}`}>
                   {content.nav.product}
                 </Link>
+                <a href="/#pilot-project" onClick={() => setMobileNavOpen(false)} className="site-mobile-link">
+                  {content.nav.contact}
+                </a>
                 <Link to="/kreislauf-demo" aria-current={showCycle ? "page" : undefined} onClick={() => setMobileNavOpen(false)} className={`site-mobile-demo-link ${showCycle ? "is-active" : ""}`}>
                   <CirclePlay className="h-4 w-4" aria-hidden="true" />
                   {content.nav.cycle}
@@ -1497,9 +1500,6 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                 <Link to="/erfolge" aria-current={showTraction ? "page" : undefined} onClick={() => setMobileNavOpen(false)} className={`site-mobile-link ${showTraction ? "is-active" : ""}`}>
                   {content.nav.traction}
                 </Link>
-                <a href="/#forms" onClick={() => setMobileNavOpen(false)} className="site-mobile-link">
-                  {content.nav.contact}
-                </a>
                 {mobileLanguageControl}
               </nav>
             ) : null}
@@ -1507,7 +1507,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         </section>
       )}
 
-      {showCycle ? (
+      {false ? (
         <section className="cycle-page-intro" aria-labelledby="cycle-page-title">
           <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 py-12 sm:px-8 md:py-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:items-end lg:gap-16">
             <div className="max-w-3xl">
@@ -1606,15 +1606,11 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             }
           >
             <div className="max-w-4xl">
-              <p
-                className={
-                  showCycle
-                    ? "text-xs font-semibold uppercase tracking-[0.3em] text-emerald-800/72"
-                    : "text-xs font-semibold uppercase tracking-[0.28em] text-primary"
-                }
-              >
-                {content.solution.eyebrow}
-              </p>
+              {!showCycle ? (
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+                  {content.solution.eyebrow}
+                </p>
+              ) : null}
               <h2
                 className={
                   showCycle
@@ -1671,14 +1667,14 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             const surface = content.demos.surfaces[demoRole];
             return (
               <>
-                <aside className="cycle-demo-overview lg:sticky lg:top-8">
+                <aside className="cycle-demo-overview min-w-0 pr-1 lg:sticky lg:top-8 lg:pr-3">
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.demos.eyebrow}</p>
                   <div className="mt-5 flex min-w-0 items-center gap-4">
                     <span className="grid h-12 w-12 shrink-0 place-items-center border border-primary/20 bg-primary/8 text-primary">
                       <Icon className="h-6 w-6" />
                     </span>
                     <div className="min-w-0">
-                      <h2 className="break-words font-display text-3xl font-semibold leading-tight md:text-[2.25rem]">{card.title}</h2>
+                      <h2 className="break-words font-display text-2xl font-semibold leading-tight md:text-3xl">{card.title}</h2>
                       <p className="mt-1 text-sm text-muted-foreground">{surface.subtitle}</p>
                     </div>
                   </div>
@@ -1921,8 +1917,8 @@ const productTechnologyCopy: Record<Language, ProductTechnologyContent> = {
     finalText: "Eine klassische Leiterplatte ist schwer zu trennen, weil Substrat, Metalle und Bauteile fest verbunden bleiben. Leaftronics verändert das Trägermaterial so, dass Nutzung und Rückgewinnung zusammen gedacht werden.",
     finalCta: "Pilotprojekt anfragen",
     steps: [
-      { index: "01", section: "Vom natürlichen Gerüst zum technischen Substrat", title: "Das Trägermaterial neu gedacht.", text: "Eine faserige, organische Struktur bildet die Basis. Sie bleibt sichtbar, leicht und materialbewusst statt als anonyme schwarze Trägerplatte zu verschwinden." },
-      { index: "02", section: "Vom natürlichen Gerüst zum technischen Substrat", title: "Ein stabiles Substrat für elektronische Anwendungen.", text: "Eine lösbare Polymermatrix stabilisiert das Gerüst mechanisch. Die Schicht macht aus dem Material eine belastbare Plattform für Elektronik." },
+      { index: "01", section: "Von Glasfaser zum technischen Substrat", title: "Das Trägermaterial neu gedacht.", text: "Eine Glasfaserstruktur mit einem besonderen Harz bildet die Basis. Sie bleibt leicht und stabil." },
+      { index: "02", section: "Von Glasfaser zum technischen Substrat", title: "Ein stabiles Substrat für elektronische Anwendungen.", text: "Das besondere Harz stabilisiert die Glasfaserstruktur während der Nutzung." },
       { index: "03", section: "Stabil genug für Elektronik", title: "Leiterbahnen, Lötstellen und elektrische Funktion bleiben erhalten.", text: "Kupferne Leiterbahnen werden präzise aufgebracht. Die elektrische Funktion bleibt klassischer PCB-Logik nahe, während das Substrat neu gedacht ist." },
       { index: "04", section: "Stabil genug für Elektronik", title: "Stabil während Herstellung und Nutzung.", text: "Chips, Widerstände, Kondensatoren und Kontakte sitzen auf der Platte. Das Modul wirkt wie echte, funktionsfähige Elektronik." },
       { index: "05", section: "Designed for Disassembly", title: "Für moderne Elektronik entwickelt.", text: "Im Produkt bleibt die Leiterplatte belastbar. Energie- und Datenlinien zeigen: Die neue Materiallogik ersetzt nicht Funktion, sondern ermöglicht ihren Kreislauf." },
@@ -1957,8 +1953,8 @@ const productTechnologyCopy: Record<Language, ProductTechnologyContent> = {
     finalText: "A conventional circuit board is difficult to separate because the substrate, metals and components remain permanently bonded. Leaftronics changes the carrier material so use and recovery can be designed together.",
     finalCta: "Request a pilot project",
     steps: [
-      { index: "01", section: "From natural structure to technical substrate", title: "Rethinking the carrier material.", text: "A fibrous organic structure forms the basis. It remains visible, lightweight and material-conscious instead of disappearing into an anonymous black board." },
-      { index: "02", section: "From natural structure to technical substrate", title: "A stable substrate for electronic applications.", text: "A separable polymer matrix mechanically stabilizes the structure and turns the material into a robust platform for electronics." },
+      { index: "01", section: "From glass fiber to technical substrate", title: "Rethinking the carrier material.", text: "A glass-fiber structure with a specially engineered resin forms the basis. It remains lightweight and stable instead of disappearing into an anonymous black board." },
+      { index: "02", section: "From glass fiber to technical substrate", title: "A stable substrate for electronic applications.", text: "The special resin stabilizes the glass-fiber structure during use. At end of life, it dissolves in a controlled process and releases the circuit-board structure for recovery." },
       { index: "03", section: "Stable enough for electronics", title: "Traces, solder joints and electrical function remain intact.", text: "Copper traces are applied precisely. Electrical function stays close to conventional PCB logic while the substrate is redesigned." },
       { index: "04", section: "Stable enough for electronics", title: "Stable through manufacturing and use.", text: "Chips, resistors, capacitors and contacts sit on the board. The module behaves like real, functional electronics." },
       { index: "05", section: "Designed for disassembly", title: "Built for modern electronics.", text: "The circuit board remains robust inside the product. Power and data lines show that the new material logic preserves function while enabling circularity." },
@@ -1993,8 +1989,8 @@ const productTechnologyCopy: Record<Language, ProductTechnologyContent> = {
     finalText: "传统电路板难以分离，因为基材、金属和元器件始终牢固结合。Leaftronics 改变载体材料，让使用与回收从设计阶段就被共同考虑。",
     finalCta: "申请试点项目",
     steps: [
-      { index: "01", section: "从天然结构到技术基材", title: "重新思考载体材料。", text: "纤维状有机结构构成基础。它保持可见、轻量且体现材料属性，而不是消失在匿名的黑色基板中。" },
-      { index: "02", section: "从天然结构到技术基材", title: "适用于电子应用的稳定基材。", text: "可分离的聚合物基体在机械上稳定这一结构，使材料成为可靠的电子平台。" },
+      { index: "01", section: "从玻璃纤维到技术基材", title: "重新思考载体材料。", text: "由特殊树脂稳定的玻璃纤维结构构成基础。它轻盈而稳定。" },
+      { index: "02", section: "从玻璃纤维到技术基材", title: "适用于电子应用的稳定基材。", text: "特殊树脂在使用期间稳定玻璃纤维结构。" },
       { index: "03", section: "足够稳定，可用于电子产品", title: "线路、焊点和电气功能保持完整。", text: "铜线路被精确施加。电气功能接近传统 PCB 逻辑，同时基材得到重新设计。" },
       { index: "04", section: "足够稳定，可用于电子产品", title: "在制造和使用期间保持稳定。", text: "芯片、电阻、电容和触点安装在板上，模块具备真实、可运行的电子功能。" },
       { index: "05", section: "为拆解而设计", title: "为现代电子产品而开发。", text: "电路板在产品内部保持可靠。电源和数据线路表明，新材料逻辑保留功能并支持循环利用。" },
@@ -2944,6 +2940,30 @@ const smelterDeliveries = [
   },
 ];
 
+const recoveryMetalsByBatch: Record<string, Array<{ label: string; value: string; uplift: string }>> = {
+  "LT-0726-18": [
+    { label: "Gold", value: "4.8 kg", uplift: "+42%" },
+    { label: "Silver", value: "38.4 kg", uplift: "+31%" },
+    { label: "Tantalum", value: "1.6 kg", uplift: "+55%" },
+    { label: "Gallium", value: "0.7 kg", uplift: "+28%" },
+    { label: "Palladium", value: "2.1 kg", uplift: "+47%" },
+  ],
+  "LT-0726-24": [
+    { label: "Gold", value: "3.6 kg", uplift: "+36%" },
+    { label: "Silver", value: "29.1 kg", uplift: "+24%" },
+    { label: "Tantalum", value: "1.2 kg", uplift: "+43%" },
+    { label: "Gallium", value: "0.5 kg", uplift: "+21%" },
+    { label: "Palladium", value: "1.6 kg", uplift: "+39%" },
+  ],
+  "LT-0726-31": [
+    { label: "Gold", value: "3.1 kg", uplift: "+39%" },
+    { label: "Silver", value: "24.6 kg", uplift: "+27%" },
+    { label: "Tantalum", value: "1.0 kg", uplift: "+49%" },
+    { label: "Gallium", value: "0.4 kg", uplift: "+22%" },
+    { label: "Palladium", value: "1.3 kg", uplift: "+41%" },
+  ],
+};
+
 const smelterInterfaceLabels: Record<
   Language,
   {
@@ -2985,6 +3005,146 @@ const smelterInterfaceLabels: Record<
   },
 };
 
+const recoveryDashboardCopy: Record<Language, { materials: string; comparison: string }> = {
+  de: { materials: "Rueckgewinnbare kritische Materialien", comparison: "ueber gemischtem PCB-Eingang" },
+  en: { materials: "Recoverable critical materials", comparison: "above mixed PCB intake" },
+  zh: { materials: "可回收关键材料", comparison: "高于混合 PCB 输入" },
+};
+
+const customerBenefitCopy: Record<
+  Language,
+  { certificate: string; discount: string; discountRange: string; discountText: string; devices: string; certificateText: string }
+> = {
+  de: {
+    certificate: "Leaftronics Certified",
+    certificateText: "Noch 28 Geraete schalten ein CO2-Zertifikat fuer die externe Kommunikation frei.",
+    devices: "Geraete",
+    discount: "Rueckgabe-Rabatt",
+    discountRange: "0,5 % bis 5 %",
+    discountText: "5 Geraete zurueckgegeben. Der Rabatt steigt mit jeder bestaetigten Rueckgabe.",
+  },
+  en: {
+    certificate: "Leaftronics Certified",
+    certificateText: "28 more devices unlock a CO2 certificate for external communication.",
+    devices: "devices",
+    discount: "Return discount",
+    discountRange: "0.5% to 5%",
+    discountText: "5 devices returned. The discount rises with every confirmed return.",
+  },
+  zh: {
+    certificate: "Leaftronics Certified",
+    certificateText: "再回收 28 台设备即可获得可用于对外沟通的 CO2 证书。",
+    devices: "台设备",
+    discount: "回收折扣",
+    discountRange: "0.5% 至 5%",
+    discountText: "已回收 5 台设备。每次确认回收都会提高折扣。",
+  },
+};
+
+const customerCatalogCopy: Record<
+  Language,
+  {
+    materialContent: string;
+    preciousMetals: string;
+    pcb: string;
+    copper: string;
+    substrate: string;
+    aluminium: string;
+    refurbishment: Record<"refurbished" | "refurbishable" | "not_assessed", string>;
+  }
+> = {
+  de: {
+    materialContent: "Materialinhalt",
+    preciousMetals: "Edelmetalle und kritische Rohstoffe",
+    pcb: "Leiterplatte",
+    copper: "Kupfer",
+    substrate: "Glasfaser & Harz",
+    aluminium: "Aluminium",
+    refurbishment: {
+      refurbished: "Bereits refurbished",
+      refurbishable: "Fuer Refurbishment geeignet",
+      not_assessed: "Refurbishment noch nicht bewertet",
+    },
+  },
+  en: {
+    materialContent: "Material content",
+    preciousMetals: "Precious metals and critical materials",
+    pcb: "Circuit board",
+    copper: "Copper",
+    substrate: "Glass fiber & resin",
+    aluminium: "Aluminium",
+    refurbishment: {
+      refurbished: "Already refurbished",
+      refurbishable: "Suitable for refurbishment",
+      not_assessed: "Refurbishment not yet assessed",
+    },
+  },
+  zh: {
+    materialContent: "材料构成",
+    preciousMetals: "贵金属与关键材料",
+    pcb: "电路板",
+    copper: "铜",
+    substrate: "玻璃纤维与树脂",
+    aluminium: "铝",
+    refurbishment: {
+      refurbished: "已翻新",
+      refurbishable: "适合翻新",
+      not_assessed: "尚未评估翻新状态",
+    },
+  },
+};
+
+const customerReturnTotalsCopy: Record<
+  Language,
+  {
+    quantity: string;
+    totalWeight: string;
+    metalShare: string;
+    copper: string;
+    totalForReturn: string;
+  }
+> = {
+  de: {
+    quantity: "Rueckgabemenge",
+    totalWeight: "Gesamtgewicht",
+    metalShare: "Metallanteil",
+    copper: "Kupfer",
+    totalForReturn: "Gesamtmenge fuer diese Rueckgabe",
+  },
+  en: {
+    quantity: "Return quantity",
+    totalWeight: "Total weight",
+    metalShare: "Metal share",
+    copper: "Copper",
+    totalForReturn: "Total for this return",
+  },
+  zh: {
+    quantity: "回收数量",
+    totalWeight: "总重量",
+    metalShare: "金属占比",
+    copper: "铜",
+    totalForReturn: "本次回收总量",
+  },
+};
+
+const customerBenefitProgressCopy: Record<
+  Language,
+  { returns: (count: number) => string; certificate: (remaining: number) => string }
+> = {
+  de: {
+    returns: (count) => `${count} bestaetigte Rueckgaben im aktuellen Zeitraum.`,
+    certificate: (remaining) => `Noch ${remaining} Geraete bis zu Leaftronics Certified.`,
+  },
+  en: {
+    returns: (count) => `${count} confirmed returns in the current period.`,
+    certificate: (remaining) => `${remaining} more devices until Leaftronics Certified.`,
+  },
+  zh: {
+    returns: (count) => `当前周期内已确认 ${count} 台回收设备。`,
+    certificate: (remaining) => `再回收 ${remaining} 台设备即可获得 Leaftronics Certified。`,
+  },
+};
+
 export const SmelterDashboard = ({
   content,
   surface,
@@ -2997,6 +3157,7 @@ export const SmelterDashboard = ({
   language: Language;
 }) => {
   const labels = smelterInterfaceLabels[language];
+  const recoveryCopy = recoveryDashboardCopy[language];
 
   return (
     <DemoWindow
@@ -3051,6 +3212,20 @@ export const SmelterDashboard = ({
                   </div>
                 ))}
               </div>
+              <div className="mt-5 border-t border-primary/12 pt-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{recoveryCopy.materials}</p>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">{recoveryCopy.comparison}</p>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
+                  {recoveryMetalsByBatch[delivery.id].map((metal) => (
+                    <div key={metal.label} className="min-w-0 border-l-2 border-primary/30 bg-primary/[0.045] px-2.5 py-2">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{metal.label}</p>
+                      <p className="mt-1 font-display text-lg font-semibold leading-none text-foreground">{metal.value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </article>
           ))}
         </div>
@@ -3065,8 +3240,14 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
   const [notFound, setNotFound] = useState(false);
   const [location, setLocation] = useState(SERIAL_DB[DEMO_SERIAL].city);
   const [detecting, setDetecting] = useState(false);
-  const [returnConfirmed, setReturnConfirmed] = useState(false);
+  const [returnQuantity, setReturnQuantity] = useState(SERIAL_DB[DEMO_SERIAL].catalogEntry?.returnQuantity ?? 1);
+  const [discountPercent, setDiscountPercent] = useState(() => 0.5 + Math.floor(Math.random() * 10) * 0.5);
+  const [certifiedDevices, setCertifiedDevices] = useState(() => 5 + Math.floor(Math.random() * 86));
   const copy = content.demos.customerLive;
+  const benefitCopy = customerBenefitCopy[language];
+  const catalogCopy = customerCatalogCopy[language];
+  const totalsCopy = customerReturnTotalsCopy[language];
+  const progressCopy = customerBenefitProgressCopy[language];
   const displayLocation = localizeCity(location, language);
 
   const checkSerial = (value = serial) => {
@@ -3074,9 +3255,9 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
     const result = SERIAL_DB[key];
     setLookup(result ?? null);
     setNotFound(!result && key.length > 0);
-    setReturnConfirmed(false);
     if (result) {
       setLocation(result.city);
+      setReturnQuantity(result.catalogEntry?.returnQuantity ?? 1);
     }
   };
 
@@ -3091,6 +3272,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
   };
 
   const device = lookup ? localizeDevice(lookup.device, language) : null;
+  const confirmedQuantity = Math.max(1, Math.min(99, Math.floor(returnQuantity) || 1));
 
   return (
     <DemoWindow content={content} reference={reference} icon={<QrCode className="h-4 w-4" />} title={copy.title} subtitle={copy.text}>
@@ -3108,7 +3290,6 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
               value={serial}
               onChange={(event) => {
                 setSerial(event.target.value);
-                setReturnConfirmed(false);
               }}
               placeholder={copy.serialPlaceholder}
               className="h-11 rounded-md border border-primary/18 bg-background px-3 font-mono text-sm text-foreground outline-none focus:border-primary"
@@ -3157,6 +3338,51 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                   </div>
                   <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">{lookup.postalCode}</span>
                 </div>
+                {lookup.catalogEntry ? (
+                  <section className="mt-4 border-y border-primary/12 py-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{totalsCopy.totalForReturn}</p>
+                      <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
+                        {catalogCopy.refurbishment[lookup.catalogEntry.refurbishmentStatus]}
+                      </span>
+                    </div>
+                    <label className="mt-3 grid max-w-48 gap-1 text-xs font-semibold text-foreground/80">
+                      {totalsCopy.quantity}
+                      <input
+                        type="number"
+                        min="1"
+                        max="99"
+                        value={returnQuantity}
+                        onChange={(event) => setReturnQuantity(Math.max(1, Math.min(99, Number(event.target.value) || 1)))}
+                        className="h-10 rounded-md border border-primary/18 bg-background px-3 font-mono text-sm text-foreground outline-none focus:border-primary"
+                      />
+                    </label>
+                    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {[
+                        [totalsCopy.quantity, `${confirmedQuantity}`],
+                        [totalsCopy.totalWeight, formatKilograms(lookup.catalogEntry.totalWeightKg * confirmedQuantity)],
+                        [totalsCopy.metalShare, `${lookup.catalogEntry.metalSharePercent}%`],
+                        [totalsCopy.copper, formatGrams(lookup.catalogEntry.metalsG.copper * confirmedQuantity)],
+                      ].map(([label, value]) => (
+                        <div key={label} className="min-w-0 border-l-2 border-primary/30 bg-primary/[0.045] px-2.5 py-2">
+                          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+                          <p className="mt-1 font-display text-base font-semibold leading-none text-foreground">{value}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{catalogCopy.preciousMetals}</p>
+                    <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-5">
+                      {Object.entries(lookup.catalogEntry.metalsG)
+                        .filter(([metal]) => metal !== "copper")
+                        .map(([metal, value]) => (
+                        <div key={metal} className="min-w-0 border-l-2 border-primary/30 bg-primary/[0.045] px-2.5 py-2">
+                          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{metal}</p>
+                          <p className="mt-1 font-display text-base font-semibold leading-none text-foreground">{formatGrams(value * confirmedQuantity)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
                 <p className="mt-4 text-sm font-semibold text-foreground/78">{copy.returnPoints}</p>
                 <div className="mt-3 grid gap-2">
                   {lookup.partners.slice(0, 3).map((partner) => (
@@ -3169,11 +3395,36 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                     </div>
                   ))}
                 </div>
+                <div className="mt-4 grid gap-3 border-t border-primary/12 pt-4 sm:grid-cols-2">
+                  <div className="rounded-md border border-primary/16 bg-primary/[0.05] p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{benefitCopy.discount}</p>
+                    <div className="mt-2 flex items-end justify-between gap-3">
+                      <strong className="font-display text-2xl text-primary">{discountPercent.toFixed(1)}%</strong>
+                      <span className="text-xs text-muted-foreground">{benefitCopy.discountRange}</span>
+                    </div>
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-primary/10">
+                      <span className="block h-full rounded-full bg-primary" style={{ width: `${(discountPercent / 5) * 100}%` }} />
+                    </div>
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">{progressCopy.returns(certifiedDevices)}</p>
+                  </div>
+                  <div className="rounded-md border border-primary/16 bg-primary/[0.05] p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{benefitCopy.certificate}</p>
+                    <div className="mt-2 flex items-end justify-between gap-3">
+                      <strong className="font-display text-2xl text-primary">{certifiedDevices} / 100</strong>
+                      <span className="text-xs text-muted-foreground">{benefitCopy.devices}</span>
+                    </div>
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-primary/10">
+                      <span className="block h-full rounded-full bg-primary" style={{ width: `${certifiedDevices}%` }} />
+                    </div>
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">{progressCopy.certificate(Math.max(0, 100 - certifiedDevices))}</p>
+                  </div>
+                </div>
                 <button
                   type="button"
                   onClick={() => {
-                    setReturnConfirmed(true);
-                    toast.success(copy.confirm, { description: lookup.serial });
+                    setCertifiedDevices((current) => Math.min(100, current + confirmedQuantity));
+                    setDiscountPercent((current) => Math.min(5, Number((current + confirmedQuantity * 0.1).toFixed(1))));
+                    toast.success(copy.confirm, { description: `${lookup.serial} · ${confirmedQuantity}` });
                   }}
                   className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
                 >
@@ -3188,7 +3439,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
             )}
           </div>
 
-          {returnConfirmed && lookup ? (
+          {false ? (
             <div className="cycle-demo-confirmation">
               <p className="text-sm font-semibold text-primary">{copy.discounts}</p>
               <div className="mt-3 grid gap-2">
@@ -3223,6 +3474,17 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
     </DemoWindow>
   );
 };
+
+function formatGrams(value: number) {
+  if (value >= 1000) {
+    return `${(value / 1000).toFixed(value >= 10000 ? 1 : 2)} kg`;
+  }
+  return `${value.toFixed(value < 1 ? 3 : 2).replace(/\.00$/, "")} g`;
+}
+
+function formatKilograms(value: number) {
+  return value >= 1000 ? `${(value / 1000).toFixed(1)} t` : `${value.toFixed(value % 1 === 0 ? 0 : 1)} kg`;
+}
 
 function localizeCity(city: string, language: Language) {
   if (language === "en") {
