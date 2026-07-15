@@ -1464,10 +1464,10 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
             </Link>
             <nav className={`site-header-nav hidden items-center gap-1 p-1 text-sm font-semibold shadow-elegant backdrop-blur-md lg:flex ${showCycle ? "is-light" : "is-dark"}`} aria-label={primaryNavigationLabel}>
-              <Link to="/problem" aria-current={showProblem ? "page" : undefined} className={`site-header-link ${showProblem ? "is-active" : ""}`}>
+              <Link to="/#problem-story" className="site-header-link">
                 {content.nav.problem}
               </Link>
-              <Link to="/produkt" aria-current={showProduct ? "page" : undefined} className={`site-header-link ${showProduct ? "is-active" : ""}`}>
+              <Link to="/#product-story" className="site-header-link">
                 {content.nav.product}
               </Link>
               <a href="/#pilot-project" className="site-header-link">
@@ -1497,10 +1497,10 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                 className={`site-mobile-navigation mt-3 w-full p-2 text-sm font-semibold shadow-elegant backdrop-blur-xl lg:hidden ${showCycle ? "is-light" : "is-dark"}`}
                 aria-label={primaryNavigationLabel}
               >
-                <Link to="/problem" aria-current={showProblem ? "page" : undefined} onClick={() => setMobileNavOpen(false)} className={`site-mobile-link ${showProblem ? "is-active" : ""}`}>
+                <Link to="/#problem-story" onClick={() => setMobileNavOpen(false)} className="site-mobile-link">
                   {content.nav.problem}
                 </Link>
-                <Link to="/produkt" aria-current={showProduct ? "page" : undefined} onClick={() => setMobileNavOpen(false)} className={`site-mobile-link ${showProduct ? "is-active" : ""}`}>
+                <Link to="/#product-story" onClick={() => setMobileNavOpen(false)} className="site-mobile-link">
                   {content.nav.product}
                 </Link>
                 <a href="/#pilot-project" onClick={() => setMobileNavOpen(false)} className="site-mobile-link">
@@ -1536,7 +1536,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
               </p>
             </div>
             <nav className="cycle-page-navigation" aria-label={cyclePageCopy[language].navigationLabel}>
-              <Link to="/produkt" className="cycle-page-navigation-link">
+              <Link to="/#product-story" className="cycle-page-navigation-link">
                 <span>01</span>
                 {cyclePageCopy[language].productLink}
               </Link>
@@ -1569,7 +1569,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
             <h1 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.problem.title}</h1>
             <p className="mt-6 max-w-xl text-base leading-8 text-background/72">{content.problem.text}</p>
             <Link
-              to="/produkt"
+              to="/#product-story"
               className="mt-8 inline-flex h-12 items-center gap-2 rounded-md bg-background px-5 font-semibold text-foreground shadow-elegant transition-transform hover:-translate-y-0.5"
             >
               {content.problem.cta}

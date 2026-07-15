@@ -116,13 +116,11 @@ const productStoryCopy: Record<Language, ProductStepCopy[]> = {
       eyebrow: "Von Glasfaser zum technischen Substrat",
       title: "Das Trägermaterial neu gedacht.",
       text: "Eine Glasfaserstruktur mit einem besonderen Harz bildet die Basis. Sie bleibt leicht und stabil.",
-      callouts: ["Glasfaser", "Besonderes Harz"],
     },
     {
       eyebrow: "Von Glasfaser zum technischen Substrat",
       title: "Ein stabiles Substrat für elektronische Anwendungen.",
       text: "Das besondere Harz stabilisiert die Glasfaserstruktur während der Nutzung.",
-      callouts: ["Lösbares Harz", "Kontrollierte Freigabe"],
     },
     {
       eyebrow: "Stabil genug für Elektronik",
@@ -160,13 +158,11 @@ const productStoryCopy: Record<Language, ProductStepCopy[]> = {
       eyebrow: "From natural structure to technical substrate",
       title: "Rethinking the carrier material.",
       text: "A glass-fiber structure with a specially engineered resin forms the basis. It remains lightweight and stable.",
-      callouts: ["Glass fiber", "Special resin"],
     },
     {
       eyebrow: "From natural structure to technical substrate",
       title: "A stable substrate for electronic applications.",
       text: "The special resin mechanically stabilizes the glass-fiber structure during use.",
-      callouts: ["Dissolvable resin", "Controlled release"],
     },
     {
       eyebrow: "Stable enough for electronics",
@@ -204,13 +200,11 @@ const productStoryCopy: Record<Language, ProductStepCopy[]> = {
       eyebrow: "从玻璃纤维到技术基材",
       title: "重新思考载体材料。",
       text: "由特殊树脂稳定的玻璃纤维结构构成基础。它轻盈而稳定。",
-      callouts: ["玻璃纤维", "特殊树脂"],
     },
     {
       eyebrow: "从玻璃纤维到技术基材",
       title: "适用于电子应用的稳定基材。",
       text: "特殊树脂在使用期间稳定玻璃纤维结构。",
-      callouts: ["可溶树脂", "稳定结构"],
     },
     {
       eyebrow: "足够稳定，可用于电子产品",

@@ -25,8 +25,8 @@ const App = () => (
           <Suspense fallback={<div className="min-h-screen bg-[#f8fbf6]" />}>
             <Routes>
               <Route path="/" element={<Landing />} />
-              <Route path="/problem" element={<Landing page="problem" />} />
-              <Route path="/produkt" element={<Landing page="product" />} />
+              <Route path="/problem" element={<Navigate to="/#problem-story" replace />} />
+              <Route path="/produkt" element={<Navigate to="/#product-story" replace />} />
               <Route path="/erfolge" element={<Landing page="traction" />} />
               <Route path="/kreislauf-demo" element={<Landing page="cycle" />} />
               <Route path="/traction" element={<Navigate to="/erfolge" replace />} />
