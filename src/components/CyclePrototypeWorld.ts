@@ -19,6 +19,21 @@ export type CycleWorldScreenPoint = {
 
 export type CycleWorldScreenPoints = Record<GraphPoint, CycleWorldScreenPoint>;
 
+export const cycleRouteIds = [
+  "product-outbound",
+  "customer-return",
+  "routing-disassembly",
+  "pcb-to-smelter",
+  "pcb-sale",
+  "direct-pcb",
+  "process-solution",
+  "recovered-material",
+  "material-return",
+] as const;
+
+export type CycleRouteId = (typeof cycleRouteIds)[number];
+export type CycleWorldRouteScreenPoints = Record<CycleRouteId, CycleWorldScreenPoint>;
+
 export type CycleWorldRuntime = {
   dispose: () => void;
   setHighlighted: (point: GraphPoint) => void;
@@ -27,7 +42,7 @@ export type CycleWorldRuntime = {
 
 type CycleWorldOptions = {
   reducedMotion: boolean;
-  onFrame: (points: CycleWorldScreenPoints) => void;
+  onFrame: (points: CycleWorldScreenPoints, routes?: CycleWorldRouteScreenPoints) => void;
 };
 
 type MaterialSet = ReturnType<typeof createMaterials>;
@@ -39,6 +54,8 @@ type RouteRuntime = {
   delay: number;
   duration: number;
   glow: THREE.Mesh<THREE.TubeGeometry, THREE.MeshBasicMaterial>;
+  id: CycleRouteId;
+  labelT: number;
   packet: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
   points: GraphPoint[];
   travelEnd: number;
@@ -61,10 +78,16 @@ const routeSpecs: Array<{
   delay: number;
   duration: number;
   end: THREE.Vector3Tuple;
+  id: CycleRouteId;
+  labelT: number;
+  packetKind: "material" | "product" | "signal";
   points: GraphPoint[];
   start: THREE.Vector3Tuple;
 }> = [
   {
+    id: "product-outbound",
+    labelT: 0.5,
+    packetKind: "product",
     start: [-5.3, 0.22, 0.08],
     control: [-4.75, 0.22, -2.15],
     end: [-3.62, 0.22, -2.58],
@@ -74,6 +97,9 @@ const routeSpecs: Array<{
     points: ["oem", "customer"],
   },
   {
+    id: "customer-return",
+    labelT: 0.72,
+    packetKind: "product",
     start: [-2.72, 0.22, -2.58],
     control: [-1.66, 0.22, -1.32],
     end: [-0.58, 0.22, 0.08],
@@ -83,6 +109,9 @@ const routeSpecs: Array<{
     points: ["customer", "consulting"],
   },
   {
+    id: "routing-disassembly",
+    labelT: 0.28,
+    packetKind: "product",
     start: [0.58, 0.22, 0.08],
     control: [1.68, 0.22, -1.42],
     end: [2.72, 0.22, -2.58],
@@ -92,6 +121,9 @@ const routeSpecs: Array<{
     points: ["consulting", "disassembly"],
   },
   {
+    id: "pcb-to-smelter",
+    labelT: 0.5,
+    packetKind: "product",
     start: [3.72, 0.22, -2.58],
     control: [5.42, 0.22, -2.02],
     end: [5.42, 0.22, 0.02],
@@ -101,6 +133,9 @@ const routeSpecs: Array<{
     points: ["disassembly", "smelter"],
   },
   {
+    id: "pcb-sale",
+    labelT: 0.5,
+    packetKind: "signal",
     start: [-0.7, 0.24, 0.61],
     control: [-2.92, 0.24, 0.61],
     end: [-4.98, 0.24, 0.61],
@@ -110,6 +145,9 @@ const routeSpecs: Array<{
     points: ["consulting", "oem"],
   },
   {
+    id: "direct-pcb",
+    labelT: 0.52,
+    packetKind: "product",
     start: [0.7, 0.24, 0.61],
     control: [2.94, 0.24, 0.61],
     end: [4.98, 0.24, 0.61],
@@ -119,6 +157,9 @@ const routeSpecs: Array<{
     points: ["consulting", "smelter"],
   },
   {
+    id: "process-solution",
+    labelT: 0.48,
+    packetKind: "signal",
     start: [0.7, 0.24, 1.16],
     control: [2.94, 0.24, 1.16],
     end: [4.98, 0.24, 1.16],
@@ -128,6 +169,9 @@ const routeSpecs: Array<{
     points: ["consulting", "smelter"],
   },
   {
+    id: "recovered-material",
+    labelT: 0.48,
+    packetKind: "material",
     start: [5.32, 0.22, 1.38],
     control: [3.62, 0.22, 4.02],
     end: [0.72, 0.22, 3.9],
@@ -137,6 +181,9 @@ const routeSpecs: Array<{
     points: ["smelter", "materials"],
   },
   {
+    id: "material-return",
+    labelT: 0.5,
+    packetKind: "material",
     start: [-0.72, 0.22, 3.9],
     control: [-3.82, 0.22, 4.08],
     end: [-5.38, 0.22, 1.38],
@@ -428,24 +475,25 @@ const createOemStation = (materials: MaterialSet) => {
   addBox(group, [1.55, 0.7, 0.82], [0, 0.6, -0.12], materials.oemShell);
   addBox(group, [1.64, 0.12, 0.92], [0, 1.01, -0.12], materials.steelDark);
   addBox(group, [1.48, 0.08, 0.5], [0, 0.25, 0.36], materials.steelDark);
-  const door = addBox(group, [0.54, 0.46, 0.045], [-0.16, 0.51, 0.325], materials.graphite);
+  const door = addBox(group, [0.58, 0.46, 0.045], [0.16, 0.51, 0.325], materials.graphite);
   const statusPanel = addBox(group, [0.24, 0.16, 0.04], [0.43, 0.67, 0.33], materials.emerald);
   [-0.56, 0.56].forEach((x) => addBox(group, [0.23, 0.2, 0.035], [x, 0.72, 0.325], materials.glass));
   addCylinder(group, 0.1, 0.58, [0.5, 1.36, -0.27], materials.steelDark, 18);
   addCylinder(group, 0.14, 0.07, [0.5, 1.68, -0.27], materials.brass, 18);
 
   const shipment = new THREE.Group();
-  shipment.position.set(-0.62, 0.31, 0.44);
+  shipment.position.set(-0.68, 0.31, 0.44);
   group.add(shipment);
   addBox(shipment, [0.34, 0.3, 0.34], [0, 0.15, 0], materials.cardboard);
   addBox(shipment, [0.055, 0.31, 0.345], [0, 0.15, 0.008], materials.brass);
-  addBox(shipment, [0.28, 0.22, 0.28], [0.28, 0.11, -0.04], materials.copper, [0, -0.14, 0]);
+  addBox(shipment, [0.28, 0.22, 0.28], [0.52, 0.11, -0.04], materials.cardboard, [0, -0.08, 0]);
+  addBox(shipment, [0.045, 0.23, 0.285], [0.52, 0.11, -0.032], materials.brass, [0, -0.08, 0]);
 
   const carrier = new THREE.Group();
-  carrier.position.set(-0.16, 0.34, 0.14);
+  carrier.position.set(0.16, 0.34, 0.12);
   group.add(carrier);
-  [-0.31, -0.01].forEach((x) => addBox(group, [0.045, 0.035, 0.88], [x, 0.31, 0.48], materials.steel));
-  addBox(group, [0.42, 0.055, 0.08], [-0.16, 0.32, 0.89], materials.steelDark);
+  [0.01, 0.31].forEach((x) => addBox(group, [0.045, 0.035, 0.88], [x, 0.31, 0.48], materials.steel));
+  addBox(group, [0.42, 0.055, 0.08], [0.16, 0.32, 0.89], materials.steelDark);
   addBox(carrier, [0.5, 0.055, 0.34], [0, 0, 0], materials.emerald);
   addBox(carrier, [0.26, 0.04, 0.2], [0, 0.052, 0], materials.graphite);
   [-0.15, 0, 0.15].forEach((x) => addBox(carrier, [0.055, 0.07, 0.055], [x, 0.06, 0], materials.brass));
@@ -559,13 +607,13 @@ const createDisassemblyStation = (materials: MaterialSet) => {
   addBox(group, [1.42, 0.12, 0.84], [0, 0.29, 0.02], materials.steelDark);
   const pickAngle = -1.3;
   const placeAngle = -2.05;
-  const inputPosition = new THREE.Vector3(0.5, 0.55, 0.24);
-  const outputPosition = new THREE.Vector3(0.09, 0.55, 0.65);
+  const inputPosition = new THREE.Vector3(0.5, 0.553, 0.24);
+  const outputPosition = new THREE.Vector3(0.09, 0.553, 0.65);
   addCylinder(group, 0.38, 0.07, [0.5, 0.4, 0.2], materials.graphite, 24);
   addBox(group, [0.5, 0.055, 0.36], [0.5, 0.46, 0.24], materials.emerald, [0, pickAngle, 0]);
-  addBox(group, [0.22, 0.045, 0.18], [0.5, 0.505, 0.24], materials.graphite, [0, pickAngle, 0]);
+  addBox(group, [0.25, 0.04, 0.21], [0.5, 0.507, 0.24], materials.steel, [0, pickAngle, 0]);
   addBox(group, [0.34, 0.055, 0.3], [0.09, 0.43, 0.65], materials.graphite, [0, placeAngle, 0]);
-  addBox(group, [0.26, 0.025, 0.22], [0.09, 0.475, 0.65], materials.steelDark, [0, placeAngle, 0]);
+  addBox(group, [0.27, 0.07, 0.23], [0.09, 0.49, 0.65], materials.steel, [0, placeAngle, 0]);
 
   const rig = addModelSlot(group, "robotAssetSlot", [-0.23, 0.28, -0.08], [0, -1.65, 0]);
   const gripperLocal = new THREE.Vector3(0.5031155, 1.1083728, -0.6204557);
@@ -603,54 +651,58 @@ const createDisassemblyStation = (materials: MaterialSet) => {
 const createSmelterStation = (materials: MaterialSet) => {
   const group = new THREE.Group();
   addStationBase(group, materials);
-  addBox(group, [1.02, 0.98, 0.62], [0.18, 0.75, 0.14], materials.smelterShell);
-  addBox(group, [1.12, 0.12, 0.72], [0.18, 1.28, 0.14], materials.steelDark);
-  addFurnaceArch(group, 0.78, 0.72, [0.18, 0.72, 0.48], materials.brass);
-  addFurnaceArch(group, 0.64, 0.59, [0.18, 0.7, 0.515], materials.graphite);
+  addBox(group, [0.94, 0.98, 0.62], [0.16, 0.75, 0.14], materials.smelterShell);
+  addBox(group, [1.04, 0.12, 0.72], [0.16, 1.28, 0.14], materials.steelDark);
+  addFurnaceArch(group, 0.72, 0.7, [0.16, 0.72, 0.48], materials.brass);
+  addFurnaceArch(group, 0.58, 0.57, [0.16, 0.7, 0.515], materials.graphite);
   const furnaceMaterial = materials.amber.clone();
-  const furnaceFace = addFurnaceArch(group, 0.49, 0.45, [0.18, 0.68, 0.55], furnaceMaterial);
-  addBox(group, [0.47, 0.055, 0.34], [0.18, 0.425, 0.56], materials.steelDark);
-  addBox(group, [0.16, 0.025, 0.28], [0.18, 0.46, 0.56], materials.amber);
-  addBox(group, [0.62, 0.08, 0.66], [-0.62, 0.37, 0.54], materials.steelDark);
-  [-0.2, 0, 0.2].forEach((x) => addCylinder(group, 0.047, 0.54, [-0.62 + x, 0.41, 0.54], materials.steel, 12, [0, 0, Math.PI / 2]));
+  const furnaceFace = addFurnaceArch(group, 0.44, 0.43, [0.16, 0.68, 0.55], furnaceMaterial);
+  addBox(group, [0.42, 0.055, 0.25], [0.16, 0.425, 0.59], materials.steelDark);
+
+  addBox(group, [0.5, 0.075, 0.28], [-0.58, 0.37, 0.59], materials.steelDark);
+  [-0.14, 0, 0.14].forEach((x) =>
+    addCylinder(group, 0.04, 0.22, [-0.58 + x, 0.41, 0.59], materials.steel, 12, [0, 0, Math.PI / 2]),
+  );
 
   const feed = new THREE.Group();
-  feed.position.set(-0.78, 0.485, 0.54);
+  feed.position.set(-0.68, 0.485, 0.59);
   group.add(feed);
-  addBox(feed, [0.38, 0.055, 0.42], [0, 0, 0], materials.emerald);
-  [-0.1, 0.1].forEach((x) => addBox(feed, [0.055, 0.065, 0.07], [x, 0.06, 0.04], materials.brass));
+  addBox(feed, [0.28, 0.05, 0.2], [0, 0, 0], materials.emerald);
+  [-0.075, 0.075].forEach((x) => addBox(feed, [0.04, 0.055, 0.045], [x, 0.052, 0.02], materials.brass));
 
-  addBox(group, [0.52, 0.065, 0.38], [0.69, 0.41, 0.54], materials.steelDark);
+  addBox(group, [0.4, 0.065, 0.28], [0.66, 0.41, 0.59], materials.steelDark);
   const ingot = new THREE.Group();
-  ingot.position.set(0.29, 0.505, 0.54);
+  ingot.position.set(0.43, 0.505, 0.59);
   group.add(ingot);
-  addBox(ingot, [0.28, 0.11, 0.2], [0, 0, 0], materials.copper, [0, -0.08, 0]);
-  addBox(ingot, [0.2, 0.035, 0.12], [0, 0.07, 0], materials.brass, [0, -0.08, 0]);
+  addBox(ingot, [0.22, 0.09, 0.15], [0, 0, 0], materials.copper, [0, -0.05, 0]);
+  addBox(ingot, [0.15, 0.03, 0.09], [0, 0.058, 0], materials.brass, [0, -0.05, 0]);
   ingot.scale.setScalar(0.001);
 
-  addCylinder(group, 0.14, 0.75, [0.48, 1.5, -0.14], materials.steelDark, 18);
-  addCylinder(group, 0.19, 0.08, [0.48, 1.91, -0.14], materials.brass, 18);
-  [-0.15, 0, 0.15].forEach((x) => addBox(group, [0.055, 0.23, 0.035], [0.72 + x, 0.76, 0.46], materials.emerald));
+  addCylinder(group, 0.14, 0.75, [0.42, 1.5, -0.14], materials.steelDark, 18);
+  addCylinder(group, 0.19, 0.08, [0.42, 1.91, -0.14], materials.brass, 18);
   const furnaceLight = new THREE.PointLight(0xff7d2d, 3.2, 3.8, 2);
   furnaceLight.position.set(0.18, 0.67, 0.76);
   group.add(furnaceLight);
 
-  const heatMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffa45c,
-    transparent: true,
-    opacity: 0,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-    toneMapped: false,
+  const heatRings = [0, 1].map(() => {
+    const heatMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffa45c,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      toneMapped: false,
+    });
+    const heatRing = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.016, 6, 24), heatMaterial);
+    heatRing.position.set(0.42, 1.52, -0.14);
+    heatRing.rotation.x = Math.PI / 2;
+    group.add(heatRing);
+    return heatRing;
   });
-  const heatRing = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.016, 6, 24), heatMaterial);
-  heatRing.position.set(0.48, 1.58, -0.14);
-  heatRing.rotation.x = Math.PI / 2;
-  group.add(heatRing);
   group.userData.furnaceLight = furnaceLight;
   group.userData.furnaceFace = furnaceFace;
   group.userData.smelterFeed = feed;
-  group.userData.smelterHeatRing = heatRing;
+  group.userData.smelterHeatRings = heatRings;
   group.userData.smelterIngot = ingot;
   return group;
 };
@@ -770,7 +822,13 @@ const addRoute = (world: THREE.Group, spec: (typeof routeSpecs)[number]): RouteR
     opacity: 0,
     toneMapped: false,
   });
-  const packet = new THREE.Mesh(new THREE.IcosahedronGeometry(0.078, 1), packetMaterial);
+  const packetGeometry =
+    spec.packetKind === "signal"
+      ? new THREE.OctahedronGeometry(0.082, 0)
+      : spec.packetKind === "material"
+        ? new RoundedBoxGeometry(0.14, 0.07, 0.1, 2, 0.018)
+        : new RoundedBoxGeometry(0.17, 0.045, 0.11, 2, 0.012);
+  const packet = new THREE.Mesh(packetGeometry, packetMaterial);
   packet.renderOrder = 14;
   world.add(packet);
 
@@ -781,6 +839,8 @@ const addRoute = (world: THREE.Group, spec: (typeof routeSpecs)[number]): RouteR
     delay: spec.delay,
     duration: spec.duration,
     glow,
+    id: spec.id,
+    labelT: spec.labelT,
     packet,
     points: spec.points,
     travelEnd,
@@ -905,6 +965,10 @@ export const createCyclePrototypeWorld = (
   nodeOrder.forEach((point) => {
     screenPoints[point] = { x: 0, y: 0, visible: true };
   });
+  const routeScreenPoints = {} as CycleWorldRouteScreenPoints;
+  cycleRouteIds.forEach((routeId) => {
+    routeScreenPoints[routeId] = { x: 0, y: 0, visible: true };
+  });
 
   let highlighted: GraphPoint = "consulting";
   let pointerX = 0;
@@ -912,6 +976,7 @@ export const createCyclePrototypeWorld = (
   let width = 1;
   let height = 1;
   let layoutScaleX = 1;
+  let stationLayoutScale = 1;
   let animationFrame = 0;
   let disposed = false;
   let sceneVisible = true;
@@ -986,6 +1051,8 @@ export const createCyclePrototypeWorld = (
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     layoutScaleX = camera.aspect < 1.62 ? THREE.MathUtils.clamp(camera.aspect / 1.72, 0.38, 1) : 1;
+    const compactProgress = THREE.MathUtils.smoothstep(camera.aspect, 0.56, 1.12);
+    stationLayoutScale = THREE.MathUtils.lerp(0.74, 1, compactProgress);
     world.scale.x = layoutScaleX;
     const aspectDistance = camera.aspect < 1.08 ? 15.2 + (1.08 - camera.aspect) * 7.5 : 15.2;
     camera.position.set(0, aspectDistance * 0.62, aspectDistance * 0.75);
@@ -1014,7 +1081,8 @@ export const createCyclePrototypeWorld = (
     nodeOrder.forEach((point, index) => {
       const station = stationGroups[point];
       const active = point === highlighted;
-      const targetScale = active ? 1.095 : 1;
+      const activeScale = active ? (stationLayoutScale < 0.86 ? 1.055 : 1.095) : 1;
+      const targetScale = stationLayoutScale * activeScale;
       const targetY = station.userData.restY + (active ? 0.2 : 0);
       const ease = options.reducedMotion ? 1 : 0.09;
       station.scale.lerp(stationTargetScale.set(targetScale / layoutScaleX, targetScale, targetScale), ease);
@@ -1031,20 +1099,23 @@ export const createCyclePrototypeWorld = (
           const door = station.userData.oemDoor as THREE.Mesh;
           const statusPanel = station.userData.oemStatusPanel as THREE.Mesh;
           const beacon = station.userData.oemBeacon as THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
-          const phase = getCycleRoutePhase(sequenceElapsed, 7.2, 0);
-          const doorOpen = getCycleSegmentProgress(phase, 0.04, 0.17) * (1 - getCycleSegmentProgress(phase, 0.87, 0.98));
-          const carrierOut = getCycleSegmentProgress(phase, 0.18, 0.42) * (1 - getCycleSegmentProgress(phase, 0.64, 0.86));
-          const confirmation = getCycleWindowEnvelope(phase, 0.4, 0.48, 0.68, 0.8);
+          const phase = getCycleRoutePhase(sequenceElapsed, 7.8, 0);
+          const doorOpen = getCycleWindowEnvelope(phase, 0.04, 0.16, 0.8, 0.92);
+          const carrierDeploy = getCycleSegmentProgress(phase, 0.18, 0.38);
+          const carrierRetract = getCycleSegmentProgress(phase, 0.62, 0.8);
+          const carrierOut = carrierDeploy * (1 - carrierRetract);
+          const confirmation = getCycleWindowEnvelope(phase, 0.38, 0.46, 0.62, 0.72);
           const doorScale = 1 - doorOpen * 0.78;
           door.scale.y = doorScale;
           door.position.y = 0.51 + (1 - doorScale) * 0.22;
-          carrier.position.z = 0.14 + carrierOut * 0.5;
-          carrier.position.y = 0.34;
+          carrier.position.x = 0.16;
+          carrier.position.z = 0.12 + carrierOut * 0.58;
+          carrier.position.y = 0.34 + Math.sin(carrierOut * Math.PI) * 0.012;
           carrier.rotation.y = 0;
-          statusPanel.scale.x = 0.82 + confirmation * 0.2;
-          const beaconScale = 0.72 + confirmation * (0.65 + activity * 0.2);
+          statusPanel.scale.set(1 + confirmation * 0.08, 1 + confirmation * 0.08, 1);
+          const beaconScale = 0.72 + confirmation * (0.42 + activity * 0.12);
           beacon.scale.setScalar(beaconScale);
-          beacon.material.opacity = 0.16 + confirmation * 0.82;
+          beacon.material.opacity = 0.12 + confirmation * 0.76;
         }
 
         if (point === "customer") {
@@ -1052,23 +1123,24 @@ export const createCyclePrototypeWorld = (
           const indicator = station.userData.customerReturnIndicator as THREE.Group;
           const returnSweep = indicator.userData.returnSweep as THREE.Group;
           const scanLine = station.userData.customerScanLine as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
-          const phase = getCycleRoutePhase(sequenceElapsed, 6.8, 0);
-          const arrival = getCycleSegmentProgress(phase, 0.06, 0.3);
-          const returnTravel = getCycleSegmentProgress(phase, 0.6, 0.86);
-          const scanProgress = getCycleSegmentProgress(phase, 0.3, 0.54);
-          const scanWindow = getCycleWindowEnvelope(phase, 0.26, 0.31, 0.54, 0.6);
-          const confirmation = getCycleWindowEnvelope(phase, 0.5, 0.58, 0.86, 0.96);
-          parcel.position.x = -0.42 + arrival * 0.42 - returnTravel * 0.42;
+          const phase = getCycleRoutePhase(sequenceElapsed, 7.2, 0);
+          const arrival = getCycleSegmentProgress(phase, 0.05, 0.24);
+          const exit = getCycleSegmentProgress(phase, 0.62, 0.84);
+          const parcelEnvelope = getCycleWindowEnvelope(phase, 0.01, 0.06, 0.88, 0.96);
+          const scanProgress = getCycleSegmentProgress(phase, 0.26, 0.5);
+          const scanWindow = getCycleWindowEnvelope(phase, 0.22, 0.28, 0.52, 0.59);
+          const confirmation = getCycleWindowEnvelope(phase, 0.5, 0.58, 0.8, 0.9);
+          parcel.position.x = THREE.MathUtils.lerp(-0.52, 0, arrival) + exit * 0.52;
           parcel.position.y =
-            0.44 + Math.sin(arrival * Math.PI) * 0.018 + Math.sin(returnTravel * Math.PI) * 0.018;
+            0.44 + Math.sin(arrival * Math.PI) * 0.014 + Math.sin(exit * Math.PI) * 0.014;
           parcel.position.z = 0.08;
-          parcel.rotation.y = (arrival - returnTravel) * 0.08;
-          parcel.scale.setScalar(1 + activity * 0.04 + confirmation * 0.025);
+          parcel.rotation.y = (arrival + exit) * 0.035;
+          parcel.scale.setScalar(Math.max(0.001, parcelEnvelope * (1 + activity * 0.04 + confirmation * 0.012)));
           scanLine.position.x = -0.32 + scanProgress * 0.64;
           scanLine.material.opacity = scanWindow * (0.72 + activity * 0.25);
           scanLine.scale.x = 0.86 + scanWindow * 0.14;
-          returnSweep.rotation.z = -0.08 + confirmation * 0.32;
-          indicator.scale.setScalar(1.08 + confirmation * (0.1 + activity * 0.04));
+          returnSweep.rotation.z = -0.1 + confirmation * 0.3;
+          indicator.scale.setScalar(1.08 + confirmation * 0.045 + activity * 0.025);
         }
 
         if (point === "consulting") {
@@ -1077,7 +1149,7 @@ export const createCyclePrototypeWorld = (
           const signals = station.userData.consultingSignals as Array<THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>>;
           const result = station.userData.consultingResult as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
           const phase = getCycleRoutePhase(sequenceElapsed, 6.4, 0);
-          const scanProgress = getCycleSegmentProgress(phase, 0.06, 0.54);
+          const scanProgress = getCycleSegmentProgress(phase, 0.08, 0.5);
           const scanWindow = getCycleWindowEnvelope(phase, 0.02, 0.08, 0.54, 0.64);
           const resultWindow = getCycleWindowEnvelope(phase, 0.52, 0.62, 0.82, 0.94);
           scanner.position.z = -0.22 + scanProgress * 0.5;
@@ -1091,7 +1163,7 @@ export const createCyclePrototypeWorld = (
           });
           result.scale.x = 0.45 + resultWindow * 0.55;
           result.material.opacity = resultWindow;
-          lens.rotation.z = elapsed * 0.22;
+          lens.rotation.z = -0.2 + phase * Math.PI * 2;
           lens.scale.setScalar(1 + resultWindow * 0.08);
         }
 
@@ -1111,18 +1183,18 @@ export const createCyclePrototypeWorld = (
           const status = station.userData.robotStatus as THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
           const phase = getCycleRoutePhase(sequenceElapsed, 7.6, 0);
           const homeAngle = -1.65;
-          const approach = getCycleSegmentProgress(phase, 0.04, 0.16);
-          const transfer = getCycleSegmentProgress(phase, 0.31, 0.56);
-          const returnProgress = getCycleSegmentProgress(phase, 0.82, 0.97);
-          const pickReach = getCycleWindowEnvelope(phase, 0.08, 0.16, 0.22, 0.32);
-          const placeReach = getCycleWindowEnvelope(phase, 0.56, 0.66, 0.76, 0.84);
-          const gripClosed = getCycleWindowEnvelope(phase, 0.17, 0.2, 0.74, 0.79);
-          const partEnvelope = getCycleWindowEnvelope(phase, 0.02, 0.08, 0.84, 0.96);
-          const arrival = getCycleWindowEnvelope(phase, 0.72, 0.78, 0.88, 0.96);
+          const approach = getCycleSegmentProgress(phase, 0.05, 0.17);
+          const transfer = getCycleSegmentProgress(phase, 0.36, 0.57);
+          const returnProgress = getCycleSegmentProgress(phase, 0.85, 0.98);
+          const pickReach = getCycleWindowEnvelope(phase, 0.1, 0.17, 0.27, 0.35);
+          const placeReach = getCycleWindowEnvelope(phase, 0.57, 0.65, 0.76, 0.84);
+          const gripClosed = getCycleWindowEnvelope(phase, 0.19, 0.23, 0.72, 0.78);
+          const partEnvelope = getCycleWindowEnvelope(phase, 0.02, 0.07, 0.9, 0.98);
+          const arrival = getCycleWindowEnvelope(phase, 0.73, 0.8, 0.9, 0.97);
 
-          if (phase < 0.31) {
+          if (phase < 0.36) {
             rig.rotation.y = THREE.MathUtils.lerp(homeAngle, pickAngle, approach);
-          } else if (phase < 0.82) {
+          } else if (phase < 0.85) {
             rig.rotation.y = THREE.MathUtils.lerp(pickAngle, placeAngle, transfer);
           } else {
             rig.rotation.y = THREE.MathUtils.lerp(placeAngle, homeAngle, returnProgress);
@@ -1142,10 +1214,10 @@ export const createCyclePrototypeWorld = (
             rig.position.y + gripperLocal.y - extension - 0.075,
             rig.position.z + robotGripRadial.z,
           );
-          if (phase < 0.19) {
+          if (phase < 0.23) {
             part.position.copy(inputPosition);
             part.rotation.y = pickAngle;
-          } else if (phase < 0.75) {
+          } else if (phase < 0.76) {
             part.position.copy(robotGripPosition);
             part.rotation.y = rig.rotation.y;
           } else {
@@ -1161,28 +1233,38 @@ export const createCyclePrototypeWorld = (
           const furnaceLight = station.userData.furnaceLight as THREE.PointLight;
           const furnaceFace = station.userData.furnaceFace as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
           const feed = station.userData.smelterFeed as THREE.Group;
-          const heatRing = station.userData.smelterHeatRing as THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial>;
+          const heatRings = station.userData.smelterHeatRings as Array<THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial>>;
           const ingot = station.userData.smelterIngot as THREE.Group;
-          const phase = getCycleRoutePhase(sequenceElapsed, 7.8, 0);
-          const feedProgress = getCycleSegmentProgress(phase, 0.05, 0.34);
-          const feedEnvelope = getCycleWindowEnvelope(phase, 0.01, 0.06, 0.35, 0.45);
-          const heatWindow = getCycleWindowEnvelope(phase, 0.24, 0.34, 0.65, 0.77);
-          const heatProgress = getCycleSegmentProgress(phase, 0.3, 0.7);
-          const ingotProgress = getCycleSegmentProgress(phase, 0.62, 0.9);
-          const ingotEnvelope = getCycleWindowEnvelope(phase, 0.57, 0.65, 0.9, 0.99);
-          feed.position.x = -0.78 + feedProgress * 0.9;
+          const phase = getCycleRoutePhase(sequenceElapsed, 8.2, 0);
+          const feedProgress = getCycleSegmentProgress(phase, 0.05, 0.32);
+          const feedEnvelope = getCycleWindowEnvelope(phase, 0.01, 0.06, 0.34, 0.42);
+          const heatWindow = getCycleWindowEnvelope(phase, 0.3, 0.38, 0.68, 0.8);
+          const ingotProgress = getCycleSegmentProgress(phase, 0.72, 0.9);
+          const ingotEnvelope = getCycleWindowEnvelope(phase, 0.66, 0.73, 0.94, 0.99);
+          feed.position.x = THREE.MathUtils.lerp(-0.68, 0.16, feedProgress);
           feed.position.y = 0.485;
-          feed.position.z = 0.54;
+          feed.position.z = 0.59;
           feed.scale.setScalar(Math.max(0.001, feedEnvelope));
           furnaceLight.intensity = 1.8 + heatWindow * (3.1 + activity * 0.8);
           furnaceFace.material.emissiveIntensity = 0.8 + heatWindow * (1.6 + activity * 0.5);
-          furnaceFace.scale.y = 0.96 + heatWindow * 0.055;
-          heatRing.position.y = 1.5 + heatProgress * 0.56;
-          heatRing.scale.setScalar(0.58 + heatProgress * 0.9);
-          heatRing.material.opacity = Math.sin(heatProgress * Math.PI) * heatWindow * (0.24 + activity * 0.18);
-          ingot.position.x = 0.29 + ingotProgress * 0.44;
+          furnaceFace.scale.y = 1;
+          heatRings.forEach((heatRing, ringIndex) => {
+            const ringOffset = ringIndex * 0.12;
+            const ringProgress = getCycleSegmentProgress(phase, 0.32 + ringOffset, 0.58 + ringOffset);
+            const ringEnvelope = getCycleWindowEnvelope(
+              phase,
+              0.29 + ringOffset,
+              0.35 + ringOffset,
+              0.57 + ringOffset,
+              0.69 + ringOffset,
+            );
+            heatRing.position.y = 1.52 + ringProgress * 0.48;
+            heatRing.scale.setScalar(0.6 + ringProgress * 0.72);
+            heatRing.material.opacity = ringEnvelope * (0.22 + activity * 0.14);
+          });
+          ingot.position.x = THREE.MathUtils.lerp(0.49, 0.69, ingotProgress);
           ingot.position.y = 0.505;
-          ingot.position.z = 0.54;
+          ingot.position.z = 0.59;
           ingot.scale.setScalar(Math.max(0.001, ingotEnvelope * (1 + activity * 0.08)));
         }
 
@@ -1192,38 +1274,42 @@ export const createCyclePrototypeWorld = (
           const binIndicators = station.userData.sorterBinIndicators as Array<THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>>;
           const phase = getCycleRoutePhase(sequenceElapsed, 8.4, 0);
           const sortWindows = [
-            [0.02, 0.28],
-            [0.36, 0.62],
-            [0.7, 0.96],
+            [0.02, 0.3],
+            [0.35, 0.63],
+            [0.68, 0.96],
           ] as const;
-          sorterRotor.rotation.y = elapsed * 0.12;
+          const rotorSteps =
+            getCycleSegmentProgress(phase, 0.3, 0.34) +
+            getCycleSegmentProgress(phase, 0.63, 0.67) +
+            getCycleSegmentProgress(phase, 0.96, 0.995);
+          sorterRotor.rotation.y = -rotorSteps * ((Math.PI * 2) / 3);
           sorterItems.forEach((item, itemIndex) => {
             const [windowStart, windowEnd] = sortWindows[itemIndex];
-            const progress = getCycleSegmentProgress(phase, windowStart + 0.04, windowEnd - 0.08);
-            const settle = getCycleSegmentProgress(phase, windowEnd - 0.12, windowEnd - 0.05);
+            const travelEnd = windowEnd - 0.14;
+            const progress = getCycleSegmentProgress(phase, windowStart + 0.045, travelEnd);
+            const settle = getCycleSegmentProgress(phase, travelEnd, windowEnd - 0.06);
             const envelope = getCycleWindowEnvelope(
               phase,
               windowStart,
               windowStart + 0.035,
-              windowEnd - 0.045,
+              windowEnd - 0.035,
               windowEnd,
             );
             const arrival = getCycleWindowEnvelope(
               phase,
-              windowEnd - 0.13,
-              windowEnd - 0.09,
-              windowEnd - 0.04,
+              travelEnd,
+              windowEnd - 0.06,
+              windowEnd - 0.025,
               windowEnd,
             );
             const target = item.userData.targetPosition as THREE.Vector3;
             item.position.x = THREE.MathUtils.lerp(0, target.x, progress);
-            item.position.y =
-              THREE.MathUtils.lerp(0.56, target.y + 0.16, progress) +
-              Math.sin(progress * Math.PI) * 0.16 -
-              settle * 0.16;
+            const travelY =
+              THREE.MathUtils.lerp(0.56, target.y + 0.18, progress) + Math.sin(progress * Math.PI) * 0.14;
+            item.position.y = THREE.MathUtils.lerp(travelY, target.y, settle);
             item.position.z = THREE.MathUtils.lerp(0.28, target.z, progress);
             item.scale.setScalar(Math.max(0.001, envelope * (1 + activity * 0.07)));
-            item.rotation.y = Math.sin(progress * Math.PI) * 0.32;
+            item.rotation.y = Math.sin(progress * Math.PI) * 0.24 * (1 - settle);
             const indicator = binIndicators[itemIndex];
             indicator.material.opacity = 0.1 + arrival * 0.9;
             indicator.scale.x = 0.8 + arrival * 0.4;
@@ -1247,12 +1333,14 @@ export const createCyclePrototypeWorld = (
       const travelProgress = getCycleRouteTravelProgress(phase);
       const progress = travelProgress * route.travelEnd;
       route.curve.getPoint(progress, route.packet.position);
+      route.packet.position.y += 0.055 + Math.sin(travelProgress * Math.PI) * 0.025;
       route.curve.getTangent(progress, routeTangent).normalize();
       route.packet.rotation.y = Math.atan2(routeTangent.x, routeTangent.z);
-      const packetScale = (0.86 + Math.sin(travelProgress * Math.PI) * 0.18) * (active ? 1.18 : 1);
-      route.packet.scale.set(packetScale, packetScale * 0.72, packetScale * 1.45);
-      const arrivalPulse = getCycleWindowEnvelope(phase, 0.84, 0.9, 0.94, 0.99);
-      route.arrow.scale.setScalar(1 + arrivalPulse * (active ? 0.11 : 0.07));
+      const packetScale = (0.84 + envelope * 0.16 + Math.sin(travelProgress * Math.PI) * 0.06) * (active ? 1.14 : 1);
+      route.packet.scale.setScalar(packetScale);
+      const arrivalPulse = getCycleWindowEnvelope(phase, 0.78, 0.86, 0.92, 0.98);
+      const arrowScale = 1 + arrivalPulse * (active ? 0.035 : 0.02);
+      route.arrow.scale.set(arrowScale, 1, arrowScale);
     });
 
     renderer.render(scene, camera);
@@ -1265,7 +1353,16 @@ export const createCyclePrototypeWorld = (
       screenPoint.y = (-projection.y * 0.5 + 0.5) * height;
       screenPoint.visible = projection.z > -1 && projection.z < 1;
     });
-    options.onFrame(screenPoints);
+    routes.forEach((route) => {
+      route.curve.getPoint(route.labelT, worldPosition);
+      world.localToWorld(worldPosition);
+      projection.copy(worldPosition).project(camera);
+      const screenPoint = routeScreenPoints[route.id];
+      screenPoint.x = (projection.x * 0.5 + 0.5) * width;
+      screenPoint.y = (-projection.y * 0.5 + 0.5) * height;
+      screenPoint.visible = projection.z > -1 && projection.z < 1;
+    });
+    options.onFrame(screenPoints, routeScreenPoints);
 
     animationFrame = window.requestAnimationFrame(animate);
   };

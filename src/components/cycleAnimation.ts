@@ -13,12 +13,12 @@ export const getCycleRoutePhase = (elapsed: number, duration: number, delay: num
 
 export const getCycleRouteEnvelope = (phase: number) => {
   const normalizedPhase = ((phase % 1) + 1) % 1;
-  const fadeIn = smoothStep(normalizedPhase, 0.01, 0.1);
-  const fadeOut = 1 - smoothStep(normalizedPhase, 0.9, 0.99);
+  const fadeIn = smoothStep(normalizedPhase, 0.02, 0.14);
+  const fadeOut = 1 - smoothStep(normalizedPhase, 0.84, 0.98);
   return fadeIn * fadeOut;
 };
 
-export const getCycleRouteTravelProgress = (phase: number) => smoothStep(clamp01(phase), 0.04, 0.9);
+export const getCycleRouteTravelProgress = (phase: number) => smoothStep(clamp01(phase), 0.06, 0.86);
 
 export const getCycleSegmentProgress = (phase: number, start: number, end: number) => smoothStep(clamp01(phase), start, end);
 

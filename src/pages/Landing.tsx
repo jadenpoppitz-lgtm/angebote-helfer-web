@@ -2,21 +2,32 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, FormEvent, MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
+  AlertTriangle,
   ArrowDown,
   ArrowRight,
   BarChart3,
+  Boxes,
+  CalendarClock,
   CheckCircle2,
+  ClipboardCheck,
   CirclePlay,
+  Database,
+  Download,
   Factory,
+  FileCheck2,
   Flame,
   Globe2,
   Handshake,
   Leaf,
+  MapPin,
   Menu,
   PackageCheck,
+  PackageOpen,
   QrCode,
   Recycle,
   SearchCheck,
+  ShieldCheck,
+  Truck,
   UserRound,
   Wrench,
   X,
@@ -294,15 +305,15 @@ export const copy: Record<Language, LandingCopy> = {
         sellPcb: "PCB verkaufen",
         productPcb: "Produkt - PCB",
         pcb: "PCB",
-        sellSolution: "Sell Solution",
+        sellSolution: "Prozesslösung",
         material: "Material",
         materialReturn: "Material zurück",
       },
     },
     demos: {
       eyebrow: "Demo-Oberflächen",
-      title: "So fühlt sich das Netzwerk als Produkt an.",
-      text: "Jede Rolle bekommt eine kleine Oberfläche mit Demo-Daten, damit der Prototyp nicht nur erklärt, sondern bedienbar wirkt.",
+      title: "Drei Arbeitsoberflächen für den echten Rücklauf.",
+      text: "OEM steuert Rückläufer und Materialwert, Customer organisiert die Rückgabe und Smelter prüft qualifizierte Chargen. Die übrigen Prozessstationen bleiben bewusst als Vorschau markiert.",
       liveLabel: "Live-Demo",
       problemLabel: "Problem",
       valueLabel: "Wert",
@@ -380,8 +391,8 @@ export const copy: Record<Language, LandingCopy> = {
       },
     },
     traction: {
-      eyebrow: "Erfolge",
-      title: "Was wir bereits erreicht haben.",
+      eyebrow: "Meilensteine",
+      title: "Aus Forschung wird Wirkung.",
       text: "Förderungen, Accelerator-Programme, Auszeichnungen und Nominierungen zeigen, wie sich Leaftronics technologisch und unternehmerisch entwickelt.",
       events: [
         {
@@ -613,15 +624,15 @@ export const copy: Record<Language, LandingCopy> = {
         sellPcb: "Sell PCB",
         productPcb: "Product - PCB",
         pcb: "PCB",
-        sellSolution: "Sell Solution",
+        sellSolution: "Process solution",
         material: "Material",
         materialReturn: "Material return",
       },
     },
     demos: {
       eyebrow: "Demo surfaces",
-      title: "How the network feels as a product.",
-      text: "Each role gets a small interface with demo data, so the prototype feels usable.",
+      title: "Three workspaces for a controlled return loop.",
+      text: "OEM manages returns and material value, Customer organizes the return, and Smelter reviews qualified batches. The remaining process stations are intentionally marked as previews.",
       liveLabel: "Live demo",
       problemLabel: "Problem",
       valueLabel: "Value",
@@ -700,7 +711,7 @@ export const copy: Record<Language, LandingCopy> = {
     },
     traction: {
       eyebrow: "Milestones",
-      title: "What we have achieved so far.",
+      title: "Research becomes real-world impact.",
       text: "Funding, accelerator programs, awards and nominations show how Leaftronics is progressing as a technology and as a company.",
       events: [
         {
@@ -931,15 +942,15 @@ export const copy: Record<Language, LandingCopy> = {
         sellPcb: "出售 PCB",
         productPcb: "产品 - PCB",
         pcb: "PCB",
-        sellSolution: "Sell Solution",
+        sellSolution: "工艺方案",
         material: "材料",
         materialReturn: "材料回流",
       },
     },
     demos: {
       eyebrow: "演示界面",
-      title: "网络作为产品的体验。",
-      text: "每个角色都有包含演示数据的小界面，让原型更像可用产品。",
+      title: "面向闭环回收的三个核心工作界面。",
+      text: "OEM 管理退回与材料价值，客户组织退回，冶炼方审核合格批次。其余流程站点明确标记为预览。",
       liveLabel: "实时演示",
       problemLabel: "问题",
       valueLabel: "价值",
@@ -1017,8 +1028,8 @@ export const copy: Record<Language, LandingCopy> = {
       },
     },
     traction: {
-      eyebrow: "成果",
-      title: "我们已经取得的进展。",
+      eyebrow: "里程碑",
+      title: "让研究转化为影响力。",
       text: "资助、加速器项目、奖项和提名展示了 Leaftronics 在技术与企业发展方面的持续进步。",
       events: [
         {
@@ -1098,8 +1109,15 @@ export const copy: Record<Language, LandingCopy> = {
 };
 
 export const roleOrder: RoleId[] = ["oem", "customer", "smelter"];
-const demoRoleOrder: RoleId[] = ["oem", "customer", "smelter"];
+const demoRoleOrder: RoleId[] = ["oem", "customer", "smelter", "partner", "recycler"];
+const coreDemoRoles = new Set<RoleId>(["oem", "customer", "smelter"]);
 const graphOrder: GraphPoint[] = ["oem", "customer", "consulting", "disassembly", "smelter", "materials"];
+
+const demoPreviewLabels: Record<Language, { materials: string; preview: string }> = {
+  de: { materials: "Materials / Rückführung", preview: "Vorschau" },
+  en: { materials: "Materials / recovery", preview: "Preview" },
+  zh: { materials: "材料 / 回收", preview: "预览" },
+};
 
 export const roleIcons: Record<RoleId, typeof Factory> = {
   oem: Factory,
@@ -1674,7 +1692,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       <section id="demos" className="cycle-demo-section pb-20 pt-8 text-foreground md:pb-28 md:pt-12">
         <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(15rem,0.3fr)_minmax(0,0.7fr)] lg:items-start lg:gap-14">
           {(() => {
-            const demoRole = demoRoleOrder.includes(activeRole) ? activeRole : "customer";
+            const demoRole = coreDemoRoles.has(activeRole) ? activeRole : "oem";
             const Icon = roleIcons[demoRole];
             const card = content.roles.cards[demoRole];
             const surface = content.demos.surfaces[demoRole];
@@ -1702,35 +1720,57 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                   <div className="cycle-demo-role-tabs mt-6" role="tablist" aria-label={content.demos.eyebrow}>
                     {demoRoleOrder.map((role) => {
                       const RoleIcon = roleIcons[role];
+                      const isAvailable = coreDemoRoles.has(role);
                       return (
                         <button
                           key={role}
                           type="button"
-                          onClick={() => chooseRole(role)}
+                          onClick={() => {
+                            if (isAvailable) chooseRole(role);
+                          }}
                           role="tab"
+                          data-demo-role={role}
                           aria-selected={role === demoRole}
+                          aria-disabled={!isAvailable}
+                          disabled={!isAvailable}
                           className={`cycle-demo-role-tab ${
                             role === demoRole
                               ? "is-active"
-                              : ""
+                              : isAvailable
+                                ? ""
+                                : "is-disabled"
                           }`}
                         >
                           <RoleIcon className="h-4 w-4" />
-                          {content.roles.cards[role].title}
+                          <span className="min-w-0 flex-1">{content.roles.cards[role].title}</span>
+                          {!isAvailable ? <small>{demoPreviewLabels[language].preview}</small> : null}
                         </button>
                       );
                     })}
+                    <button
+                      type="button"
+                      role="tab"
+                      data-demo-role="materials"
+                      aria-selected={false}
+                      aria-disabled="true"
+                      disabled
+                      className="cycle-demo-role-tab is-disabled"
+                    >
+                      <PackageCheck className="h-4 w-4" />
+                      <span className="min-w-0 flex-1">{demoPreviewLabels[language].materials}</span>
+                      <small>{demoPreviewLabels[language].preview}</small>
+                    </button>
                   </div>
                 </aside>
 
                 <section className="min-w-0">
-                  {demoRole === "customer" ? (
+                  {demoRole === "oem" ? (
+                    <OemDashboard content={content} surface={surface} reference={reference} language={language} />
+                  ) : demoRole === "customer" ? (
                     <CustomerReturnDemo content={content} language={language} reference={reference} />
                   ) : demoRole === "smelter" ? (
                     <SmelterDashboard content={content} surface={surface} reference={reference} language={language} />
-                  ) : (
-                    <DemoSurface content={content} surface={surface} reference={reference} role={demoRole} language={language} />
-                  )}
+                  ) : null}
                 </section>
               </>
             );
@@ -1785,16 +1825,40 @@ const tractionEventRank = (event: LandingCopy["traction"]["events"][number]) => 
   return 0;
 };
 
+const tractionEventYear = (event: LandingCopy["traction"]["events"][number]) => {
+  const key = `${event.href} ${event.title}`;
+  if (key.includes("emanuel-goldberg")) return "2024";
+  return String(Math.floor(tractionEventRank(event) / 10000));
+};
+
 const TractionTimeline = ({ content }: { content: LandingCopy["traction"] }) => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const itemRefs = useRef<Array<HTMLElement | null>>([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [lineProgress, setLineProgress] = useState(0);
+  const activeIndexRef = useRef(0);
 
   const events = useMemo(
     () => [...content.events].sort((a, b) => tractionEventRank(b) - tractionEventRank(a)),
     [content.events],
   );
+
+  const yearGroups = useMemo(() => {
+    const groups: Array<{ year: string; items: Array<{ item: LandingCopy["traction"]["events"][number]; index: number }> }> = [];
+    events.forEach((item, index) => {
+      const year = tractionEventYear(item);
+      const group = groups.find((entry) => entry.year === year);
+      if (group) {
+        group.items.push({ item, index });
+      } else {
+        groups.push({ year, items: [{ item, index }] });
+      }
+    });
+    return groups;
+  }, [events]);
+
+  const activeYear = events[activeIndex] ? tractionEventYear(events[activeIndex]) : yearGroups[0]?.year;
+  const activeGroupIndex = Math.max(0, yearGroups.findIndex((group) => group.year === activeYear));
+  const yearProgress = yearGroups.length > 1 ? activeGroupIndex / (yearGroups.length - 1) : 0;
 
   useEffect(() => {
     let frame = 0;
@@ -1805,26 +1869,50 @@ const TractionTimeline = ({ content }: { content: LandingCopy["traction"] }) => 
         const section = sectionRef.current;
         if (!section) return;
 
-        const rect = section.getBoundingClientRect();
-        const progressDistance = Math.max(1, rect.height - window.innerHeight * 0.38);
-        setLineProgress(clamp01((window.innerHeight * 0.58 - rect.top) / progressDistance));
-
-        const viewportFocus = window.innerHeight * 0.48;
+        const list = section.querySelector<HTMLElement>(".traction-timeline-list");
+        const listRect = list?.getBoundingClientRect();
+        const viewportFocus = window.innerHeight * 0.5;
         let closestIndex = 0;
         let closestDistance = Number.POSITIVE_INFINITY;
+        let firstCenter = 0;
+        let lastCenter = 0;
 
         itemRefs.current.forEach((item, index) => {
           if (!item) return;
           const itemRect = item.getBoundingClientRect();
-          const itemCenter = itemRect.top + itemRect.height * 0.42;
+          const itemCenter = itemRect.top + itemRect.height * 0.5;
           const distance = Math.abs(itemCenter - viewportFocus);
+          const visibility = clamp01(1 - distance / Math.max(window.innerHeight * 0.82, itemRect.height));
+          const travel = clamp01((viewportFocus - itemRect.top) / (itemRect.height + viewportFocus));
+
+          item.style.setProperty("--item-visibility", visibility.toFixed(3));
+          item.style.setProperty("--item-opacity", (0.38 + visibility * 0.62).toFixed(3));
+          item.style.setProperty("--item-lift", `${((1 - visibility) * 42).toFixed(2)}px`);
+          item.style.setProperty("--item-scale", (0.975 + visibility * 0.025).toFixed(4));
+          item.style.setProperty("--item-saturation", (0.68 + visibility * 0.32).toFixed(3));
+          item.style.setProperty("--image-shift", `${((0.5 - travel) * 28).toFixed(2)}px`);
+
+          if (index === 0) firstCenter = itemCenter;
+          if (index === events.length - 1) lastCenter = itemCenter;
           if (distance < closestDistance) {
             closestDistance = distance;
             closestIndex = index;
           }
         });
 
-        setActiveIndex(closestIndex);
+        if (list && listRect) {
+          list.style.setProperty("--timeline-spine-start", `${Math.max(0, firstCenter - listRect.top).toFixed(2)}px`);
+          list.style.setProperty("--timeline-spine-end", `${Math.max(0, listRect.bottom - lastCenter).toFixed(2)}px`);
+        }
+
+        const lineDistance = Math.max(1, lastCenter - firstCenter);
+        const lineProgress = clamp01((viewportFocus - firstCenter) / lineDistance);
+        section.style.setProperty("--timeline-progress", lineProgress.toFixed(4));
+
+        if (closestIndex !== activeIndexRef.current) {
+          activeIndexRef.current = closestIndex;
+          setActiveIndex(closestIndex);
+        }
       });
     };
 
@@ -1838,45 +1926,123 @@ const TractionTimeline = ({ content }: { content: LandingCopy["traction"] }) => 
     };
   }, [events.length]);
 
+  const focusEvent = (index: number) => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    itemRefs.current[index]?.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: "center",
+    });
+  };
+
   return (
-    <section
-      id="traction"
-      ref={sectionRef}
-      className="traction-timeline-section"
-      style={{ "--timeline-progress": lineProgress } as CSSProperties}
-    >
+    <section id="traction" ref={sectionRef} className="traction-timeline-section">
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <div className="traction-timeline-intro">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.eyebrow}</p>
-          <h1 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.title}</h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.text}</p>
+          <div className="traction-timeline-intro-copy">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.eyebrow}</p>
+            <h1 className="mt-4 font-display text-4xl font-semibold leading-tight md:text-6xl">{content.title}</h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">{content.text}</p>
+          </div>
+
+          <div className="traction-timeline-scroll-cue" aria-hidden="true">
+            <ArrowDown className="h-4 w-4" />
+            <i />
+          </div>
         </div>
 
-        <div className="traction-timeline">
-          <div className="traction-timeline-line" aria-hidden="true">
-            <span />
-          </div>
+        <div className="traction-timeline-journey">
+          <aside
+            className="traction-timeline-aside"
+            aria-label={content.eyebrow}
+            style={{ "--year-progress": yearProgress } as CSSProperties}
+          >
+            <div className="traction-timeline-aside-inner">
+              <p className="traction-timeline-aside-eyebrow">{content.eyebrow}</p>
+              <p className="traction-timeline-active-date">{events[activeIndex]?.date}</p>
+              <h2>{events[activeIndex]?.title}</h2>
+
+              <div className="traction-timeline-navigation">
+                <span className="traction-timeline-navigation-line" aria-hidden="true">
+                  <i />
+                </span>
+                {yearGroups.map((group, groupIndex) => (
+                  <button
+                    key={group.year}
+                    type="button"
+                    className={
+                      group.year === activeYear ? "is-active" : groupIndex < activeGroupIndex ? "is-past" : ""
+                    }
+                    onClick={() => focusEvent(group.items[0].index)}
+                    aria-label={group.year}
+                    aria-current={group.year === activeYear ? "step" : undefined}
+                  >
+                    <span aria-hidden="true" />
+                    <small>{group.year}</small>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </aside>
+
           <div className="traction-timeline-list">
-            {events.map((item, index) => {
-              const stateClass = index === activeIndex ? "is-active" : index < activeIndex ? "is-past" : "is-future";
-              return (
-                <article
-                  key={`${item.date}-${item.title}`}
-                  ref={(node) => {
-                    itemRefs.current[index] = node;
-                  }}
-                  className={`traction-timeline-item ${stateClass}`}
-                >
-                  <div className="traction-timeline-date" aria-hidden="true">
-                    <span>{item.date}</span>
-                  </div>
-                  <span className="traction-timeline-dot" aria-hidden="true" />
+            <span className="traction-timeline-spine" aria-hidden="true">
+              <i />
+            </span>
+            {yearGroups.map((group) => (
+              <section key={group.year} className="traction-timeline-year-group" aria-labelledby={`year-${group.year}`}>
+                <div className="traction-timeline-year-heading" id={`year-${group.year}`}>
+                  <span>{group.year}</span>
+                  <i aria-hidden="true" />
+                </div>
+                <div className="traction-timeline-year-events">
+                  {group.items.map(({ item, index }) => {
+                    const stateClass =
+                      index === activeIndex ? "is-active" : index < activeIndex ? "is-past" : "is-future";
+                    return (
+                      <article
+                        key={`${item.date}-${item.title}`}
+                        ref={(node) => {
+                          itemRefs.current[index] = node;
+                        }}
+                        className={`traction-timeline-item ${stateClass}`}
+                        style={
+                          {
+                            "--item-visibility": index === 0 ? 1 : 0,
+                            "--item-opacity": index === 0 ? 1 : 0.38,
+                            "--item-lift": index === 0 ? "0px" : "42px",
+                            "--item-scale": index === 0 ? 1 : 0.975,
+                            "--item-saturation": index === 0 ? 1 : 0.68,
+                            "--image-shift": "0px",
+                          } as CSSProperties
+                        }
+                      >
                   <div className="traction-timeline-card">
-                    {item.image ? (
-                      <img src={item.image} alt={item.imageAlt} className="traction-timeline-image" loading="lazy" />
-                    ) : null}
+                    <div className={`traction-timeline-media ${item.image ? "has-image" : "is-placeholder"}`}>
+                      {item.image ? (
+                        <img
+                          src={item.image}
+                          alt={item.imageAlt}
+                          className="traction-timeline-image"
+                          loading={index === 0 ? "eager" : "lazy"}
+                          fetchPriority={index === 0 ? "high" : "auto"}
+                        />
+                      ) : (
+                        <div className="traction-timeline-placeholder" aria-hidden="true">
+                          <i />
+                          <strong>{String(index + 1).padStart(2, "0")}</strong>
+                          <span>{item.date.match(/\b20\d{2}\b/)?.[0]}</span>
+                        </div>
+                      )}
+                      <div className="traction-timeline-media-meta" aria-hidden="true">
+                        <span>{item.date}</span>
+                        <b>{String(index + 1).padStart(2, "0")}</b>
+                      </div>
+                    </div>
                     <div className="traction-timeline-card-body">
-                      <p className="traction-timeline-mobile-date">{item.date}</p>
+                      <div className="traction-timeline-card-meta">
+                        <span>{String(index + 1).padStart(2, "0")}</span>
+                        <p>{item.date}</p>
+                      </div>
                       <h3>{item.title}</h3>
                       <p>{item.text}</p>
                       <a href={item.href} target="_blank" rel="noreferrer">
@@ -1885,9 +2051,12 @@ const TractionTimeline = ({ content }: { content: LandingCopy["traction"] }) => 
                       </a>
                     </div>
                   </div>
-                </article>
-              );
-            })}
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
           </div>
         </div>
       </div>
@@ -2911,6 +3080,360 @@ export const DemoSurface = ({
   );
 };
 
+const oemReturnBatches = [
+  {
+    id: "RET-2048",
+    product: "Edge Controller X2",
+    units: 126,
+    coverage: 98,
+    value: 18_400,
+    status: "ready",
+    due: "18.07.",
+    materials: [
+      { id: "copper", share: 46 },
+      { id: "precious", share: 12 },
+      { id: "substrate", share: 42 },
+    ],
+  },
+  {
+    id: "RET-2051",
+    product: "Sensor Hub M4",
+    units: 84,
+    coverage: 91,
+    value: 13_700,
+    status: "review",
+    due: "22.07.",
+    materials: [
+      { id: "copper", share: 39 },
+      { id: "precious", share: 9 },
+      { id: "substrate", share: 52 },
+    ],
+  },
+  {
+    id: "RET-2057",
+    product: "Drive Unit C8",
+    units: 52,
+    coverage: 96,
+    value: 10_700,
+    status: "scheduled",
+    due: "29.07.",
+    materials: [
+      { id: "copper", share: 51 },
+      { id: "precious", share: 7 },
+      { id: "substrate", share: 42 },
+    ],
+  },
+] as const;
+
+const oemInterfaceLabels: Record<
+  Language,
+  {
+    cockpit: string;
+    dataCoverage: string;
+    dataQuality: string;
+    export: string;
+    exportReady: string;
+    materialForecast: string;
+    materialValue: string;
+    queue: string;
+    readyBatches: string;
+    release: string;
+    released: string;
+    returnRate: string;
+    selectedBatch: string;
+    status: Record<(typeof oemReturnBatches)[number]["status"], string>;
+    fields: {
+      batch: string;
+      coverage: string;
+      due: string;
+      product: string;
+      units: string;
+      value: string;
+    };
+    checks: Array<{ label: string; status: "complete" | "open" }>;
+    checkStatus: Record<"complete" | "open", string>;
+    materials: Record<(typeof oemReturnBatches)[number]["materials"][number]["id"], string>;
+  }
+> = {
+  de: {
+    cockpit: "Closed-Loop Operations",
+    dataCoverage: "Datenabdeckung",
+    dataQuality: "Produktdatensatz",
+    export: "Bericht exportieren",
+    exportReady: "OEM-Bericht wurde erstellt",
+    materialForecast: "Erwartetes Materialprofil",
+    materialValue: "Gesicherter Materialwert",
+    queue: "Rücklauf-Chargen",
+    readyBatches: "Freigabebereit",
+    release: "Materialabruf freigeben",
+    released: "Materialabruf freigegeben",
+    returnRate: "Rücklaufquote",
+    selectedBatch: "Ausgewählte Charge",
+    status: { ready: "Freigabebereit", review: "Datenprüfung", scheduled: "Eingeplant" },
+    fields: {
+      batch: "Charge",
+      coverage: "Datensatz",
+      due: "Fällig",
+      product: "Produktfamilie",
+      units: "Einheiten",
+      value: "Materialwert",
+    },
+    checks: [
+      { label: "Eindeutige Produkt- und Chargen-ID", status: "complete" },
+      { label: "Material- und Komponentenprofil", status: "complete" },
+      { label: "Behandlungsinformation", status: "complete" },
+      { label: "Transportnachweis", status: "open" },
+    ],
+    checkStatus: { complete: "Vollständig", open: "Offen" },
+    materials: { copper: "Kupfer", precious: "Edelmetalle", substrate: "Substrat" },
+  },
+  en: {
+    cockpit: "Closed-loop operations",
+    dataCoverage: "Data coverage",
+    dataQuality: "Product record",
+    export: "Export report",
+    exportReady: "OEM report created",
+    materialForecast: "Expected material profile",
+    materialValue: "Secured material value",
+    queue: "Return batches",
+    readyBatches: "Ready to release",
+    release: "Release material call-off",
+    released: "Material call-off released",
+    returnRate: "Return rate",
+    selectedBatch: "Selected batch",
+    status: { ready: "Ready to release", review: "Data review", scheduled: "Scheduled" },
+    fields: {
+      batch: "Batch",
+      coverage: "Record",
+      due: "Due",
+      product: "Product family",
+      units: "Units",
+      value: "Material value",
+    },
+    checks: [
+      { label: "Unique product and batch ID", status: "complete" },
+      { label: "Material and component profile", status: "complete" },
+      { label: "Treatment information", status: "complete" },
+      { label: "Transport evidence", status: "open" },
+    ],
+    checkStatus: { complete: "Complete", open: "Open" },
+    materials: { copper: "Copper", precious: "Precious metals", substrate: "Substrate" },
+  },
+  zh: {
+    cockpit: "闭环运营",
+    dataCoverage: "数据覆盖率",
+    dataQuality: "产品数据记录",
+    export: "导出报告",
+    exportReady: "OEM 报告已创建",
+    materialForecast: "预计材料构成",
+    materialValue: "已锁定材料价值",
+    queue: "退回批次",
+    readyBatches: "可批准批次",
+    release: "批准材料调用",
+    released: "材料调用已批准",
+    returnRate: "退回率",
+    selectedBatch: "所选批次",
+    status: { ready: "可批准", review: "数据审核", scheduled: "已计划" },
+    fields: {
+      batch: "批次",
+      coverage: "数据记录",
+      due: "到期",
+      product: "产品系列",
+      units: "数量",
+      value: "材料价值",
+    },
+    checks: [
+      { label: "唯一产品及批次标识", status: "complete" },
+      { label: "材料及组件构成", status: "complete" },
+      { label: "处理信息", status: "complete" },
+      { label: "运输证明", status: "open" },
+    ],
+    checkStatus: { complete: "完整", open: "待补充" },
+    materials: { copper: "铜", precious: "贵金属", substrate: "基板" },
+  },
+};
+
+export const OemDashboard = ({
+  content,
+  surface,
+  reference,
+  language,
+}: {
+  content: LandingCopy;
+  surface: LandingCopy["demos"]["surfaces"][RoleId];
+  reference: string;
+  language: Language;
+}) => {
+  const labels = oemInterfaceLabels[language];
+  const [selectedId, setSelectedId] = useState<string>(oemReturnBatches[0].id);
+  const [releasedIds, setReleasedIds] = useState<string[]>([]);
+  const selectedBatch = oemReturnBatches.find((batch) => batch.id === selectedId) ?? oemReturnBatches[0];
+  const isReleased = releasedIds.includes(selectedBatch.id);
+  const currency = new Intl.NumberFormat(language === "de" ? "de-DE" : language === "zh" ? "zh-CN" : "en-GB", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  });
+
+  const exportReport = () => {
+    const report = {
+      reference,
+      exportedAt: new Date().toISOString(),
+      batches: oemReturnBatches,
+    };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], { type: "application/json" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `leaftronics-oem-${reference}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success(labels.exportReady);
+  };
+
+  return (
+    <DemoWindow
+      content={content}
+      reference={reference}
+      icon={<Factory className="h-4 w-4" />}
+      title={surface.title}
+      subtitle={surface.subtitle}
+    >
+      <div className="cycle-ops-toolbar">
+        <div>
+          <p className="cycle-ops-eyebrow">{labels.cockpit}</p>
+          <p className="cycle-ops-context">Q3 / Europe Central</p>
+        </div>
+        <button type="button" onClick={exportReport} className="cycle-ops-secondary-action">
+          <Download className="h-4 w-4" />
+          {labels.export}
+        </button>
+      </div>
+
+      <div className="cycle-ops-kpis" aria-label={labels.cockpit}>
+        {[
+          { icon: PackageOpen, label: labels.returnRate, value: "78%", detail: "+6 pp" },
+          { icon: Boxes, label: labels.materialValue, value: currency.format(42_800), detail: "262 units" },
+          { icon: Database, label: labels.dataCoverage, value: "96%", detail: "3 / 4 complete" },
+          { icon: ShieldCheck, label: labels.readyBatches, value: "1", detail: "18.07." },
+        ].map((metric) => {
+          const MetricIcon = metric.icon;
+          return (
+            <div key={metric.label} className="cycle-ops-kpi">
+              <span><MetricIcon className="h-4 w-4" /></span>
+              <p>{metric.label}</p>
+              <strong>{metric.value}</strong>
+              <small>{metric.detail}</small>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="cycle-ops-layout">
+        <section className="cycle-ops-queue" aria-label={labels.queue}>
+          <div className="cycle-ops-section-heading">
+            <div>
+              <p className="cycle-ops-eyebrow">{labels.queue}</p>
+              <h4>{labels.selectedBatch}: {selectedBatch.id}</h4>
+            </div>
+            <span>{oemReturnBatches.length}</span>
+          </div>
+          <div className="cycle-ops-rows">
+            {oemReturnBatches.map((batch) => (
+              <button
+                key={batch.id}
+                type="button"
+                aria-pressed={batch.id === selectedBatch.id}
+                className={`cycle-ops-row ${batch.id === selectedBatch.id ? "is-selected" : ""}`}
+                onClick={() => setSelectedId(batch.id)}
+              >
+                <span>
+                  <small>{labels.fields.batch}</small>
+                  <strong className="font-mono">{batch.id}</strong>
+                </span>
+                <span>
+                  <small>{labels.fields.product}</small>
+                  <strong>{batch.product}</strong>
+                </span>
+                <span>
+                  <small>{labels.fields.units}</small>
+                  <strong>{batch.units}</strong>
+                </span>
+                <span>
+                  <small>{labels.fields.coverage}</small>
+                  <strong>{batch.coverage}%</strong>
+                </span>
+                <span>
+                  <small>{labels.fields.value}</small>
+                  <strong>{currency.format(batch.value)}</strong>
+                </span>
+                <span>
+                  <small>{labels.fields.due}</small>
+                  <strong>{batch.due}</strong>
+                </span>
+                <span className={`cycle-ops-status is-${batch.status}`}>{labels.status[batch.status]}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <aside className="cycle-ops-inspector">
+          <section>
+            <div className="cycle-ops-section-heading">
+              <div>
+                <p className="cycle-ops-eyebrow">{labels.materialForecast}</p>
+                <h4>{selectedBatch.product}</h4>
+              </div>
+              <Boxes className="h-5 w-5 text-primary" />
+            </div>
+            <div className="cycle-ops-materials">
+              {selectedBatch.materials.map((material) => (
+                <div key={material.id}>
+                  <span>
+                    <small>{labels.materials[material.id]}</small>
+                    <strong>{material.share}%</strong>
+                  </span>
+                  <i aria-hidden="true"><b style={{ width: `${material.share}%` }} /></i>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="cycle-ops-data-quality">
+            <div className="cycle-ops-section-heading">
+              <div>
+                <p className="cycle-ops-eyebrow">{labels.dataQuality}</p>
+                <h4>{selectedBatch.coverage}%</h4>
+              </div>
+              <FileCheck2 className="h-5 w-5 text-primary" />
+            </div>
+            <ul>
+              {labels.checks.map((check) => (
+                <li key={check.label} className={`is-${check.status}`}>
+                  {check.status === "complete" ? <CheckCircle2 className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
+                  <span>{check.label}</span>
+                  <small>{labels.checkStatus[check.status]}</small>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <button
+            type="button"
+            className={`cycle-ops-primary-action ${isReleased ? "is-complete" : ""}`}
+            onClick={() => {
+              setReleasedIds((current) => current.includes(selectedBatch.id) ? current : [...current, selectedBatch.id]);
+              toast.success(labels.released, { description: selectedBatch.id });
+            }}
+          >
+            <ClipboardCheck className="h-4 w-4" />
+            {isReleased ? labels.released : labels.release}
+          </button>
+        </aside>
+      </div>
+    </DemoWindow>
+  );
+};
+
 const smelterDeliveries = [
   {
     id: "LT-0726-18",
@@ -2918,6 +3441,11 @@ const smelterDeliveries = [
     source: "Leaftronics Dresden",
     tonnes: 38,
     status: "freigegeben",
+    moisture: 1.8,
+    documents: 8,
+    documentsTotal: 8,
+    contamination: "low",
+    expectedYield: 89,
     materials: [
       { label: "Kupfer", share: 41, tonnes: 15.6 },
       { label: "Substrat", share: 34, tonnes: 12.9 },
@@ -2931,6 +3459,11 @@ const smelterDeliveries = [
     source: "OEM-Rückläufer Süd",
     tonnes: 31,
     status: "angemeldet",
+    moisture: 2.4,
+    documents: 7,
+    documentsTotal: 8,
+    contamination: "review",
+    expectedYield: 86,
     materials: [
       { label: "Kupfer", share: 38, tonnes: 11.8 },
       { label: "Substrat", share: 37, tonnes: 11.5 },
@@ -2944,6 +3477,11 @@ const smelterDeliveries = [
     source: "Industriechargen Ost",
     tonnes: 24,
     status: "in Prüfung",
+    moisture: 1.6,
+    documents: 6,
+    documentsTotal: 8,
+    contamination: "review",
+    expectedYield: 87,
     materials: [
       { label: "Kupfer", share: 44, tonnes: 10.6 },
       { label: "Substrat", share: 31, tonnes: 7.4 },
@@ -2951,7 +3489,7 @@ const smelterDeliveries = [
       { label: "Lötmetalle", share: 16, tonnes: 3.8 },
     ],
   },
-];
+] as const;
 
 const recoveryMetalsByBatch: Record<string, Array<{ label: string; value: string; uplift: string }>> = {
   "LT-0726-18": [
@@ -2980,39 +3518,95 @@ const recoveryMetalsByBatch: Record<string, Array<{ label: string; value: string
 const smelterInterfaceLabels: Record<
   Language,
   {
+    approve: string;
+    approved: string;
+    assayCoverage: string;
     batchPlan: string;
+    contamination: string;
+    contaminationStates: Record<(typeof smelterDeliveries)[number]["contamination"], string>;
+    context: string;
+    documents: string;
+    expectedYield: string;
+    mass: string;
     materialMix: string;
+    moisture: string;
     nextBatch: string;
     planned: string;
+    quality: string;
     registered: string;
+    selectedBatch: string;
+    source: string;
+    syncStatus: string;
     statuses: Record<string, string>;
     materials: Record<string, string>;
   }
 > = {
   de: {
-    batchPlan: "Lieferplan",
+    approve: "Charge für Annahme freigeben",
+    approved: "Charge ist freigegeben",
+    assayCoverage: "Analyseabdeckung",
+    batchPlan: "Eingangsplanung",
+    contamination: "Störstoffrisiko",
+    contaminationStates: { low: "Niedrig", review: "Prüfung nötig" },
+    context: "Werk 02 / Linie A",
+    documents: "Dokumente",
+    expectedYield: "Erwartete Ausbeute",
+    mass: "Menge",
     materialMix: "Erwarteter Materialmix",
+    moisture: "Feuchte",
     nextBatch: "Nächste Charge",
     planned: "Lieferungen geplant",
+    quality: "Annahmeprüfung",
     registered: "Angemeldete Menge",
+    selectedBatch: "Ausgewählte Charge",
+    source: "Herkunft",
+    syncStatus: "Annahme synchronisiert",
     statuses: { freigegeben: "Freigegeben", angemeldet: "Angemeldet", "in Prüfung": "In Prüfung" },
     materials: { Kupfer: "Kupfer", Substrat: "Substrat", Edelmetalle: "Edelmetalle", Lötmetalle: "Lötmetalle" },
   },
   en: {
-    batchPlan: "Delivery plan",
+    approve: "Approve batch for intake",
+    approved: "Batch approved",
+    assayCoverage: "Assay coverage",
+    batchPlan: "Inbound schedule",
+    contamination: "Contamination risk",
+    contaminationStates: { low: "Low", review: "Review required" },
+    context: "Plant 02 / Line A",
+    documents: "Documents",
+    expectedYield: "Expected yield",
+    mass: "Volume",
     materialMix: "Expected material mix",
+    moisture: "Moisture",
     nextBatch: "Next batch",
     planned: "Planned deliveries",
+    quality: "Acceptance check",
     registered: "Registered volume",
+    selectedBatch: "Selected batch",
+    source: "Origin",
+    syncStatus: "Intake synced",
     statuses: { freigegeben: "Approved", angemeldet: "Registered", "in Prüfung": "In review" },
     materials: { Kupfer: "Copper", Substrat: "Substrate", Edelmetalle: "Precious metals", Lötmetalle: "Solder metals" },
   },
   zh: {
-    batchPlan: "交付计划",
+    approve: "批准批次入库",
+    approved: "批次已批准",
+    assayCoverage: "分析覆盖率",
+    batchPlan: "入库计划",
+    contamination: "杂质风险",
+    contaminationStates: { low: "低", review: "需要审核" },
+    context: "02 号工厂 / A 线",
+    documents: "文件",
+    expectedYield: "预计产出率",
+    mass: "数量",
     materialMix: "预计材料构成",
+    moisture: "含水率",
     nextBatch: "下一批次",
     planned: "计划交付",
+    quality: "验收检查",
     registered: "已登记数量",
+    selectedBatch: "所选批次",
+    source: "来源",
+    syncStatus: "入库已同步",
     statuses: { freigegeben: "已批准", angemeldet: "已登记", "in Prüfung": "审核中" },
     materials: { Kupfer: "铜", Substrat: "基板", Edelmetalle: "贵金属", Lötmetalle: "焊料金属" },
   },
@@ -3171,6 +3765,10 @@ export const SmelterDashboard = ({
 }) => {
   const labels = smelterInterfaceLabels[language];
   const recoveryCopy = recoveryDashboardCopy[language];
+  const [selectedId, setSelectedId] = useState<string>(smelterDeliveries[0].id);
+  const [approvedIds, setApprovedIds] = useState<string[]>([smelterDeliveries[0].id]);
+  const selected = smelterDeliveries.find((delivery) => delivery.id === selectedId) ?? smelterDeliveries[0];
+  const isApproved = approvedIds.includes(selected.id);
 
   return (
     <DemoWindow
@@ -3180,71 +3778,221 @@ export const SmelterDashboard = ({
       title={surface.title}
       subtitle={surface.subtitle}
     >
-      <div className="cycle-demo-metric-strip">
-        <div className="cycle-demo-metric">
-          <p>{labels.nextBatch}</p>
-          <strong>{smelterDeliveries[0].tonnes} t</strong>
+      <div className="cycle-ops-toolbar">
+        <div>
+          <p className="cycle-ops-eyebrow">{labels.batchPlan}</p>
+          <p className="cycle-ops-context">{labels.context}</p>
         </div>
-        <div className="cycle-demo-metric">
-          <p>{labels.registered}</p>
-          <strong>93 t</strong>
-        </div>
-        <div className="cycle-demo-metric">
-          <p>{labels.planned}</p>
-          <strong>3</strong>
-        </div>
+        <span className="cycle-ops-live-status"><i aria-hidden="true" /> {labels.syncStatus}</span>
       </div>
 
-      <section className="cycle-smelter-plan" aria-label={labels.batchPlan}>
-        <div className="cycle-demo-subheading">
-          <span>{labels.batchPlan}</span>
-          <span>{labels.materialMix}</span>
-        </div>
-        <div className="cycle-smelter-list">
-          {smelterDeliveries.map((delivery) => (
-            <article key={delivery.id} className="cycle-smelter-delivery">
-              <header>
-                <div className="min-w-0">
-                  <p className="font-mono text-[10px] font-semibold uppercase text-primary">{delivery.id} · {delivery.date}</p>
-                  <h4 className="mt-1 break-words font-display text-xl font-semibold leading-tight">{delivery.source}</h4>
-                </div>
-                <div className="shrink-0 text-right">
-                  <p className="font-display text-3xl font-semibold leading-none text-primary">{delivery.tonnes} t</p>
-                  <p className="mt-1 text-[10px] font-semibold uppercase text-muted-foreground">{labels.statuses[delivery.status]}</p>
-                </div>
-              </header>
-              <div className="cycle-material-mix">
-                {delivery.materials.map((material) => (
-                  <div key={material.label} className="cycle-material-row">
-                    <span className="cycle-material-name">{labels.materials[material.label]}</span>
-                    <span className="cycle-material-bar" aria-hidden="true">
-                      <span style={{ width: `${material.share}%` }} />
-                    </span>
-                    <span className="cycle-material-share">{material.share}%</span>
+      <div className="cycle-ops-kpis" aria-label={labels.batchPlan}>
+        {[
+          { icon: CalendarClock, label: labels.nextBatch, value: "18.07.", detail: "08:30" },
+          { icon: Truck, label: labels.registered, value: "93 t", detail: `${labels.planned}: 3` },
+          { icon: FileCheck2, label: labels.assayCoverage, value: "96%", detail: "21 / 22" },
+          { icon: Flame, label: labels.expectedYield, value: "89%", detail: "Cu + PM" },
+        ].map((metric) => {
+          const MetricIcon = metric.icon;
+          return (
+            <div key={metric.label} className="cycle-ops-kpi">
+              <span><MetricIcon className="h-4 w-4" /></span>
+              <p>{metric.label}</p>
+              <strong>{metric.value}</strong>
+              <small>{metric.detail}</small>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="cycle-ops-layout cycle-smelter-workspace">
+        <section className="cycle-ops-queue" aria-label={labels.batchPlan}>
+          <div className="cycle-ops-section-heading">
+            <div>
+              <p className="cycle-ops-eyebrow">{labels.batchPlan}</p>
+              <h4>{labels.selectedBatch}: {selected.id}</h4>
+            </div>
+            <span>{smelterDeliveries.length}</span>
+          </div>
+          <div className="cycle-smelter-rows">
+            {smelterDeliveries.map((delivery) => (
+              <button
+                key={delivery.id}
+                type="button"
+                aria-pressed={delivery.id === selected.id}
+                className={`cycle-smelter-row ${delivery.id === selected.id ? "is-selected" : ""}`}
+                onClick={() => setSelectedId(delivery.id)}
+              >
+                <span>
+                  <small>{delivery.date}</small>
+                  <strong className="font-mono">{delivery.id}</strong>
+                </span>
+                <span>
+                  <small>{labels.source}</small>
+                  <strong>{delivery.source}</strong>
+                </span>
+                <span>
+                  <small>{labels.mass}</small>
+                  <strong>{delivery.tonnes} t</strong>
+                </span>
+                <span>
+                  <small>{labels.expectedYield}</small>
+                  <strong>{delivery.expectedYield}%</strong>
+                </span>
+                <span
+                  className={`cycle-ops-status is-${
+                    delivery.status === "freigegeben" ? "ready" : delivery.status === "angemeldet" ? "scheduled" : "review"
+                  }`}
+                >
+                  {approvedIds.includes(delivery.id) ? labels.statuses.freigegeben : labels.statuses[delivery.status]}
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <aside className="cycle-ops-inspector">
+          <section>
+            <div className="cycle-ops-section-heading">
+              <div>
+                <p className="cycle-ops-eyebrow">{labels.materialMix}</p>
+                <h4>{selected.source}</h4>
+              </div>
+              <Flame className="h-5 w-5 text-primary" />
+            </div>
+            <div className="cycle-smelter-materials">
+              {selected.materials.map((material) => (
+                <div key={material.label}>
+                  <span>
+                    <small>{labels.materials[material.label]}</small>
                     <strong>{material.tonnes.toFixed(1)} t</strong>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-5 border-t border-primary/12 pt-4">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{recoveryCopy.materials}</p>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">{recoveryCopy.comparison}</p>
+                  </span>
+                  <i aria-hidden="true"><b style={{ width: `${material.share}%` }} /></i>
+                  <em>{material.share}%</em>
                 </div>
-                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
-                  {recoveryMetalsByBatch[delivery.id].map((metal) => (
-                    <div key={metal.label} className="min-w-0 border-l-2 border-primary/30 bg-primary/[0.045] px-2.5 py-2">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{metal.label}</p>
-                      <p className="mt-1 font-display text-lg font-semibold leading-none text-foreground">{metal.value}</p>
-                    </div>
-                  ))}
-                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="cycle-smelter-recovery">
+            <div className="cycle-ops-section-heading">
+              <div>
+                <p className="cycle-ops-eyebrow">{recoveryCopy.materials}</p>
+                <h4>{recoveryCopy.comparison}</h4>
               </div>
-            </article>
-          ))}
-        </div>
-      </section>
+              <Boxes className="h-5 w-5 text-primary" />
+            </div>
+            <div className="cycle-smelter-recovery-grid">
+              {recoveryMetalsByBatch[selected.id].map((metal) => (
+                <div key={metal.label}>
+                  <small>{metal.label}</small>
+                  <strong>{metal.value}</strong>
+                  <span>{metal.uplift}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="cycle-smelter-quality">
+            <div className="cycle-ops-section-heading">
+              <div>
+                <p className="cycle-ops-eyebrow">{labels.quality}</p>
+                <h4>{selected.id}</h4>
+              </div>
+              <ShieldCheck className="h-5 w-5 text-primary" />
+            </div>
+            <dl>
+              <div>
+                <dt>{labels.moisture}</dt>
+                <dd>{selected.moisture.toFixed(1)}%</dd>
+              </div>
+              <div>
+                <dt>{labels.documents}</dt>
+                <dd>{selected.documents} / {selected.documentsTotal}</dd>
+              </div>
+              <div>
+                <dt>{labels.contamination}</dt>
+                <dd className={`is-${selected.contamination}`}>{labels.contaminationStates[selected.contamination]}</dd>
+              </div>
+              <div>
+                <dt>{labels.expectedYield}</dt>
+                <dd>{selected.expectedYield}%</dd>
+              </div>
+            </dl>
+          </section>
+
+          <button
+            type="button"
+            className={`cycle-ops-primary-action ${isApproved ? "is-complete" : ""}`}
+            onClick={() => {
+              setApprovedIds((current) => current.includes(selected.id) ? current : [...current, selected.id]);
+              toast.success(labels.approved, { description: selected.id });
+            }}
+          >
+            <ClipboardCheck className="h-4 w-4" />
+            {isApproved ? labels.approved : labels.approve}
+          </button>
+        </aside>
+      </div>
     </DemoWindow>
   );
+};
+
+const customerInterfaceLabels: Record<
+  Language,
+  {
+    complete: string;
+    eligible: string;
+    journey: string;
+    method: string;
+    pickup: string;
+    pickupDetail: string;
+    pickupWindow: string;
+    productId: string;
+    productRecord: string;
+    returnPoint: string;
+    steps: [string, string, string];
+  }
+> = {
+  de: {
+    complete: "Vollständig",
+    eligible: "Rückgabe möglich",
+    journey: "Rückgabeprozess",
+    method: "Rückgabeart",
+    pickup: "Abholung",
+    pickupDetail: "Abholung am nächsten Werktag zwischen 10:00 und 14:00 Uhr.",
+    pickupWindow: "Abholfenster",
+    productId: "Produkt-ID",
+    productRecord: "Produktdatensatz",
+    returnPoint: "Rückgabestelle",
+    steps: ["Produkt prüfen", "Rückgabe wählen", "Bestätigen"],
+  },
+  en: {
+    complete: "Complete",
+    eligible: "Eligible for return",
+    journey: "Return journey",
+    method: "Return method",
+    pickup: "Pickup",
+    pickupDetail: "Pickup on the next working day between 10:00 and 14:00.",
+    pickupWindow: "Pickup window",
+    productId: "Product ID",
+    productRecord: "Product record",
+    returnPoint: "Drop-off",
+    steps: ["Check product", "Choose return", "Confirm"],
+  },
+  zh: {
+    complete: "完整",
+    eligible: "可以退回",
+    journey: "退回流程",
+    method: "退回方式",
+    pickup: "上门取件",
+    pickupDetail: "下一个工作日 10:00 至 14:00 上门取件。",
+    pickupWindow: "取件时间",
+    productId: "产品 ID",
+    productRecord: "产品数据记录",
+    returnPoint: "退回点",
+    steps: ["检查产品", "选择退回", "确认"],
+  },
 };
 
 export const CustomerReturnDemo = ({ content, language, reference }: { content: LandingCopy; language: Language; reference: string }) => {
@@ -3256,18 +4004,23 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
   const [returnQuantity, setReturnQuantity] = useState(SERIAL_DB[DEMO_SERIAL].catalogEntry?.returnQuantity ?? 1);
   const [discountPercent, setDiscountPercent] = useState(() => 0.5 + Math.floor(Math.random() * 10) * 0.5);
   const [certifiedDevices, setCertifiedDevices] = useState(() => 5 + Math.floor(Math.random() * 86));
+  const [returnConfirmed, setReturnConfirmed] = useState(false);
+  const [returnMode, setReturnMode] = useState<"dropoff" | "pickup">("dropoff");
   const copy = content.demos.customerLive;
+  const labels = customerInterfaceLabels[language];
   const benefitCopy = customerBenefitCopy[language];
   const catalogCopy = customerCatalogCopy[language];
   const totalsCopy = customerReturnTotalsCopy[language];
   const progressCopy = customerBenefitProgressCopy[language];
   const displayLocation = localizeCity(location, language);
+  const currentStep = returnConfirmed ? 3 : lookup ? 2 : 1;
 
   const checkSerial = (value = serial) => {
     const key = value.trim().toUpperCase();
     const result = SERIAL_DB[key];
     setLookup(result ?? null);
     setNotFound(!result && key.length > 0);
+    setReturnConfirmed(false);
     if (result) {
       setLocation(result.city);
       setReturnQuantity(result.catalogEntry?.returnQuantity ?? 1);
@@ -3289,6 +4042,18 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
 
   return (
     <DemoWindow content={content} reference={reference} icon={<QrCode className="h-4 w-4" />} title={copy.title} subtitle={copy.text}>
+      <ol className="cycle-return-progress" aria-label={labels.journey}>
+        {labels.steps.map((step, index) => {
+          const number = index + 1;
+          const state = number < currentStep ? "complete" : number === currentStep ? "current" : "pending";
+          return (
+            <li key={step} className={`is-${state}`} aria-current={state === "current" ? "step" : undefined}>
+              <span>{state === "complete" ? <CheckCircle2 className="h-4 w-4" /> : number}</span>
+              <strong>{step}</strong>
+            </li>
+          );
+        })}
+      </ol>
       <div className="cycle-customer-workspace">
         <form
           onSubmit={(event) => {
@@ -3303,6 +4068,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
               value={serial}
               onChange={(event) => {
                 setSerial(event.target.value);
+                setReturnConfirmed(false);
               }}
               placeholder={copy.serialPlaceholder}
               className="h-11 rounded-md border border-primary/18 bg-background px-3 font-mono text-sm text-foreground outline-none focus:border-primary"
@@ -3344,13 +4110,28 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
           <div className="cycle-demo-panel">
             {lookup ? (
               <>
-                <div className="flex items-start justify-between gap-3">
+                <div className="cycle-return-product-heading flex items-start justify-between gap-3">
                   <div>
                     <p className="text-xs uppercase tracking-[0.22em] text-primary">{lookup.serial}</p>
                     <h4 className="mt-2 font-display text-2xl font-semibold">{device}</h4>
                   </div>
-                  <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">{lookup.postalCode}</span>
+                  <span className="cycle-return-eligible"><CheckCircle2 className="h-3.5 w-3.5" />{labels.eligible}</span>
                 </div>
+                <dl className="cycle-return-record">
+                  <div>
+                    <dt>{labels.productId}</dt>
+                    <dd>{lookup.serial}</dd>
+                  </div>
+                  <div>
+                    <dt>{labels.productRecord}</dt>
+                    <dd>{labels.complete}</dd>
+                  </div>
+                  <div>
+                    <dt>{copy.detected}</dt>
+                    <dd>{displayLocation} · {lookup.postalCode}</dd>
+                  </div>
+                </dl>
+
                 {lookup.catalogEntry ? (
                   <section className="mt-4 border-y border-primary/12 py-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -3396,18 +4177,51 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                     </div>
                   </section>
                 ) : null}
-                <p className="mt-4 text-sm font-semibold text-foreground/78">{copy.returnPoints}</p>
-                <div className="mt-3 grid gap-2">
-                  {lookup.partners.slice(0, 3).map((partner) => (
-                    <div key={partner.id} className="cycle-demo-list-row">
-                      <span>
-                        <span className="block text-sm font-semibold">{partner.name}</span>
-                        <span className="block text-xs text-muted-foreground">{partner.street}</span>
-                      </span>
-                      <span className="text-sm font-semibold text-primary">{partner.distanceKm.toFixed(1)} km</span>
-                    </div>
-                  ))}
+                <div className="cycle-return-method">
+                  <p>{labels.method}</p>
+                  <div role="group" aria-label={labels.method}>
+                    <button
+                      type="button"
+                      aria-pressed={returnMode === "dropoff"}
+                      className={returnMode === "dropoff" ? "is-active" : ""}
+                      onClick={() => setReturnMode("dropoff")}
+                    >
+                      <MapPin className="h-4 w-4" />
+                      {labels.returnPoint}
+                    </button>
+                    <button
+                      type="button"
+                      aria-pressed={returnMode === "pickup"}
+                      className={returnMode === "pickup" ? "is-active" : ""}
+                      onClick={() => setReturnMode("pickup")}
+                    >
+                      <Truck className="h-4 w-4" />
+                      {labels.pickup}
+                    </button>
+                  </div>
                 </div>
+
+                <p className="mt-4 text-sm font-semibold text-foreground/78">
+                  {returnMode === "dropoff" ? copy.returnPoints : labels.pickupWindow}
+                </p>
+                {returnMode === "dropoff" ? (
+                  <div className="mt-2 grid">
+                    {lookup.partners.slice(0, 3).map((partner) => (
+                      <div key={partner.id} className="cycle-demo-list-row">
+                        <span>
+                          <span className="block text-sm font-semibold">{partner.name}</span>
+                          <span className="block text-xs text-muted-foreground">{partner.street}</span>
+                        </span>
+                        <span className="text-sm font-semibold text-primary">{partner.distanceKm.toFixed(1)} km</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="cycle-return-pickup">
+                    <CalendarClock className="h-5 w-5" />
+                    <span>{labels.pickupDetail}</span>
+                  </div>
+                )}
                 <div className="mt-4 grid gap-3 border-t border-primary/12 pt-4 sm:grid-cols-2">
                   <div className="rounded-md border border-primary/16 bg-primary/[0.05] p-3">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{benefitCopy.discount}</p>
@@ -3435,6 +4249,7 @@ export const CustomerReturnDemo = ({ content, language, reference }: { content: 
                 <button
                   type="button"
                   onClick={() => {
+                    setReturnConfirmed(true);
                     setCertifiedDevices((current) => Math.min(100, current + confirmedQuantity));
                     setDiscountPercent((current) => Math.min(5, Number((current + confirmedQuantity * 0.1).toFixed(1))));
                     toast.success(copy.confirm, { description: `${lookup.serial} · ${confirmedQuantity}` });

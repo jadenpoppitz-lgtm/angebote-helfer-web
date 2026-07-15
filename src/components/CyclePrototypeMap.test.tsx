@@ -26,6 +26,17 @@ vi.mock("@/components/CyclePrototypeWorld", () => ({
 
 const content = {
   solution: {
+    eyebrow: "Material and data flows",
+    hoverLabel: "Process preview",
+    flow: {
+      product: "Product",
+      sellPcb: "Sell PCB",
+      productPcb: "Product and PCB",
+      pcb: "PCB",
+      sellSolution: "Process solution",
+      material: "Material",
+      materialReturn: "Material return",
+    },
     nodes: Object.fromEntries(
       points.map((point) => [
         point,
@@ -81,33 +92,45 @@ describe("CyclePrototypeMap", () => {
     matchMedia(false);
     setup();
 
-    fireEvent.mouseEnter(screen.getByRole("button", { name: "Leaftronics: Routing prüfen" }));
+    fireEvent.mouseEnter(screen.getByRole("button", { name: /Leaftronics/ }));
 
     expect(screen.getByText("consulting problem")).toBeInTheDocument();
     expect(screen.getByText("consulting solution")).toBeInTheDocument();
   });
 
-  it("opens the matching dashboard on pointer devices", () => {
+  it("opens a core dashboard on pointer devices", () => {
     matchMedia(false);
     const { chooseRole, jumpTo } = setup();
 
-    fireEvent.click(screen.getByRole("button", { name: "Leaftronics: Routing prüfen" }));
+    fireEvent.click(screen.getByRole("button", { name: /oem öffnen/ }));
 
-    expect(chooseRole).toHaveBeenCalledWith("partner");
+    expect(chooseRole).toHaveBeenCalledWith("oem");
     expect(jumpTo).toHaveBeenCalledWith("demos");
+  });
+
+  it("keeps secondary stations informational", () => {
+    matchMedia(false);
+    const { chooseRole, jumpTo } = setup();
+
+    fireEvent.click(screen.getByRole("button", { name: /Leaftronics/ }));
+
+    expect(screen.getByText("consulting problem")).toBeInTheDocument();
+    expect(screen.getByText("Process preview")).toBeInTheDocument();
+    expect(chooseRole).not.toHaveBeenCalled();
+    expect(jumpTo).not.toHaveBeenCalled();
   });
 
   it("shows information before opening a dashboard on touch devices", () => {
     matchMedia(true);
     const { chooseRole, jumpTo } = setup();
-    const station = screen.getByRole("button", { name: "Leaftronics: Routing prüfen" });
+    const station = screen.getByRole("button", { name: /customer öffnen/ });
 
     fireEvent.click(station);
-    expect(screen.getByText("consulting problem")).toBeInTheDocument();
+    expect(screen.getByText("customer problem")).toBeInTheDocument();
     expect(chooseRole).not.toHaveBeenCalled();
 
     fireEvent.click(station);
-    expect(chooseRole).toHaveBeenCalledWith("partner");
+    expect(chooseRole).toHaveBeenCalledWith("customer");
     expect(jumpTo).toHaveBeenCalledWith("demos");
   });
 });

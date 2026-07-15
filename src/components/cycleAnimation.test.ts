@@ -20,9 +20,9 @@ describe("cycle route animation", () => {
   });
 
   it("finishes packet travel before fading at the route handoff", () => {
-    expect(getCycleRouteTravelProgress(0.04)).toBe(0);
-    expect(getCycleRouteTravelProgress(0.47)).toBeCloseTo(0.5);
-    expect(getCycleRouteTravelProgress(0.9)).toBe(1);
+    expect(getCycleRouteTravelProgress(0.06)).toBe(0);
+    expect(getCycleRouteTravelProgress(0.46)).toBeCloseTo(0.5);
+    expect(getCycleRouteTravelProgress(0.86)).toBe(1);
   });
 
   it("normalizes delayed and negative phases", () => {
