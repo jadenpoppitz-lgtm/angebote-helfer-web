@@ -385,8 +385,8 @@ export default function LegalPage({ kind }: { kind: LegalPageKind }) {
       <header className="relative z-40 border-b border-emerald-950/10 bg-[#f5faf4]">
         <div className="mx-auto flex min-h-20 w-full max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link to="/" className="flex items-center gap-3" aria-label="Leaftronics">
-            <span className="h-10 w-10 overflow-hidden rounded-full border border-emerald-950/10 bg-white">
-              <img src="/logo1-web.webp" alt="" className="h-full w-full object-cover" />
+            <span className="h-10 w-10">
+              <img src="/leaftronics-logo-color.webp" alt="" className="h-full w-full object-contain" />
             </span>
             <span className="hidden font-display text-sm font-semibold uppercase tracking-[0.2em] sm:inline">Leaftronics</span>
           </Link>

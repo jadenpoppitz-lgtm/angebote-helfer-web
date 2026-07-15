@@ -34,13 +34,14 @@ import {
 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { CyclePrototypeMap } from "@/components/CyclePrototypeMap";
+import { DemoDayCustomerLookup } from "@/components/DemoDayCustomerLookup";
 import { Footer } from "@/components/Footer";
 import { PilotProjectSection } from "@/components/PilotProjectSection";
 import { ProofOfProgress } from "@/components/ProofOfProgress";
 import { ScrollPCBStory } from "@/components/ScrollPCBStory";
 import { WaterfallToPCBHero } from "@/components/WaterfallToPCBHero";
 import { languages, type Language, useLanguage } from "@/lib/i18n";
-import { DEMO_SERIAL, SERIAL_DB, type SerialLookup } from "@/data/partners";
+import { DEMO_SERIAL } from "@/data/partners";
 
 export type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
 export type GraphPoint = "oem" | "customer" | "consulting" | "disassembly" | "smelter" | "materials";
@@ -215,7 +216,7 @@ export const copy: Record<Language, LandingCopy> = {
         customer: {
           title: "Customer / Rückgeber",
           problem: "Alte Produkte liegen ungenutzt oder gehen in unscharfe Sammelströme.",
-          value: "Seriennummer erfassen, Rückgabe bestätigen und Rabatt bei OEMs im Netzwerk erhalten.",
+          value: "Seriennummer prüfen, Gerätepass und Materialwerte verstehen und die Rückgabe vormerken.",
           next: "Produkt zurückgeben",
           cta: "Rückgabe starten",
         },
@@ -318,10 +319,10 @@ export const copy: Record<Language, LandingCopy> = {
       problemLabel: "Problem",
       valueLabel: "Wert",
       customerLive: {
-        title: "Live-Demo: Customer Rückgabe",
-        text: "Gib eine Seriennummer ein. Leaftronics erkennt Produkt und Standort, zeigt Rückgabepartner und mögliche OEM-Rabatte.",
+        title: "Dein Gerät. Seine Materialien. Deine Gewinnchance.",
+        text: "Öffne mit der Seriennummer deiner Demo-Karte einen digitalen Gerätepass. Fünf von 100 Geräten tragen ein Goldticket.",
         serialLabel: "Seriennummer",
-        serialPlaceholder: "z. B. LT-B2B-26-0001",
+        serialPlaceholder: "z. B. LT26-N7Q4-K9M2",
         detect: "Standort automatisch erkennen",
         detected: "Standort erkannt",
         unknown: "Seriennummer noch nicht im Demo-System",
@@ -350,7 +351,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
         customer: {
           title: "Customer-Rückgabe",
-          subtitle: "Seriennummer, Rabattstatus und Bestätigung",
+          subtitle: "Gerätepass, Materialprofil und Gewinnstatus",
           metrics: [
             { label: "Demo-ID", value: "KB-24-104" },
             { label: "Rabatt", value: "12%" },
@@ -534,7 +535,7 @@ export const copy: Record<Language, LandingCopy> = {
         customer: {
           title: "Customer / Returner",
           problem: "Old products sit unused or enter unclear collection streams.",
-          value: "Enter serial number, confirm return and receive OEM network discounts.",
+          value: "Check the serial number, understand the device passport and material value, then reserve a return.",
           next: "Return product",
           cta: "Start return",
         },
@@ -637,10 +638,10 @@ export const copy: Record<Language, LandingCopy> = {
       problemLabel: "Problem",
       valueLabel: "Value",
       customerLive: {
-        title: "Live demo: customer return",
-        text: "Enter a serial number. Leaftronics detects product and location, then shows return partners and possible OEM discounts.",
+        title: "Your device. Its materials. Your chance to win.",
+        text: "Use the serial number on your demo card to open a digital device passport. Five out of 100 devices hold a golden ticket.",
         serialLabel: "Serial number",
-        serialPlaceholder: "e.g. LT-B2B-26-0001",
+        serialPlaceholder: "e.g. LT26-N7Q4-K9M2",
         detect: "Detect location automatically",
         detected: "Location detected",
         unknown: "Serial number is not in the demo system yet",
@@ -669,7 +670,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
         customer: {
           title: "Customer return",
-          subtitle: "Serial number, discount status and confirmation",
+          subtitle: "Device passport, material profile and prize status",
           metrics: [
             { label: "Demo ID", value: "KB-24-104" },
             { label: "Discount", value: "12%" },
@@ -852,7 +853,7 @@ export const copy: Record<Language, LandingCopy> = {
         customer: {
           title: "客户 / 退回方",
           problem: "旧产品闲置或进入不清晰的收集流。",
-          value: "输入序列号，确认退回，并获得 OEM 网络折扣。",
+          value: "检查序列号，了解设备护照和材料价值，并登记回收。",
           next: "退回产品",
           cta: "开始退回",
         },
@@ -955,10 +956,10 @@ export const copy: Record<Language, LandingCopy> = {
       problemLabel: "问题",
       valueLabel: "价值",
       customerLive: {
-        title: "实时演示：客户退回",
-        text: "输入序列号。Leaftronics 会识别产品和位置，并显示退回伙伴与可能的 OEM 折扣。",
+        title: "你的设备、材料与中奖机会",
+        text: "输入演示卡上的序列号，打开数字设备护照。100 台设备中有 5 台带有金色奖券。",
         serialLabel: "序列号",
-        serialPlaceholder: "例如 LT-B2B-26-0001",
+        serialPlaceholder: "例如 LT26-N7Q4-K9M2",
         detect: "自动识别位置",
         detected: "位置已识别",
         unknown: "该序列号暂未在演示系统中",
@@ -987,7 +988,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
         customer: {
           title: "客户退回",
-          subtitle: "序列号、折扣状态和确认",
+          subtitle: "设备护照、材料构成和中奖状态",
           metrics: [
             { label: "演示 ID", value: "KB-24-104" },
             { label: "折扣", value: "12%" },
@@ -1352,8 +1353,8 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         <WaterfallToPCBHero loadingLabel={heroLoadingLabels[language]}>
           <header className="landing-hero-header relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
             <Link to="/" className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-background shadow-elegant">
-                <img src="/logo1-web.webp" alt="Leaftronics Logo" className="h-full w-full object-cover" />
+              <span className="flex h-11 w-11 items-center justify-center">
+                <img src="/leaftronics-logo-color.webp" alt="Leaftronics Logo" className="h-full w-full object-contain" />
               </span>
               <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
             </Link>
@@ -1476,8 +1477,12 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         <section className={`site-subpage-header-shell relative z-30 ${showCycle ? "is-light" : "is-dark"}`}>
           <header className="site-subpage-header relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between px-5 py-6 sm:px-8 sm:pr-32">
             <Link to="/" className="flex items-center gap-3">
-              <span className="site-header-logo flex h-11 w-11 items-center justify-center overflow-hidden rounded-full shadow-elegant">
-                <img src="/logo1-web.webp" alt="Leaftronics Logo" className="h-full w-full object-cover" />
+              <span className="site-header-logo flex h-11 w-11 items-center justify-center">
+                <img
+                  src={showCycle ? "/leaftronics-logo-color.webp" : "/leaftronics-logo-mono-light.png"}
+                  alt="Leaftronics Logo"
+                  className="h-full w-full object-contain"
+                />
               </span>
               <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
             </Link>
@@ -3996,359 +4001,13 @@ const customerInterfaceLabels: Record<
 };
 
 export const CustomerReturnDemo = ({ content, language, reference }: { content: LandingCopy; language: Language; reference: string }) => {
-  const [serial, setSerial] = useState(DEMO_SERIAL);
-  const [lookup, setLookup] = useState<SerialLookup | null>(SERIAL_DB[DEMO_SERIAL]);
-  const [notFound, setNotFound] = useState(false);
-  const [location, setLocation] = useState(SERIAL_DB[DEMO_SERIAL].city);
-  const [detecting, setDetecting] = useState(false);
-  const [returnQuantity, setReturnQuantity] = useState(SERIAL_DB[DEMO_SERIAL].catalogEntry?.returnQuantity ?? 1);
-  const [discountPercent, setDiscountPercent] = useState(() => 0.5 + Math.floor(Math.random() * 10) * 0.5);
-  const [certifiedDevices, setCertifiedDevices] = useState(() => 5 + Math.floor(Math.random() * 86));
-  const [returnConfirmed, setReturnConfirmed] = useState(false);
-  const [returnMode, setReturnMode] = useState<"dropoff" | "pickup">("dropoff");
   const copy = content.demos.customerLive;
-  const labels = customerInterfaceLabels[language];
-  const benefitCopy = customerBenefitCopy[language];
-  const catalogCopy = customerCatalogCopy[language];
-  const totalsCopy = customerReturnTotalsCopy[language];
-  const progressCopy = customerBenefitProgressCopy[language];
-  const displayLocation = localizeCity(location, language);
-  const currentStep = returnConfirmed ? 3 : lookup ? 2 : 1;
-
-  const checkSerial = (value = serial) => {
-    const key = value.trim().toUpperCase();
-    const result = SERIAL_DB[key];
-    setLookup(result ?? null);
-    setNotFound(!result && key.length > 0);
-    setReturnConfirmed(false);
-    if (result) {
-      setLocation(result.city);
-      setReturnQuantity(result.catalogEntry?.returnQuantity ?? 1);
-    }
-  };
-
-  const detectLocation = () => {
-    setDetecting(true);
-    window.setTimeout(() => {
-      const next = lookup?.city ?? "Dresden";
-      setLocation(next);
-      setDetecting(false);
-      toast.success(copy.detected, { description: localizeCity(next, language) });
-    }, 650);
-  };
-
-  const device = lookup ? localizeDevice(lookup.device, language) : null;
-  const confirmedQuantity = Math.max(1, Math.min(99, Math.floor(returnQuantity) || 1));
 
   return (
     <DemoWindow content={content} reference={reference} icon={<QrCode className="h-4 w-4" />} title={copy.title} subtitle={copy.text}>
-      <ol className="cycle-return-progress" aria-label={labels.journey}>
-        {labels.steps.map((step, index) => {
-          const number = index + 1;
-          const state = number < currentStep ? "complete" : number === currentStep ? "current" : "pending";
-          return (
-            <li key={step} className={`is-${state}`} aria-current={state === "current" ? "step" : undefined}>
-              <span>{state === "complete" ? <CheckCircle2 className="h-4 w-4" /> : number}</span>
-              <strong>{step}</strong>
-            </li>
-          );
-        })}
-      </ol>
-      <div className="cycle-customer-workspace">
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            checkSerial();
-          }}
-          className="cycle-demo-panel"
-        >
-          <label className="grid gap-2 text-sm font-semibold">
-            {copy.serialLabel}
-            <input
-              value={serial}
-              onChange={(event) => {
-                setSerial(event.target.value);
-                setReturnConfirmed(false);
-              }}
-              placeholder={copy.serialPlaceholder}
-              className="h-11 rounded-md border border-primary/18 bg-background px-3 font-mono text-sm text-foreground outline-none focus:border-primary"
-            />
-          </label>
-          <button
-            type="button"
-            onClick={() => {
-              setSerial(DEMO_SERIAL);
-              checkSerial(DEMO_SERIAL);
-            }}
-            className="mt-2 inline-flex text-sm font-semibold text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-          >
-            {copy.useDemo}
-          </button>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button type="submit" className="inline-flex h-10 items-center gap-2 rounded-md bg-foreground px-4 text-sm font-semibold text-background shadow-card">
-              <SearchCheck className="h-4 w-4" />
-              {copy.check}
-            </button>
-          </div>
-
-          <button
-            type="button"
-            onClick={detectLocation}
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md border border-primary/35 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary"
-          >
-            <Globe2 className="h-4 w-4" />
-            {detecting ? copy.locationPending : copy.detect}
-          </button>
-
-          <div className="cycle-inline-data mt-4">
-            <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">{copy.detected}</p>
-            <p className="mt-1 font-display text-2xl font-semibold">{displayLocation}</p>
-          </div>
-        </form>
-
-        <div className="grid min-w-0 gap-4">
-          <div className="cycle-demo-panel">
-            {lookup ? (
-              <>
-                <div className="cycle-return-product-heading flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-primary">{lookup.serial}</p>
-                    <h4 className="mt-2 font-display text-2xl font-semibold">{device}</h4>
-                  </div>
-                  <span className="cycle-return-eligible"><CheckCircle2 className="h-3.5 w-3.5" />{labels.eligible}</span>
-                </div>
-                <dl className="cycle-return-record">
-                  <div>
-                    <dt>{labels.productId}</dt>
-                    <dd>{lookup.serial}</dd>
-                  </div>
-                  <div>
-                    <dt>{labels.productRecord}</dt>
-                    <dd>{labels.complete}</dd>
-                  </div>
-                  <div>
-                    <dt>{copy.detected}</dt>
-                    <dd>{displayLocation} · {lookup.postalCode}</dd>
-                  </div>
-                </dl>
-
-                {lookup.catalogEntry ? (
-                  <section className="mt-4 border-y border-primary/12 py-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{totalsCopy.totalForReturn}</p>
-                      <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
-                        {catalogCopy.refurbishment[lookup.catalogEntry.refurbishmentStatus]}
-                      </span>
-                    </div>
-                    <label className="mt-3 grid max-w-48 gap-1 text-xs font-semibold text-foreground/80">
-                      {totalsCopy.quantity}
-                      <input
-                        type="number"
-                        min="1"
-                        max="99"
-                        value={returnQuantity}
-                        onChange={(event) => setReturnQuantity(Math.max(1, Math.min(99, Number(event.target.value) || 1)))}
-                        className="h-10 rounded-md border border-primary/18 bg-background px-3 font-mono text-sm text-foreground outline-none focus:border-primary"
-                      />
-                    </label>
-                    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                      {[
-                        [totalsCopy.quantity, `${confirmedQuantity}`],
-                        [totalsCopy.totalWeight, formatKilograms(lookup.catalogEntry.totalWeightKg * confirmedQuantity)],
-                        [totalsCopy.metalShare, `${lookup.catalogEntry.metalSharePercent}%`],
-                        [totalsCopy.copper, formatGrams(lookup.catalogEntry.metalsG.copper * confirmedQuantity)],
-                      ].map(([label, value]) => (
-                        <div key={label} className="min-w-0 border-l-2 border-primary/30 bg-primary/[0.045] px-2.5 py-2">
-                          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
-                          <p className="mt-1 font-display text-base font-semibold leading-none text-foreground">{value}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{catalogCopy.preciousMetals}</p>
-                    <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-5">
-                      {Object.entries(lookup.catalogEntry.metalsG)
-                        .filter(([metal]) => metal !== "copper")
-                        .map(([metal, value]) => (
-                        <div key={metal} className="min-w-0 border-l-2 border-primary/30 bg-primary/[0.045] px-2.5 py-2">
-                          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{metal}</p>
-                          <p className="mt-1 font-display text-base font-semibold leading-none text-foreground">{formatGrams(value * confirmedQuantity)}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                ) : null}
-                <div className="cycle-return-method">
-                  <p>{labels.method}</p>
-                  <div role="group" aria-label={labels.method}>
-                    <button
-                      type="button"
-                      aria-pressed={returnMode === "dropoff"}
-                      className={returnMode === "dropoff" ? "is-active" : ""}
-                      onClick={() => setReturnMode("dropoff")}
-                    >
-                      <MapPin className="h-4 w-4" />
-                      {labels.returnPoint}
-                    </button>
-                    <button
-                      type="button"
-                      aria-pressed={returnMode === "pickup"}
-                      className={returnMode === "pickup" ? "is-active" : ""}
-                      onClick={() => setReturnMode("pickup")}
-                    >
-                      <Truck className="h-4 w-4" />
-                      {labels.pickup}
-                    </button>
-                  </div>
-                </div>
-
-                <p className="mt-4 text-sm font-semibold text-foreground/78">
-                  {returnMode === "dropoff" ? copy.returnPoints : labels.pickupWindow}
-                </p>
-                {returnMode === "dropoff" ? (
-                  <div className="mt-2 grid">
-                    {lookup.partners.slice(0, 3).map((partner) => (
-                      <div key={partner.id} className="cycle-demo-list-row">
-                        <span>
-                          <span className="block text-sm font-semibold">{partner.name}</span>
-                          <span className="block text-xs text-muted-foreground">{partner.street}</span>
-                        </span>
-                        <span className="text-sm font-semibold text-primary">{partner.distanceKm.toFixed(1)} km</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="cycle-return-pickup">
-                    <CalendarClock className="h-5 w-5" />
-                    <span>{labels.pickupDetail}</span>
-                  </div>
-                )}
-                <div className="mt-4 grid gap-3 border-t border-primary/12 pt-4 sm:grid-cols-2">
-                  <div className="rounded-md border border-primary/16 bg-primary/[0.05] p-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{benefitCopy.discount}</p>
-                    <div className="mt-2 flex items-end justify-between gap-3">
-                      <strong className="font-display text-2xl text-primary">{discountPercent.toFixed(1)}%</strong>
-                      <span className="text-xs text-muted-foreground">{benefitCopy.discountRange}</span>
-                    </div>
-                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-primary/10">
-                      <span className="block h-full rounded-full bg-primary" style={{ width: `${(discountPercent / 5) * 100}%` }} />
-                    </div>
-                    <p className="mt-2 text-xs leading-5 text-muted-foreground">{progressCopy.returns(certifiedDevices)}</p>
-                  </div>
-                  <div className="rounded-md border border-primary/16 bg-primary/[0.05] p-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{benefitCopy.certificate}</p>
-                    <div className="mt-2 flex items-end justify-between gap-3">
-                      <strong className="font-display text-2xl text-primary">{certifiedDevices} / 100</strong>
-                      <span className="text-xs text-muted-foreground">{benefitCopy.devices}</span>
-                    </div>
-                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-primary/10">
-                      <span className="block h-full rounded-full bg-primary" style={{ width: `${certifiedDevices}%` }} />
-                    </div>
-                    <p className="mt-2 text-xs leading-5 text-muted-foreground">{progressCopy.certificate(Math.max(0, 100 - certifiedDevices))}</p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setReturnConfirmed(true);
-                    setCertifiedDevices((current) => Math.min(100, current + confirmedQuantity));
-                    setDiscountPercent((current) => Math.min(5, Number((current + confirmedQuantity * 0.1).toFixed(1))));
-                    toast.success(copy.confirm, { description: `${lookup.serial} · ${confirmedQuantity}` });
-                  }}
-                  className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
-                >
-                  <CheckCircle2 className="h-4 w-4" />
-                  {copy.confirm}
-                </button>
-              </>
-            ) : notFound ? (
-              <div className="rounded-md border border-background/12 bg-black/25 p-4 text-sm text-background/70">{copy.unknown}</div>
-            ) : (
-              <div className="rounded-md border border-background/12 bg-black/25 p-4 text-sm text-background/70">{copy.text}</div>
-            )}
-          </div>
-
-          {false ? (
-            <div className="cycle-demo-confirmation">
-              <p className="text-sm font-semibold text-primary">{copy.discounts}</p>
-              <div className="mt-3 grid gap-2">
-                {copy.oemOffers.map((offer) => {
-                  const percent = offer.offer.match(/\d+\s?%/)?.[0];
-                  const remainder = percent ? offer.offer.replace(percent, "").trim() : offer.offer;
-                  return (
-                    <div key={offer.oem} className="border-t border-primary/12 py-3 first:border-t-0 first:pt-0 last:pb-0">
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="font-display text-lg font-semibold">{offer.oem}</p>
-                        <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-                          OEM
-                        </span>
-                      </div>
-                      {percent ? (
-                        <div className="mt-2 flex items-end gap-2">
-                          <p className="font-display text-5xl font-semibold leading-none text-primary">{percent}</p>
-                          <p className="pb-1 text-sm font-semibold text-foreground/72">{remainder}</p>
-                        </div>
-                      ) : (
-                        <p className="mt-2 font-display text-2xl font-semibold text-primary">{offer.offer}</p>
-                      )}
-                      <p className="mt-2 text-xs text-muted-foreground">{offer.condition}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ) : null}
-        </div>
-      </div>
+      <DemoDayCustomerLookup language={language} />
     </DemoWindow>
   );
 };
-
-function formatGrams(value: number) {
-  if (value >= 1000) {
-    return `${(value / 1000).toFixed(value >= 10000 ? 1 : 2)} kg`;
-  }
-  return `${value.toFixed(value < 1 ? 3 : 2).replace(/\.00$/, "")} g`;
-}
-
-function formatKilograms(value: number) {
-  return value >= 1000 ? `${(value / 1000).toFixed(1)} t` : `${value.toFixed(value % 1 === 0 ? 0 : 1)} kg`;
-}
-
-function localizeCity(city: string, language: Language) {
-  if (language === "en") {
-    return city === "München" ? "Munich" : city === "Köln" ? "Cologne" : city;
-  }
-  if (language === "zh") {
-    const labels: Record<string, string> = {
-      Berlin: "柏林",
-      Hamburg: "汉堡",
-      München: "慕尼黑",
-      Köln: "科隆",
-      "Frankfurt am Main": "法兰克福",
-      Stuttgart: "斯图加特",
-      Leipzig: "莱比锡",
-      Dresden: "德累斯顿",
-    };
-    return labels[city] ?? city;
-  }
-  return city;
-}
-
-function localizeDevice(device: string, language: Language) {
-  const normalized = device.replace(/Â·/g, "·");
-  if (language === "en") {
-    return normalized
-      .replace("Steuerungsmodul · Leiterplatte Rev. C", "Control module · circuit board Rev. C")
-      .replace("Leiterplatte · Sensorboard", "Circuit board · sensor board")
-      .replace("Hauptplatine · Industriesteuerung", "Mainboard · industrial controller");
-  }
-  if (language === "zh") {
-    return normalized
-      .replace("Steuerungsmodul · Leiterplatte Rev. C", "控制模块 · 电路板 Rev. C")
-      .replace("Leiterplatte · Sensorboard", "电路板 · 传感器板")
-      .replace("Hauptplatine · Industriesteuerung", "主板 · 工业控制器");
-  }
-  return normalized;
-}
 
 export default Landing;

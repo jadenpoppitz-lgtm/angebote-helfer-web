@@ -15,8 +15,8 @@ const NotFound = () => {
 
       <div className="relative w-full max-w-3xl text-center">
         <Link to="/" className="mx-auto inline-flex items-center gap-3" aria-label="Leaftronics Startseite">
-          <span className="h-12 w-12 overflow-hidden rounded-full border border-white/12 bg-white/95">
-            <img src="/logo1-web.webp" alt="" className="h-full w-full object-cover" />
+          <span className="h-12 w-12">
+            <img src="/leaftronics-logo-mono-light.png" alt="" className="h-full w-full object-contain" />
           </span>
           <span className="font-display text-base font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
         </Link>

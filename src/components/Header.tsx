@@ -22,8 +22,8 @@ export function Header({ onRequest }: HeaderProps) {
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2">
-          <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-background shadow-card ring-1 ring-border">
-            <img src="/logo1-web.webp" alt="Leaftronics Logo" className="h-full w-full object-cover" />
+          <span className="flex h-10 w-10 items-center justify-center">
+            <img src="/leaftronics-logo-color.webp" alt="Leaftronics Logo" className="h-full w-full object-contain" />
           </span>
           <span className="font-display text-lg font-semibold tracking-tight">Leaftronics</span>
         </Link>

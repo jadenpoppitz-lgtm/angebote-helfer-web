@@ -100,8 +100,8 @@ export function Footer({ compact = false }: FooterProps) {
           <div className="grid gap-12 border-b border-white/10 py-16 md:grid-cols-[minmax(0,1.15fr)_minmax(13rem,0.65fr)] md:py-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(11rem,0.45fr)_minmax(13rem,0.55fr)] lg:gap-16">
             <div className="max-w-2xl md:row-span-2 lg:row-span-1">
               <Link to="/" className="inline-flex items-center gap-3" aria-label="Leaftronics Startseite">
-                <span className="h-12 w-12 overflow-hidden rounded-full border border-white/12 bg-white/95">
-                  <img src="/logo1-web.webp" alt="" className="h-full w-full object-cover" />
+                <span className="h-12 w-12">
+                  <img src="/leaftronics-logo-mono-light.png" alt="" className="h-full w-full object-contain" />
                 </span>
                 <span className="font-display text-lg font-semibold uppercase tracking-[0.22em]">Leaftronics</span>
               </Link>

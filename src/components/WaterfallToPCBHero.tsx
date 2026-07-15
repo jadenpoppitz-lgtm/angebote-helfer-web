@@ -23,7 +23,7 @@ function HeroSceneFallback({ label, visible }: { label: string; visible: boolean
         <div className="hero-loader-mark" aria-hidden="true">
           <span className="hero-loader-ring hero-loader-ring-outer" />
           <span className="hero-loader-ring hero-loader-ring-inner" />
-          <img src="/logo1-web.webp" alt="" className="hero-loader-logo" />
+          <img src="/leaftronics-logo-color.webp" alt="" className="hero-loader-logo" />
         </div>
         <span className="hero-loader-label">{label}</span>
         <span className="hero-loader-track" aria-hidden="true">

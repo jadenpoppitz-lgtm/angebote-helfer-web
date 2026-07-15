@@ -20,7 +20,7 @@ import {
 const DESKTOP_MODEL_PATH = "/models/green-circuit-board-web.glb?v=5";
 const MOBILE_MODEL_PATH = "/models/green-circuit-board-mobile.glb?v=2";
 const CONTAINER_MODEL_PATH = "/models/problem/shipping-container-20ft.glb";
-const BOARD_LOGO_PATH = "/logo1-web.webp";
+const BOARD_LOGO_PATH = "/leaftronics-logo-color.webp";
 const PROCESS_CYCLE_SECONDS = 20;
 const MODEL_WORLD_SIZE = 3.2;
 const PROBLEM_CONTAINER_BOARD_YAW = 0.04;

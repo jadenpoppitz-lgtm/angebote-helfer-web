@@ -1021,7 +1021,7 @@ export const createCyclePrototypeWorld = (
 
   const logoTextureLoader = new THREE.TextureLoader();
   void logoTextureLoader
-    .loadAsync("/logo1-web.webp")
+    .loadAsync("/leaftronics-logo-color.webp")
     .then((texture) => {
       if (disposed) {
         texture.dispose();
