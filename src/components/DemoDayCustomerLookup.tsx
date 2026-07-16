@@ -88,6 +88,12 @@ type LookupCopy = {
   reserve: string;
   reserved: string;
   reserveText: string;
+  reservationBenefitTitle: string;
+  discountBenefit: string;
+  discountBenefitText: (discount: string) => string;
+  certificateBenefit: string;
+  certificateBenefitText: (remaining: number, co2: string) => string;
+  devices: string;
   nonWinnerEyebrow: string;
   nonWinnerTitle: string;
   nonWinnerText: string;
@@ -154,6 +160,12 @@ const lookupCopy: Record<Language, LookupCopy> = {
     reserve: "Rückgabe vormerken",
     reserved: "Rückgabe vorgemerkt",
     reserveText: "Die Demo-Vormerkung ist lokal und löst keine echte Abholung aus.",
+    reservationBenefitTitle: "Dein Rückgabevorteil",
+    discountBenefit: "Rückgabe-Rabatt",
+    discountBenefitText: (discount) => `${discount} Rabatt wird nach bestätigter Rückgabe freigeschaltet.`,
+    certificateBenefit: "Leaftronics Certified",
+    certificateBenefitText: (remaining, co2) => `Noch ${remaining} Rückgaben, dann kannst du ${co2} CO2-Einsparung zertifiziert ausweisen.`,
+    devices: "Geräte",
     nonWinnerEyebrow: "Seriennummer gültig",
     nonWinnerTitle: "Diesmal leider nicht gewonnen",
     nonWinnerText: "Dein Gerätepass ist trotzdem freigeschaltet. Entdecke, welche Materialien aus deinem Gerät zurückgewonnen werden können.",
@@ -240,6 +252,12 @@ const lookupCopy: Record<Language, LookupCopy> = {
     reserve: "Reserve a return",
     reserved: "Return reserved",
     reserveText: "This demo reservation stays local and does not trigger a real pickup.",
+    reservationBenefitTitle: "Your return benefit",
+    discountBenefit: "Return discount",
+    discountBenefitText: (discount) => `${discount} is unlocked after the return is confirmed.`,
+    certificateBenefit: "Leaftronics Certified",
+    certificateBenefitText: (remaining, co2) => `${remaining} more returns unlock certified reporting of ${co2} CO2 savings.`,
+    devices: "devices",
     nonWinnerEyebrow: "Valid serial number",
     nonWinnerTitle: "No win this time",
     nonWinnerText: "Your device passport is still unlocked. Explore which materials can be recovered from your device.",
@@ -326,6 +344,12 @@ const lookupCopy: Record<Language, LookupCopy> = {
     reserve: "登记回收",
     reserved: "已登记回收",
     reserveText: "此演示登记仅保存在本地，不会触发真实取件。",
+    reservationBenefitTitle: "你的回收权益",
+    discountBenefit: "回收折扣",
+    discountBenefitText: (discount) => `确认回收后即可获得 ${discount}。`,
+    certificateBenefit: "Leaftronics Certified",
+    certificateBenefitText: (remaining, co2) => `再完成 ${remaining} 次回收，即可认证展示 ${co2} CO2 减排。`,
+    devices: "台设备",
     nonWinnerEyebrow: "序列号有效",
     nonWinnerTitle: "很遗憾，这次没有中奖",
     nonWinnerText: "你的设备护照仍已解锁。继续查看设备中可回收的材料。",
@@ -749,7 +773,31 @@ export function DemoDayCustomerLookup({ language }: DemoDayCustomerLookupProps) 
             )}
           </section>
 
-          {reserved ? <p className="demo-day-reserve-note" role="status">{copy.reserveText}</p> : null}
+          {reserved ? (
+            <section className="demo-day-reservation-benefit" role="status" aria-label={copy.reservationBenefitTitle}>
+              <div className="demo-day-reservation-heading">
+                <Leaf aria-hidden="true" />
+                <div>
+                  <p>{copy.reservationBenefitTitle}</p>
+                  <strong>{copy.reserved}</strong>
+                </div>
+              </div>
+              <div className="demo-day-reservation-cards">
+                <div>
+                  <small>{copy.discountBenefit}</small>
+                  <strong>15%</strong>
+                  <p>{copy.discountBenefitText("15%")}</p>
+                </div>
+                <div>
+                  <small>{copy.certificateBenefit}</small>
+                  <strong>1 / 50 <em>{copy.devices}</em></strong>
+                  <span aria-hidden="true"><i /></span>
+                  <p>{copy.certificateBenefitText(49, `${formatNumber(record.avoidedCo2Kg, language)} kg`)}</p>
+                </div>
+              </div>
+              <p className="demo-day-reserve-note">{copy.reserveText}</p>
+            </section>
+          ) : null}
           <p className="demo-day-synthetic-note">{copy.syntheticNote}</p>
         </article>
       ) : null}

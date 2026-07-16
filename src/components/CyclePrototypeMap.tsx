@@ -74,7 +74,7 @@ const flowRoutes: FlowRoute[] = [
     id: "customer-return",
     from: "customer",
     to: "consulting",
-    flow: "productPcb",
+    flow: "product",
     tone: "product",
     fallback: [43, 47],
     offset: [18, 10],

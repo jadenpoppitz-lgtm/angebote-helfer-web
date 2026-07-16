@@ -5648,6 +5648,102 @@ All colors MUST be HSL.
   height: 1rem;
 }
 
+.demo-day-reservation-benefit {
+  border-top: 1px solid var(--demo-day-line);
+  background: #f8fbf8;
+  padding: 1rem 1.5rem 0.9rem;
+}
+
+.demo-day-reservation-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.demo-day-reservation-heading > svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--demo-day-green);
+}
+
+.demo-day-reservation-heading div {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.demo-day-reservation-heading p,
+.demo-day-reservation-heading strong,
+.demo-day-reservation-cards p {
+  margin: 0;
+}
+
+.demo-day-reservation-heading p,
+.demo-day-reservation-cards small {
+  color: #6b7e74;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.demo-day-reservation-heading strong {
+  color: #17352a;
+  font-size: 0.82rem;
+}
+
+.demo-day-reservation-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.8rem;
+}
+
+.demo-day-reservation-cards > div {
+  min-width: 0;
+  border-left: 2px solid rgba(31, 118, 84, 0.45);
+  background: #edf5ef;
+  padding: 0.7rem 0.8rem;
+}
+
+.demo-day-reservation-cards > div > strong {
+  display: block;
+  margin-top: 0.35rem;
+  color: #1b714d;
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.demo-day-reservation-cards em {
+  color: #6b7e74;
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.demo-day-reservation-cards > div > span {
+  display: block;
+  height: 0.35rem;
+  overflow: hidden;
+  margin-top: 0.55rem;
+  background: #d4e5d9;
+}
+
+.demo-day-reservation-cards > div > span > i {
+  display: block;
+  width: 2%;
+  height: 100%;
+  background: var(--demo-day-green);
+}
+
+.demo-day-reservation-cards p {
+  margin-top: 0.55rem;
+  color: #587066;
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
 .demo-day-reserve-note,
 .demo-day-synthetic-note {
   padding-right: 1.5rem;
@@ -5657,7 +5753,7 @@ All colors MUST be HSL.
 }
 
 .demo-day-reserve-note {
-  padding-top: 0.65rem;
+  padding: 0.7rem 0 0;
   color: #1b6849;
   font-weight: 700;
 }

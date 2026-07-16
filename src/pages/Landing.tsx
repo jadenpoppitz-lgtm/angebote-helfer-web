@@ -274,7 +274,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
         disassembly: {
           title: "Disassembly",
-          label: "Produkt - PCB",
+          label: "Produkt",
           problem: "PCB, Gehäuse und Komponenten vermischen sich.",
           solution: "Demontage trennt Produkt und PCB, bevor Material in den falschen Kanal fällt.",
           next: "Demontageauftrag anlegen",
@@ -306,7 +306,7 @@ export const copy: Record<Language, LandingCopy> = {
         sellPcb: "PCB verkaufen",
         productPcb: "Produkt - PCB",
         pcb: "PCB",
-        sellSolution: "Prozesslösung",
+        sellSolution: "Lösung verkaufen",
         material: "Material",
         materialReturn: "Material zurück",
       },
@@ -345,7 +345,7 @@ export const copy: Record<Language, LandingCopy> = {
           metrics: [
             { label: "CO2-Einsparung pro PCB", value: "1,8 kg" },
             { label: "Materialwert", value: "42,8 k EUR" },
-            { label: "Datenabdeckung", value: "96%" },
+            { label: "CO2-Einsparung", value: "1,8 t" },
           ],
           steps: ["Eingang qualifiziert", "PCB-Chargen zugeordnet", "Materialabruf freigeben"],
         },
@@ -593,7 +593,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
         disassembly: {
           title: "Disassembly",
-          label: "Product - PCB",
+          label: "Product",
           problem: "PCB, housing and components get mixed.",
           solution: "Disassembly separates product and PCB before material falls into the wrong channel.",
           next: "Create disassembly order",
@@ -625,7 +625,7 @@ export const copy: Record<Language, LandingCopy> = {
         sellPcb: "Sell PCB",
         productPcb: "Product - PCB",
         pcb: "PCB",
-        sellSolution: "Process solution",
+        sellSolution: "Sell solution",
         material: "Material",
         materialReturn: "Material return",
       },
@@ -911,7 +911,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
         disassembly: {
           title: "拆解",
-          label: "产品 - PCB",
+          label: "产品",
           problem: "PCB、外壳和组件混合。",
           solution: "拆解先分离产品和 PCB，避免材料进入错误渠道。",
           next: "创建拆解任务",
@@ -943,7 +943,7 @@ export const copy: Record<Language, LandingCopy> = {
         sellPcb: "出售 PCB",
         productPcb: "产品 - PCB",
         pcb: "PCB",
-        sellSolution: "工艺方案",
+        sellSolution: "出售解决方案",
         material: "材料",
         materialReturn: "材料回流",
       },
@@ -3134,7 +3134,8 @@ const oemInterfaceLabels: Record<
   Language,
   {
     cockpit: string;
-    dataCoverage: string;
+    co2Savings: string;
+    co2SavingsDetail: string;
     dataQuality: string;
     export: string;
     exportReady: string;
@@ -3162,7 +3163,8 @@ const oemInterfaceLabels: Record<
 > = {
   de: {
     cockpit: "Closed-Loop Operations",
-    dataCoverage: "Datenabdeckung",
+    co2Savings: "CO2-Einsparung",
+    co2SavingsDetail: "37 % weniger gegenüber Neumaterial",
     dataQuality: "Produktdatensatz",
     export: "Bericht exportieren",
     exportReady: "OEM-Bericht wurde erstellt",
@@ -3194,7 +3196,8 @@ const oemInterfaceLabels: Record<
   },
   en: {
     cockpit: "Closed-loop operations",
-    dataCoverage: "Data coverage",
+    co2Savings: "CO2 savings",
+    co2SavingsDetail: "37% less than virgin material",
     dataQuality: "Product record",
     export: "Export report",
     exportReady: "OEM report created",
@@ -3226,7 +3229,8 @@ const oemInterfaceLabels: Record<
   },
   zh: {
     cockpit: "闭环运营",
-    dataCoverage: "数据覆盖率",
+    co2Savings: "CO2 减排",
+    co2SavingsDetail: "较原生材料减少 37%",
     dataQuality: "产品数据记录",
     export: "导出报告",
     exportReady: "OEM 报告已创建",
@@ -3318,7 +3322,7 @@ export const OemDashboard = ({
         {[
           { icon: PackageOpen, label: labels.returnRate, value: "78%", detail: "+6 pp" },
           { icon: Boxes, label: labels.materialValue, value: currency.format(42_800), detail: "262 units" },
-          { icon: Database, label: labels.dataCoverage, value: "96%", detail: "3 / 4 complete" },
+          { icon: Leaf, label: labels.co2Savings, value: "1,8 t", detail: labels.co2SavingsDetail },
           { icon: ShieldCheck, label: labels.readyBatches, value: "1", detail: "18.07." },
         ].map((metric) => {
           const MetricIcon = metric.icon;
