@@ -30,7 +30,7 @@ const devicePresentation: Record<
     yaw: number;
   }
 > = {
-  phone: { rotation: [-0.14, 0.42, 0.05], scale: 1, positionY: 0, phase: 0.2, yaw: 0.055 },
+  phone: { rotation: [-0.14, 0.48, 0.05], scale: 1.25, positionY: 0.24, phase: 0.2, yaw: 0.07 },
   laptop: { rotation: [0.04, 0.34, 0], scale: 0.98, positionY: -0.2, phase: 0.8, yaw: 0.045 },
   tablet: { rotation: [-0.2, 0.4, -0.04], scale: 0.94, positionY: 0, phase: 1.3, yaw: 0.05 },
   watch: { rotation: [-0.12, 0.35, 0.05], scale: 0.9, positionY: 0, phase: 1.9, yaw: 0.05 },
@@ -209,26 +209,244 @@ function ScreenInterface({
   );
 }
 
+function PhoneScreen({ reducedMotion }: { reducedMotion: boolean }) {
+  const materialRef = useRef<MeshStandardMaterial>(null);
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 720;
+    canvas.height = 1440;
+    const context = canvas.getContext("2d");
+
+    if (context) {
+      const background = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+      background.addColorStop(0, "#10271f");
+      background.addColorStop(0.58, "#103126");
+      background.addColorStop(1, "#07130f");
+      context.fillStyle = background;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      const halo = context.createRadialGradient(500, 400, 20, 500, 400, 500);
+      halo.addColorStop(0, "rgba(67, 212, 154, 0.34)");
+      halo.addColorStop(0.55, "rgba(32, 125, 89, 0.1)");
+      halo.addColorStop(1, "rgba(4, 15, 11, 0)");
+      context.fillStyle = halo;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      context.fillStyle = "rgba(239, 248, 242, 0.88)";
+      context.font = "600 25px Arial, sans-serif";
+      context.fillText("09:41", 48, 68);
+      context.fillStyle = "rgba(218, 237, 227, 0.45)";
+      context.fillRect(598, 44, 74, 26);
+      context.fillStyle = "#8fe0b9";
+      context.fillRect(606, 50, 52, 14);
+
+      context.strokeStyle = "#e7c873";
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.lineWidth = 7;
+      context.beginPath();
+      context.moveTo(66, 141);
+      context.quadraticCurveTo(91, 94, 117, 141);
+      context.quadraticCurveTo(137, 178, 91, 211);
+      context.quadraticCurveTo(45, 178, 66, 141);
+      context.stroke();
+      context.beginPath();
+      context.moveTo(91, 112);
+      context.lineTo(91, 198);
+      context.moveTo(91, 145);
+      context.lineTo(67, 159);
+      context.moveTo(91, 166);
+      context.lineTo(118, 150);
+      context.stroke();
+
+      context.fillStyle = "#f0f5f1";
+      context.font = "700 29px Arial, sans-serif";
+      context.fillText("LEAFTRONICS", 151, 163);
+      context.fillStyle = "rgba(219, 235, 226, 0.62)";
+      context.font = "500 21px Arial, sans-serif";
+      context.fillText("DIGITALER GERÄTEPASS", 151, 198);
+
+      context.lineWidth = 24;
+      context.strokeStyle = "rgba(229, 241, 234, 0.11)";
+      context.beginPath();
+      context.arc(360, 620, 176, -Math.PI * 0.76, Math.PI * 0.76);
+      context.stroke();
+      context.strokeStyle = "#43d49a";
+      context.beginPath();
+      context.arc(360, 620, 176, -Math.PI * 0.76, Math.PI * 0.53);
+      context.stroke();
+
+      context.fillStyle = "rgba(219, 238, 228, 0.68)";
+      context.font = "600 24px Arial, sans-serif";
+      context.textAlign = "center";
+      context.fillText("RÜCKGEWINNBAR", 360, 558);
+      context.fillStyle = "#f5f8f5";
+      context.font = "700 132px Arial, sans-serif";
+      context.fillText("84", 360, 693);
+      context.fillStyle = "#e7c873";
+      context.font = "700 36px Arial, sans-serif";
+      context.fillText("%", 480, 667);
+
+      context.fillStyle = "rgba(240, 247, 243, 0.08)";
+      context.fillRect(54, 930, 612, 292);
+      context.strokeStyle = "rgba(183, 226, 205, 0.2)";
+      context.lineWidth = 2;
+      context.strokeRect(54, 930, 612, 292);
+      context.textAlign = "left";
+      context.fillStyle = "rgba(211, 232, 221, 0.62)";
+      context.font = "600 22px Arial, sans-serif";
+      context.fillText("MATERIALPROFIL", 92, 992);
+
+      const materialRows = [
+        { color: "#d18350", label: "KUPFER", value: "16,4 g" },
+        { color: "#c9d2cd", label: "ALUMINIUM", value: "25,1 g" },
+        { color: "#e8ca78", label: "EDELMETALLE", value: "0,3 g" },
+      ];
+      materialRows.forEach((row, index) => {
+        const y = 1052 + index * 64;
+        context.fillStyle = row.color;
+        context.beginPath();
+        context.arc(104, y, 9, 0, Math.PI * 2);
+        context.fill();
+        context.fillStyle = "rgba(236, 245, 240, 0.78)";
+        context.font = "600 22px Arial, sans-serif";
+        context.fillText(row.label, 130, y + 8);
+        context.fillStyle = "#f5f8f5";
+        context.font = "700 24px Arial, sans-serif";
+        context.textAlign = "right";
+        context.fillText(row.value, 620, y + 8);
+        context.textAlign = "left";
+      });
+
+      context.fillStyle = "rgba(232, 244, 237, 0.5)";
+      context.font = "500 21px Arial, sans-serif";
+      context.textAlign = "center";
+      context.fillText("SERIE  LT-S25-0726-18", 360, 1332);
+    }
+
+    const nextTexture = new THREE.CanvasTexture(canvas);
+    nextTexture.colorSpace = THREE.SRGBColorSpace;
+    nextTexture.anisotropy = 8;
+    nextTexture.minFilter = THREE.LinearMipmapLinearFilter;
+    return nextTexture;
+  }, []);
+
+  useEffect(() => () => texture.dispose(), [texture]);
+
+  useFrame(({ clock }) => {
+    if (!materialRef.current || reducedMotion) return;
+    materialRef.current.emissiveIntensity = 0.22 + Math.sin(clock.elapsedTime * 0.9) * 0.035;
+  });
+
+  return (
+    <RoundedBox args={[1.015, 2.105, 0.018]} radius={0.13} smoothness={8} position={[0, 0, 0.129]}>
+      <meshStandardMaterial
+        ref={materialRef}
+        map={texture}
+        color="#ffffff"
+        emissive="#10382a"
+        emissiveIntensity={0.22}
+        metalness={0.04}
+        roughness={0.28}
+      />
+    </RoundedBox>
+  );
+}
+
+function RearCameraLens({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <mesh rotation={[Math.PI / 2, 0, 0]} castShadow>
+        <cylinderGeometry args={[0.112, 0.112, 0.046, 48]} />
+        <meshPhysicalMaterial color="#89918d" metalness={0.94} roughness={0.16} clearcoat={0.8} />
+      </mesh>
+      <mesh position={[0, 0, -0.028]} rotation={[0, Math.PI, 0]}>
+        <circleGeometry args={[0.083, 48]} />
+        <meshPhysicalMaterial color="#0b151d" metalness={0.15} roughness={0.08} clearcoat={1} />
+      </mesh>
+      <mesh position={[-0.022, 0.024, -0.031]} rotation={[0, Math.PI, 0]}>
+        <circleGeometry args={[0.022, 32]} />
+        <meshStandardMaterial color="#567e91" emissive="#1a3442" emissiveIntensity={0.25} />
+      </mesh>
+    </group>
+  );
+}
+
 function PremiumPhone({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <group>
-      <RoundedBox args={[1.08, 2.15, 0.19]} radius={0.15} smoothness={7} castShadow>
-        <meshPhysicalMaterial color={COLORS.aluminum} metalness={0.82} roughness={0.22} clearcoat={0.55} />
+      <RoundedBox args={[1.15, 2.27, 0.205]} radius={0.19} smoothness={10} castShadow>
+        <meshPhysicalMaterial
+          color="#858d89"
+          metalness={0.94}
+          roughness={0.17}
+          clearcoat={0.82}
+          clearcoatRoughness={0.16}
+        />
       </RoundedBox>
-      <ScreenInterface width={0.96} height={1.98} z={0.112} reducedMotion={reducedMotion} />
-      <RoundedBox args={[0.25, 0.055, 0.025]} radius={0.025} smoothness={4} position={[0, 0.92, 0.145]}>
-        <meshStandardMaterial color={COLORS.black} roughness={0.35} />
+      <RoundedBox args={[1.105, 2.225, 0.036]} radius={0.17} smoothness={9} position={[0, 0, 0.108]}>
+        <meshPhysicalMaterial
+          color="#030706"
+          metalness={0.15}
+          roughness={0.08}
+          clearcoat={1}
+          clearcoatRoughness={0.08}
+        />
       </RoundedBox>
-      <mesh position={[0.36, 0.93, 0.148]}>
-        <circleGeometry args={[0.028, 24]} />
-        <meshPhysicalMaterial color="#101b2a" roughness={0.18} clearcoat={1} />
+      <PhoneScreen reducedMotion={reducedMotion} />
+      <RoundedBox args={[0.31, 0.09, 0.026]} radius={0.045} smoothness={6} position={[0, 0.94, 0.154]}>
+        <meshPhysicalMaterial color="#020504" roughness={0.16} clearcoat={0.8} />
+      </RoundedBox>
+      <mesh position={[0.084, 0.94, 0.17]}>
+        <circleGeometry args={[0.022, 28]} />
+        <meshPhysicalMaterial color="#152c38" roughness={0.1} clearcoat={1} />
       </mesh>
-      <RoundedBox args={[0.03, 0.34, 0.07]} radius={0.012} smoothness={3} position={[0.555, 0.28, 0]}>
-        <meshStandardMaterial color="#76827c" metalness={0.9} roughness={0.2} />
+      <RoundedBox args={[0.035, 0.34, 0.085]} radius={0.014} smoothness={4} position={[0.59, 0.25, 0.005]} castShadow>
+        <meshPhysicalMaterial color="#a3aaa6" metalness={0.96} roughness={0.15} clearcoat={0.7} />
       </RoundedBox>
-      <RoundedBox args={[0.03, 0.2, 0.07]} radius={0.012} smoothness={3} position={[-0.555, 0.42, 0]}>
-        <meshStandardMaterial color="#76827c" metalness={0.9} roughness={0.2} />
+      {[
+        { height: 0.22, y: 0.42 },
+        { height: 0.22, y: 0.12 },
+      ].map((button) => (
+        <RoundedBox
+          key={button.y}
+          args={[0.035, button.height, 0.085]}
+          radius={0.014}
+          smoothness={4}
+          position={[-0.59, button.y, 0.005]}
+          castShadow
+        >
+          <meshPhysicalMaterial color="#a3aaa6" metalness={0.96} roughness={0.15} clearcoat={0.7} />
+        </RoundedBox>
+      ))}
+      {[
+        [0.578, 0.82, 0],
+        [0.578, -0.8, 0],
+        [-0.578, 0.82, 0],
+        [-0.578, -0.8, 0],
+      ].map(([x, y, z]) => (
+        <RoundedBox key={`${x}-${y}`} args={[0.018, 0.075, 0.18]} radius={0.006} smoothness={2} position={[x, y, z]}>
+          <meshStandardMaterial color="#3e4743" metalness={0.5} roughness={0.35} />
+        </RoundedBox>
+      ))}
+      <RoundedBox args={[1.075, 2.195, 0.025]} radius={0.17} smoothness={8} position={[0, 0, -0.113]}>
+        <meshPhysicalMaterial
+          color="#263a33"
+          metalness={0.28}
+          roughness={0.24}
+          clearcoat={0.82}
+          clearcoatRoughness={0.18}
+        />
       </RoundedBox>
+      <RoundedBox args={[0.5, 0.62, 0.055]} radius={0.12} smoothness={7} position={[-0.25, 0.69, -0.145]} castShadow>
+        <meshPhysicalMaterial color="#30433c" metalness={0.42} roughness={0.2} clearcoat={0.75} />
+      </RoundedBox>
+      <RearCameraLens position={[-0.34, 0.82, -0.174]} />
+      <RearCameraLens position={[-0.16, 0.59, -0.174]} />
+      <mesh position={[-0.12, 0.84, -0.178]} rotation={[0, Math.PI, 0]}>
+        <circleGeometry args={[0.052, 32]} />
+        <meshStandardMaterial color="#e9dba4" emissive="#d8a953" emissiveIntensity={0.18} roughness={0.42} />
+      </mesh>
     </group>
   );
 }

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import type { CSSProperties, FormEvent } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -43,9 +43,31 @@ import {
 import { trackDemoDayLookup } from "@/lib/demoDayTracking";
 
 const DemoDayDeviceModel = lazy(() => import("@/components/DemoDayDeviceModel"));
+const DemoDayDresdenMap = lazy(() => import("@/components/DemoDayDresdenMap"));
 
 const supportsWebGl = () =>
   typeof window !== "undefined" && typeof window.WebGLRenderingContext !== "undefined";
+
+const compactDeviceVisualQuery = "(max-width: 640px)";
+
+const useDeviceVisual = () => {
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return true;
+    return !window.matchMedia(compactDeviceVisualQuery).matches;
+  });
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const query = window.matchMedia(compactDeviceVisualQuery);
+    const update = () => setVisible(!query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return visible;
+};
+
 import type { Language } from "@/lib/i18n";
 
 type DemoDayCustomerLookupProps = {
@@ -124,6 +146,8 @@ type LookupCopy = {
   openRoute: string;
   officialSource: string;
   mapAriaLabel: string;
+  mapZoomIn: string;
+  mapZoomOut: string;
   metals: Record<DemoDayMetalKey, string>;
 };
 
@@ -213,6 +237,8 @@ const lookupCopy: Record<Language, LookupCopy> = {
     openRoute: "Route öffnen",
     officialSource: "Angaben der Landeshauptstadt Dresden",
     mapAriaLabel: "Karte mit HTW Dresden und den Wertstoffhöfen Friedrichstadt, Plauen und Johannstadt",
+    mapZoomIn: "Karte vergrößern",
+    mapZoomOut: "Karte verkleinern",
     metals: {
       aluminum: "Aluminium",
       ironSteel: "Eisen / Stahl",
@@ -322,6 +348,8 @@ const lookupCopy: Record<Language, LookupCopy> = {
     openRoute: "Open route",
     officialSource: "Information from the City of Dresden",
     mapAriaLabel: "Map showing HTW Dresden and the Friedrichstadt, Plauen and Johannstadt recycling centres",
+    mapZoomIn: "Zoom in",
+    mapZoomOut: "Zoom out",
     metals: {
       aluminum: "Aluminium",
       ironSteel: "Iron / steel",
@@ -431,6 +459,8 @@ const lookupCopy: Record<Language, LookupCopy> = {
     openRoute: "打开路线",
     officialSource: "德累斯顿市政府信息",
     mapAriaLabel: "显示 HTW Dresden 与 Friedrichstadt、Plauen 和 Johannstadt 回收中心的地图",
+    mapZoomIn: "放大地图",
+    mapZoomOut: "缩小地图",
     metals: {
       aluminum: "铝",
       ironSteel: "铁 / 钢",
@@ -541,21 +571,21 @@ const returnLocations = [
     id: "friedrichstadt",
     name: "Wertstoffhof Friedrichstadt",
     address: "Altonaer Straße 15, 01159 Dresden",
-    position: [27, 41] as const,
+    coordinates: [51.0489214, 13.7083368] as const,
     routeUrl: "https://www.openstreetmap.org/search?query=Altonaer%20Stra%C3%9Fe%2015%2C%20Dresden",
   },
   {
     id: "plauen",
     name: "Wertstoffhof Plauen",
     address: "Pforzheimer Straße 1, 01189 Dresden",
-    position: [38, 82] as const,
+    coordinates: [51.0112792, 13.706831] as const,
     routeUrl: "https://www.openstreetmap.org/search?query=Pforzheimer%20Stra%C3%9Fe%201%2C%20Dresden",
   },
   {
     id: "johannstadt",
     name: "Wertstoffhof Johannstadt",
     address: "Hertelstraße 3, 01307 Dresden",
-    position: [82, 28] as const,
+    coordinates: [51.0563462, 13.7722831] as const,
     routeUrl: "https://www.openstreetmap.org/search?query=Hertelstra%C3%9Fe%203%2C%20Dresden",
   },
 ] as const;
@@ -571,36 +601,29 @@ const ReturnLocationMap = ({ copy }: { copy: LookupCopy }) => (
     </div>
 
     <div className="demo-day-return-map-layout">
-      <div className="demo-day-return-map-canvas" aria-label={copy.mapAriaLabel}>
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <path className="is-road-major" d="M-6 69 C18 65 38 58 55 50 C72 42 86 34 106 31" />
-          <path className="is-road-major" d="M48 -6 C48 18 51 36 54 58 C57 73 68 88 82 106" />
-          <path d="M4 24 C23 30 43 32 62 27 C78 23 90 15 104 8" />
-          <path d="M3 87 C22 78 39 72 57 75 C75 78 90 89 104 96" />
-          <path d="M20 -5 C24 18 29 34 39 48 C49 62 63 68 103 67" />
-          <path className="is-route" d="M53 58 C43 53 34 47 27 41" />
-        </svg>
-        <span className="demo-day-map-district is-friedrichstadt" aria-hidden="true">Friedrichstadt</span>
-        <span className="demo-day-map-district is-plauen" aria-hidden="true">Plauen</span>
-        <span className="demo-day-map-district is-johannstadt" aria-hidden="true">Johannstadt</span>
-        <span className="demo-day-map-current" style={{ left: "53%", top: "58%" }}>
-          <span aria-hidden="true"><Navigation /></span>
+      <div className="demo-day-return-map-canvas">
+        <Suspense
+          fallback={(
+            <div className="demo-day-map-loading" aria-busy="true" aria-label={copy.mapAriaLabel}>
+              <MapPin aria-hidden="true" />
+            </div>
+          )}
+        >
+          <DemoDayDresdenMap
+            ariaLabel={copy.mapAriaLabel}
+            currentLocation={copy.currentLocation}
+            locations={returnLocations}
+            nearestLabel={copy.nearestLocation}
+            otherLabel={copy.otherLocation}
+            openRoute={copy.openRoute}
+            zoomInTitle={copy.mapZoomIn}
+            zoomOutTitle={copy.mapZoomOut}
+          />
+        </Suspense>
+        <span className="demo-day-map-location-banner">
+          <Navigation aria-hidden="true" />
           <strong>{copy.currentLocation}</strong>
         </span>
-        {returnLocations.map((location, index) => (
-          <a
-            key={location.id}
-            className={`demo-day-map-marker${index === 0 ? " is-nearest" : ""}`}
-            href={location.routeUrl}
-            target="_blank"
-            rel="noreferrer"
-            style={{ left: `${location.position[0]}%`, top: `${location.position[1]}%` }}
-            aria-label={`${location.name}, ${location.address}. ${copy.openRoute}`}
-          >
-            <MapPin aria-hidden="true" />
-            <span>{index + 1}</span>
-          </a>
-        ))}
       </div>
 
       <ol className="demo-day-return-points">
@@ -807,6 +830,7 @@ const formatDemoDaySerialInput = (value: string) => {
 
 export function DemoDayCustomerLookup({ language }: DemoDayCustomerLookupProps) {
   const copy = lookupCopy[language];
+  const showDeviceVisual = useDeviceVisual();
   const [serial, setSerial] = useState("");
   const [record, setRecord] = useState<DemoDayDeviceRecord | null>(null);
   const [searched, setSearched] = useState(false);
@@ -902,17 +926,19 @@ export function DemoDayCustomerLookup({ language }: DemoDayCustomerLookupProps) 
           ) : null}
 
           <header className="demo-day-device-header">
-            <div className="demo-day-device-visual">
-              <div className="demo-day-device-model-shell">
-                {supportsWebGl() ? (
-                  <Suspense fallback={<span className="demo-day-device-fallback" aria-hidden="true"><DeviceIcon /></span>}>
-                    <DemoDayDeviceModel kind={record.kind} />
-                  </Suspense>
-                ) : (
-                  <span className="demo-day-device-fallback" aria-hidden="true"><DeviceIcon /></span>
-                )}
+            {showDeviceVisual ? (
+              <div className="demo-day-device-visual">
+                <div className="demo-day-device-model-shell">
+                  {supportsWebGl() ? (
+                    <Suspense fallback={<span className="demo-day-device-fallback" aria-hidden="true"><DeviceIcon /></span>}>
+                      <DemoDayDeviceModel kind={record.kind} />
+                    </Suspense>
+                  ) : (
+                    <span className="demo-day-device-fallback" aria-hidden="true"><DeviceIcon /></span>
+                  )}
+                </div>
               </div>
-            </div>
+            ) : null}
             <div className="demo-day-device-title">
               <div className="demo-day-passport-meta">
                 <span><ShieldCheck aria-hidden="true" />{copy.passport}</span>
