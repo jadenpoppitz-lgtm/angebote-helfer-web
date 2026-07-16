@@ -98,7 +98,7 @@ const routeSpecs: Array<{
   },
   {
     id: "customer-return",
-    labelT: 0.72,
+    labelT: 0.34,
     packetKind: "product",
     start: [-2.72, 0.22, -2.58],
     control: [-1.66, 0.22, -1.32],
@@ -110,7 +110,7 @@ const routeSpecs: Array<{
   },
   {
     id: "routing-disassembly",
-    labelT: 0.28,
+    labelT: 0.66,
     packetKind: "product",
     start: [0.58, 0.22, 0.08],
     control: [1.68, 0.22, -1.42],
@@ -200,7 +200,7 @@ const createMaterials = () => ({
   steel: new THREE.MeshStandardMaterial({ color: 0x86928d, metalness: 0.9, roughness: 0.28 }),
   steelDark: new THREE.MeshStandardMaterial({ color: 0x3c4844, metalness: 0.88, roughness: 0.32 }),
   shell: new THREE.MeshStandardMaterial({ color: 0xbfc9c3, metalness: 0.38, roughness: 0.48 }),
-  oemShell: new THREE.MeshStandardMaterial({ color: 0x5f746c, metalness: 0.58, roughness: 0.42 }),
+  oemShell: new THREE.MeshStandardMaterial({ color: 0x748b82, metalness: 0.48, roughness: 0.46 }),
   smelterShell: new THREE.MeshStandardMaterial({ color: 0x283531, metalness: 0.78, roughness: 0.38 }),
   cardboard: new THREE.MeshStandardMaterial({ color: 0xb78652, metalness: 0.04, roughness: 0.84 }),
   brass: new THREE.MeshStandardMaterial({ color: 0xc59b5d, metalness: 0.76, roughness: 0.3 }),
@@ -472,31 +472,36 @@ const disposeObjectResources = (root: THREE.Object3D) => {
 const createOemStation = (materials: MaterialSet) => {
   const group = new THREE.Group();
   addStationBase(group, materials);
-  addBox(group, [1.55, 0.7, 0.82], [0, 0.6, -0.12], materials.oemShell);
-  addBox(group, [1.64, 0.12, 0.92], [0, 1.01, -0.12], materials.steelDark);
-  addBox(group, [1.48, 0.08, 0.5], [0, 0.25, 0.36], materials.steelDark);
-  const door = addBox(group, [0.58, 0.46, 0.045], [0.16, 0.51, 0.325], materials.graphite);
-  const statusPanel = addBox(group, [0.24, 0.16, 0.04], [0.43, 0.67, 0.33], materials.emerald);
-  [-0.56, 0.56].forEach((x) => addBox(group, [0.23, 0.2, 0.035], [x, 0.72, 0.325], materials.glass));
-  addCylinder(group, 0.1, 0.58, [0.5, 1.36, -0.27], materials.steelDark, 18);
-  addCylinder(group, 0.14, 0.07, [0.5, 1.68, -0.27], materials.brass, 18);
+  addBox(group, [1.58, 0.66, 0.8], [0, 0.58, -0.16], materials.oemShell);
+  addBox(group, [1.64, 0.09, 0.54], [0, 1.02, -0.38], materials.steelDark, [-0.2, 0, 0]);
+  addBox(group, [1.64, 0.09, 0.54], [0, 1.02, 0.05], materials.steelDark, [0.2, 0, 0]);
+  addBox(group, [0.44, 0.46, 0.58], [-0.61, 0.49, 0.08], materials.graphiteSoft);
+  addBox(group, [0.38, 0.07, 0.62], [-0.61, 0.75, 0.08], materials.steelDark);
+  const door = addBox(group, [0.55, 0.45, 0.045], [0.22, 0.5, 0.265], materials.graphite);
+  const statusPanel = addBox(group, [0.19, 0.14, 0.04], [0.59, 0.65, 0.29], materials.emerald);
+  [-0.55, 0.57].forEach((x) => addBox(group, [0.2, 0.17, 0.035], [x, 0.72, 0.27], materials.glass));
+  addCylinder(group, 0.1, 0.55, [0.54, 1.35, -0.27], materials.steelDark, 18);
+  addCylinder(group, 0.14, 0.07, [0.54, 1.66, -0.27], materials.brass, 18);
 
   const shipment = new THREE.Group();
-  shipment.position.set(-0.68, 0.31, 0.44);
+  shipment.position.set(-0.68, 0.28, 0.53);
   group.add(shipment);
-  addBox(shipment, [0.34, 0.3, 0.34], [0, 0.15, 0], materials.cardboard);
-  addBox(shipment, [0.055, 0.31, 0.345], [0, 0.15, 0.008], materials.brass);
-  addBox(shipment, [0.28, 0.22, 0.28], [0.52, 0.11, -0.04], materials.cardboard, [0, -0.08, 0]);
-  addBox(shipment, [0.045, 0.23, 0.285], [0.52, 0.11, -0.032], materials.brass, [0, -0.08, 0]);
+  addBox(shipment, [0.32, 0.28, 0.3], [0, 0.14, 0], materials.cardboard);
+  addBox(shipment, [0.052, 0.29, 0.305], [0, 0.14, 0.008], materials.brass);
+  addBox(shipment, [0.27, 0.2, 0.25], [0.02, 0.38, -0.01], materials.cardboard, [0, -0.08, 0]);
+  addBox(shipment, [0.044, 0.21, 0.255], [0.02, 0.38, -0.002], materials.brass, [0, -0.08, 0]);
 
   const carrier = new THREE.Group();
-  carrier.position.set(0.16, 0.34, 0.12);
+  carrier.position.set(0.22, 0.39, 0.38);
   group.add(carrier);
-  [0.01, 0.31].forEach((x) => addBox(group, [0.045, 0.035, 0.88], [x, 0.31, 0.48], materials.steel));
-  addBox(group, [0.42, 0.055, 0.08], [0.16, 0.32, 0.89], materials.steelDark);
-  addBox(carrier, [0.5, 0.055, 0.34], [0, 0, 0], materials.emerald);
-  addBox(carrier, [0.26, 0.04, 0.2], [0, 0.052, 0], materials.graphite);
-  [-0.15, 0, 0.15].forEach((x) => addBox(carrier, [0.055, 0.07, 0.055], [x, 0.06, 0], materials.brass));
+  addBox(group, [0.56, 0.07, 0.78], [0.22, 0.31, 0.69], materials.steelDark);
+  [-0.02, 0.46].forEach((x) => addBox(group, [0.045, 0.055, 0.8], [x, 0.38, 0.69], materials.steel));
+  [0.4, 0.57, 0.74, 0.91].forEach((z) =>
+    addCylinder(group, 0.032, 0.42, [0.22, 0.4, z], materials.steel, 10, [0, 0, Math.PI / 2]),
+  );
+  addBox(carrier, [0.42, 0.055, 0.3], [0, 0, 0], materials.emerald);
+  addBox(carrier, [0.24, 0.04, 0.17], [0, 0.052, 0], materials.graphite);
+  [-0.12, 0, 0.12].forEach((x) => addBox(carrier, [0.045, 0.06, 0.045], [x, 0.06, 0], materials.brass));
 
   const beaconMaterial = materials.emeraldGlow.clone();
   beaconMaterial.transparent = true;
@@ -616,16 +621,13 @@ const createDisassemblyStation = (materials: MaterialSet) => {
   addBox(group, [0.27, 0.07, 0.23], [0.09, 0.49, 0.65], materials.steel, [0, placeAngle, 0]);
 
   const rig = addModelSlot(group, "robotAssetSlot", [-0.23, 0.28, -0.08], [0, -1.65, 0]);
-  const gripperLocal = new THREE.Vector3(0.5031155, 1.1083728, -0.6204557);
+  const gripperLocal = new THREE.Vector3(0.5031155, 1.265, -0.6204557);
   const gripperTool = new THREE.Group();
   gripperTool.position.copy(gripperLocal);
   rig.add(gripperTool);
-  const toolStem = addCylinder(gripperTool, 0.024, 0.32, [0, -0.16, 0], materials.steelDark, 12);
-  const toolBridge = addBox(gripperTool, [0.2, 0.045, 0.09], [0, -0.32, 0], materials.steel);
-  const toolJaws = [
-    addBox(gripperTool, [0.035, 0.11, 0.08], [-0.105, -0.375, 0], materials.brass),
-    addBox(gripperTool, [0.035, 0.11, 0.08], [0.105, -0.375, 0], materials.brass),
-  ];
+  const toolStem = addCylinder(gripperTool, 0.018, 0.46, [0, -0.23, 0], materials.graphite, 12);
+  const toolHead = addCylinder(gripperTool, 0.075, 0.055, [0, -0.46, 0], materials.steel, 16);
+  const toolSuction = addCylinder(gripperTool, 0.052, 0.035, [0, -0.505, 0], materials.brass, 16);
   const extractedPart = new THREE.Group();
   extractedPart.position.copy(inputPosition);
   extractedPart.rotation.y = pickAngle;
@@ -643,7 +645,7 @@ const createDisassemblyStation = (materials: MaterialSet) => {
   group.userData.robotGripperLocal = gripperLocal;
   group.userData.robotPickAngle = pickAngle;
   group.userData.robotPlaceAngle = placeAngle;
-  group.userData.robotTool = { bridge: toolBridge, jaws: toolJaws, stem: toolStem };
+  group.userData.robotTool = { head: toolHead, stem: toolStem, suction: toolSuction };
   group.userData.robotStatus = status;
   return group;
 };
@@ -657,22 +659,27 @@ const createSmelterStation = (materials: MaterialSet) => {
   addFurnaceArch(group, 0.58, 0.57, [0.16, 0.7, 0.515], materials.graphite);
   const furnaceMaterial = materials.amber.clone();
   const furnaceFace = addFurnaceArch(group, 0.44, 0.43, [0.16, 0.68, 0.55], furnaceMaterial);
-  addBox(group, [0.42, 0.055, 0.25], [0.16, 0.425, 0.59], materials.steelDark);
+  addBox(group, [0.42, 0.05, 0.28], [0.16, 0.35, 0.59], materials.steelDark);
 
-  addBox(group, [0.5, 0.075, 0.28], [-0.58, 0.37, 0.59], materials.steelDark);
-  [-0.14, 0, 0.14].forEach((x) =>
-    addCylinder(group, 0.04, 0.22, [-0.58 + x, 0.41, 0.59], materials.steel, 12, [0, 0, Math.PI / 2]),
+  addBox(group, [1, 0.07, 0.32], [-0.34, 0.37, 0.59], materials.steelDark);
+  [-0.76, -0.56, -0.36, -0.16, 0.04].forEach((x) =>
+    addCylinder(group, 0.035, 0.25, [x, 0.42, 0.59], materials.steel, 12, [Math.PI / 2, 0, 0]),
   );
+  [0.43, 0.75].forEach((z) => addBox(group, [1, 0.055, 0.035], [-0.34, 0.45, z], materials.steel));
 
   const feed = new THREE.Group();
-  feed.position.set(-0.68, 0.485, 0.59);
+  feed.position.set(-0.75, 0.49, 0.59);
   group.add(feed);
   addBox(feed, [0.28, 0.05, 0.2], [0, 0, 0], materials.emerald);
   [-0.075, 0.075].forEach((x) => addBox(feed, [0.04, 0.055, 0.045], [x, 0.052, 0.02], materials.brass));
 
-  addBox(group, [0.4, 0.065, 0.28], [0.66, 0.41, 0.59], materials.steelDark);
+  addBox(group, [0.56, 0.07, 0.32], [0.64, 0.37, 0.59], materials.steelDark);
+  [0.42, 0.56, 0.7, 0.84].forEach((x) =>
+    addCylinder(group, 0.035, 0.25, [x, 0.42, 0.59], materials.steel, 12, [Math.PI / 2, 0, 0]),
+  );
+  [0.43, 0.75].forEach((z) => addBox(group, [0.56, 0.055, 0.035], [0.64, 0.45, z], materials.steel));
   const ingot = new THREE.Group();
-  ingot.position.set(0.43, 0.505, 0.59);
+  ingot.position.set(0.4, 0.505, 0.59);
   group.add(ingot);
   addBox(ingot, [0.22, 0.09, 0.15], [0, 0, 0], materials.copper, [0, -0.05, 0]);
   addBox(ingot, [0.15, 0.03, 0.09], [0, 0.058, 0], materials.brass, [0, -0.05, 0]);
@@ -710,18 +717,25 @@ const createSmelterStation = (materials: MaterialSet) => {
 const createMaterialsStation = (materials: MaterialSet) => {
   const group = new THREE.Group();
   addStationBase(group, materials);
-  addCylinder(group, 0.82, 0.13, [0, 0.29, 0], materials.steelDark, 24);
-  const sorterRotor = new THREE.Group();
-  sorterRotor.position.set(0, 0.39, 0.06);
-  group.add(sorterRotor);
-  addCylinder(sorterRotor, 0.61, 0.055, [0, 0, 0], materials.graphite, 24);
-  [materials.copper, materials.steel, materials.emerald].forEach((material, index) => {
-    const angle = index * (Math.PI * 2) / 3;
-    addBox(sorterRotor, [0.14, 0.04, 0.08], [Math.cos(angle) * 0.43, 0.06, Math.sin(angle) * 0.43], material, [0, -angle, 0]);
-  });
+  addBox(group, [0.46, 0.1, 1.08], [0, 0.34, 0.22], materials.steelDark);
+  const sorterRollers = [0.66, 0.45, 0.24, 0.03].map((z) =>
+    addCylinder(group, 0.032, 0.38, [0, 0.41, z], materials.steel, 10, [0, 0, Math.PI / 2]),
+  );
+  [-0.25, 0.25].forEach((x) => addBox(group, [0.045, 0.6, 0.045], [x, 0.7, 0.16], materials.steel));
+  addBox(group, [0.54, 0.045, 0.045], [0, 0.98, 0.16], materials.steel);
+  const scannerMaterial = materials.emeraldGlow.clone();
+  scannerMaterial.transparent = true;
+  scannerMaterial.opacity = 0.18;
+  const sorterScanner = addBox(group, [0.43, 0.018, 0.035], [0, 0.66, 0.18], scannerMaterial);
+
+  const sorterDiverter = new THREE.Group();
+  sorterDiverter.position.set(0, 0.48, -0.03);
+  group.add(sorterDiverter);
+  addCylinder(sorterDiverter, 0.09, 0.07, [0, 0, 0], materials.graphiteSoft, 18);
+  addBox(sorterDiverter, [0.075, 0.055, 0.48], [0, 0.02, -0.21], materials.brass);
 
   const bins = new THREE.Group();
-  bins.position.set(0, 0.36, -0.48);
+  bins.position.set(0, 0.34, -0.5);
   group.add(bins);
   const binSpecs = [
     { x: -0.48, material: materials.copper },
@@ -730,11 +744,11 @@ const createMaterialsStation = (materials: MaterialSet) => {
   ];
   const binIndicators: Array<ReturnType<typeof addBox>> = [];
   binSpecs.forEach(({ x, material }) => {
-    addBox(bins, [0.36, 0.055, 0.34], [x, 0.05, 0], materials.graphiteSoft);
-    addBox(bins, [0.36, 0.28, 0.045], [x, 0.19, -0.15], materials.graphiteSoft);
-    addBox(bins, [0.045, 0.28, 0.34], [x - 0.157, 0.19, 0], materials.graphiteSoft);
-    addBox(bins, [0.045, 0.28, 0.34], [x + 0.157, 0.19, 0], materials.graphiteSoft);
-    addBox(bins, [0.26, 0.022, 0.22], [x, 0.095, 0], material);
+    addBox(bins, [0.34, 0.055, 0.32], [x, 0.05, 0], materials.graphiteSoft);
+    addBox(bins, [0.34, 0.3, 0.045], [x, 0.2, -0.14], materials.graphiteSoft);
+    addBox(bins, [0.045, 0.3, 0.32], [x - 0.147, 0.2, 0], materials.graphiteSoft);
+    addBox(bins, [0.045, 0.3, 0.32], [x + 0.147, 0.2, 0], materials.graphiteSoft);
+    addBox(bins, [0.24, 0.022, 0.2], [x, 0.1, 0], material);
     const indicatorMaterial = materials.emeraldGlow.clone();
     indicatorMaterial.transparent = true;
     indicatorMaterial.opacity = 0.12;
@@ -743,15 +757,17 @@ const createMaterialsStation = (materials: MaterialSet) => {
 
   const sorterItems = binSpecs.map(({ x, material }, index) => {
     const item = new THREE.Group();
-    item.position.set(0, 0.56, 0.28);
-    item.scale.setScalar(0.001);
+    item.position.set(0, 0.51, 0.68);
+    item.scale.setScalar(index === 0 ? 1 : 0.001);
     group.add(item);
-    addBox(item, [0.26, 0.13 + index * 0.015, 0.22], [0, 0, 0], material, [0, index * 0.14 - 0.12, 0]);
-    item.userData.targetPosition = new THREE.Vector3(x, 0.54, -0.48);
+    addBox(item, [0.18, 0.08 + index * 0.012, 0.14], [0, 0, 0], material);
+    item.userData.targetPosition = new THREE.Vector3(x, 0.46, -0.5);
     return item;
   });
   group.userData.sorterItems = sorterItems;
-  group.userData.sorterRotor = sorterRotor;
+  group.userData.sorterDiverter = sorterDiverter;
+  group.userData.sorterRollers = sorterRollers;
+  group.userData.sorterScanner = sorterScanner;
   group.userData.sorterBinIndicators = binIndicators;
   return group;
 };
@@ -1001,6 +1017,7 @@ export const createCyclePrototypeWorld = (
     material?: THREE.Material,
     rotation: THREE.Vector3Tuple = [0, 0, 0],
     stretch: THREE.Vector3Tuple = [1, 1, 1],
+    hiddenObjectNames: readonly string[] = [],
   ) => {
     try {
       const gltf = await modelLoader.loadAsync(url);
@@ -1010,6 +1027,9 @@ export const createCyclePrototypeWorld = (
       }
       const slot = stationGroups[point].userData[slotKey] as THREE.Group;
       const model = prepareModel(gltf.scene, maxDimension, material, rotation);
+      model.traverse((object) => {
+        if (hiddenObjectNames.includes(object.name)) object.visible = false;
+      });
       model.scale.multiply(new THREE.Vector3(...stretch));
       slot.add(model);
     } catch (error) {
@@ -1017,7 +1037,16 @@ export const createCyclePrototypeWorld = (
     }
   };
 
-  void attachModel("disassembly", "robotAssetSlot", "/zyklus-prototype/models/robot-arm.glb", 1.56, undefined, [0, -0.72, 0]);
+  void attachModel(
+    "disassembly",
+    "robotAssetSlot",
+    "/zyklus-prototype/models/robot-arm.glb",
+    1.56,
+    undefined,
+    [0, -0.72, 0],
+    [1, 1, 1],
+    ["Grabber", "Grabber_hand_1", "Grabber_hand_2"],
+  );
 
   const logoTextureLoader = new THREE.TextureLoader();
   void logoTextureLoader
@@ -1108,9 +1137,9 @@ export const createCyclePrototypeWorld = (
           const doorScale = 1 - doorOpen * 0.78;
           door.scale.y = doorScale;
           door.position.y = 0.51 + (1 - doorScale) * 0.22;
-          carrier.position.x = 0.16;
-          carrier.position.z = 0.12 + carrierOut * 0.58;
-          carrier.position.y = 0.34 + Math.sin(carrierOut * Math.PI) * 0.012;
+          carrier.position.x = 0.22;
+          carrier.position.z = 0.38 + carrierOut * 0.53;
+          carrier.position.y = 0.39 + Math.sin(carrierOut * Math.PI) * 0.008;
           carrier.rotation.y = 0;
           statusPanel.scale.set(1 + confirmation * 0.08, 1 + confirmation * 0.08, 1);
           const beaconScale = 0.72 + confirmation * (0.42 + activity * 0.12);
@@ -1176,9 +1205,9 @@ export const createCyclePrototypeWorld = (
           const pickAngle = station.userData.robotPickAngle as number;
           const placeAngle = station.userData.robotPlaceAngle as number;
           const tool = station.userData.robotTool as {
-            bridge: THREE.Mesh;
-            jaws: THREE.Mesh[];
+            head: THREE.Mesh;
             stem: THREE.Mesh;
+            suction: THREE.Mesh;
           };
           const status = station.userData.robotStatus as THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
           const phase = getCycleRoutePhase(sequenceElapsed, 7.6, 0);
@@ -1201,17 +1230,18 @@ export const createCyclePrototypeWorld = (
           }
           rig.position.y = 0.28;
 
-          const extension = 0.32 + Math.max(pickReach, placeReach) * 0.44;
-          tool.stem.scale.y = extension / 0.32;
+          const extension = 0.46 + Math.max(pickReach, placeReach) * 0.44;
+          tool.stem.scale.y = extension / 0.46;
           tool.stem.position.y = -extension * 0.5;
-          tool.bridge.position.y = -extension;
-          tool.jaws[0].position.set(-0.105 + gripClosed * 0.035, -extension - 0.055, 0);
-          tool.jaws[1].position.set(0.105 - gripClosed * 0.035, -extension - 0.055, 0);
+          tool.head.position.y = -extension;
+          tool.suction.position.y = -extension - 0.045;
+          const suctionScale = 0.9 + gripClosed * 0.18;
+          tool.suction.scale.set(suctionScale, 1, suctionScale);
 
           robotGripRadial.set(gripperLocal.x, 0, gripperLocal.z).applyAxisAngle(rotationAxisY, rig.rotation.y);
           robotGripPosition.set(
             rig.position.x + robotGripRadial.x,
-            rig.position.y + gripperLocal.y - extension - 0.075,
+            rig.position.y + gripperLocal.y - extension - 0.095,
             rig.position.z + robotGripRadial.z,
           );
           if (phase < 0.23) {
@@ -1241,7 +1271,7 @@ export const createCyclePrototypeWorld = (
           const heatWindow = getCycleWindowEnvelope(phase, 0.3, 0.38, 0.68, 0.8);
           const ingotProgress = getCycleSegmentProgress(phase, 0.72, 0.9);
           const ingotEnvelope = getCycleWindowEnvelope(phase, 0.66, 0.73, 0.94, 0.99);
-          feed.position.x = THREE.MathUtils.lerp(-0.68, 0.16, feedProgress);
+          feed.position.x = THREE.MathUtils.lerp(-0.75, 0.08, feedProgress);
           feed.position.y = 0.485;
           feed.position.z = 0.59;
           feed.scale.setScalar(Math.max(0.001, feedEnvelope));
@@ -1262,7 +1292,7 @@ export const createCyclePrototypeWorld = (
             heatRing.scale.setScalar(0.6 + ringProgress * 0.72);
             heatRing.material.opacity = ringEnvelope * (0.22 + activity * 0.14);
           });
-          ingot.position.x = THREE.MathUtils.lerp(0.49, 0.69, ingotProgress);
+          ingot.position.x = THREE.MathUtils.lerp(0.4, 0.8, ingotProgress);
           ingot.position.y = 0.505;
           ingot.position.z = 0.59;
           ingot.scale.setScalar(Math.max(0.001, ingotEnvelope * (1 + activity * 0.08)));
@@ -1270,7 +1300,8 @@ export const createCyclePrototypeWorld = (
 
         if (point === "materials") {
           const sorterItems = station.userData.sorterItems as THREE.Group[];
-          const sorterRotor = station.userData.sorterRotor as THREE.Group;
+          const sorterDiverter = station.userData.sorterDiverter as THREE.Group;
+          const sorterScanner = station.userData.sorterScanner as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
           const binIndicators = station.userData.sorterBinIndicators as Array<THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>>;
           const phase = getCycleRoutePhase(sequenceElapsed, 8.4, 0);
           const sortWindows = [
@@ -1278,16 +1309,24 @@ export const createCyclePrototypeWorld = (
             [0.35, 0.63],
             [0.68, 0.96],
           ] as const;
-          const rotorSteps =
-            getCycleSegmentProgress(phase, 0.3, 0.34) +
-            getCycleSegmentProgress(phase, 0.63, 0.67) +
-            getCycleSegmentProgress(phase, 0.96, 0.995);
-          sorterRotor.rotation.y = -rotorSteps * ((Math.PI * 2) / 3);
+          const activeSortIndex = phase < 0.35 ? 0 : phase < 0.68 ? 1 : 2;
+          const activeTarget = sorterItems[activeSortIndex].userData.targetPosition as THREE.Vector3;
+          const targetDiverterAngle = Math.atan2(activeTarget.x, 0.47);
+          sorterDiverter.rotation.y = THREE.MathUtils.lerp(sorterDiverter.rotation.y, targetDiverterAngle, 0.08);
+          const scanPulse = getCycleWindowEnvelope(
+            phase,
+            sortWindows[activeSortIndex][0] + 0.06,
+            sortWindows[activeSortIndex][0] + 0.1,
+            sortWindows[activeSortIndex][0] + 0.15,
+            sortWindows[activeSortIndex][0] + 0.2,
+          );
+          sorterScanner.material.opacity = 0.12 + scanPulse * (0.76 + activity * 0.08);
+          sorterScanner.scale.x = 0.9 + scanPulse * 0.14;
           sorterItems.forEach((item, itemIndex) => {
             const [windowStart, windowEnd] = sortWindows[itemIndex];
-            const travelEnd = windowEnd - 0.14;
-            const progress = getCycleSegmentProgress(phase, windowStart + 0.045, travelEnd);
-            const settle = getCycleSegmentProgress(phase, travelEnd, windowEnd - 0.06);
+            const inputProgress = getCycleSegmentProgress(phase, windowStart + 0.025, windowStart + 0.115);
+            const divertProgress = getCycleSegmentProgress(phase, windowStart + 0.13, windowEnd - 0.075);
+            const settle = getCycleSegmentProgress(phase, windowEnd - 0.095, windowEnd - 0.04);
             const envelope = getCycleWindowEnvelope(
               phase,
               windowStart,
@@ -1297,19 +1336,21 @@ export const createCyclePrototypeWorld = (
             );
             const arrival = getCycleWindowEnvelope(
               phase,
-              travelEnd,
-              windowEnd - 0.06,
+              windowEnd - 0.1,
+              windowEnd - 0.055,
               windowEnd - 0.025,
               windowEnd,
             );
             const target = item.userData.targetPosition as THREE.Vector3;
-            item.position.x = THREE.MathUtils.lerp(0, target.x, progress);
-            const travelY =
-              THREE.MathUtils.lerp(0.56, target.y + 0.18, progress) + Math.sin(progress * Math.PI) * 0.14;
-            item.position.y = THREE.MathUtils.lerp(travelY, target.y, settle);
-            item.position.z = THREE.MathUtils.lerp(0.28, target.z, progress);
+            item.position.x = THREE.MathUtils.lerp(0, target.x, divertProgress);
+            item.position.y = THREE.MathUtils.lerp(0.51, target.y, settle);
+            item.position.z = THREE.MathUtils.lerp(
+              THREE.MathUtils.lerp(0.68, 0.02, inputProgress),
+              target.z,
+              divertProgress,
+            );
             item.scale.setScalar(Math.max(0.001, envelope * (1 + activity * 0.07)));
-            item.rotation.y = Math.sin(progress * Math.PI) * 0.24 * (1 - settle);
+            item.rotation.y = THREE.MathUtils.lerp(0, Math.atan2(target.x, 0.47), divertProgress);
             const indicator = binIndicators[itemIndex];
             indicator.material.opacity = 0.1 + arrival * 0.9;
             indicator.scale.x = 0.8 + arrival * 0.4;

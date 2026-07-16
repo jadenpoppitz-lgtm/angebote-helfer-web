@@ -1,5 +1,6 @@
 import { lazy, Suspense, useMemo, useState } from "react";
 import type { CSSProperties, FormEvent } from "react";
+import { createPortal } from "react-dom";
 import {
   ArrowRight,
   BatteryCharging,
@@ -14,6 +15,8 @@ import {
   Laptop,
   Leaf,
   Monitor,
+  MapPin,
+  Navigation,
   PackageCheck,
   Recycle,
   Router,
@@ -37,6 +40,7 @@ import {
   type DemoDayMetalKey,
   type DemoDeviceKind,
 } from "@/data/demoDayDevices";
+import { trackDemoDayLookup } from "@/lib/demoDayTracking";
 
 const DemoDayDeviceModel = lazy(() => import("@/components/DemoDayDeviceModel"));
 
@@ -65,18 +69,25 @@ type LookupCopy = {
   demoRecord: string;
   manufactured: string;
   weight: string;
+  impactEyebrow: string;
+  impactTitle: string;
+  impactText: string;
   recyclable: string;
+  recyclableText: string;
   recoverable: string;
+  recoverableText: string;
   avoidedCo2: string;
+  avoidedCo2Text: string;
   metalInventory: string;
   metalInventoryText: string;
   metalSummaryTitle: string;
   capturedMetalMass: string;
   capturedMetalMassNote: string;
-  moreMetals: (count: number) => string;
+  metalShare: string;
   metalGroups: Record<"circular" | "battery" | "precious" | "technology", string>;
   notPublished: string;
   sourceList: string;
+  sourceSummary: string;
   precisionNote: string;
   disclosures: Record<"precious-metals-minimum" | "rare-earths-minimum", string>;
   evidence: Record<DemoDayMetalEvidence, string>;
@@ -103,12 +114,22 @@ type LookupCopy = {
   winnerInstruction: string;
   prize: string;
   syntheticNote: string;
+  returnMapEyebrow: string;
+  returnMapTitle: string;
+  returnMapText: string;
+  currentLocation: string;
+  nearestLocation: string;
+  otherLocation: string;
+  acceptsDevices: string;
+  openRoute: string;
+  officialSource: string;
+  mapAriaLabel: string;
   metals: Record<DemoDayMetalKey, string>;
 };
 
 const lookupCopy: Record<Language, LookupCopy> = {
   de: {
-    eventLabel: "Demo-Day Gerätepass",
+    eventLabel: "Seriennummer prüfen",
     serialLabel: "Seriennummer deiner Demo-Karte",
     serialPlaceholder: "LT26-XXXX-XXXX",
     serialHint: "Tippe LT26 und die zwei vierstelligen Blöcke. Die Bindestriche erscheinen automatisch.",
@@ -124,15 +145,21 @@ const lookupCopy: Record<Language, LookupCopy> = {
     demoRecord: "Verifizierter Demo-Datensatz",
     manufactured: "Baujahr",
     weight: "Gerätegewicht",
-    recyclable: "Recyclingpotenzial",
-    recoverable: "Rückgewinnbar",
-    avoidedCo2: "CO₂ vermeidbar",
-    metalInventory: "Metallübersicht",
-    metalInventoryText: "Die enthaltenen Metalle sind in vier verständlichen Materialgruppen zusammengefasst.",
-    metalSummaryTitle: "4 Materialgruppen im Überblick",
-    capturedMetalMass: "Erfasste Metallmenge",
-    capturedMetalMassNote: "Die Anteile basieren auf veröffentlichten oder wissenschaftlich geschätzten Mengen.",
-    moreMetals: (count) => `+${count} weitere`,
+    impactEyebrow: "Deine Rückgabe",
+    impactTitle: "So bleibt dein Gerät im Kreislauf",
+    impactText: "Statt im Restmüll zu enden, werden nutzbare Materialien gezielt zurückgewonnen.",
+    recyclable: "des Gerätegewichts bleiben nutzbar",
+    recyclableText: "Der Anteil, der bei fachgerechter Rückgabe weiterverwendet oder recycelt werden kann.",
+    recoverable: "Materialien erneut nutzbar",
+    recoverableText: "Diese Menge kann aus deinem Gerät zurück in den Kreislauf geführt werden.",
+    avoidedCo2: "CO₂-Emissionen vermeidbar",
+    avoidedCo2Text: "Mögliche Wirkung gegenüber der Gewinnung neuer Rohstoffe.",
+    metalInventory: "Materialien",
+    metalInventoryText: "Vier klar beschriftete Gruppen zeigen dir Mengen, Anteile und die wichtigsten enthaltenen Metalle.",
+    metalSummaryTitle: "Diese Metalle stecken in deinem Gerät",
+    capturedMetalMass: "Erfasste Metalle",
+    capturedMetalMassNote: "Die dargestellten Anteile beziehen sich auf die erfasste Metallmenge.",
+    metalShare: "der erfassten Metalle",
     metalGroups: {
       circular: "Basis- & Kreislaufmetalle",
       battery: "Batterie & Speicher",
@@ -141,6 +168,7 @@ const lookupCopy: Record<Language, LookupCopy> = {
     },
     notPublished: "Menge nicht veröffentlicht",
     sourceList: "Quellen und Methodik",
+    sourceSummary: "Gewicht, Metallwerte und Demo-Annahmen transparent erklärt.",
     precisionNote: "Eine vollständige, modellgenaue Elementbilanz ist nur mit Hersteller-Stückliste oder Laboranalyse möglich. Deshalb werden unveröffentlichte Werte nicht als exakt ausgegeben.",
     disclosures: {
       "precious-metals-minimum": "Edelmetalle gesamt",
@@ -157,9 +185,9 @@ const lookupCopy: Record<Language, LookupCopy> = {
     previousCycles: (count) => `${count} Kreisläufe dokumentiert`,
     firstCycleText: "Dieses Demo-Gerät wurde bisher noch nicht zurückgeführt.",
     previousCyclesText: "Der Gerätepass enthält bereits einen dokumentierten Rücklauf.",
-    reserve: "Rückgabe vormerken",
-    reserved: "Rückgabe vorgemerkt",
-    reserveText: "Die Demo-Vormerkung ist lokal und löst keine echte Abholung aus.",
+    reserve: "Rückgabestelle auswählen",
+    reserved: "Friedrichstadt ausgewählt",
+    reserveText: "Wertstoffhof Friedrichstadt · Altonaer Straße 15",
     reservationBenefitTitle: "Dein Rückgabevorteil",
     discountBenefit: "Rückgabe-Rabatt",
     discountBenefitText: (discount) => `${discount} Rabatt wird nach bestätigter Rückgabe freigeschaltet.`,
@@ -175,6 +203,16 @@ const lookupCopy: Record<Language, LookupCopy> = {
     winnerInstruction: "Zeige diesen Gerätepass am Leaftronics-Stand und hole deinen Demo-Goldbarren ab.",
     prize: "Demo Gold Bar 2026",
     syntheticNote: "Seriennummer, Kreislaufhistorie, Gewinnstatus, CO₂-Wert und Rückgewinnungspotenzial sind Demo-Daten. Modellgewicht und Metallangaben sind separat quellen- und evidenzbasiert gekennzeichnet.",
+    returnMapEyebrow: "Rückgabe in Dresden",
+    returnMapTitle: "Altgerät richtig abgeben",
+    returnMapText: "Die nächsten städtischen Annahmestellen für Elektroaltgeräte rund um deinen Standort.",
+    currentLocation: "Aktueller Standort · HTW Dresden, Friedrich-List-Platz 1",
+    nearestLocation: "Nächste Anlaufstelle",
+    otherLocation: "Weitere Anlaufstelle",
+    acceptsDevices: "Elektroaltgeräte · gebührenfreie Abgabe",
+    openRoute: "Route öffnen",
+    officialSource: "Angaben der Landeshauptstadt Dresden",
+    mapAriaLabel: "Karte mit HTW Dresden und den Wertstoffhöfen Friedrichstadt, Plauen und Johannstadt",
     metals: {
       aluminum: "Aluminium",
       ironSteel: "Eisen / Stahl",
@@ -200,7 +238,7 @@ const lookupCopy: Record<Language, LookupCopy> = {
     },
   },
   en: {
-    eventLabel: "Demo day device passport",
+    eventLabel: "Check serial number",
     serialLabel: "Serial number on your demo card",
     serialPlaceholder: "LT26-XXXX-XXXX",
     serialHint: "Type LT26 and the two four-character blocks. Hyphens are added automatically.",
@@ -216,15 +254,21 @@ const lookupCopy: Record<Language, LookupCopy> = {
     demoRecord: "Verified demo record",
     manufactured: "Model year",
     weight: "Device weight",
-    recyclable: "Recycling potential",
-    recoverable: "Recoverable",
-    avoidedCo2: "CO₂ avoidable",
-    metalInventory: "Metal overview",
-    metalInventoryText: "The metals in this device are summarised in four understandable material groups.",
-    metalSummaryTitle: "4 material groups at a glance",
-    capturedMetalMass: "Recorded metal mass",
-    capturedMetalMassNote: "Shares are based on published or scientifically estimated quantities.",
-    moreMetals: (count) => `+${count} more`,
+    impactEyebrow: "Your return",
+    impactTitle: "How your device stays in the loop",
+    impactText: "Instead of becoming residual waste, useful materials are recovered for another use.",
+    recyclable: "of the device weight remains useful",
+    recyclableText: "The share that can be reused or recycled through a proper return process.",
+    recoverable: "of materials can be reused",
+    recoverableText: "This amount can be recovered from your device and returned to the loop.",
+    avoidedCo2: "of CO₂ emissions potentially avoided",
+    avoidedCo2Text: "Possible impact compared with extracting new raw materials.",
+    metalInventory: "Materials",
+    metalInventoryText: "Four directly labelled groups show the quantities, shares and most important metals in your device.",
+    metalSummaryTitle: "These metals are inside your device",
+    capturedMetalMass: "Recorded metals",
+    capturedMetalMassNote: "The displayed shares refer to the recorded metal mass.",
+    metalShare: "of recorded metals",
     metalGroups: {
       circular: "Base & circular metals",
       battery: "Battery & storage",
@@ -233,6 +277,7 @@ const lookupCopy: Record<Language, LookupCopy> = {
     },
     notPublished: "Amount not published",
     sourceList: "Sources and method",
+    sourceSummary: "A transparent explanation of weight, metal values and demo assumptions.",
     precisionNote: "A complete model-specific elemental balance requires a manufacturer bill of materials or laboratory analysis. Unpublished quantities are therefore never presented as exact.",
     disclosures: {
       "precious-metals-minimum": "Total precious metals",
@@ -249,9 +294,9 @@ const lookupCopy: Record<Language, LookupCopy> = {
     previousCycles: (count) => `${count} cycles documented`,
     firstCycleText: "This demo device has not entered a return loop before.",
     previousCyclesText: "The device passport already contains a documented return.",
-    reserve: "Reserve a return",
-    reserved: "Return reserved",
-    reserveText: "This demo reservation stays local and does not trigger a real pickup.",
+    reserve: "Choose a return point",
+    reserved: "Friedrichstadt selected",
+    reserveText: "Friedrichstadt recycling centre · Altonaer Strasse 15",
     reservationBenefitTitle: "Your return benefit",
     discountBenefit: "Return discount",
     discountBenefitText: (discount) => `${discount} is unlocked after the return is confirmed.`,
@@ -267,6 +312,16 @@ const lookupCopy: Record<Language, LookupCopy> = {
     winnerInstruction: "Show this device passport at the Leaftronics booth to collect your demo gold bar.",
     prize: "Demo Gold Bar 2026",
     syntheticNote: "Serial number, circular history, winner status, CO₂ value and recovery potential are demo data. Model weight and metal information are separately labelled by source and evidence level.",
+    returnMapEyebrow: "Return in Dresden",
+    returnMapTitle: "Return your old device correctly",
+    returnMapText: "The nearest municipal collection points for electronic waste around your location.",
+    currentLocation: "Current location · HTW Dresden, Friedrich-List-Platz 1",
+    nearestLocation: "Nearest collection point",
+    otherLocation: "Other collection point",
+    acceptsDevices: "Electronic waste · free household drop-off",
+    openRoute: "Open route",
+    officialSource: "Information from the City of Dresden",
+    mapAriaLabel: "Map showing HTW Dresden and the Friedrichstadt, Plauen and Johannstadt recycling centres",
     metals: {
       aluminum: "Aluminium",
       ironSteel: "Iron / steel",
@@ -292,7 +347,7 @@ const lookupCopy: Record<Language, LookupCopy> = {
     },
   },
   zh: {
-    eventLabel: "演示日设备护照",
+    eventLabel: "检查序列号",
     serialLabel: "演示卡上的序列号",
     serialPlaceholder: "LT26-XXXX-XXXX",
     serialHint: "输入 LT26 和后面的两组四位字符，连字符会自动添加。",
@@ -308,15 +363,21 @@ const lookupCopy: Record<Language, LookupCopy> = {
     demoRecord: "已验证演示数据",
     manufactured: "生产年份",
     weight: "设备重量",
-    recyclable: "回收潜力",
-    recoverable: "可回收重量",
-    avoidedCo2: "可避免 CO₂",
-    metalInventory: "金属概览",
-    metalInventoryText: "设备中的金属被归纳为四个易于理解的材料组。",
-    metalSummaryTitle: "四类材料一览",
-    capturedMetalMass: "已记录金属重量",
-    capturedMetalMassNote: "比例基于公开数据或科学估算值。",
-    moreMetals: (count) => `另有 ${count} 种`,
+    impactEyebrow: "你的回收行动",
+    impactTitle: "让设备材料继续循环",
+    impactText: "通过正确回收，可用材料不会成为残余垃圾，而是被重新利用。",
+    recyclable: "的设备重量可继续利用",
+    recyclableText: "通过正确回收可被再使用或再循环的重量比例。",
+    recoverable: "材料可重新利用",
+    recoverableText: "这些材料可从设备中回收并重新进入循环。",
+    avoidedCo2: "可避免的 CO₂ 排放",
+    avoidedCo2Text: "与开采新原材料相比可能产生的环境效益。",
+    metalInventory: "材料",
+    metalInventoryText: "四个直接标注的材料组展示设备中的数量、比例和主要金属。",
+    metalSummaryTitle: "你的设备中含有这些金属",
+    capturedMetalMass: "已记录金属",
+    capturedMetalMassNote: "图中比例以已记录的金属总量为基准。",
+    metalShare: "占已记录金属",
     metalGroups: {
       circular: "基础与循环金属",
       battery: "电池与储能金属",
@@ -325,6 +386,7 @@ const lookupCopy: Record<Language, LookupCopy> = {
     },
     notPublished: "制造商未公布含量",
     sourceList: "来源与方法",
+    sourceSummary: "透明说明重量、金属数据和演示假设。",
     precisionNote: "完整且针对具体型号的元素平衡需要制造商物料清单或实验室分析，因此未公开的数值不会被标为精确值。",
     disclosures: {
       "precious-metals-minimum": "贵金属总量",
@@ -341,9 +403,9 @@ const lookupCopy: Record<Language, LookupCopy> = {
     previousCycles: (count) => `已记录 ${count} 次循环`,
     firstCycleText: "此演示设备此前尚未进入回收循环。",
     previousCyclesText: "设备护照中已有一次回收记录。",
-    reserve: "登记回收",
-    reserved: "已登记回收",
-    reserveText: "此演示登记仅保存在本地，不会触发真实取件。",
+    reserve: "选择回收点",
+    reserved: "已选择 Friedrichstadt",
+    reserveText: "Friedrichstadt 回收中心 · Altonaer Straße 15",
     reservationBenefitTitle: "你的回收权益",
     discountBenefit: "回收折扣",
     discountBenefitText: (discount) => `确认回收后即可获得 ${discount}。`,
@@ -359,6 +421,16 @@ const lookupCopy: Record<Language, LookupCopy> = {
     winnerInstruction: "请在 Leaftronics 展台出示此设备护照，领取演示金条。",
     prize: "2026 演示金条",
     syntheticNote: "序列号、循环记录、中奖状态、CO₂ 数值和回收潜力为演示数据；型号重量和金属信息均单独标注来源与证据等级。",
+    returnMapEyebrow: "德累斯顿回收点",
+    returnMapTitle: "正确交回旧设备",
+    returnMapText: "当前位置附近可接收电子废弃物的市政回收点。",
+    currentLocation: "当前位置 · HTW Dresden, Friedrich-List-Platz 1",
+    nearestLocation: "最近回收点",
+    otherLocation: "其他回收点",
+    acceptsDevices: "电子废弃物 · 家庭免费交回",
+    openRoute: "打开路线",
+    officialSource: "德累斯顿市政府信息",
+    mapAriaLabel: "显示 HTW Dresden 与 Friedrichstadt、Plauen 和 Johannstadt 回收中心的地图",
     metals: {
       aluminum: "铝",
       ironSteel: "铁 / 钢",
@@ -402,36 +474,42 @@ const metalSummaryGroups: Array<{
   key: MetalSummaryGroupKey;
   metals: readonly DemoDayMetalKey[];
   icon: LucideIcon;
+  color: string;
 }> = [
   {
     key: "circular",
     metals: ["aluminum", "ironSteel", "copper", "tin", "zinc", "magnesium", "lead"],
     icon: Recycle,
+    color: "#2b7d5a",
   },
   {
     key: "battery",
     metals: ["cobalt", "lithium", "nickel", "manganese"],
     icon: BatteryCharging,
+    color: "#c27a32",
   },
   {
     key: "precious",
     metals: ["gold", "silver", "palladium", "platinum"],
     icon: Gem,
+    color: "#b79530",
   },
   {
     key: "technology",
     metals: ["chromium", "tungsten", "tantalum", "indium", "antimony", "rareEarths"],
     icon: Cpu,
+    color: "#577069",
   },
 ];
 
-const confettiPieces = Array.from({ length: 30 }, (_, index) => ({
-  x: `${4 + ((index * 37) % 92)}%`,
-  delay: `${-((index * 0.19) % 2.8)}s`,
-  duration: `${2.9 + (index % 7) * 0.22}s`,
-  drift: `${-48 + ((index * 29) % 96)}px`,
+const confettiPieces = Array.from({ length: 112 }, (_, index) => ({
+  x: `${2 + ((index * 47) % 97)}%`,
+  delay: index < 56 ? `${-((index * 0.13) % 1.85)}s` : `${((index - 56) % 28) * 0.035}s`,
+  duration: `${3.35 + (index % 8) * 0.18}s`,
+  drift: `${-14 + ((index * 31) % 29)}vw`,
   rotation: `${(index * 47) % 360}deg`,
-  color: ["#e5b73d", "#f5d77f", "#227a55", "#f7f2de", "#b4683d"][index % 5],
+  size: `${0.44 + (index % 5) * 0.09}rem`,
+  color: ["#e5b73d", "#f5d77f", "#227a55", "#f7f2de", "#b4683d", "#f0c95b"][index % 6],
 }));
 
 const localeFor = (language: Language) => (language === "de" ? "de-DE" : language === "zh" ? "zh-CN" : "en-GB");
@@ -458,6 +536,103 @@ const formatMetalMass = (grams: number, language: Language) => {
 const formatNumber = (value: number, language: Language, maximumFractionDigits = 1) =>
   new Intl.NumberFormat(localeFor(language), { maximumFractionDigits }).format(value);
 
+const returnLocations = [
+  {
+    id: "friedrichstadt",
+    name: "Wertstoffhof Friedrichstadt",
+    address: "Altonaer Straße 15, 01159 Dresden",
+    position: [27, 41] as const,
+    routeUrl: "https://www.openstreetmap.org/search?query=Altonaer%20Stra%C3%9Fe%2015%2C%20Dresden",
+  },
+  {
+    id: "plauen",
+    name: "Wertstoffhof Plauen",
+    address: "Pforzheimer Straße 1, 01189 Dresden",
+    position: [38, 82] as const,
+    routeUrl: "https://www.openstreetmap.org/search?query=Pforzheimer%20Stra%C3%9Fe%201%2C%20Dresden",
+  },
+  {
+    id: "johannstadt",
+    name: "Wertstoffhof Johannstadt",
+    address: "Hertelstraße 3, 01307 Dresden",
+    position: [82, 28] as const,
+    routeUrl: "https://www.openstreetmap.org/search?query=Hertelstra%C3%9Fe%203%2C%20Dresden",
+  },
+] as const;
+
+const ReturnLocationMap = ({ copy }: { copy: LookupCopy }) => (
+  <section className="demo-day-return-map" id="demo-day-return-map" aria-labelledby="demo-day-return-map-title">
+    <div className="demo-day-return-map-heading">
+      <div>
+        <p className="demo-day-kicker">{copy.returnMapEyebrow}</p>
+        <h4 id="demo-day-return-map-title">{copy.returnMapTitle}</h4>
+      </div>
+      <p>{copy.returnMapText}</p>
+    </div>
+
+    <div className="demo-day-return-map-layout">
+      <div className="demo-day-return-map-canvas" aria-label={copy.mapAriaLabel}>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path className="is-road-major" d="M-6 69 C18 65 38 58 55 50 C72 42 86 34 106 31" />
+          <path className="is-road-major" d="M48 -6 C48 18 51 36 54 58 C57 73 68 88 82 106" />
+          <path d="M4 24 C23 30 43 32 62 27 C78 23 90 15 104 8" />
+          <path d="M3 87 C22 78 39 72 57 75 C75 78 90 89 104 96" />
+          <path d="M20 -5 C24 18 29 34 39 48 C49 62 63 68 103 67" />
+          <path className="is-route" d="M53 58 C43 53 34 47 27 41" />
+        </svg>
+        <span className="demo-day-map-district is-friedrichstadt" aria-hidden="true">Friedrichstadt</span>
+        <span className="demo-day-map-district is-plauen" aria-hidden="true">Plauen</span>
+        <span className="demo-day-map-district is-johannstadt" aria-hidden="true">Johannstadt</span>
+        <span className="demo-day-map-current" style={{ left: "53%", top: "58%" }}>
+          <span aria-hidden="true"><Navigation /></span>
+          <strong>{copy.currentLocation}</strong>
+        </span>
+        {returnLocations.map((location, index) => (
+          <a
+            key={location.id}
+            className={`demo-day-map-marker${index === 0 ? " is-nearest" : ""}`}
+            href={location.routeUrl}
+            target="_blank"
+            rel="noreferrer"
+            style={{ left: `${location.position[0]}%`, top: `${location.position[1]}%` }}
+            aria-label={`${location.name}, ${location.address}. ${copy.openRoute}`}
+          >
+            <MapPin aria-hidden="true" />
+            <span>{index + 1}</span>
+          </a>
+        ))}
+      </div>
+
+      <ol className="demo-day-return-points">
+        {returnLocations.map((location, index) => (
+          <li key={location.id} className={index === 0 ? "is-nearest" : undefined}>
+            <span className="demo-day-return-point-index">{index + 1}</span>
+            <span className="demo-day-return-point-copy">
+              <small>{index === 0 ? copy.nearestLocation : copy.otherLocation}</small>
+              <strong>{location.name}</strong>
+              <span>{location.address}</span>
+              <em>{copy.acceptsDevices}</em>
+            </span>
+            <a href={location.routeUrl} target="_blank" rel="noreferrer" aria-label={`${copy.openRoute}: ${location.name}`}>
+              <Navigation aria-hidden="true" />
+              <span>{copy.openRoute}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <a
+      className="demo-day-return-source"
+      href="https://www.dresden.de/de/stadtraum/umwelt/abfall-stadtreinigung/abfallberatung/trennung/Elektroaltgeraet.php"
+      target="_blank"
+      rel="noreferrer"
+    >
+      {copy.officialSource}<ExternalLink aria-hidden="true" />
+    </a>
+  </section>
+);
+
 const MetalProfile = ({ record, language, copy }: { record: DemoDayDeviceRecord; language: Language; copy: LookupCopy }) => {
   const groups = metalSummaryGroups.map((group) => {
     const metals = record.metalProfile.filter((metal) => group.metals.includes(metal.key));
@@ -468,10 +643,18 @@ const MetalProfile = ({ record, language, copy }: { record: DemoDayDeviceRecord;
       ...group,
       knownMass,
       examples: dominantMetals.slice(0, 2).map((metal) => copy.metals[metal.key]),
-      remaining: Math.max(0, metals.length - 2),
     };
-  });
+  }).sort((left, right) => right.knownMass - left.knownMass);
   const capturedMass = groups.reduce((total, group) => total + group.knownMass, 0);
+  let accumulatedShare = 0;
+  const chartSegments = groups.map((group) => {
+    const start = accumulatedShare;
+    accumulatedShare += capturedMass > 0 ? (group.knownMass / capturedMass) * 100 : 0;
+    return `${group.color} ${start}% ${accumulatedShare}%`;
+  });
+  const chartBackground = capturedMass > 0
+    ? `conic-gradient(from -90deg, ${chartSegments.join(", ")})`
+    : "#dce6e0";
 
   return (
     <section className="demo-day-metals" aria-labelledby="demo-day-metal-title">
@@ -483,6 +666,62 @@ const MetalProfile = ({ record, language, copy }: { record: DemoDayDeviceRecord;
         <p>{copy.metalInventoryText}</p>
       </div>
 
+      <div className="demo-day-metal-overview">
+        <div
+          className="demo-day-metal-chart"
+          role="img"
+          aria-label={`${copy.metalSummaryTitle}. ${copy.capturedMetalMass}: ${formatMetalMass(capturedMass, language)}`}
+        >
+          <div className="demo-day-metal-donut" style={{ background: chartBackground }} aria-hidden="true">
+            <span>
+              <strong>{formatMetalMass(capturedMass, language)}</strong>
+              <small>{copy.capturedMetalMass}</small>
+            </span>
+          </div>
+          <p>{copy.capturedMetalMassNote}</p>
+        </div>
+
+        <div className="demo-day-metal-groups">
+          {groups.map((group) => {
+            const GroupIcon = group.icon;
+            const share = capturedMass > 0 ? (group.knownMass / capturedMass) * 100 : 0;
+            return (
+              <div
+                className="demo-day-metal-group"
+                data-group={group.key}
+                data-testid="metal-summary-group"
+                key={group.key}
+                style={{
+                  "--metal-group-color": group.color,
+                  "--metal-group-share": `${share}%`,
+                } as CSSProperties}
+              >
+                <span className="demo-day-metal-group-icon" aria-hidden="true"><GroupIcon /></span>
+                <span className="demo-day-metal-group-copy">
+                  <strong>{copy.metalGroups[group.key]}</strong>
+                  <small>{group.examples.join(" · ")}</small>
+                </span>
+                <span className="demo-day-metal-group-value">
+                  <strong>{group.knownMass > 0 ? formatMetalMass(group.knownMass, language) : copy.notPublished}</strong>
+                  <small>{formatNumber(share, language, share < 1 ? 2 : 0)}% {copy.metalShare}</small>
+                </span>
+                <span className="demo-day-metal-group-track" aria-hidden="true"><i /></span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const SourcesAndMethod = ({ record, language, copy }: { record: DemoDayDeviceRecord; language: Language; copy: LookupCopy }) => (
+  <details className="demo-day-sources">
+    <summary>
+      <span>{copy.sourceList}</span>
+      <small>{copy.sourceSummary}</small>
+    </summary>
+    <div className="demo-day-sources-content">
       {record.disclosures.length > 0 ? (
         <dl className="demo-day-disclosures">
           {record.disclosures.map((disclosure) => (
@@ -498,68 +737,24 @@ const MetalProfile = ({ record, language, copy }: { record: DemoDayDeviceRecord;
           ))}
         </dl>
       ) : null}
+      <ul>
+        {record.sources.map((source) => (
+          <li key={source.url}>
+            <a href={source.url} target="_blank" rel="noreferrer">{source.title}<ExternalLink aria-hidden="true" /></a>
+          </li>
+        ))}
+      </ul>
+      <p>{copy.precisionNote}</p>
+      <p>{copy.syntheticNote}</p>
+    </div>
+  </details>
+);
 
-      <div className="demo-day-metal-overview">
-        <div className="demo-day-metal-total">
-          <span>
-            <small>{copy.capturedMetalMass}</small>
-            <strong>{formatMetalMass(capturedMass, language)}</strong>
-          </span>
-          <p>{copy.capturedMetalMassNote}</p>
-        </div>
+const FullscreenConfetti = ({ celebrationKey }: { celebrationKey: number }) => {
+  if (typeof document === "undefined") return null;
 
-        <div className="demo-day-metal-composition" aria-hidden="true">
-          {groups.map((group) => (
-            <i
-              key={group.key}
-              data-group={group.key}
-              style={{ flexGrow: Math.max(group.knownMass, 0.001), flexBasis: 0 }}
-            />
-          ))}
-        </div>
-
-        <div className="demo-day-metal-groups">
-          {groups.map((group) => {
-            const GroupIcon = group.icon;
-            const share = capturedMass > 0 ? (group.knownMass / capturedMass) * 100 : 0;
-            return (
-              <div className="demo-day-metal-group" data-group={group.key} data-testid="metal-summary-group" key={group.key}>
-                <span className="demo-day-metal-group-icon" aria-hidden="true"><GroupIcon /></span>
-                <span className="demo-day-metal-group-copy">
-                  <strong>{copy.metalGroups[group.key]}</strong>
-                  <small>
-                    {group.examples.join(" · ")}
-                    {group.remaining > 0 ? <em>{copy.moreMetals(group.remaining)}</em> : null}
-                  </small>
-                </span>
-                <span className="demo-day-metal-group-value">
-                  <strong>{group.knownMass > 0 ? formatMetalMass(group.knownMass, language) : copy.notPublished}</strong>
-                  <small>{formatNumber(share, language, share < 1 ? 2 : 0)}%</small>
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <details className="demo-day-sources">
-        <summary>{copy.sourceList}</summary>
-        <ul>
-          {record.sources.map((source) => (
-            <li key={source.url}>
-              <a href={source.url} target="_blank" rel="noreferrer">{source.title}<ExternalLink aria-hidden="true" /></a>
-            </li>
-          ))}
-        </ul>
-        <p>{copy.precisionNote}</p>
-      </details>
-    </section>
-  );
-};
-
-const WinnerCelebration = ({ copy, celebrationKey }: { copy: LookupCopy; celebrationKey: number }) => (
-  <section key={celebrationKey} className="demo-day-winner" data-testid="winner-celebration" aria-labelledby="demo-day-winner-title">
-    <div className="demo-day-confetti" aria-hidden="true">
+  return createPortal(
+    <div key={celebrationKey} className="demo-day-confetti-screen" data-testid="winner-confetti" aria-hidden="true">
       {confettiPieces.map((piece, index) => (
         <i
           key={index}
@@ -570,29 +765,39 @@ const WinnerCelebration = ({ copy, celebrationKey }: { copy: LookupCopy; celebra
               "--confetti-duration": piece.duration,
               "--confetti-drift": piece.drift,
               "--confetti-rotation": piece.rotation,
+              "--confetti-size": piece.size,
               "--confetti-color": piece.color,
             } as CSSProperties
           }
         />
       ))}
-    </div>
+    </div>,
+    document.body,
+  );
+};
 
-    <div className="demo-day-winner-copy" role="status" aria-live="polite">
-      <p className="demo-day-winner-eyebrow"><Sparkles aria-hidden="true" />{copy.winnerEyebrow}</p>
-      <h4 id="demo-day-winner-title">{copy.winnerTitle}</h4>
-      <p>{copy.winnerText}</p>
-      <strong>{copy.winnerInstruction}</strong>
-    </div>
+const WinnerCelebration = ({ copy, celebrationKey }: { copy: LookupCopy; celebrationKey: number }) => (
+  <>
+    <FullscreenConfetti celebrationKey={celebrationKey} />
+    <section key={celebrationKey} className="demo-day-winner" data-testid="winner-celebration" aria-labelledby="demo-day-winner-title">
 
-    <div className="demo-day-gold-prize" aria-label={copy.prize}>
-      <div className="demo-day-gold-bar" aria-hidden="true">
-        <Trophy />
-        <span>LT</span>
-        <small>999.9</small>
+      <div className="demo-day-winner-copy" role="status" aria-live="polite">
+        <p className="demo-day-winner-eyebrow"><Sparkles aria-hidden="true" />{copy.winnerEyebrow}</p>
+        <h4 id="demo-day-winner-title">{copy.winnerTitle}</h4>
+        <p>{copy.winnerText}</p>
+        <strong>{copy.winnerInstruction}</strong>
       </div>
-      <p>{copy.prize}</p>
-    </div>
-  </section>
+
+      <div className="demo-day-gold-prize" aria-label={copy.prize}>
+        <div className="demo-day-gold-bar" aria-hidden="true">
+          <Trophy />
+          <span>LT</span>
+          <small>999.9</small>
+        </div>
+        <p>{copy.prize}</p>
+      </div>
+    </section>
+  </>
 );
 
 const formatDemoDaySerialInput = (value: string) => {
@@ -612,6 +817,7 @@ export function DemoDayCustomerLookup({ language }: DemoDayCustomerLookupProps) 
 
   const runLookup = (value: string) => {
     const nextRecord = lookupDemoDayDevice(value);
+    void trackDemoDayLookup(value, Boolean(nextRecord), Boolean(nextRecord?.winner));
     setRecord(nextRecord);
     setSearched(true);
     setReserved(false);
@@ -669,21 +875,6 @@ export function DemoDayCustomerLookup({ language }: DemoDayCustomerLookupProps) 
         </form>
       </section>
 
-      {!searched ? (
-        <section className="demo-day-empty" aria-labelledby="demo-day-empty-title">
-          <div className="demo-day-empty-symbol" aria-hidden="true"><Recycle /></div>
-          <div>
-            <h4 id="demo-day-empty-title">{copy.emptyTitle}</h4>
-            <p>{copy.emptyText}</p>
-          </div>
-          <ol>
-            {copy.emptySteps.map((step, index) => (
-              <li key={step}><span>{index + 1}</span>{step}</li>
-            ))}
-          </ol>
-        </section>
-      ) : null}
-
       {searched && !record ? (
         <section className="demo-day-not-found" role="alert">
           <div aria-hidden="true"><Search /></div>
@@ -713,14 +904,14 @@ export function DemoDayCustomerLookup({ language }: DemoDayCustomerLookupProps) 
           <header className="demo-day-device-header">
             <div className="demo-day-device-visual">
               <div className="demo-day-device-model-shell">
-                <span className="demo-day-device-fallback" aria-hidden="true"><DeviceIcon /></span>
                 {supportsWebGl() ? (
-                  <Suspense fallback={null}>
+                  <Suspense fallback={<span className="demo-day-device-fallback" aria-hidden="true"><DeviceIcon /></span>}>
                     <DemoDayDeviceModel kind={record.kind} />
                   </Suspense>
-                ) : null}
+                ) : (
+                  <span className="demo-day-device-fallback" aria-hidden="true"><DeviceIcon /></span>
+                )}
               </div>
-              <i>{record.category}</i>
             </div>
             <div className="demo-day-device-title">
               <div className="demo-day-passport-meta">
@@ -737,18 +928,42 @@ export function DemoDayCustomerLookup({ language }: DemoDayCustomerLookupProps) 
             </div>
           </header>
 
-          <section className="demo-day-impact" aria-label={copy.recyclable}>
-            <div>
-              <Recycle aria-hidden="true" />
-              <span><small>{copy.recyclable}</small><strong>{record.recyclablePercent}%</strong></span>
+          <section className="demo-day-impact" aria-labelledby="demo-day-impact-title">
+            <div className="demo-day-impact-copy">
+              <p className="demo-day-kicker">{copy.impactEyebrow}</p>
+              <h5 id="demo-day-impact-title">{copy.impactTitle}</h5>
+              <p>{copy.impactText}</p>
             </div>
-            <div>
-              <Weight aria-hidden="true" />
-              <span><small>{copy.recoverable}</small><strong>{formatMass(record.recoverableWeightG, language)}</strong></span>
+
+            <div
+              className="demo-day-impact-meter"
+              style={{ "--demo-day-impact-value": `${record.recyclablePercent}%` } as CSSProperties}
+              role="img"
+              aria-label={`${record.recyclablePercent}% ${copy.recyclable}. ${copy.recyclableText}`}
+            >
+              <span>
+                <strong>{record.recyclablePercent}%</strong>
+                <small>{copy.recyclable}</small>
+              </span>
             </div>
-            <div>
-              <Leaf aria-hidden="true" />
-              <span><small>{copy.avoidedCo2}</small><strong>{formatNumber(record.avoidedCo2Kg, language)} kg</strong></span>
+
+            <div className="demo-day-impact-facts">
+              <div>
+                <span className="demo-day-impact-fact-icon" aria-hidden="true"><Weight /></span>
+                <span>
+                  <strong>{formatMass(record.recoverableWeightG, language)}</strong>
+                  <b>{copy.recoverable}</b>
+                  <small>{copy.recoverableText}</small>
+                </span>
+              </div>
+              <div>
+                <span className="demo-day-impact-fact-icon" aria-hidden="true"><Leaf /></span>
+                <span>
+                  <strong>{formatNumber(record.avoidedCo2Kg, language)} kg</strong>
+                  <b>{copy.avoidedCo2}</b>
+                  <small>{copy.avoidedCo2Text}</small>
+                </span>
+              </div>
             </div>
           </section>
 
@@ -764,7 +979,14 @@ export function DemoDayCustomerLookup({ language }: DemoDayCustomerLookupProps) 
               </span>
             </div>
             {!record.winner ? (
-              <button type="button" className={reserved ? "is-reserved" : ""} onClick={() => setReserved(true)}>
+              <button
+                type="button"
+                className={reserved ? "is-reserved" : ""}
+                onClick={() => {
+                  setReserved(true);
+                  document.getElementById("demo-day-return-map")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                }}
+              >
                 {reserved ? <CheckCircle2 aria-hidden="true" /> : <PackageCheck aria-hidden="true" />}
                 <span>{reserved ? copy.reserved : copy.reserve}</span>
               </button>
@@ -773,6 +995,7 @@ export function DemoDayCustomerLookup({ language }: DemoDayCustomerLookupProps) 
             )}
           </section>
 
+          <ReturnLocationMap copy={copy} />
           {reserved ? (
             <section className="demo-day-reservation-benefit" role="status" aria-label={copy.reservationBenefitTitle}>
               <div className="demo-day-reservation-heading">
@@ -798,7 +1021,7 @@ export function DemoDayCustomerLookup({ language }: DemoDayCustomerLookupProps) 
               <p className="demo-day-reserve-note">{copy.reserveText}</p>
             </section>
           ) : null}
-          <p className="demo-day-synthetic-note">{copy.syntheticNote}</p>
+          <SourcesAndMethod record={record} language={language} copy={copy} />
         </article>
       ) : null}
     </div>

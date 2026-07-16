@@ -1,99 +1,43 @@
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { RoundedBox, useGLTF } from "@react-three/drei";
+import { ContactShadows, RoundedBox } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import type { Group } from "three";
+import type { Group, MeshStandardMaterial } from "three";
 import type { DemoDeviceKind } from "@/data/demoDayDevices";
 
-type DeviceAsset = {
-  path: string;
-  source: string;
-  creator: string;
-  license: "CC0" | "CC BY 3.0";
-  rotation: [number, number, number];
-  targetSize?: number;
-  yawAmplitude?: number;
-  watchDisplay?: boolean;
-  materialTint?: string;
-  phase: number;
+const COLORS = {
+  accent: "#2bc487",
+  accentDark: "#156b4c",
+  aluminum: "#aeb9b3",
+  black: "#0c1512",
+  copper: "#bd7449",
+  graphite: "#26322e",
+  glass: "#07110e",
+  gold: "#d5b365",
+  light: "#e8eee9",
+  rubber: "#111916",
+  screen: "#0b211a",
+  white: "#f4f7f3",
 };
 
-const deviceAssets: Record<DemoDeviceKind, DeviceAsset> = {
-  phone: {
-    path: "/models/demo-day/smartphone.glb",
-    source: "https://poly.pizza/m/k2kgBepoMU",
-    creator: "Quaternius",
-    license: "CC0",
-    rotation: [-0.35, 0.55, -0.08],
-    targetSize: 2.15,
-    yawAmplitude: 0.08,
-    phase: 0.2,
-  },
-  laptop: {
-    path: "/models/demo-day/laptop.glb",
-    source: "https://poly.pizza/m/GnbwSUiVty",
-    creator: "Kenney",
-    license: "CC0",
-    rotation: [-0.12, -0.45, 0],
-    phase: 0.8,
-  },
-  tablet: {
-    path: "/models/demo-day/tablet.glb",
-    source: "https://poly.pizza/m/2LxocCCiDy-",
-    creator: "Poly by Google",
-    license: "CC BY 3.0",
-    rotation: [0.65, 0, -0.55],
-    targetSize: 2.3,
-    yawAmplitude: 0.08,
-    phase: 1.3,
-  },
-  watch: {
-    path: "/models/demo-day/smartwatch.glb",
-    source: "https://poly.pizza/m/6908NHM0OcR",
-    creator: "Poly by Google",
-    license: "CC BY 3.0",
-    rotation: [-0.35, 0.55, 0.08],
-    targetSize: 2.3,
-    yawAmplitude: 0.08,
-    watchDisplay: true,
-    materialTint: "#25483d",
-    phase: 1.9,
-  },
-  console: {
-    path: "/models/demo-day/console.glb",
-    source: "https://poly.pizza/m/600PeFCBopv",
-    creator: "Jasmine Roberts",
-    license: "CC BY 3.0",
-    rotation: [-0.35, 0.55, -0.04],
-    targetSize: 2.35,
-    yawAmplitude: 0.08,
-    phase: 2.4,
-  },
-  headphones: {
-    path: "/models/demo-day/headphones.glb",
-    source: "https://poly.pizza/m/PSsWSIAYIL",
-    creator: "CreativeTrio",
-    license: "CC0",
-    rotation: [-0.15, -0.5, 0],
-    phase: 2.9,
-  },
-  network: {
-    path: "/models/demo-day/router.glb",
-    source: "https://poly.pizza/m/OJffxxkMtZ",
-    creator: "Kenney",
-    license: "CC0",
-    rotation: [-0.18, -0.6, 0],
-    targetSize: 2.25,
-    phase: 3.4,
-  },
-  desktop: {
-    path: "/models/demo-day/desktop-micro.glb",
-    source: "https://poly.pizza/m/3mANYC9YrZf",
-    creator: "Gav Grant (Shaddam)",
-    license: "CC BY 3.0",
-    rotation: [-0.14, -0.52, 0],
-    phase: 4,
-  },
+const devicePresentation: Record<
+  DemoDeviceKind,
+  {
+    rotation: [number, number, number];
+    scale: number;
+    positionY: number;
+    phase: number;
+    yaw: number;
+  }
+> = {
+  phone: { rotation: [-0.14, 0.42, 0.05], scale: 1, positionY: 0, phase: 0.2, yaw: 0.055 },
+  laptop: { rotation: [0.04, 0.34, 0], scale: 0.98, positionY: -0.2, phase: 0.8, yaw: 0.045 },
+  tablet: { rotation: [-0.2, 0.4, -0.04], scale: 0.94, positionY: 0, phase: 1.3, yaw: 0.05 },
+  watch: { rotation: [-0.12, 0.35, 0.05], scale: 0.9, positionY: 0, phase: 1.9, yaw: 0.05 },
+  console: { rotation: [-0.15, 0.33, 0.02], scale: 0.9, positionY: 0, phase: 2.4, yaw: 0.045 },
+  headphones: { rotation: [-0.04, 0.28, 0], scale: 1, positionY: -0.05, phase: 2.9, yaw: 0.055 },
+  network: { rotation: [-0.06, 0.34, 0], scale: 0.97, positionY: -0.28, phase: 3.4, yaw: 0.045 },
+  desktop: { rotation: [-0.08, 0.38, 0], scale: 0.95, positionY: 0, phase: 4, yaw: 0.045 },
 };
 
 const useReducedMotion = () => {
@@ -110,110 +54,681 @@ const useReducedMotion = () => {
   return reducedMotion;
 };
 
-function AnimatedDevice({ asset, reducedMotion }: { asset: DeviceAsset; reducedMotion: boolean }) {
-  const model = useGLTF(asset.path);
-  const rootRef = useRef<Group>(null);
-  const normalizedModel = useMemo(() => {
-    const scene = model.scene.clone(true);
+const useRenderProfile = () => {
+  const [lowPower, setLowPower] = useState(false);
 
-    if (asset.materialTint) {
-      scene.traverse((child) => {
-        if (!(child instanceof THREE.Mesh)) return;
-        const materials = Array.isArray(child.material) ? child.material : [child.material];
-        const tintedMaterials = materials.map((material) => {
-          const tintedMaterial = material.clone();
-          if ("color" in tintedMaterial && tintedMaterial.color instanceof THREE.Color) {
-            tintedMaterial.color.set(asset.materialTint);
-          }
-          return tintedMaterial;
-        });
-        child.material = Array.isArray(child.material) ? tintedMaterials : tintedMaterials[0];
-      });
-    }
-
-    scene.updateMatrixWorld(true);
-    const bounds = new THREE.Box3().setFromObject(scene);
-    const center = bounds.getCenter(new THREE.Vector3());
-    const size = bounds.getSize(new THREE.Vector3());
-    const largestDimension = Math.max(size.x, size.y, size.z, 0.001);
-
-    return {
-      scene,
-      center: [-center.x, -center.y, -center.z] as [number, number, number],
-      scale: (asset.targetSize ?? 2.05) / largestDimension,
+  useEffect(() => {
+    const compactScreen = window.matchMedia("(max-width: 640px)");
+    const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
+    const update = () => {
+      setLowPower(compactScreen.matches || navigator.hardwareConcurrency <= 4 || deviceMemory <= 4);
     };
-  }, [asset.materialTint, asset.targetSize, model.scene]);
+
+    update();
+    compactScreen.addEventListener("change", update);
+    return () => compactScreen.removeEventListener("change", update);
+  }, []);
+
+  return lowPower;
+};
+
+const useCanvasActivity = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inViewportRef = useRef(true);
+  const [active, setActive] = useState(true);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const syncActivity = () => setActive(inViewportRef.current && !document.hidden);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inViewportRef.current = entry.isIntersecting;
+        syncActivity();
+      },
+      { rootMargin: "160px" },
+    );
+
+    observer.observe(container);
+    document.addEventListener("visibilitychange", syncActivity);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", syncActivity);
+    };
+  }, []);
+
+  return { active, containerRef };
+};
+
+function StatusLight({
+  color = COLORS.accent,
+  phase = 0,
+  position,
+  reducedMotion,
+  size = 0.035,
+}: {
+  color?: string;
+  phase?: number;
+  position: [number, number, number];
+  reducedMotion: boolean;
+  size?: number;
+}) {
+  const materialRef = useRef<MeshStandardMaterial>(null);
 
   useFrame(({ clock }) => {
-    if (!rootRef.current || reducedMotion) return;
-    const time = clock.getElapsedTime();
-    rootRef.current.rotation.x = asset.rotation[0] + Math.sin(time * 0.36 + asset.phase) * 0.035;
-    rootRef.current.rotation.y =
-      asset.rotation[1] + Math.sin(time * 0.46 + asset.phase) * (asset.yawAmplitude ?? 0.28);
-    rootRef.current.position.y = Math.sin(time * 0.72 + asset.phase) * 0.025;
+    if (!materialRef.current || reducedMotion) return;
+    materialRef.current.emissiveIntensity = 0.9 + Math.sin(clock.elapsedTime * 2.3 + phase) * 0.45;
   });
 
   return (
-    <group ref={rootRef} rotation={asset.rotation}>
-      <group scale={normalizedModel.scale}>
-        <group position={normalizedModel.center}>
-          <primitive object={normalizedModel.scene} />
+    <mesh position={position}>
+      <sphereGeometry args={[size, 20, 20]} />
+      <meshStandardMaterial
+        ref={materialRef}
+        color={color}
+        emissive={color}
+        emissiveIntensity={1.1}
+        roughness={0.3}
+      />
+    </mesh>
+  );
+}
+
+function ScreenInterface({
+  height,
+  reducedMotion,
+  width,
+  z,
+}: {
+  height: number;
+  reducedMotion: boolean;
+  width: number;
+  z: number;
+}) {
+  const activityRef = useRef<MeshStandardMaterial>(null);
+  const rows = useMemo(() => [0.48, 0.72, 0.58], []);
+
+  useFrame(({ clock }) => {
+    if (!activityRef.current || reducedMotion) return;
+    activityRef.current.emissiveIntensity = 0.42 + Math.sin(clock.elapsedTime * 1.35) * 0.16;
+  });
+
+  return (
+    <group position={[0, 0, z]}>
+      <RoundedBox args={[width, height, 0.035]} radius={Math.min(width, height) * 0.045} smoothness={5}>
+        <meshPhysicalMaterial
+          color={COLORS.screen}
+          metalness={0.18}
+          roughness={0.23}
+          clearcoat={0.8}
+          clearcoatRoughness={0.18}
+        />
+      </RoundedBox>
+      <group position={[-width * 0.32, height * 0.3, 0.026]}>
+        <mesh>
+          <circleGeometry args={[Math.min(width, height) * 0.055, 28]} />
+          <meshStandardMaterial color={COLORS.accent} emissive={COLORS.accentDark} emissiveIntensity={0.8} />
+        </mesh>
+        <RoundedBox
+          args={[width * 0.34, height * 0.045, 0.012]}
+          position={[width * 0.25, 0, 0]}
+          radius={height * 0.018}
+          smoothness={3}
+        >
+          <meshStandardMaterial color="#b9d8ca" emissive="#3b8063" emissiveIntensity={0.25} />
+        </RoundedBox>
+      </group>
+      <group position={[-width * 0.34, height * 0.04, 0.028]}>
+        {rows.map((rowWidth, index) => (
+          <RoundedBox
+            key={rowWidth}
+            args={[width * rowWidth, height * 0.055, 0.012]}
+            position={[width * rowWidth * 0.5, -index * height * 0.13, 0]}
+            radius={height * 0.02}
+            smoothness={3}
+          >
+            <meshStandardMaterial
+              ref={index === 0 ? activityRef : undefined}
+              color={index === 0 ? COLORS.accent : "#5b7c6e"}
+              emissive={index === 0 ? COLORS.accentDark : "#14271f"}
+              emissiveIntensity={index === 0 ? 0.45 : 0.16}
+            />
+          </RoundedBox>
+        ))}
+      </group>
+      <RoundedBox
+        args={[width * 0.23, height * 0.18, 0.014]}
+        position={[width * 0.28, -height * 0.27, 0.028]}
+        radius={height * 0.035}
+        smoothness={3}
+      >
+        <meshStandardMaterial color="#173e31" emissive="#1a6549" emissiveIntensity={0.24} />
+      </RoundedBox>
+    </group>
+  );
+}
+
+function PremiumPhone({ reducedMotion }: { reducedMotion: boolean }) {
+  return (
+    <group>
+      <RoundedBox args={[1.08, 2.15, 0.19]} radius={0.15} smoothness={7} castShadow>
+        <meshPhysicalMaterial color={COLORS.aluminum} metalness={0.82} roughness={0.22} clearcoat={0.55} />
+      </RoundedBox>
+      <ScreenInterface width={0.96} height={1.98} z={0.112} reducedMotion={reducedMotion} />
+      <RoundedBox args={[0.25, 0.055, 0.025]} radius={0.025} smoothness={4} position={[0, 0.92, 0.145]}>
+        <meshStandardMaterial color={COLORS.black} roughness={0.35} />
+      </RoundedBox>
+      <mesh position={[0.36, 0.93, 0.148]}>
+        <circleGeometry args={[0.028, 24]} />
+        <meshPhysicalMaterial color="#101b2a" roughness={0.18} clearcoat={1} />
+      </mesh>
+      <RoundedBox args={[0.03, 0.34, 0.07]} radius={0.012} smoothness={3} position={[0.555, 0.28, 0]}>
+        <meshStandardMaterial color="#76827c" metalness={0.9} roughness={0.2} />
+      </RoundedBox>
+      <RoundedBox args={[0.03, 0.2, 0.07]} radius={0.012} smoothness={3} position={[-0.555, 0.42, 0]}>
+        <meshStandardMaterial color="#76827c" metalness={0.9} roughness={0.2} />
+      </RoundedBox>
+    </group>
+  );
+}
+
+function LaptopKeyboard() {
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 720;
+    canvas.height = 240;
+    const context = canvas.getContext("2d");
+
+    if (context) {
+      context.fillStyle = "#26342f";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      const rowLengths = [12, 12, 11, 7];
+      const keyHeight = 34;
+      const keyWidth = 42;
+      const gap = 10;
+
+      rowLengths.forEach((rowLength, row) => {
+        const rowWidth = rowLength * keyWidth + (rowLength - 1) * gap;
+        const offsetX = (canvas.width - rowWidth) / 2;
+        const y = 22 + row * 51;
+
+        for (let column = 0; column < rowLength; column += 1) {
+          const isSpacebar = row === 3 && column === 2;
+          const width = isSpacebar ? 196 : keyWidth;
+          const x = offsetX + column * (keyWidth + gap);
+          context.fillStyle = "#aeb9b3";
+          context.fillRect(x, y, width, keyHeight);
+          context.fillStyle = "rgba(255, 255, 255, 0.22)";
+          context.fillRect(x + 3, y + 3, Math.max(1, width - 6), 3);
+        }
+      });
+    }
+
+    const nextTexture = new THREE.CanvasTexture(canvas);
+    nextTexture.colorSpace = THREE.SRGBColorSpace;
+    nextTexture.anisotropy = 4;
+    return nextTexture;
+  }, []);
+
+  useEffect(() => () => texture.dispose(), [texture]);
+
+  return (
+    <mesh position={[0, -0.235, 0.1]} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[1.68, 0.58]} />
+      <meshBasicMaterial
+        map={texture}
+        polygonOffset
+        polygonOffsetFactor={-2}
+        side={THREE.DoubleSide}
+        toneMapped={false}
+      />
+    </mesh>
+  );
+}
+
+function PremiumLaptop({ reducedMotion }: { reducedMotion: boolean }) {
+  const lidRef = useRef<Group>(null);
+
+  useFrame(({ clock }) => {
+    if (!lidRef.current || reducedMotion) return;
+    lidRef.current.rotation.x = -0.055 + Math.sin(clock.elapsedTime * 0.42) * 0.012;
+  });
+
+  return (
+    <group>
+      <RoundedBox args={[2.35, 0.14, 1.42]} radius={0.11} smoothness={6} position={[0, -0.42, 0.15]} castShadow>
+        <meshPhysicalMaterial color="#b9c3be" metalness={0.7} roughness={0.27} clearcoat={0.42} />
+      </RoundedBox>
+      <RoundedBox args={[1.78, 0.03, 0.64]} radius={0.045} smoothness={4} position={[0, -0.304, 0.12]}>
+        <meshStandardMaterial color="#899790" roughness={0.4} metalness={0.3} />
+      </RoundedBox>
+      <LaptopKeyboard />
+      <RoundedBox args={[0.7, 0.022, 0.42]} radius={0.04} smoothness={4} position={[0, -0.294, 0.55]}>
+        <meshStandardMaterial color="#8f9b95" metalness={0.62} roughness={0.32} />
+      </RoundedBox>
+      <group ref={lidRef} position={[0, 0.24, -0.51]} rotation={[-0.055, 0, 0]}>
+        <RoundedBox args={[2.34, 1.48, 0.09]} radius={0.1} smoothness={6} position={[0, 0.44, 0]} castShadow>
+          <meshPhysicalMaterial color="#aab5b0" metalness={0.74} roughness={0.25} clearcoat={0.42} />
+        </RoundedBox>
+        <group position={[0, 0.44, 0.057]}>
+          <ScreenInterface width={2.13} height={1.26} z={0} reducedMotion={reducedMotion} />
+          <mesh position={[0, 0.56, 0.032]}>
+            <circleGeometry args={[0.024, 20]} />
+            <meshStandardMaterial color="#1f302a" />
+          </mesh>
         </group>
       </group>
-      {asset.watchDisplay ? (
-        <group position={[0, 0, 0.12]}>
-          <RoundedBox args={[0.52, 0.6, 0.12]} radius={0.08} smoothness={3}>
-            <meshStandardMaterial color="#17372e" roughness={0.42} metalness={0.22} />
+      <mesh rotation={[0, 0, Math.PI / 2]} position={[-0.77, -0.33, -0.52]}>
+        <cylinderGeometry args={[0.055, 0.055, 0.65, 24]} />
+        <meshStandardMaterial color="#33413b" metalness={0.72} roughness={0.3} />
+      </mesh>
+      <mesh rotation={[0, 0, Math.PI / 2]} position={[0.77, -0.33, -0.52]}>
+        <cylinderGeometry args={[0.055, 0.055, 0.65, 24]} />
+        <meshStandardMaterial color="#33413b" metalness={0.72} roughness={0.3} />
+      </mesh>
+    </group>
+  );
+}
+
+function PremiumTablet({ reducedMotion }: { reducedMotion: boolean }) {
+  return (
+    <group>
+      <RoundedBox args={[1.65, 2.25, 0.15]} radius={0.15} smoothness={7} castShadow>
+        <meshPhysicalMaterial color="#9aa59f" metalness={0.8} roughness={0.2} clearcoat={0.5} />
+      </RoundedBox>
+      <ScreenInterface width={1.5} height={2.04} z={0.092} reducedMotion={reducedMotion} />
+      <mesh position={[0, 1.02, 0.113]}>
+        <circleGeometry args={[0.026, 24]} />
+        <meshPhysicalMaterial color="#101b2a" roughness={0.18} clearcoat={1} />
+      </mesh>
+      <RoundedBox args={[0.065, 1.72, 0.065]} radius={0.028} smoothness={4} position={[0.91, 0, -0.01]}>
+        <meshPhysicalMaterial color={COLORS.white} roughness={0.24} clearcoat={0.45} />
+      </RoundedBox>
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0.91, -0.88, -0.01]}>
+        <coneGeometry args={[0.032, 0.12, 24]} />
+        <meshStandardMaterial color="#5b6862" metalness={0.72} roughness={0.25} />
+      </mesh>
+    </group>
+  );
+}
+
+function WatchFace({ reducedMotion }: { reducedMotion: boolean }) {
+  const minuteRef = useRef<Group>(null);
+  const secondRef = useRef<Group>(null);
+
+  useFrame(({ clock }) => {
+    if (reducedMotion) return;
+    if (minuteRef.current) minuteRef.current.rotation.z = -clock.elapsedTime * 0.08;
+    if (secondRef.current) secondRef.current.rotation.z = -clock.elapsedTime * 0.65;
+  });
+
+  return (
+    <group position={[0, 0, 0.148]}>
+      <mesh>
+        <circleGeometry args={[0.43, 48]} />
+        <meshPhysicalMaterial color={COLORS.screen} roughness={0.16} clearcoat={1} clearcoatRoughness={0.1} />
+      </mesh>
+      <mesh>
+        <ringGeometry args={[0.34, 0.365, 48]} />
+        <meshStandardMaterial color={COLORS.accent} emissive={COLORS.accentDark} emissiveIntensity={0.75} />
+      </mesh>
+      <group ref={minuteRef}>
+        <RoundedBox args={[0.035, 0.25, 0.012]} radius={0.016} smoothness={3} position={[0, 0.11, 0.014]}>
+          <meshBasicMaterial color={COLORS.white} />
+        </RoundedBox>
+      </group>
+      <group ref={secondRef}>
+        <RoundedBox args={[0.018, 0.32, 0.014]} radius={0.009} smoothness={3} position={[0, 0.14, 0.018]}>
+          <meshBasicMaterial color={COLORS.gold} />
+        </RoundedBox>
+      </group>
+      <mesh position={[0, 0, 0.025]}>
+        <circleGeometry args={[0.045, 24]} />
+        <meshStandardMaterial color={COLORS.gold} metalness={0.65} roughness={0.24} />
+      </mesh>
+    </group>
+  );
+}
+
+function PremiumWatch({ reducedMotion }: { reducedMotion: boolean }) {
+  return (
+    <group>
+      <RoundedBox args={[0.62, 1.12, 0.12]} radius={0.23} smoothness={7} position={[0, 0.98, -0.06]}>
+        <meshPhysicalMaterial color="#27463b" roughness={0.52} clearcoat={0.2} />
+      </RoundedBox>
+      <RoundedBox args={[0.62, 1.12, 0.12]} radius={0.23} smoothness={7} position={[0, -0.98, -0.06]}>
+        <meshPhysicalMaterial color="#27463b" roughness={0.52} clearcoat={0.2} />
+      </RoundedBox>
+      {[0.72, 1, 1.28, -0.72, -1, -1.28].map((position) => (
+        <RoundedBox key={position} args={[0.25, 0.07, 0.03]} radius={0.025} smoothness={3} position={[0, position, 0.012]}>
+          <meshStandardMaterial color="#0f231c" roughness={0.62} />
+        </RoundedBox>
+      ))}
+      <RoundedBox args={[1.08, 1.05, 0.22]} radius={0.22} smoothness={8} castShadow>
+        <meshPhysicalMaterial color="#89948f" metalness={0.86} roughness={0.2} clearcoat={0.5} />
+      </RoundedBox>
+      <WatchFace reducedMotion={reducedMotion} />
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0.59, 0.05, 0]}>
+        <cylinderGeometry args={[0.11, 0.11, 0.12, 32]} />
+        <meshStandardMaterial color={COLORS.gold} metalness={0.78} roughness={0.25} />
+      </mesh>
+    </group>
+  );
+}
+
+function ControllerButton({ position, color = COLORS.graphite }: { position: [number, number, number]; color?: string }) {
+  return (
+    <mesh position={position}>
+      <sphereGeometry args={[0.065, 24, 16]} />
+      <meshPhysicalMaterial color={color} roughness={0.28} clearcoat={0.45} />
+    </mesh>
+  );
+}
+
+function PremiumConsole({ reducedMotion }: { reducedMotion: boolean }) {
+  return (
+    <group>
+      <RoundedBox args={[1.72, 1.14, 0.17]} radius={0.1} smoothness={6} castShadow>
+        <meshPhysicalMaterial color="#1c2824" metalness={0.48} roughness={0.28} clearcoat={0.45} />
+      </RoundedBox>
+      <ScreenInterface width={1.5} height={0.94} z={0.105} reducedMotion={reducedMotion} />
+      <RoundedBox args={[0.48, 1.22, 0.2]} radius={0.18} smoothness={7} position={[-1.08, 0, 0]} castShadow>
+        <meshPhysicalMaterial color="#d6dfdc" metalness={0.28} roughness={0.27} clearcoat={0.65} />
+      </RoundedBox>
+      <RoundedBox args={[0.48, 1.22, 0.2]} radius={0.18} smoothness={7} position={[1.08, 0, 0]} castShadow>
+        <meshPhysicalMaterial color="#d6dfdc" metalness={0.28} roughness={0.27} clearcoat={0.65} />
+      </RoundedBox>
+      <ControllerButton position={[-1.08, 0.28, 0.135]} color="#111a17" />
+      <ControllerButton position={[1.08, 0.28, 0.135]} color="#111a17" />
+      <ControllerButton position={[-1.08, -0.14, 0.135]} color={COLORS.accentDark} />
+      {[
+        [0, 0.01],
+        [0.1, -0.08],
+        [-0.1, -0.08],
+        [0, -0.17],
+      ].map(([x, y], index) => (
+        <ControllerButton key={index} position={[1.08 + x, y - 0.12, 0.135]} color={index === 0 ? COLORS.copper : COLORS.graphite} />
+      ))}
+      <RoundedBox args={[0.16, 0.045, 0.03]} radius={0.02} smoothness={3} position={[-0.95, 0.5, 0.13]}>
+        <meshStandardMaterial color={COLORS.graphite} />
+      </RoundedBox>
+      <StatusLight position={[0.96, 0.51, 0.135]} phase={1.1} reducedMotion={reducedMotion} size={0.025} />
+    </group>
+  );
+}
+
+function PremiumHeadphones({ reducedMotion }: { reducedMotion: boolean }) {
+  const earRef = useRef<Group>(null);
+
+  useFrame(({ clock }) => {
+    if (!earRef.current || reducedMotion) return;
+    earRef.current.position.y = -0.43 + Math.sin(clock.elapsedTime * 0.7) * 0.018;
+  });
+
+  return (
+    <group>
+      <mesh rotation={[0, 0, -Math.PI * 0.175]} castShadow>
+        <torusGeometry args={[0.92, 0.12, 24, 72, Math.PI * 1.35]} />
+        <meshPhysicalMaterial color="#3a4842" metalness={0.44} roughness={0.28} clearcoat={0.45} />
+      </mesh>
+      <mesh rotation={[0, 0, -Math.PI * 0.175]}>
+        <torusGeometry args={[0.92, 0.067, 20, 64, Math.PI * 1.35]} />
+        <meshStandardMaterial color="#78857f" metalness={0.62} roughness={0.3} />
+      </mesh>
+      <group ref={earRef} position={[0, -0.43, 0]}>
+        {[-0.88, 0.88].map((x, index) => (
+          <group key={x} position={[x, 0, 0]}>
+            <mesh rotation={[Math.PI / 2, 0, 0]} castShadow>
+              <cylinderGeometry args={[0.39, 0.42, 0.24, 48]} />
+              <meshPhysicalMaterial color={index === 0 ? "#31423b" : "#273630"} metalness={0.46} roughness={0.24} clearcoat={0.5} />
+            </mesh>
+            <mesh position={[0, 0, 0.135]}>
+              <ringGeometry args={[0.24, 0.36, 48]} />
+              <meshStandardMaterial color={COLORS.rubber} roughness={0.7} />
+            </mesh>
+            <mesh position={[0, 0, 0.138]}>
+              <circleGeometry args={[0.235, 40]} />
+              <meshStandardMaterial color="#17241f" roughness={0.82} />
+            </mesh>
+            {index === 1 ? <StatusLight position={[0.28, -0.18, 0.145]} phase={2.3} reducedMotion={reducedMotion} size={0.027} /> : null}
+          </group>
+        ))}
+      </group>
+      {[-0.79, 0.79].map((x) => (
+        <RoundedBox key={x} args={[0.13, 0.52, 0.13]} radius={0.055} smoothness={4} position={[x, -0.08, 0]}>
+          <meshStandardMaterial color="#717d77" metalness={0.74} roughness={0.26} />
+        </RoundedBox>
+      ))}
+    </group>
+  );
+}
+
+function RouterAntenna({ position, rotation = 0 }: { position: [number, number, number]; rotation?: number }) {
+  return (
+    <group position={position} rotation={[0, 0, rotation]}>
+      <mesh>
+        <sphereGeometry args={[0.1, 24, 16]} />
+        <meshStandardMaterial color="#293730" metalness={0.36} roughness={0.4} />
+      </mesh>
+      <RoundedBox args={[0.12, 1.05, 0.1]} radius={0.05} smoothness={4} position={[0, 0.52, 0]} castShadow>
+        <meshPhysicalMaterial color="#65716b" metalness={0.65} roughness={0.27} clearcoat={0.3} />
+      </RoundedBox>
+    </group>
+  );
+}
+
+function WifiSignal({ reducedMotion }: { reducedMotion: boolean }) {
+  const refs = useRef<Array<MeshStandardMaterial | null>>([]);
+
+  useFrame(({ clock }) => {
+    if (reducedMotion) return;
+    refs.current.forEach((material, index) => {
+      if (!material) return;
+      material.opacity = 0.24 + (Math.sin(clock.elapsedTime * 2.1 - index * 0.65) + 1) * 0.25;
+    });
+  });
+
+  return (
+    <group position={[0, 0.7, 0.2]} rotation={[0, 0, Math.PI * 0.17]}>
+      {[0.28, 0.48, 0.68].map((radius, index) => (
+        <mesh key={radius} rotation={[0, 0, -Math.PI * 0.5]}>
+          <torusGeometry args={[radius, 0.025, 12, 42, Math.PI * 0.55]} />
+          <meshStandardMaterial
+            ref={(material) => {
+              refs.current[index] = material;
+            }}
+            color={COLORS.accent}
+            emissive={COLORS.accentDark}
+            emissiveIntensity={0.8}
+            transparent
+            opacity={0.45}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+function PremiumRouter({ reducedMotion }: { reducedMotion: boolean }) {
+  return (
+    <group>
+      <RoundedBox args={[2.1, 0.42, 1.3]} radius={0.2} smoothness={7} position={[0, -0.18, 0]} castShadow>
+        <meshPhysicalMaterial color="#c7d2cc" roughness={0.28} clearcoat={0.52} clearcoatRoughness={0.2} />
+      </RoundedBox>
+      <RoundedBox args={[1.82, 0.035, 0.93]} radius={0.14} smoothness={5} position={[0, 0.045, 0]}>
+        <meshPhysicalMaterial color="#62756c" metalness={0.32} roughness={0.28} clearcoat={0.45} />
+      </RoundedBox>
+      <RoundedBox args={[0.72, 0.045, 0.56]} radius={0.1} smoothness={4} position={[0, 0.07, 0.02]}>
+        <meshStandardMaterial color="#173e31" roughness={0.3} metalness={0.28} />
+      </RoundedBox>
+      {[-0.56, -0.28, 0, 0.28, 0.56].map((x, index) => (
+        <StatusLight key={x} position={[x, 0.075, 0.52]} phase={index * 0.55} reducedMotion={reducedMotion} size={0.027} />
+      ))}
+      <RouterAntenna position={[-0.78, 0.05, -0.48]} rotation={-0.12} />
+      <RouterAntenna position={[0.78, 0.05, -0.48]} rotation={0.12} />
+      <group position={[0, -0.19, 0.66]}>
+        {[-0.48, -0.16, 0.16, 0.48].map((x, index) => (
+          <group key={x} position={[x, 0, 0]}>
+            <RoundedBox args={[0.24, 0.12, 0.025]} radius={0.022} smoothness={3}>
+              <meshStandardMaterial color="#20342c" metalness={0.28} roughness={0.4} />
+            </RoundedBox>
+            <RoundedBox args={[0.12, 0.018, 0.012]} radius={0.008} smoothness={2} position={[0, -0.02, 0.019]}>
+              <meshStandardMaterial
+                color={index === 0 ? COLORS.gold : COLORS.accent}
+                emissive={index === 0 ? "#5d4618" : COLORS.accentDark}
+                emissiveIntensity={0.32}
+              />
+            </RoundedBox>
+          </group>
+        ))}
+      </group>
+      <WifiSignal reducedMotion={reducedMotion} />
+    </group>
+  );
+}
+
+function VentRing({ radius }: { radius: number }) {
+  return (
+    <mesh>
+      <ringGeometry args={[radius - 0.012, radius, 40]} />
+      <meshStandardMaterial color="#67756f" metalness={0.5} roughness={0.42} />
+    </mesh>
+  );
+}
+
+function PremiumDesktop({ reducedMotion }: { reducedMotion: boolean }) {
+  const ventRef = useRef<Group>(null);
+
+  useFrame(({ clock }) => {
+    if (!ventRef.current || reducedMotion) return;
+    ventRef.current.rotation.z = clock.elapsedTime * 0.22;
+  });
+
+  return (
+    <group>
+      <RoundedBox args={[1.42, 2.15, 0.62]} radius={0.13} smoothness={7} castShadow>
+        <meshPhysicalMaterial color="#303b37" metalness={0.62} roughness={0.28} clearcoat={0.34} />
+      </RoundedBox>
+      <RoundedBox args={[1.2, 1.93, 0.035]} radius={0.08} smoothness={5} position={[0, 0, 0.33]}>
+        <meshStandardMaterial color="#1c2723" metalness={0.42} roughness={0.38} />
+      </RoundedBox>
+      <group ref={ventRef} position={[0.08, 0.43, 0.356]}>
+        {[0.13, 0.22, 0.31].map((radius) => <VentRing key={radius} radius={radius} />)}
+        {Array.from({ length: 8 }, (_, index) => (
+          <RoundedBox
+            key={index}
+            args={[0.045, 0.58, 0.012]}
+            radius={0.02}
+            smoothness={2}
+            rotation={[0, 0, (index * Math.PI) / 4]}
+          >
+            <meshStandardMaterial color="#66736d" metalness={0.48} roughness={0.4} />
           </RoundedBox>
-          <RoundedBox args={[0.4, 0.47, 0.022]} radius={0.05} smoothness={3} position={[0, 0, 0.068]}>
-            <meshStandardMaterial color="#75dfad" emissive="#1d7d58" emissiveIntensity={0.4} />
-          </RoundedBox>
-          <mesh position={[0, 0.04, 0.083]}>
-            <ringGeometry args={[0.08, 0.105, 24]} />
-            <meshBasicMaterial color="#f7faf6" />
-          </mesh>
-          <mesh position={[0, -0.12, 0.083]}>
-            <planeGeometry args={[0.21, 0.026]} />
-            <meshBasicMaterial color="#f7faf6" />
-          </mesh>
-        </group>
-      ) : null}
+        ))}
+      </group>
+      <RoundedBox args={[0.55, 0.055, 0.025]} radius={0.02} smoothness={3} position={[0, -0.38, 0.36]}>
+        <meshStandardMaterial color="#75837c" metalness={0.58} roughness={0.28} />
+      </RoundedBox>
+      {[-0.22, 0].map((x) => (
+        <RoundedBox key={x} args={[0.15, 0.1, 0.025]} radius={0.025} smoothness={3} position={[x, -0.66, 0.36]}>
+          <meshStandardMaterial color="#101815" roughness={0.42} />
+        </RoundedBox>
+      ))}
+      <mesh position={[0.3, -0.65, 0.36]}>
+        <ringGeometry args={[0.06, 0.08, 30]} />
+        <meshStandardMaterial color="#92a09a" metalness={0.8} roughness={0.2} />
+      </mesh>
+      <StatusLight position={[0.47, -0.66, 0.368]} phase={3} reducedMotion={reducedMotion} size={0.032} />
+      <RoundedBox args={[1.05, 0.08, 0.8]} radius={0.04} smoothness={4} position={[0, -1.12, -0.04]} castShadow>
+        <meshStandardMaterial color="#77847e" metalness={0.67} roughness={0.3} />
+      </RoundedBox>
+    </group>
+  );
+}
+
+function DeviceGeometry({ kind, reducedMotion }: { kind: DemoDeviceKind; reducedMotion: boolean }) {
+  switch (kind) {
+    case "phone":
+      return <PremiumPhone reducedMotion={reducedMotion} />;
+    case "laptop":
+      return <PremiumLaptop reducedMotion={reducedMotion} />;
+    case "tablet":
+      return <PremiumTablet reducedMotion={reducedMotion} />;
+    case "watch":
+      return <PremiumWatch reducedMotion={reducedMotion} />;
+    case "console":
+      return <PremiumConsole reducedMotion={reducedMotion} />;
+    case "headphones":
+      return <PremiumHeadphones reducedMotion={reducedMotion} />;
+    case "network":
+      return <PremiumRouter reducedMotion={reducedMotion} />;
+    case "desktop":
+      return <PremiumDesktop reducedMotion={reducedMotion} />;
+  }
+}
+
+function AnimatedProduct({ kind, reducedMotion }: { kind: DemoDeviceKind; reducedMotion: boolean }) {
+  const rootRef = useRef<Group>(null);
+  const presentation = devicePresentation[kind];
+
+  useFrame(({ clock }) => {
+    if (!rootRef.current || reducedMotion) return;
+    const time = clock.elapsedTime;
+    rootRef.current.rotation.x = presentation.rotation[0] + Math.sin(time * 0.36 + presentation.phase) * 0.018;
+    rootRef.current.rotation.y = presentation.rotation[1] + Math.sin(time * 0.44 + presentation.phase) * presentation.yaw;
+    rootRef.current.position.y = presentation.positionY + Math.sin(time * 0.68 + presentation.phase) * 0.025;
+  });
+
+  return (
+    <group
+      ref={rootRef}
+      position={[0, presentation.positionY, 0]}
+      rotation={presentation.rotation}
+      scale={presentation.scale}
+    >
+      <DeviceGeometry kind={kind} reducedMotion={reducedMotion} />
     </group>
   );
 }
 
 export default function DemoDayDeviceModel({ kind }: { kind: DemoDeviceKind }) {
-  const asset = deviceAssets[kind];
   const reducedMotion = useReducedMotion();
+  const lowPower = useRenderProfile();
+  const { active, containerRef } = useCanvasActivity();
 
   return (
-    <>
-      <div className="demo-day-device-canvas-layer" aria-hidden="true">
-        <Canvas
-          camera={{ position: [3.2, 2.35, 4.2], fov: 34, near: 0.01, far: 100 }}
-          dpr={[1, 1.35]}
-          frameloop={reducedMotion ? "demand" : "always"}
-          gl={{ alpha: false, antialias: true, powerPreference: "low-power" }}
-          onCreated={({ gl }) => gl.setClearColor("#f7faf6", 1)}
-        >
-          <ambientLight intensity={1.6} />
-          <hemisphereLight args={["#ffffff", "#b9cbc1", 1.35]} />
-          <directionalLight position={[4, 5, 5]} intensity={2.2} />
-          <directionalLight position={[-3, 1, -2]} color="#9fd8bd" intensity={0.8} />
-          <Suspense fallback={null}>
-            <AnimatedDevice asset={asset} reducedMotion={reducedMotion} />
-          </Suspense>
-        </Canvas>
-      </div>
-      <a
-        className="demo-day-device-model-credit"
-        href={asset.source}
-        target="_blank"
-        rel="noreferrer"
-        aria-label={`3D model by ${asset.creator}, ${asset.license}`}
+    <div ref={containerRef} className="demo-day-device-canvas-layer" aria-hidden="true">
+      <Canvas
+        camera={{ position: [3.25, 2.25, 4.35], fov: 31, near: 0.01, far: 40 }}
+        dpr={[1, lowPower ? 1.15 : 1.45]}
+        frameloop={reducedMotion || !active ? "demand" : "always"}
+        gl={{ alpha: true, antialias: true, powerPreference: "default" }}
+        shadows
+        onCreated={({ gl }) => {
+          gl.setClearColor("#000000", 0);
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.08;
+        }}
       >
-        3D: {asset.creator} · {asset.license}
-      </a>
-    </>
+        <ambientLight intensity={0.82} />
+        <hemisphereLight args={["#f8fff9", "#6c8177", 1.2]} />
+        <directionalLight position={[4, 5, 5]} intensity={2.6} color="#fffaf0" castShadow shadow-mapSize={[512, 512]} />
+        <directionalLight position={[-4, 2, 2]} intensity={1.25} color="#79d6ae" />
+        <pointLight position={[0, -1, 3]} intensity={0.75} color="#e8c477" />
+        <AnimatedProduct kind={kind} reducedMotion={reducedMotion} />
+        <ContactShadows
+          position={[0, -1.18, 0]}
+          opacity={0.3}
+          scale={4.2}
+          blur={2.6}
+          far={2.5}
+          resolution={lowPower ? 128 : 256}
+          frames={1}
+          color="#17372d"
+        />
+      </Canvas>
+    </div>
   );
 }

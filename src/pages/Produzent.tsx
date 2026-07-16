@@ -32,7 +32,7 @@ const metalColors = {
 
 const copy = {
   de: {
-    heroBadge: "Für OEM & Produzenten",
+    heroBadge: "Für Original Equipment Manufacturer & Produzenten",
     heroTitleA: "Edelmetalle aus Ihren Leiterplatten -",
     heroTitleB: "zurück in Ihre Produktion.",
     heroText:
@@ -44,16 +44,16 @@ const copy = {
       ["Reinheit", "999,9 ‰"],
       ["Lieferzeit", "14 Tage"],
     ],
-    loopCaption: "Closed Loop · Materialhoheit beim OEM",
+    loopCaption: "Closed Loop · Materialhoheit beim Hersteller",
     loopViz: [
-      ["OEM", "Produktion & Hoheit über Material"],
+      ["Original Equipment Manufacturer", "Produktion & Hoheit über Material"],
       ["Kunde", "Gibt Gerät / PCB zurück"],
       ["Leaftronics", "Sammelt, sortiert, dokumentiert"],
-      ["Hochofen / Refining", "Verarbeitet auf Weisung des OEM"],
+      ["Hochofen / Refining", "Verarbeitet auf Weisung des Herstellers"],
     ],
-    metalBack: "Edelmetall zurück an OEM",
+    metalBack: "Edelmetall zurück an den Hersteller",
     loopNote:
-      "Der OEM bestimmt, wohin die zurückgewonnenen Edelmetalle vom Hochofen geliefert werden - die Hoheit über das Material bleibt jederzeit beim Hersteller.",
+      "Der Original Equipment Manufacturer bestimmt, wohin die zurückgewonnenen Edelmetalle vom Hochofen geliefert werden - die Hoheit über das Material bleibt jederzeit beim Hersteller.",
     scopeStrong: "Wir konzentrieren uns bewusst auf Edelmetalle.",
     scopeText:
       "Papier, Kunststoff und Mischschrott gehören nicht zu unserem Kreislauf - das hält die Rückgewinnungsquote hoch und Ihre Materialkosten niedrig.",
@@ -62,13 +62,13 @@ const copy = {
     flowTitle: "Vier Stationen. Ein geschlossener Kreislauf.",
     flowText: "Ihre Leiterplatten verlassen den Betrieb nie wirklich - sie kommen als Reinmetall zurück.",
     loopSteps: [
-      ["OEM-Produktion", "Ihre elektronischen Baugruppen verlassen das Werk - mit definierter Stückliste und bekanntem Edelmetallanteil."],
+      ["Herstellerproduktion", "Ihre elektronischen Baugruppen verlassen das Werk - mit definierter Stückliste und bekanntem Edelmetallanteil."],
       ["End-of-Life Rückführung", "Leiterplatten, Bestückungsausschuss und Retouren werden lückenlos erfasst, dokumentiert und versiegelt zurückgeführt."],
       ["Edelmetall-Aufbereitung", "Hydrometallurgische Trennung von Au, Ag, Pd, Pt und HG-Kupfer auf LBMA-Reinheit."],
-      ["Rücklieferung an OEM", "Die zurückgewonnenen Edelmetalle gehen als Barren oder Halbzeug direkt an Sie oder Ihren benannten Halbzeug-Lieferanten."],
+      ["Rücklieferung an den Hersteller", "Die zurückgewonnenen Edelmetalle gehen als Barren oder Halbzeug direkt an Sie oder Ihren benannten Halbzeug-Lieferanten."],
     ],
     metalsEyebrow: "Rückgewonnene Metalle",
-    metalsTitle: "Nur Edelmetalle. Direkt in OEM-Qualität.",
+    metalsTitle: "Nur Edelmetalle. Direkt in Herstellerqualität.",
     metalsText:
       "Typische Ausbeuten pro Tonne bestückter Leiterplatten - abhängig von Baugruppe und Bestückungsdichte.",
     metals: [
@@ -90,7 +90,7 @@ const copy = {
     bullets: [
       "Versiegelte Sammlung & dokumentierte Chain-of-Custody",
       "LBMA-konforme Scheidung mit Probenahme im Vier-Augen-Prinzip",
-      "Rücklieferung an OEM oder benannten Halbzeug-Lieferanten",
+      "Rücklieferung an den Hersteller oder benannten Halbzeug-Lieferanten",
       "Monatliches Reporting für Scope-3 & Lieferkettengesetz",
     ],
     company: "Unternehmen",
@@ -106,7 +106,7 @@ const copy = {
     toastDescription: "Wir melden uns binnen 24h mit einem Closed-Loop-Konzept für Ihre Edelmetallströme.",
   },
   en: {
-    heroBadge: "For OEMs & producers",
+    heroBadge: "For original equipment manufacturers & producers",
     heroTitleA: "Precious metals from your circuit boards -",
     heroTitleB: "back into your production.",
     heroText:
@@ -118,16 +118,16 @@ const copy = {
       ["Purity", "999.9 ‰"],
       ["Lead time", "14 days"],
     ],
-    loopCaption: "Closed loop · OEM retains material control",
+    loopCaption: "Closed loop · Manufacturer retains material control",
     loopViz: [
-      ["OEM", "Production & material ownership"],
+      ["Original Equipment Manufacturer", "Production & material ownership"],
       ["Customer", "Returns device / PCB"],
       ["Leaftronics", "Collects, sorts, documents"],
-      ["Smelter / refining", "Processes on OEM instruction"],
+      ["Smelter / refining", "Processes on manufacturer instruction"],
     ],
-    metalBack: "Precious metal back to OEM",
+    metalBack: "Precious metal back to the manufacturer",
     loopNote:
-      "The OEM decides where recovered precious metals are delivered from the smelter - material control remains with the manufacturer at all times.",
+      "The original equipment manufacturer decides where recovered precious metals are delivered from the smelter - material control remains with the manufacturer at all times.",
     scopeStrong: "We deliberately focus on precious metals.",
     scopeText:
       "Paper, plastics and mixed scrap are not part of this loop - keeping recovery rates high and material costs low.",
@@ -136,13 +136,13 @@ const copy = {
     flowTitle: "Four stations. One closed loop.",
     flowText: "Your circuit boards never truly leave your operation - they return as refined metal.",
     loopSteps: [
-      ["OEM production", "Your electronic assemblies leave the factory with defined BOM data and known precious-metal content."],
+      ["Manufacturer production", "Your electronic assemblies leave the factory with defined BOM data and known precious-metal content."],
       ["End-of-life return", "Circuit boards, assembly scrap and returns are captured, documented, sealed and returned without gaps."],
       ["Precious-metal refining", "Hydrometallurgical separation of Au, Ag, Pd, Pt and high-grade copper to LBMA-level purity."],
-      ["Return delivery to OEM", "Recovered precious metals go directly to you or your named semi-finished goods supplier as bars or feedstock."],
+      ["Return delivery to the manufacturer", "Recovered precious metals go directly to you or your named semi-finished goods supplier as bars or feedstock."],
     ],
     metalsEyebrow: "Recovered metals",
-    metalsTitle: "Only precious metals. Directly in OEM quality.",
+    metalsTitle: "Only precious metals. Directly in manufacturer quality.",
     metalsText: "Typical yields per ton of populated circuit boards - depending on assembly and component density.",
     metals: [
       ["Au", "Gold", "200-350 g / t PCB", "Bond wires, connectors, IC pins"],
@@ -163,7 +163,7 @@ const copy = {
     bullets: [
       "Sealed collection & documented chain of custody",
       "LBMA-aligned separation with four-eyes sampling",
-      "Return delivery to OEM or named semi-finished goods supplier",
+      "Return delivery to the manufacturer or named semi-finished goods supplier",
       "Monthly reporting for Scope 3 & supply-chain requirements",
     ],
     company: "Company",
@@ -179,7 +179,7 @@ const copy = {
     toastDescription: "We will respond within 24h with a closed-loop concept for your precious-metal streams.",
   },
   zh: {
-    heroBadge: "面向 OEM 与生产商",
+    heroBadge: "面向原始设备制造商与生产商",
     heroTitleA: "从您的电路板中回收贵金属 -",
     heroTitleB: "重新回到您的生产中。",
     heroText:
@@ -191,15 +191,15 @@ const copy = {
       ["纯度", "999.9 ‰"],
       ["交付周期", "14 天"],
     ],
-    loopCaption: "闭环 · OEM 保持材料控制权",
+    loopCaption: "闭环 · 原始设备制造商保持材料控制权",
     loopViz: [
-      ["OEM", "生产与材料所有权"],
+      ["原始设备制造商", "生产与材料所有权"],
       ["客户", "退回设备 / PCB"],
       ["Leaftronics", "收集、分类、记录"],
-      ["冶炼 / 精炼", "按 OEM 指示处理"],
+      ["冶炼 / 精炼", "按原始设备制造商指示处理"],
     ],
-    metalBack: "贵金属回到 OEM",
-    loopNote: "OEM 决定精炼后的贵金属交付方向，材料控制权始终保留在制造商手中。",
+    metalBack: "贵金属回到原始设备制造商",
+    loopNote: "原始设备制造商决定精炼后的贵金属交付方向，材料控制权始终保留在制造商手中。",
     scopeStrong: "我们有意识地专注于贵金属。",
     scopeText: "纸张、塑料和混合废料不属于此循环，因此可保持较高回收率并降低材料成本。",
     customerMarket: "通用客户入口",
@@ -207,13 +207,13 @@ const copy = {
     flowTitle: "四个站点，一个闭环。",
     flowText: "您的电路板并不会真正离开体系，它们会以精炼金属形式回归。",
     loopSteps: [
-      ["OEM 生产", "电子组件带着明确物料清单和已知贵金属含量离开工厂。"],
+      ["原始设备制造商生产", "电子组件带着明确物料清单和已知贵金属含量离开工厂。"],
       ["寿命终止回收", "电路板、装配废料和退货被完整记录、封存并回收。"],
       ["贵金属精炼", "通过湿法冶金分离 Au、Ag、Pd、Pt 和高品位铜，达到 LBMA 级纯度。"],
-      ["交付回 OEM", "回收贵金属以金属锭或半成品形式直接交付给您或指定供应商。"],
+      ["交付回原始设备制造商", "回收贵金属以金属锭或半成品形式直接交付给您或指定供应商。"],
     ],
     metalsEyebrow: "回收金属",
-    metalsTitle: "只处理贵金属，直接达到 OEM 质量。",
+    metalsTitle: "只处理贵金属，直接达到制造商质量。",
     metalsText: "以下为每吨装配电路板的典型产出，实际取决于组件类型和装配密度。",
     metals: [
       ["Au", "金", "200-350 g / t PCB", "键合线、连接器、IC 引脚"],
@@ -234,7 +234,7 @@ const copy = {
     bullets: [
       "密封收集并记录监管链",
       "符合 LBMA 思路的分离与双人取样",
-      "交付回 OEM 或指定半成品供应商",
+      "交付回原始设备制造商或指定半成品供应商",
       "每月提供 Scope 3 与供应链要求报告",
     ],
     company: "公司",
@@ -459,7 +459,7 @@ const Produzent = () => {
                     required
                     value={form.company}
                     onChange={(event) => setForm({ ...form, company: event.target.value })}
-                    placeholder="OEM GmbH"
+                    placeholder="Hersteller GmbH"
                   />
                 </div>
                 <div>

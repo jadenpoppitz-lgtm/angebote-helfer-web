@@ -35,12 +35,14 @@ import {
 import { toast } from "@/components/ui/sonner";
 import { CyclePrototypeMap } from "@/components/CyclePrototypeMap";
 import { DemoDayCustomerLookup } from "@/components/DemoDayCustomerLookup";
+import { DemoDayTrackingAdmin } from "@/components/DemoDayTrackingAdmin";
 import { Footer } from "@/components/Footer";
 import { PilotProjectSection } from "@/components/PilotProjectSection";
 import { ProofOfProgress } from "@/components/ProofOfProgress";
 import { ScrollPCBStory } from "@/components/ScrollPCBStory";
 import { WaterfallToPCBHero } from "@/components/WaterfallToPCBHero";
 import { languages, type Language, useLanguage } from "@/lib/i18n";
+import { trackDemoDayVisit } from "@/lib/demoDayTracking";
 import { DEMO_SERIAL } from "@/data/partners";
 
 export type RoleId = "oem" | "customer" | "recycler" | "smelter" | "partner";
@@ -176,12 +178,12 @@ export const copy: Record<Language, LandingCopy> = {
       eyebrow: "Das Problem",
       title: "Materialien verschwinden, bevor sie wieder Produktion werden.",
       text:
-        "Alte Produkte werden exportiert, unscharf gesammelt oder nicht sauber demontiert. Bestimmte Fraktionen werden im Prozess nicht gefiltert, OEMs verlieren Materialhoheit und Europa verliert Rohstoffsicherheit. Leaftronics setzt dort an, wo Produktdaten, Demontage und Materialrückführung bisher getrennt sind.",
+        "Alte Produkte werden exportiert, unscharf gesammelt oder nicht sauber demontiert. Bestimmte Fraktionen werden im Prozess nicht gefiltert, Hersteller verlieren Materialhoheit und Europa verliert Rohstoffsicherheit. Leaftronics setzt dort an, wo Produktdaten, Demontage und Materialrückführung bisher getrennt sind.",
       cta: "Zur Lösung",
       stats: [
         { value: "Export", label: "Kontrolle geht verloren" },
         { value: "CMA", label: "Rohstoffe in Europa halten" },
-        { value: "OEM", label: "Materialhoheit sichern" },
+        { value: "Original Equipment Manufacturer", label: "Materialhoheit sichern" },
       ],
       tiles: [
         {
@@ -196,7 +198,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
         {
           title: "Keine Materialhoheit",
-          text: "Ohne Datenfluss verlieren OEMs Rückführungsdaten, ESG-Nachweise und europäische Produktionsoptionen.",
+          text: "Ohne Datenfluss verlieren Hersteller Rückführungsdaten, ESG-Nachweise und europäische Produktionsoptionen.",
           image: "/leaftronics-pcb-prototype.jpg",
         },
       ],
@@ -207,14 +209,14 @@ export const copy: Record<Language, LandingCopy> = {
       text: "Wähle eine Rolle: Die Seite aktualisiert Graph, Demo-Oberfläche und Formular automatisch.",
       cards: {
         oem: {
-          title: "OEM / Produzent",
+          title: "Original Equipment Manufacturer / Produzent",
           problem: "Material und ESG-Daten verschwinden nach dem Verkauf.",
           value: "Recyclebare Leiterplatten, bis zu 50 Prozent weniger CO2, Rückführungsdaten und Materialhoheit.",
           next: "Closed-Loop Gespräch starten",
-          cta: "OEM auswählen",
+          cta: "Hersteller auswählen",
         },
         customer: {
-          title: "Customer / Rückgeber",
+          title: "Customer",
           problem: "Alte Produkte liegen ungenutzt oder gehen in unscharfe Sammelströme.",
           value: "Seriennummer prüfen, Gerätepass und Materialwerte verstehen und die Rückgabe vormerken.",
           next: "Produkt zurückgeben",
@@ -247,16 +249,16 @@ export const copy: Record<Language, LandingCopy> = {
       eyebrow: "Interaktiver Wertstrom",
       title: "Vom Produkt zurück zum Material.",
       text:
-        "Sechs Stationen bilden einen kontrollierten Kreislauf: Produkte, Leiterplatten, Daten und Wertstoffe bleiben sichtbar und fließen gezielt zum OEM zurück.",
+        "Sechs Stationen bilden einen kontrollierten Kreislauf: Produkte, Leiterplatten, Daten und Wertstoffe bleiben sichtbar und fließen gezielt zum Hersteller zurück.",
       hoverLabel: "Aktiver Prozesspunkt",
       nextStep: "Nächster Schritt",
       nodes: {
         oem: {
-          title: "OEM",
+          title: "Original Equipment Manufacturer",
           label: "Produktion",
           problem: "Materialhoheit endet oft nach dem Verkauf.",
-          solution: "Der OEM bleibt Start- und Zielpunkt: Produkt geht zum Kunden, PCB-Wert und Daten kommen zurück.",
-          next: "OEM-Dashboard öffnen",
+          solution: "Der Hersteller bleibt Start- und Zielpunkt: Das Produkt geht zum Kunden, PCB-Wert und Daten kommen zurück.",
+          next: "Hersteller-Dashboard öffnen",
         },
         customer: {
           title: "Customer",
@@ -295,7 +297,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
       },
       values: [
-        { role: "OEM", value: "Recyclebare PCB, 50 Prozent weniger CO2, Materialhoheit." },
+        { role: "Original Equipment Manufacturer", value: "Recyclebare PCB, 50 Prozent weniger CO2, Materialhoheit." },
         { role: "Recycler", value: "Chemische Lösung, Fraktionslogik, sauberere Auflösung." },
         { role: "Smelter", value: "Bessere Chargen, dokumentierte Herkunft, erwartete Ausbeute." },
         { role: "Customer", value: "Rückgabe bestätigen, Rabatt erhalten, Produktstatus sehen." },
@@ -314,33 +316,33 @@ export const copy: Record<Language, LandingCopy> = {
     demos: {
       eyebrow: "Demo-Oberflächen",
       title: "Drei Arbeitsoberflächen für den echten Rücklauf.",
-      text: "OEM steuert Rückläufer und Materialwert, Customer organisiert die Rückgabe und Smelter prüft qualifizierte Chargen. Die übrigen Prozessstationen bleiben bewusst als Vorschau markiert.",
+      text: "Der Hersteller steuert Rückläufer und Materialwert, der Customer organisiert die Rückgabe und der Smelter prüft qualifizierte Chargen. Die übrigen Prozessstationen bleiben bewusst als Vorschau markiert.",
       liveLabel: "Live-Demo",
       problemLabel: "Problem",
       valueLabel: "Wert",
       customerLive: {
-        title: "Dein Gerät. Seine Materialien. Deine Gewinnchance.",
-        text: "Öffne mit der Seriennummer deiner Demo-Karte einen digitalen Gerätepass. Fünf von 100 Geräten tragen ein Goldticket.",
+        title: "Gerätepass und Rückgabe",
+        text: "",
         serialLabel: "Seriennummer",
         serialPlaceholder: "z. B. LT26-N7Q4-K9M2",
         detect: "Standort automatisch erkennen",
         detected: "Standort erkannt",
         unknown: "Seriennummer noch nicht im Demo-System",
         returnPoints: "Rückgabepartner",
-        discounts: "Rabattaktionen der Partner-OEMs",
+        discounts: "Rabattaktionen der Partner-Hersteller",
         useDemo: "Demo-Seriennummer nutzen",
         confirm: "Rückgabe bestätigen",
         locationPending: "Standort wird erkannt ...",
         check: "Prüfen",
         oemOffers: [
           { oem: "YETI Industrial", offer: "12% Rabatt auf Service-PCB", condition: "nach bestätigter Rückgabe" },
-          { oem: "Leaftronics OEM", offer: "85 EUR Materialgutschrift", condition: "für sortenreine Leiterplatten" },
+          { oem: "Leaftronics Hersteller", offer: "85 EUR Materialgutschrift", condition: "für sortenreine Leiterplatten" },
           { oem: "Leaftronics Network", offer: "CO2-Zertifikat + Einkaufsvorteil", condition: "für ESG-fähige Rückläufer" },
         ],
       },
       surfaces: {
         oem: {
-          title: "OEM-Dashboard",
+          title: "Hersteller-Dashboard",
           subtitle: "Rückläufer, Materialwerte und ESG-Status",
           metrics: [
             { label: "CO2-Einsparung pro PCB", value: "1,8 kg" },
@@ -350,14 +352,14 @@ export const copy: Record<Language, LandingCopy> = {
           steps: ["Eingang qualifiziert", "PCB-Chargen zugeordnet", "Materialabruf freigeben"],
         },
         customer: {
-          title: "Customer-Rückgabe",
-          subtitle: "Gerätepass, Materialprofil und Gewinnstatus",
+          title: "Customer Interface",
+          subtitle: "",
           metrics: [
             { label: "Demo-ID", value: "KB-24-104" },
             { label: "Rabatt", value: "12%" },
             { label: "Status", value: "bestätigt" },
           ],
-          steps: ["QR gescannt", "OEM erkannt", "Rückgabe akzeptiert"],
+          steps: ["QR gescannt", "Hersteller erkannt", "Rückgabe akzeptiert"],
         },
         recycler: {
           title: "Recycler-Ansicht",
@@ -495,12 +497,12 @@ export const copy: Record<Language, LandingCopy> = {
       eyebrow: "The problem",
       title: "Materials disappear before they become production again.",
       text:
-        "Old products are exported, collected too broadly or not disassembled cleanly. Specific fractions are never filtered, OEMs lose material sovereignty and Europe loses raw-material security. Leaftronics connects the product data, disassembly and material return paths that are currently separated.",
+        "Old products are exported, collected too broadly or not disassembled cleanly. Specific fractions are never filtered, manufacturers lose material sovereignty and Europe loses raw-material security. Leaftronics connects the product data, disassembly and material return paths that are currently separated.",
       cta: "See solution",
       stats: [
         { value: "Export", label: "control gets lost" },
         { value: "CMA", label: "keep resources in Europe" },
-        { value: "OEM", label: "secure material sovereignty" },
+        { value: "Original Equipment Manufacturer", label: "secure material sovereignty" },
       ],
       tiles: [
         {
@@ -515,7 +517,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
         {
           title: "No material sovereignty",
-          text: "Without data flow, OEMs lose return data, ESG proof and European production options.",
+          text: "Without data flow, manufacturers lose return data, ESG proof and European production options.",
           image: "/leaftronics-pcb-prototype.jpg",
         },
       ],
@@ -526,14 +528,14 @@ export const copy: Record<Language, LandingCopy> = {
       text: "Choose a role: graph, demo surface and form update automatically.",
       cards: {
         oem: {
-          title: "OEM / Producer",
+          title: "Original Equipment Manufacturer / Producer",
           problem: "Material and ESG data disappear after the product is sold.",
           value: "Recyclable PCBs, up to 50 percent less CO2, return data and material sovereignty.",
           next: "Start closed-loop call",
-          cta: "Select OEM",
+          cta: "Select manufacturer",
         },
         customer: {
-          title: "Customer / Returner",
+          title: "Customer",
           problem: "Old products sit unused or enter unclear collection streams.",
           value: "Check the serial number, understand the device passport and material value, then reserve a return.",
           next: "Return product",
@@ -566,16 +568,16 @@ export const copy: Record<Language, LandingCopy> = {
       eyebrow: "Interactive value flow",
       title: "From product back to material.",
       text:
-        "Six stations form one controlled loop: products, circuit boards, data and valuable materials stay visible and flow deliberately back to the OEM.",
+        "Six stations form one controlled loop: products, circuit boards, data and valuable materials stay visible and flow deliberately back to the manufacturer.",
       hoverLabel: "Active process point",
       nextStep: "Next step",
       nodes: {
         oem: {
-          title: "OEM",
+          title: "Original Equipment Manufacturer",
           label: "Production",
           problem: "Material sovereignty often ends after the product sale.",
-          solution: "The OEM stays the start and target point: products go to customers, PCB value and data come back.",
-          next: "Open OEM dashboard",
+          solution: "The manufacturer stays the start and target point: products go to customers, PCB value and data come back.",
+          next: "Open manufacturer dashboard",
         },
         customer: {
           title: "Customer",
@@ -614,7 +616,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
       },
       values: [
-        { role: "OEM", value: "Recyclable PCB, 50 percent less CO2, material sovereignty." },
+        { role: "Original Equipment Manufacturer", value: "Recyclable PCB, 50 percent less CO2, material sovereignty." },
         { role: "Recycler", value: "Chemical solution, fraction logic, cleaner dissolution." },
         { role: "Smelter", value: "Better batches, documented origin, expected yield." },
         { role: "Customer", value: "Confirm return, receive discount, see product status." },
@@ -633,33 +635,33 @@ export const copy: Record<Language, LandingCopy> = {
     demos: {
       eyebrow: "Demo surfaces",
       title: "Three workspaces for a controlled return loop.",
-      text: "OEM manages returns and material value, Customer organizes the return, and Smelter reviews qualified batches. The remaining process stations are intentionally marked as previews.",
+      text: "The manufacturer manages returns and material value, the customer organizes the return, and the smelter reviews qualified batches. The remaining process stations are intentionally marked as previews.",
       liveLabel: "Live demo",
       problemLabel: "Problem",
       valueLabel: "Value",
       customerLive: {
-        title: "Your device. Its materials. Your chance to win.",
-        text: "Use the serial number on your demo card to open a digital device passport. Five out of 100 devices hold a golden ticket.",
+        title: "Device passport and return",
+        text: "",
         serialLabel: "Serial number",
         serialPlaceholder: "e.g. LT26-N7Q4-K9M2",
         detect: "Detect location automatically",
         detected: "Location detected",
         unknown: "Serial number is not in the demo system yet",
         returnPoints: "Return partners",
-        discounts: "Partner OEM discount actions",
+        discounts: "Partner manufacturer discount actions",
         useDemo: "Use demo serial",
         confirm: "Confirm return",
         locationPending: "Detecting location ...",
         check: "Check",
         oemOffers: [
           { oem: "YETI Industrial", offer: "12% discount on service PCB", condition: "after confirmed return" },
-          { oem: "Leaftronics OEM", offer: "85 EUR material credit", condition: "for sorted circuit boards" },
+          { oem: "Leaftronics manufacturer", offer: "85 EUR material credit", condition: "for sorted circuit boards" },
           { oem: "Leaftronics Network", offer: "CO2 certificate + purchase benefit", condition: "for ESG-ready returns" },
         ],
       },
       surfaces: {
         oem: {
-          title: "OEM dashboard",
+          title: "Manufacturer dashboard",
           subtitle: "Returns, material values and ESG status",
           metrics: [
             { label: "CO2 saved per PCB", value: "1.8 kg" },
@@ -669,14 +671,14 @@ export const copy: Record<Language, LandingCopy> = {
           steps: ["Inbound qualified", "PCB batches assigned", "Release material call-off"],
         },
         customer: {
-          title: "Customer return",
-          subtitle: "Device passport, material profile and prize status",
+          title: "Customer Interface",
+          subtitle: "",
           metrics: [
             { label: "Demo ID", value: "KB-24-104" },
             { label: "Discount", value: "12%" },
             { label: "Status", value: "confirmed" },
           ],
-          steps: ["QR scanned", "OEM detected", "Return accepted"],
+          steps: ["QR scanned", "Manufacturer detected", "Return accepted"],
         },
         recycler: {
           title: "Recycler view",
@@ -813,12 +815,12 @@ export const copy: Record<Language, LandingCopy> = {
       eyebrow: "问题",
       title: "材料在重新进入生产之前就消失了。",
       text:
-        "旧产品被出口、混合收集或没有被清晰拆解。部分材料组分没有被过滤，OEM 失去材料主权，欧洲失去原材料安全。Leaftronics 连接产品数据、拆解和材料回流路径。",
+        "旧产品被出口、混合收集或没有被清晰拆解。部分材料组分没有被过滤，原始设备制造商失去材料主权，欧洲失去原材料安全。Leaftronics 连接产品数据、拆解和材料回流路径。",
       cta: "查看解决方案",
       stats: [
         { value: "出口", label: "控制流失" },
         { value: "CMA", label: "材料留在欧洲" },
-        { value: "OEM", label: "材料主权" },
+        { value: "原始设备制造商", label: "材料主权" },
       ],
       tiles: [
         {
@@ -833,7 +835,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
         {
           title: "没有材料主权",
-          text: "没有数据流，OEM 失去回流数据、ESG 证明和欧洲生产选择。",
+          text: "没有数据流，原始设备制造商失去回流数据、ESG 证明和欧洲生产选择。",
           image: "/leaftronics-pcb-prototype.jpg",
         },
       ],
@@ -844,14 +846,14 @@ export const copy: Record<Language, LandingCopy> = {
       text: "选择角色后，流程图、演示界面和表单会自动更新。",
       cards: {
         oem: {
-          title: "OEM / 生产商",
+          title: "原始设备制造商 / 生产商",
           problem: "产品销售后，材料和 ESG 数据消失。",
           value: "可回收 PCB、最高 50% CO2 减排、回流数据和材料主权。",
           next: "开始闭环沟通",
-          cta: "选择 OEM",
+          cta: "选择原始设备制造商",
         },
         customer: {
-          title: "客户 / 退回方",
+          title: "客户",
           problem: "旧产品闲置或进入不清晰的收集流。",
           value: "检查序列号，了解设备护照和材料价值，并登记回收。",
           next: "退回产品",
@@ -884,16 +886,16 @@ export const copy: Record<Language, LandingCopy> = {
       eyebrow: "交互式价值流",
       title: "从产品回到材料。",
       text:
-        "六个环节组成一个可控闭环：产品、电路板、数据和高价值材料始终可见，并有目的地回流至 OEM。",
+        "六个环节组成一个可控闭环：产品、电路板、数据和高价值材料始终可见，并有目的地回流至原始设备制造商。",
       hoverLabel: "当前流程点",
       nextStep: "下一步",
       nodes: {
         oem: {
-          title: "OEM",
+          title: "原始设备制造商",
           label: "生产",
           problem: "材料主权常常在产品销售后结束。",
-          solution: "OEM 保持起点和目标点：产品交给客户，PCB 价值和数据回到体系。",
-          next: "打开 OEM 仪表板",
+          solution: "原始设备制造商保持起点和目标点：产品交给客户，PCB 价值和数据回到体系。",
+          next: "打开制造商仪表板",
         },
         customer: {
           title: "客户",
@@ -932,7 +934,7 @@ export const copy: Record<Language, LandingCopy> = {
         },
       },
       values: [
-        { role: "OEM", value: "可回收 PCB、50% CO2 减排、材料主权。" },
+        { role: "原始设备制造商", value: "可回收 PCB、50% CO2 减排、材料主权。" },
         { role: "回收商", value: "化学方案、组分逻辑、更干净的溶解。" },
         { role: "冶炼方", value: "更好批次、来源记录、预期产出。" },
         { role: "客户", value: "确认退回、获得折扣、查看产品状态。" },
@@ -951,33 +953,33 @@ export const copy: Record<Language, LandingCopy> = {
     demos: {
       eyebrow: "演示界面",
       title: "面向闭环回收的三个核心工作界面。",
-      text: "OEM 管理退回与材料价值，客户组织退回，冶炼方审核合格批次。其余流程站点明确标记为预览。",
+      text: "原始设备制造商管理退回与材料价值，客户组织退回，冶炼方审核合格批次。其余流程站点明确标记为预览。",
       liveLabel: "实时演示",
       problemLabel: "问题",
       valueLabel: "价值",
       customerLive: {
-        title: "你的设备、材料与中奖机会",
-        text: "输入演示卡上的序列号，打开数字设备护照。100 台设备中有 5 台带有金色奖券。",
+        title: "设备护照与回收",
+        text: "",
         serialLabel: "序列号",
         serialPlaceholder: "例如 LT26-N7Q4-K9M2",
         detect: "自动识别位置",
         detected: "位置已识别",
         unknown: "该序列号暂未在演示系统中",
         returnPoints: "退回伙伴",
-        discounts: "合作 OEM 折扣",
+        discounts: "合作制造商折扣",
         useDemo: "使用演示序列号",
         confirm: "确认退回",
         locationPending: "正在识别位置 ...",
         check: "检查",
         oemOffers: [
           { oem: "YETI Industrial", offer: "服务 PCB 12% 折扣", condition: "确认退回后" },
-          { oem: "Leaftronics OEM", offer: "85 欧元材料积分", condition: "适用于分类电路板" },
+          { oem: "Leaftronics 制造商", offer: "85 欧元材料积分", condition: "适用于分类电路板" },
           { oem: "Leaftronics Network", offer: "CO2 证书 + 采购优惠", condition: "适用于 ESG 可追踪退回" },
         ],
       },
       surfaces: {
         oem: {
-          title: "OEM 仪表板",
+          title: "制造商仪表板",
           subtitle: "退回、材料价值和 ESG 状态",
           metrics: [
             { label: "退回率", value: "78%" },
@@ -987,14 +989,14 @@ export const copy: Record<Language, LandingCopy> = {
           steps: ["来料已确认", "PCB 批次已分配", "批准材料调用"],
         },
         customer: {
-          title: "客户退回",
-          subtitle: "设备护照、材料构成和中奖状态",
+          title: "客户界面",
+          subtitle: "",
           metrics: [
             { label: "演示 ID", value: "KB-24-104" },
             { label: "折扣", value: "12%" },
             { label: "状态", value: "已确认" },
           ],
-          steps: ["QR 已扫描", "OEM 已识别", "退回已接受"],
+          steps: ["QR 已扫描", "制造商已识别", "退回已接受"],
         },
         recycler: {
           title: "回收商视图",
@@ -1120,6 +1122,73 @@ const demoPreviewLabels: Record<Language, { materials: string; preview: string }
   zh: { materials: "材料 / 回收", preview: "预览" },
 };
 
+const demoAppLabels: Record<
+  Language,
+  {
+    workspace: string;
+    switcher: string;
+    active: string;
+    roles: Record<RoleId, string>;
+    materials: string;
+    interfaces: Record<"oem" | "customer" | "smelter", string>;
+  }
+> = {
+  de: {
+    workspace: "Demo Workspace",
+    switcher: "Oberfläche wechseln",
+    active: "Aktive Oberfläche",
+    roles: {
+      oem: "Hersteller",
+      customer: "Customer",
+      smelter: "Smelter",
+      partner: "Leaftronics",
+      recycler: "Demontage",
+    },
+    materials: "Materialien",
+    interfaces: {
+      oem: "Hersteller Interface",
+      customer: "Customer Interface",
+      smelter: "Smelter Interface",
+    },
+  },
+  en: {
+    workspace: "Demo workspace",
+    switcher: "Switch interface",
+    active: "Active interface",
+    roles: {
+      oem: "Manufacturer",
+      customer: "Customer",
+      smelter: "Smelter",
+      partner: "Leaftronics",
+      recycler: "Disassembly",
+    },
+    materials: "Materials",
+    interfaces: {
+      oem: "Manufacturer interface",
+      customer: "Customer interface",
+      smelter: "Smelter interface",
+    },
+  },
+  zh: {
+    workspace: "演示工作区",
+    switcher: "切换界面",
+    active: "当前界面",
+    roles: {
+      oem: "制造商",
+      customer: "客户",
+      smelter: "冶炼伙伴",
+      partner: "Leaftronics",
+      recycler: "拆解",
+    },
+    materials: "材料",
+    interfaces: {
+      oem: "制造商界面",
+      customer: "客户界面",
+      smelter: "冶炼伙伴界面",
+    },
+  },
+};
+
 export const roleIcons: Record<RoleId, typeof Factory> = {
   oem: Factory,
   customer: UserRound,
@@ -1233,6 +1302,8 @@ function scrollToLandingSection(id: string, duration = 560) {
   window.requestAnimationFrame(animate);
 }
 
+const showCyclePageIntro = false;
+
 const Landing = ({ page = "home" }: { page?: LandingPage }) => {
   const [activeRole, setActiveRole] = useState<RoleId>("oem");
   const [activePoint, setActivePoint] = useState<GraphPoint>("oem");
@@ -1257,6 +1328,10 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
     const timer = window.setTimeout(() => scrollToLandingSection(id, 420), 80);
     return () => window.clearTimeout(timer);
   }, [page]);
+
+  useEffect(() => {
+    void trackDemoDayVisit();
+  }, []);
 
   const handleSectionLink = (
     event: ReactMouseEvent<HTMLAnchorElement>,
@@ -1543,7 +1618,7 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
         </section>
       )}
 
-      {false ? (
+      {showCyclePageIntro ? (
         <section className="cycle-page-intro" aria-labelledby="cycle-page-title">
           <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 py-12 sm:px-8 md:py-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:items-end lg:gap-16">
             <div className="max-w-3xl">
@@ -1694,35 +1769,34 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
       ) : null}
 
       {showCycle ? (
-      <section id="demos" className="cycle-demo-section pb-20 pt-8 text-foreground md:pb-28 md:pt-12">
-        <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(15rem,0.3fr)_minmax(0,0.7fr)] lg:items-start lg:gap-14">
+      <section id="demos" className="cycle-demo-section pb-20 pt-5 text-foreground md:pb-28 md:pt-8">
+        <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
           {(() => {
-            const demoRole = coreDemoRoles.has(activeRole) ? activeRole : "oem";
+            const demoRole = (coreDemoRoles.has(activeRole) ? activeRole : "oem") as "oem" | "customer" | "smelter";
             const Icon = roleIcons[demoRole];
-            const card = content.roles.cards[demoRole];
             const surface = content.demos.surfaces[demoRole];
+            const appLabels = demoAppLabels[language];
             return (
-              <>
-                <aside className="cycle-demo-overview min-w-0 pr-1 lg:sticky lg:top-8 lg:pr-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">{content.demos.eyebrow}</p>
-                  <div className="mt-5 flex min-w-0 items-center gap-4">
-                    <span className="grid h-12 w-12 shrink-0 place-items-center border border-primary/20 bg-primary/8 text-primary">
-                      <Icon className="h-6 w-6" />
+              <div className={`cycle-app-shell is-${demoRole}`}>
+                <header className="cycle-app-topbar">
+                  <div className="cycle-app-brand">
+                    <span className="cycle-app-brand-mark">
+                      <img src="/leaftronics-logo-mono-light.png" alt="" />
                     </span>
-                    <div className="min-w-0">
-                      <h2 className="break-words font-display text-2xl font-semibold leading-tight md:text-3xl">{card.title}</h2>
-                      <p className="mt-1 text-sm text-muted-foreground">{surface.subtitle}</p>
-                    </div>
+                    <span>
+                      <strong>Leaftronics</strong>
+                      <small>{appLabels.workspace}</small>
+                    </span>
                   </div>
+                  <span className="cycle-app-live-status">
+                    <i aria-hidden="true" />
+                    {content.demos.liveLabel}
+                  </span>
+                </header>
 
-                  <div className="mt-7 border-y border-primary/16 py-5">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">{content.demos.problemLabel}</p>
-                    <p className="mt-2 text-sm leading-6 text-foreground/72">{card.problem}</p>
-                    <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">{content.demos.valueLabel}</p>
-                    <p className="mt-2 text-sm leading-6 text-foreground/78">{card.value}</p>
-                  </div>
-
-                  <div className="cycle-demo-role-tabs mt-6" role="tablist" aria-label={content.demos.eyebrow}>
+                <div className="cycle-app-rolebar">
+                  <p>{appLabels.switcher}</p>
+                  <div className="cycle-demo-role-tabs" role="tablist" aria-label={content.demos.eyebrow}>
                     {demoRoleOrder.map((role) => {
                       const RoleIcon = roleIcons[role];
                       const isAvailable = coreDemoRoles.has(role);
@@ -1746,8 +1820,8 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                                 : "is-disabled"
                           }`}
                         >
-                          <RoleIcon className="h-4 w-4" />
-                          <span className="min-w-0 flex-1">{content.roles.cards[role].title}</span>
+                          <RoleIcon aria-hidden="true" />
+                          <span>{appLabels.roles[role]}</span>
                           {!isAvailable ? <small>{demoPreviewLabels[language].preview}</small> : null}
                         </button>
                       );
@@ -1761,23 +1835,38 @@ const Landing = ({ page = "home" }: { page?: LandingPage }) => {
                       disabled
                       className="cycle-demo-role-tab is-disabled"
                     >
-                      <PackageCheck className="h-4 w-4" />
-                      <span className="min-w-0 flex-1">{demoPreviewLabels[language].materials}</span>
+                      <PackageCheck aria-hidden="true" />
+                      <span>{appLabels.materials}</span>
                       <small>{demoPreviewLabels[language].preview}</small>
                     </button>
                   </div>
-                </aside>
+                </div>
 
-                <section className="min-w-0">
+                <div className="cycle-app-context">
+                  <div className="cycle-app-context-title">
+                    <span aria-hidden="true"><Icon /></span>
+                    <div>
+                      <p>{appLabels.active}</p>
+                      <h2>{appLabels.interfaces[demoRole]}</h2>
+                    </div>
+                  </div>
+                  <p className="cycle-app-reference">
+                    <span>{content.form.demoId}</span>
+                    <strong>{reference}</strong>
+                  </p>
+                </div>
+
+                <section className="cycle-app-canvas" aria-label={appLabels.interfaces[demoRole]}>
                   {demoRole === "oem" ? (
                     <OemDashboard content={content} surface={surface} reference={reference} language={language} />
                   ) : demoRole === "customer" ? (
                     <CustomerReturnDemo content={content} language={language} reference={reference} />
-                  ) : demoRole === "smelter" ? (
+                  ) : (
                     <SmelterDashboard content={content} surface={surface} reference={reference} language={language} />
-                  ) : null}
+                  )}
                 </section>
-              </>
+                {demoRole === "customer" ? <DemoDayTrackingAdmin language={language} /> : null}
+              </div>
             );
           })()}
         </div>
@@ -2966,7 +3055,7 @@ const demoInterfaceLabels: Record<
 };
 
 const roleCaseMeta: Record<RoleId, { id: string; owner: string }> = {
-  oem: { id: "RET-2048", owner: "OEM Circular Ops" },
+  oem: { id: "RET-2048", owner: "Manufacturer Circular Ops" },
   customer: { id: "KB-DD-0001", owner: "Return Service" },
   recycler: { id: "DIS-0718", owner: "Separation Cell 02" },
   smelter: { id: "LT-0726-18", owner: "Material Intake" },
@@ -3000,10 +3089,12 @@ const DemoWindow = ({
         </span>
       </div>
 
-      <div className="cycle-demo-window-heading">
-        <h3 className="font-display text-[1.75rem] font-semibold leading-tight md:text-3xl">{title}</h3>
-        <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{subtitle}</p>
-      </div>
+      {title || subtitle ? (
+        <div className="cycle-demo-window-heading">
+          {title ? <h3 className="font-display text-[1.75rem] font-semibold leading-tight md:text-3xl">{title}</h3> : null}
+          {subtitle ? <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{subtitle}</p> : null}
+        </div>
+      ) : null}
 
       <div className="cycle-demo-window-content">
         {children}
@@ -3167,7 +3258,7 @@ const oemInterfaceLabels: Record<
     co2SavingsDetail: "37 % weniger gegenüber Neumaterial",
     dataQuality: "Produktdatensatz",
     export: "Bericht exportieren",
-    exportReady: "OEM-Bericht wurde erstellt",
+    exportReady: "Herstellerbericht wurde erstellt",
     materialForecast: "Erwartetes Materialprofil",
     materialValue: "Gesicherter Materialwert",
     queue: "Rücklauf-Chargen",
@@ -3200,7 +3291,7 @@ const oemInterfaceLabels: Record<
     co2SavingsDetail: "37% less than virgin material",
     dataQuality: "Product record",
     export: "Export report",
-    exportReady: "OEM report created",
+    exportReady: "Manufacturer report created",
     materialForecast: "Expected material profile",
     materialValue: "Secured material value",
     queue: "Return batches",
@@ -3233,7 +3324,7 @@ const oemInterfaceLabels: Record<
     co2SavingsDetail: "较原生材料减少 37%",
     dataQuality: "产品数据记录",
     export: "导出报告",
-    exportReady: "OEM 报告已创建",
+    exportReady: "制造商报告已创建",
     materialForecast: "预计材料构成",
     materialValue: "已锁定材料价值",
     queue: "退回批次",
@@ -3465,7 +3556,7 @@ const smelterDeliveries = [
   {
     id: "LT-0726-24",
     date: "24.07.2026",
-    source: "OEM-Rückläufer Süd",
+    source: "Hersteller-Rückläufer Süd",
     tonnes: 31,
     status: "angemeldet",
     moisture: 2.4,
@@ -4005,10 +4096,8 @@ const customerInterfaceLabels: Record<
 };
 
 export const CustomerReturnDemo = ({ content, language, reference }: { content: LandingCopy; language: Language; reference: string }) => {
-  const copy = content.demos.customerLive;
-
   return (
-    <DemoWindow content={content} reference={reference} icon={<QrCode className="h-4 w-4" />} title={copy.title} subtitle={copy.text}>
+    <DemoWindow content={content} reference={reference} icon={<QrCode className="h-4 w-4" />} title="" subtitle="">
       <DemoDayCustomerLookup language={language} />
     </DemoWindow>
   );

@@ -77,7 +77,7 @@ const flowRoutes: FlowRoute[] = [
     flow: "product",
     tone: "product",
     fallback: [43, 47],
-    offset: [18, 10],
+    offset: [-16, -12],
   },
   {
     id: "routing-disassembly",
@@ -86,7 +86,7 @@ const flowRoutes: FlowRoute[] = [
     flow: "productPcb",
     tone: "product",
     fallback: [57, 47],
-    offset: [-18, 10],
+    offset: [16, -12],
   },
   {
     id: "pcb-to-smelter",

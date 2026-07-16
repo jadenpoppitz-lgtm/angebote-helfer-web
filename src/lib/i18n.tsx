@@ -229,14 +229,14 @@ const translations = {
       eyebrow: "Closed-Loop Wertstrom",
       title: "Vom Produkt zur Rueckgewinnung.",
       text:
-        "OEMs, Kunden und Smelter greifen in einen gemeinsamen Materialfluss ein. Waehle einen Knoten und gehe direkt zur passenden naechsten Seite.",
+        "Original Equipment Manufacturer, Kunden und Smelter greifen in einen gemeinsamen Materialfluss ein. Waehle einen Knoten und gehe direkt zur passenden naechsten Seite.",
       mapLabel: "Prozesskarte",
       selectLabel: "Knoten auswaehlen",
       roles: {
         oem: {
-          title: "OEM",
+          title: "Original Equipment Manufacturer",
           text: "Produkte zuruecknehmen, PCB-Verwertung planen und Materialkreislauf steuern.",
-          cta: "Zur OEM-Seite",
+          cta: "Zur Hersteller-Seite",
         },
         customer: {
           title: "Customer",
@@ -251,7 +251,7 @@ const translations = {
       },
       nodes: {
         customer: "Customer",
-        oem: "OEM",
+        oem: "Original Equipment Manufacturer",
         consulting: "Consulting",
         product: "Product",
         disassembly: "Disassembly",
@@ -281,16 +281,16 @@ const translations = {
         eyebrow: "Das Problem",
         title: "Wertvolle Materialien verlieren ihren Weg zurück in die Produktion.",
         text:
-          "Alte Produkte werden exportiert, unscharf gesammelt oder nicht sauber auseinandergenommen. Dabei gehen Materialien verloren: teils physisch im Ausland, teils im Prozess, weil bestimmte Fraktionen gar nicht erst gefiltert werden. Langfristig müssen kritische Rohstoffe und CMA-relevante Materialien stärker in Europa bleiben. Mit Leaftronics lassen sich B2B-Produkte reiner recyceln, Materialhoheit bei OEMs halten und ein Ökosystem fördern, in dem Produktion in Europa wieder wirtschaftlich sinnvoller wird.",
+          "Alte Produkte werden exportiert, unscharf gesammelt oder nicht sauber auseinandergenommen. Dabei gehen Materialien verloren: teils physisch im Ausland, teils im Prozess, weil bestimmte Fraktionen gar nicht erst gefiltert werden. Langfristig müssen kritische Rohstoffe und CMA-relevante Materialien stärker in Europa bleiben. Mit Leaftronics lassen sich B2B-Produkte reiner recyceln, Materialhoheit bei Herstellern halten und ein Ökosystem fördern, in dem Produktion in Europa wieder wirtschaftlich sinnvoller wird.",
         cta: "Zu unserer Lösung",
-        imageA: "Export und Mischsammlung trennen Produkte von Herkunft, Qualität und OEM-Verantwortung.",
+        imageA: "Export und Mischsammlung trennen Produkte von Herkunft, Qualität und Herstellerverantwortung.",
         imageB: "Nicht gefilterte Fraktionen verlieren Kupfer, Edelmetalle und CMA-relevante Materialien im Prozess.",
         imageC: "Fehlende Demontage macht hochwertige B2B-Produkte zu anonymem Mischmaterial.",
-        imageD: "Ohne Datenfluss verlieren OEMs Materialhoheit und Europa verliert Produktionsoptionen.",
+        imageD: "Ohne Datenfluss verlieren Hersteller Materialhoheit und Europa verliert Produktionsoptionen.",
         stats: [
           { value: "Export", label: "verlorene Kontrolle" },
           { value: "CMA", label: "Europa sichern" },
-          { value: "OEM", label: "Materialhoheit" },
+          { value: "Original Equipment Manufacturer", label: "Materialhoheit" },
         ],
       },
       solution: {
@@ -305,8 +305,8 @@ const translations = {
             text: "Kunden starten die Rückgabe über Seriennummer oder QR-Code. Leaftronics ordnet das Produkt direkt dem richtigen Kreislauf zu.",
           },
           oem: {
-            title: "OEM Steuerung",
-            text: "OEMs sehen, welche Produkte und PCB-Ströme zurückkommen, und können Rücknahme, Vergütung und Materialziele steuern.",
+            title: "Herstellersteuerung",
+            text: "Hersteller sehen, welche Produkte und PCB-Ströme zurückkommen, und können Rücknahme, Vergütung und Materialziele steuern.",
           },
           consulting: {
             title: "Consulting & Daten",
@@ -464,14 +464,14 @@ const translations = {
       eyebrow: "Closed-loop value flow",
       title: "From product to recovery.",
       text:
-        "OEMs, customers and smelters connect through one shared material flow. Select a node and move straight to the right next page.",
+        "Original equipment manufacturers, customers and smelters connect through one shared material flow. Select a node and move straight to the right next page.",
       mapLabel: "Process map",
       selectLabel: "Select node",
       roles: {
         oem: {
-          title: "OEM",
+          title: "Original Equipment Manufacturer",
           text: "Take products back, plan PCB recovery and steer the material loop.",
-          cta: "Open OEM page",
+          cta: "Open manufacturer page",
         },
         customer: {
           title: "Customer",
@@ -486,7 +486,7 @@ const translations = {
       },
       nodes: {
         customer: "Customer",
-        oem: "OEM",
+        oem: "Original Equipment Manufacturer",
         consulting: "Consulting",
         product: "Product",
         disassembly: "Disassembly",
@@ -516,16 +516,16 @@ const translations = {
         eyebrow: "The problem",
         title: "Valuable materials lose their path back into production.",
         text:
-          "Old products are exported, collected too broadly or not disassembled cleanly. Materials are lost along the way: physically abroad, and inside the process when specific fractions are never filtered in the first place. In the long run, critical raw materials and CMA-relevant materials need to stay in Europe more often. With Leaftronics, B2B products can be recycled more purely, OEMs can keep material sovereignty, and a stronger ecosystem can make production in Europe economically attractive again.",
+          "Old products are exported, collected too broadly or not disassembled cleanly. Materials are lost along the way: physically abroad, and inside the process when specific fractions are never filtered in the first place. In the long run, critical raw materials and CMA-relevant materials need to stay in Europe more often. With Leaftronics, B2B products can be recycled more purely, manufacturers can keep material sovereignty, and a stronger ecosystem can make production in Europe economically attractive again.",
         cta: "See our solution",
-        imageA: "Export and mixed collection separate products from origin, quality and OEM responsibility.",
+        imageA: "Export and mixed collection separate products from origin, quality and manufacturer responsibility.",
         imageB: "Unfiltered fractions lose copper, precious metals and CMA-relevant materials inside the process.",
         imageC: "Missing disassembly turns high-value B2B products into anonymous mixed material.",
-        imageD: "Without data flow, OEMs lose material sovereignty and Europe loses production options.",
+        imageD: "Without data flow, manufacturers lose material sovereignty and Europe loses production options.",
         stats: [
           { value: "Export", label: "lost control" },
           { value: "CMA", label: "secure Europe" },
-          { value: "OEM", label: "material sovereignty" },
+          { value: "Original Equipment Manufacturer", label: "material sovereignty" },
         ],
       },
       solution: {
@@ -540,8 +540,8 @@ const translations = {
             text: "Customers start the return with a serial number or QR code. Leaftronics routes the product into the right loop immediately.",
           },
           oem: {
-            title: "OEM control",
-            text: "OEMs see which products and PCB streams return, then steer take-back, compensation and material goals.",
+            title: "Manufacturer control",
+            text: "Manufacturers see which products and PCB streams return, then steer take-back, compensation and material goals.",
           },
           consulting: {
             title: "Consulting & data",
@@ -695,14 +695,14 @@ const translations = {
     landingGraph: {
       eyebrow: "闭环价值流",
       title: "从产品到回收。",
-      text: "OEM、客户和冶炼方连接在同一条材料流中。选择一个节点，直接进入对应的下一页。",
+      text: "原始设备制造商、客户和冶炼方连接在同一条材料流中。选择一个节点，直接进入对应的下一页。",
       mapLabel: "流程图",
       selectLabel: "选择节点",
       roles: {
         oem: {
-          title: "OEM",
+          title: "原始设备制造商",
           text: "管理产品回收、PCB 再利用和材料闭环。",
-          cta: "打开 OEM 页面",
+          cta: "打开制造商页面",
         },
         customer: {
           title: "客户",
@@ -717,7 +717,7 @@ const translations = {
       },
       nodes: {
         customer: "客户",
-        oem: "OEM",
+        oem: "原始设备制造商",
         consulting: "咨询",
         product: "产品",
         disassembly: "拆解",
@@ -746,16 +746,16 @@ const translations = {
         eyebrow: "问题",
         title: "有价值的材料正在失去回到生产中的路径。",
         text:
-          "旧产品被出口、被混合收集，或没有被清晰拆解。材料会在途中流失：一部分流向海外，一部分在处理过程中因为特定材料没有被过滤出来而消失。长期来看，关键原材料和与 CMA 相关的材料需要更多留在欧洲。通过 Leaftronics，B2B 产品可以被更纯净地回收，OEM 可以保留材料主权，并推动一个让欧洲生产更有经济意义的生态系统。",
+          "旧产品被出口、被混合收集，或没有被清晰拆解。材料会在途中流失：一部分流向海外，一部分在处理过程中因为特定材料没有被过滤出来而消失。长期来看，关键原材料和与 CMA 相关的材料需要更多留在欧洲。通过 Leaftronics，B2B 产品可以被更纯净地回收，原始设备制造商可以保留材料主权，并推动一个让欧洲生产更有经济意义的生态系统。",
         cta: "查看我们的解决方案",
-        imageA: "出口和混合收集会切断产品来源、质量和 OEM 责任。",
+        imageA: "出口和混合收集会切断产品来源、质量和制造商责任。",
         imageB: "未被过滤的材料组分会让铜、贵金属和 CMA 相关材料在过程中流失。",
         imageC: "缺少拆解会让高价值 B2B 产品变成匿名混合材料。",
-        imageD: "没有数据流，OEM 会失去材料主权，欧洲也会失去生产选择。",
+        imageD: "没有数据流，原始设备制造商会失去材料主权，欧洲也会失去生产选择。",
         stats: [
           { value: "出口", label: "控制流失" },
           { value: "CMA", label: "保障欧洲" },
-          { value: "OEM", label: "材料主权" },
+          { value: "原始设备制造商", label: "材料主权" },
         ],
       },
       solution: {
@@ -769,8 +769,8 @@ const translations = {
             text: "客户通过序列号或二维码启动回收。Leaftronics 立即把产品导入正确的循环。",
           },
           oem: {
-            title: "OEM 控制",
-            text: "OEM 可以看到哪些产品和 PCB 流返回，并控制回收、补偿和材料目标。",
+            title: "制造商控制",
+            text: "原始设备制造商可以看到哪些产品和 PCB 流返回，并控制回收、补偿和材料目标。",
           },
           consulting: {
             title: "咨询与数据",
