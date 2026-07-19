@@ -20,7 +20,7 @@ export type DemoDayTrackingSummary = {
 export type DemoDayAnalytics = {
   summary: DemoDayTrackingSummary;
   events: DemoDayTrackingEvent[];
-  storage: "persistent" | "development";
+  storage: "persistent" | "ephemeral" | "development";
   generatedAt: string;
 };
 

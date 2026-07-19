@@ -27,6 +27,12 @@ Set these environment variables in Vercel before enabling production tracking:
   `UPSTASH_REDIS_REST_TOKEN` are supported as alternatives.
 - `DEMO_DAY_TRACKING_KEY_PREFIX` (optional): separates multiple demo events in
   the same store.
+- `DEMO_DAY_ALLOW_EPHEMERAL_STORAGE=true` (optional): keeps the monitoring
+  interface available without Redis. Data in this mode can be reset whenever
+  Vercel starts a new function instance and should only be used as a demo-day
+  fallback.
 
 The local Vite preview uses browser storage and the development password
-`leaftronics-demo`; production never accepts that fallback password.
+`leaftronics-demo`. Production uses a separate hashed emergency credential when
+`DEMO_DAY_ADMIN_PASSWORD` is not configured. A configured password always takes
+precedence.

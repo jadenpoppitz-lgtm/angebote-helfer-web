@@ -67,6 +67,7 @@ type AdminCopy = {
   logout: string;
   updated: string;
   persistent: string;
+  ephemeral: string;
   local: string;
   invalid: string;
   winnerChecks: string;
@@ -106,6 +107,7 @@ const adminCopy: Record<Language, AdminCopy> = {
     logout: "Sperren",
     updated: "Aktualisiert",
     persistent: "Live gespeichert",
+    ephemeral: "Live aktiv (temporär)",
     local: "Lokale Vorschau",
     invalid: "Ungültige Eingaben",
     winnerChecks: "Gewinnprüfungen",
@@ -143,6 +145,7 @@ const adminCopy: Record<Language, AdminCopy> = {
     logout: "Lock",
     updated: "Updated",
     persistent: "Stored live",
+    ephemeral: "Live (temporary)",
     local: "Local preview",
     invalid: "Invalid entries",
     winnerChecks: "Winner checks",
@@ -180,6 +183,7 @@ const adminCopy: Record<Language, AdminCopy> = {
     logout: "锁定",
     updated: "更新时间",
     persistent: "实时保存",
+    ephemeral: "实时运行（临时）",
     local: "本地预览",
     invalid: "无效输入",
     winnerChecks: "中奖查询",
@@ -205,6 +209,27 @@ function LookupResult({ event, copy }: { event: DemoDayTrackingEvent; copy: Admi
     return <span className="is-found"><CheckCircle2 aria-hidden="true" />{copy.found}</span>;
   }
   return <span className="is-missing"><XCircle aria-hidden="true" />{copy.notFound}</span>;
+}
+
+function TrackingStorageStatus({
+  storage,
+  copy,
+}: {
+  storage: DemoDayAnalytics["storage"];
+  copy: AdminCopy;
+}) {
+  const className = storage === "persistent"
+    ? "is-live"
+    : storage === "ephemeral"
+      ? "is-ephemeral"
+      : "is-local";
+  const label = storage === "persistent"
+    ? copy.persistent
+    : storage === "ephemeral"
+      ? copy.ephemeral
+      : copy.local;
+
+  return <span className={className}><i aria-hidden="true" />{label}</span>;
 }
 
 export function DemoDayTrackingAdmin({ language }: DemoDayTrackingAdminProps) {
@@ -293,10 +318,7 @@ export function DemoDayTrackingAdmin({ language }: DemoDayTrackingAdminProps) {
                 <DialogTitle className="demo-day-admin-title">{copy.title}</DialogTitle>
                 <DialogDescription className="demo-day-admin-description">{copy.description}</DialogDescription>
               </div>
-              <span className={analytics.storage === "persistent" ? "is-live" : "is-local"}>
-                <i aria-hidden="true" />
-                {analytics.storage === "persistent" ? copy.persistent : copy.local}
-              </span>
+              <TrackingStorageStatus storage={analytics.storage} copy={copy} />
             </header>
 
             <section className="demo-day-admin-metrics" aria-label={copy.title}>

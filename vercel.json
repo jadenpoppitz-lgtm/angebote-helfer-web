@@ -1,5 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "env": {
+    "DEMO_DAY_ALLOW_EPHEMERAL_STORAGE": "true"
+  },
   "rewrites": [
     {
       "source": "/:path((?!api/).*)",
